@@ -1,3 +1,6 @@
 backups/
 elpa/
 auto-save-list/
+places
+bookmarks
+.smex-items
