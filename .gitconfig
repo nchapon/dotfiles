@@ -1,0 +1,45 @@
+[user]
+	name = Nicolas Chapon
+	email = nchapon@gmail.com
+
+[core]
+        editor=vi
+
+[color]
+	ui=auto
+
+
+[diff]
+	tool = kdiff3
+
+[merge]
+       conflictstyle=merge
+       tool = kdiff3
+	
+[alias]
+undo = reset --hard HEAD~1
+uncommit = reset HEAD~1
+redo = reset --hard HEAD@{1}
+wip = "!git add -A; git commit -m \"wip\""
+addall = "!git add -A; git status"
+unwip = !git log -n 1 | grep -q -c wip && git reset HEAD~1
+rb = "!git wip;git rebase -i --autosquash origin/master;git unwip;git heads"
+pr = "!git fetch;git wip;git rebase --stat origin/master;git unwip;git heads"
+lg = "!git log --branches --oneline --graph --decorate \
+            | awk '{while(1){print;if($0~/origin/)exit;next}}'"
+
+
+st = status
+br = branch
+co = checkout
+cp = cherry-pick
+
+
+
+
+
+
+
+
+
+
