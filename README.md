@@ -6,10 +6,8 @@ Nicolas Chapon personal dotfiles
 
 ## Usage
 
-> cd ~
+> git clone https://github.com/nchapon/dotfiles.git
 
-> find ~/.dotfiles/ -type f -name ".*" -exec ln -s -f {} --target-directory=$HOME \;
+> cd dotfiles
 
-
-
-
+> ./install.sh
