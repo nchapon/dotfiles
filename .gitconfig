@@ -1,21 +1,16 @@
 [user]
-	name = Nicolas Chapon
-	email = nchapon@gmail.com
+    name = Nicolas Chapon
+    email = nchapon@gmail.com
 
 [core]
-        editor=vi
+   editor=vi
 
 [color]
-	ui=auto
-
-
-[diff]
-	tool = kdiff3
+    ui=auto
 
 [merge]
-       conflictstyle=merge
-       tool = kdiff3
-	
+    conflictstyle=merge
+
 [alias]
 undo = reset --hard HEAD~1
 uncommit = reset HEAD~1
@@ -33,13 +28,3 @@ st = status
 br = branch
 co = checkout
 cp = cherry-pick
-
-
-
-
-
-
-
-
-
-
