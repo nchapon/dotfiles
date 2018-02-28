@@ -1,0 +1,5 @@
+[user]
+        name = nchapon
+        email = nchapon@gmail.com
+[credential]
+        helper = osxkeychain
