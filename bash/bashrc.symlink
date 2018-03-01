@@ -5,7 +5,13 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-
+# Stash your environment variables in ~/bash.local. This means they'll stay out
+# of your main dotfiles repository (which may be public, like this one), but
+# you'll have access to them in your scripts.
+if [[ -a ~/.bash.local ]]
+then
+  source ~/.bash.local
+fi
 
 
 # don't put duplicate lines in the history. See bash(1) for more options
