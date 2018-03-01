@@ -152,5 +152,15 @@ then
   fi
 fi
 
+if [ "$(uname -s)" == "Linux" ]
+then
+  info "installing dependencies"
+  # Install software
+  echo "› $DOTFILES_ROOT/script/install-ubuntu"
+  $DOTFILES_ROOT/script/install-ubuntu
+fi
+
+
+
 echo ''
 echo '  All installed!'
