@@ -16,7 +16,7 @@ install_mvn () {
 
     echo 'Configuring Envrionment'
 
-    mv $TEMPORARY_DIRECTORY/apache-maven-* /opt/maven
+    mv $TEMPORARY_DIRECTORY/apache-maven-* $HOME/opt/maven
 
     echo 'Your Maven Installation is Complete.'
 }
