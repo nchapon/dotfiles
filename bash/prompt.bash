@@ -1,5 +1,7 @@
 # From http://bashrcgenerator.com/
-#export PS1="\[$(tput bold)\]\[\033[38;5;2m\]➜\[$(tput sgr0)\]\[$(tput sgr0)\]\[\033[38;5;15m\] \W \[$(tput sgr0)\]"
+
+
+# export PS1="\[$(tput bold)\]\[\033[38;5;2m\]➜\[$(tput sgr0)\]\[$(tput sgr0)\]\[\033[38;5;15m\] \W \[$(tput sgr0)\]"
 
 
 # Shell prompt based on the Solarized Dark theme.
@@ -7,11 +9,11 @@
 # Heavily inspired by @necolas’s prompt: https://github.com/necolas/dotfiles
 # iTerm → Profiles → Text → use 13pt Monaco with 1.1 vertical spacing.
 
-if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
-    export TERM='gnome-256color';
-elif infocmp xterm-256color >/dev/null 2>&1; then
-    export TERM='xterm-256color';
-fi;
+# if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
+#     export TERM='gnome-256color';
+# elif infocmp xterm-256color >/dev/null 2>&1; then
+#     export TERM='xterm-256color';
+# fi;
 
 prompt_git() {
     local s='';
@@ -57,7 +59,7 @@ prompt_git() {
 
         [ -n "${s}" ] && s=" [${s}]";
 
-        echo -e "${blue} (${1}${branchName}${blue})${red}${s}";
+        echo -e "${blue}(${orange}${branchName}${blue})${red}${s}";
     else
         return;
     fi;
@@ -91,25 +93,7 @@ else
     violet="\e[1;35m";
     white="\e[1;37m";
     yellow="\e[1;33m";
-fi;
+fi
 
-# Highlight the user name when logged in as root.
-if [[ "${USER}" == "root" ]]; then
-    userStyle="${red}";
-else
-    userStyle="${orange}";
-fi;
 
-# Highlight the hostname when connected via SSH.
-if [[ "${SSH_TTY}" ]]; then
-    hostStyle="${bold}${red}";
-else
-    hostStyle="${yellow}";
-fi;
-
-# Set the terminal title to the current working directory.
-PS1="\[\033]0;\w\007\]";
-PS1+="\[${bold}${green}\]➜ \[${white}\]\w"
-PS1+="\$(prompt_git \"${orange}\")"; # Git repository details
-PS1+=" \[${reset}\]"  # reset color
-export PS1;
+export PS1="\[\033[38;5;2m\]➜ \[$(tput sgr0)\] \w \[$(tput sgr0)\]\$(prompt_git) \[$(tput sgr0)\]"
