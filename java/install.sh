@@ -14,11 +14,10 @@ install_mvn () {
     tar xzf $DOWNLOAD_TO -C $TEMPORARY_DIRECTORY
     rm $DOWNLOAD_TO
 
-    echo 'Configuring Envrionment'
-
+    mkdir -p $HOME/opt
     mv $TEMPORARY_DIRECTORY/apache-maven-* $HOME/opt/maven
 
-    echo 'Your Maven Installation is Complete.'
+    echo 'Maven Installation is installed in: ' "$HOME/opt/maven"
 }
 
 
