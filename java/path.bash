@@ -5,7 +5,7 @@
 if [[ -f /usr/libexec/java_home ]]; then
     export JAVA_HOME="$(/usr/libexec/java_home)"
 else
-    export JAVA_HOME="/opt/jdk1.8.0_152"
+    export JAVA_HOME="$HOME/opt/jdk1.8.0_152"
 fi
 
 
