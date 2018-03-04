@@ -1,0 +1,17 @@
+#!/usr/local/bin/bash
+export DOTFILES="$(cd $(dirname "${BASH_SOURCE:-${(%):-%x}}") && pwd -P)"
+
+
+
+
+# Library
+
+function _os {
+  case $OSTYPE in
+    linux*) if   [[ -f /etc/arch-release   ]]; then echo arch
+            elif [[ -f /etc/debian_version ]]; then echo debian
+            fi ;;
+    darwin*) echo macos ;;
+    cygwin*) echo cygwin ;;
+  esac
+}
