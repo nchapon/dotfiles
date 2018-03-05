@@ -12,7 +12,7 @@ $DOTFILES/init/osx/set-defaults.sh
 
 # Install software
 info "Installing OSX dependencies"
-if source homebrew.sh | while read -r data; do info "$data"; done
+if source $DOTFILES/init/osx/homebrew.sh | while read -r data; do info "$data"; done
 then
     success "Dependencies installed"
 else
