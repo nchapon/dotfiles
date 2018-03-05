@@ -1,11 +1,8 @@
-#!/usr/local/bin/bash
+#!/usr/bin/env bash
 export DOTFILES="$(cd $(dirname "${BASH_SOURCE:-${(%):-%x}}") && pwd -P)"
 
 
-
-
 # Library
-
 function _os {
   case $OSTYPE in
     linux*) if   [[ -f /etc/arch-release   ]]; then echo arch
@@ -14,4 +11,22 @@ function _os {
     darwin*) echo macos ;;
     cygwin*) echo cygwin ;;
   esac
+}
+
+
+function _source {
+  [[ -f $1 ]] && source "$1"
+}
+
+function _load {
+  case $1 in
+    /*) source "$1" ;;
+    *)  source "$DOTFILES/$1" ;;
+  esac
+}
+
+function _load_all {
+  for file in "$DOTFILES"/**/"$1"; do
+    [[ -e $file ]] && source "$file"
+  done
 }
