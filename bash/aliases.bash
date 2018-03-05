@@ -2,6 +2,7 @@ alias reload='. ~/.bashrc'
 alias cls='clear' # Good 'ol Clear Screen command
 
 
+# Macos ls colors
 if $(gls &>/dev/null)
 then
   alias ls="gls -F --color"

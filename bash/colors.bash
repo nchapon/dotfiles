@@ -1,12 +1,34 @@
 #!/usr/bin/env bash
 
-#  From https://github.com/ChristopherA/dotfiles-stow/blob/master/0-shell/.bash_profile
-if [[ $(uname) = "Darwin"  ]]; then
+source $HOME/.dotfiles/env
+
+_macos_colors () {
     export CLICOLOR=1
-fi
+    export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
+}
 
-export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 
+# enable color support of ls and also add handy aliases
+_linux_colors () {
+    if [ -x /usr/bin/dircolors ]; then
+        test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+        alias ls='ls --color=auto'
+        alias grep='grep --color=auto'
+        alias fgrep='fgrep --color=auto'
+        alias egrep='egrep --color=auto'
+    fi
+}
 
-## grep colors to highlight matches
-export GREP_OPTIONS='--color=auto'
+os=$(_os)
+case "${os}" in
+
+    macos)
+        _macos_colors
+        ;;
+    debian)
+        _linux_colors
+        ;;
+    *)
+        echo-fail "${os} not recognized"
+        ;;
+esac
