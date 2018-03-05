@@ -19,16 +19,8 @@ _linux_colors () {
     fi
 }
 
-os=$(_os)
-case "${os}" in
-
-    macos)
-        _macos_colors
-        ;;
-    debian)
-        _linux_colors
-        ;;
-    *)
-        echo-fail "${os} not recognized"
-        ;;
-esac
+if is_osx; then
+  _macos_colors
+else
+  _linux_colors
+fi
