@@ -82,4 +82,4 @@ need_push () {
   fi
 }
 
-export PS1=" \w \$(git_dirty)\$(need_push)\n \[${green}\]➜ \[${reset}\]"
+export PS1="${bold}╭─ ${green}\h ${reset}\w \$(git_dirty)\$(need_push)\n╰─ $ \[${reset}\]"
