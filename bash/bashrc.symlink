@@ -17,15 +17,10 @@ then
   source ~/.bash.local
 fi
 
-# Bash completion
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-  . /etc/bash_completion
-fi
-
-
 _load_all env.bash
 _load_all aliases.bash
 
 _load bash/prompt.bash
+_load bash/completion.bash
 _load bash/colors.bash
 _load bash/options.bash
