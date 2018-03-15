@@ -16,3 +16,4 @@ brew 'wget'
 
 cask 'iterm2'
 cask 'vlc'
+cask 'dropbox'
