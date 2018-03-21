@@ -8,8 +8,8 @@ set -e
 
 info "Install Ubuntu dependencies"
 
-info "Running installers"
+info "Running topics initializers"
 
 cd $DOTFILES
 # find the installers and run them iteratively
-find . -name install.sh | while read installer ; do sh -c "${installer}" ; done
+find . -name _init.sh | while read init ; do sh -c "${init}" ; done
