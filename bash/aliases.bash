@@ -1,6 +1,7 @@
 alias reload='. ~/.bashrc'
 alias cls='clear' # Good 'ol Clear Screen command
 
+alias cdp='cd ~/Projects'
 
 # Macos ls colors
 if $(gls &>/dev/null)
