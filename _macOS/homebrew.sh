@@ -9,6 +9,6 @@ echo "brew update"
 brew update
 
 # Run Homebrew through the Brewfile
-cd $DOTFILES/_init/osx
+cd $DOTFILES/_macOS
 echo "› brew bundle"
 brew bundle

@@ -42,7 +42,7 @@ function _os {
 }
 
 # OS detection
-function is_osx() {
+function is_macOS() {
   [[ "$OSTYPE" =~ ^darwin ]] || return 1
 }
 function is_ubuntu() {
@@ -68,7 +68,7 @@ function _load_all {
 }
 
 function get_os() {
-  for os in osx ubuntu; do
+  for os in macOS ubuntu; do
     is_$os; [[ $? == ${1:-0} ]] && echo $os
   done
 }

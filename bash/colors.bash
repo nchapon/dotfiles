@@ -19,7 +19,7 @@ _linux_colors () {
     fi
 }
 
-if is_osx; then
+if is_macOS; then
   _macos_colors
 else
   _linux_colors

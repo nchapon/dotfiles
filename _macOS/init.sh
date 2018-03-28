@@ -8,11 +8,11 @@ source $HOME/.dotfiles/env
 set -e
 
 # Set macOS defaults
-$DOTFILES/_init/osx/set-defaults.sh
+$DOTFILES/_macOS/set-defaults.sh
 
 # Install software
 info "Installing OSX dependencies"
-if source $DOTFILES/_init/osx/homebrew.sh | while read -r data; do info "$data"; done
+if source $DOTFILES/_macOS/homebrew.sh | while read -r data; do info "$data"; done
 then
     success "Dependencies installed"
 else

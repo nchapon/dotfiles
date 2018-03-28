@@ -14,7 +14,7 @@ _linux_completion () {
 }
 
 
-if is_osx; then
+if is_macOS; then
   _macos_completion
 else
   _linux_completion

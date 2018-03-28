@@ -21,7 +21,7 @@ _docker_macos_completion () {
     fi
 }
 
-if is_osx; then
+if is_macOS; then
     info "[docker] Install Docker Shell Completion"
     _docker_macos_completion
 fi
