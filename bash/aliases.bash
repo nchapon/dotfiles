@@ -1,13 +1,12 @@
+# cd "$(dirname "${BASH_SOURCE[0]}")" \
+#     && . "../env"
+
+declare -r CURRENT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+
+
 alias reload='. ~/.bashrc'
 alias cls='clear' # Good 'ol Clear Screen command
 
 alias cdp='cd ~/Projects'
 
-# Macos ls colors
-if $(gls &>/dev/null)
-then
-  alias ls="gls -F --color"
-  alias l="gls -lAh --color"
-  alias ll="gls -l --color"
-  alias la='gls -A --color'
-fi
+_source ${CURRENT_DIR}/_$(get_os)/aliases.bash

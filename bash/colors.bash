@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
-source $HOME/.dotfiles/env
+cd "$(dirname "${BASH_SOURCE[0]}")" \
+    && . "../env"
 
 _source _$(get_os)/colors.bash
