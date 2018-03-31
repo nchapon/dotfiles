@@ -9,18 +9,35 @@
 
 source $HOME/.dotfiles/env
 
-# Stash your environment variables in ~/bash.local. This means they'll stay out
-# of your main dotfiles repository (which may be public, like this one), but
-# you'll have access to them in your scripts.
-if [[ -a ~/.bash.local ]]
-then
-  source ~/.bash.local
-fi
+source_bash_files () {
 
-_load_all env.bash
-_load_all aliases.bash
+    declare -r CURRENT_DIR="$(pwd)"
 
-_load bash/prompt.bash
-_load bash/completion.bash
-_load bash/colors.bash
-_load bash/options.bash
+
+
+    # Stash your environment variables in ~/bash.local. This means they'll stay out
+    # of your main dotfiles repository (which may be public, like this one), but
+    # you'll have access to them in your scripts.
+    if [[ -a ~/.bash.local ]]
+    then
+        source ~/.bash.local
+    fi
+
+    _load_all env.bash
+    _load_all aliases.bash
+
+    _load bash/prompt.bash
+    _load bash/completion.bash
+    _load bash/colors.bash
+    _load bash/options.bash
+
+    cd "$CURRENT_DIR"
+
+
+}
+
+source_bash_files
+
+unset -f source_bash_files
+
+clear
