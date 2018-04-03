@@ -2,17 +2,17 @@
 #
 # Installs macos things.
 
-
-source $HOME/.dotfiles/env
+cd "$(dirname "${BASH_SOURCE[0]}")" \
+    && . "../utils.sh"
 
 set -e
 
 # Set macOS defaults
-$DOTFILES/_macOS/set-defaults.sh
+./set-defaults.sh
 
 # Install software
 info "Installing OSX dependencies"
-if source $DOTFILES/_macOS/homebrew.sh | while read -r data; do info "$data"; done
+if source homebrew.sh | while read -r data; do info "$data"; done
 then
     success "Dependencies installed"
 else
@@ -20,4 +20,5 @@ else
 fi
 
 info "Running initializers"
-find . -name _init.sh | while read init ; do sh -c "${init}" ; done
+
+find -H "$DOTFILES" -name _init.sh | while read init ; do sh -c "${init}" ; done

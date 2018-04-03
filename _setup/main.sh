@@ -2,15 +2,17 @@
 #
 # installs things.
 
-source ./env
+cd "$(dirname "${BASH_SOURCE[0]}")" \
+    && . "./utils.sh"
 
 set -e
 
-echo ''
+echo ' '
 
 
 setup_gitconfig () {
-  if ! [ -f git/gitconfig.local.symlink ]
+
+  if ! [ -f ../git/gitconfig.local.symlink ]
   then
     info 'setup gitconfig'
 
@@ -25,7 +27,7 @@ setup_gitconfig () {
     user ' - What is your github author email?'
     read -e git_authoremail
 
-    sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" -e "s/GIT_CREDENTIAL_HELPER/$git_credential/g" git/gitconfig.local.symlink.example > git/gitconfig.local.symlink
+    sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" -e "s/GIT_CREDENTIAL_HELPER/$git_credential/g" ../git/gitconfig.local.symlink.example > ../git/gitconfig.local.symlink
 
     success 'gitconfig'
   fi
@@ -122,7 +124,7 @@ install_dotfiles () {
 setup_gitconfig
 install_dotfiles
 
-$DOTFILES/_$(get_os)/init.sh
+_$(get_os)/main.sh
 
 
 echo ''

@@ -7,7 +7,7 @@
 # If not running interactively, don't do anything
 # [ -z "$PS1" ] && return
 
-source $HOME/.dotfiles/env
+source $HOME/.dotfiles/_setup/utils.sh
 
 source_bash_files () {
 

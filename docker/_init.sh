@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Init docker bash completion
 
-source $HOME/.dotfiles/env
+cd "$(dirname "${BASH_SOURCE[0]}")" \
+    && . "../_setup/utils.sh"
 
 set -e
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-export DOTFILES="$(cd $(dirname "${BASH_SOURCE:-${(%):-%x}}") && pwd -P)"
+export DOTFILES=$HOME/.dotfiles
+
 
 
 

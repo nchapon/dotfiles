@@ -1,5 +1,5 @@
 cd "$(dirname "${BASH_SOURCE[0]}")" \
-     && . "../env"
+     && . "../_setup/utils.sh"
 
 alias reload='. ~/.bashrc'
 alias cls='clear' # Good 'ol Clear Screen command

@@ -2,7 +2,8 @@
 #
 # Run all topics installers.
 
-source $HOME/.dotfiles/env
+cd "$(dirname "${BASH_SOURCE[0]}")" \
+    && . "../utils.sh"
 
 set -e
 
