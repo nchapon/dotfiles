@@ -31,6 +31,7 @@ source_bash_files () {
     _load bash/colors.bash
     _load bash/options.bash
 
+    add_path "$HOME/.dotfiles/bin"
     cd "$CURRENT_DIR"
 
 

@@ -8,7 +8,10 @@ set -e
 
 install_rust () {
     curl https://sh.rustup.rs -sSf | sh
+    # Be sure rust will be in path for next steps
+    add_path "$HOME/.cargo/bin"
     success "[rust] Successfull installed"
+
 }
 
 

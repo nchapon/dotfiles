@@ -17,4 +17,6 @@ fi
 
 
 export M2_HOME=$HOME/opt/maven
-export PATH="$M2_HOME/bin:$JAVA_HOME/bin:$PATH"
+
+add_path "$M2_HOME/bin"
+add_path "$JAVA_HOME/bin"

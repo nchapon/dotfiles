@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-export PATH="$PATH:$HOME/.cargo/bin"
+add_path "$HOME/.cargo/bin"
