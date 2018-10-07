@@ -13,7 +13,7 @@ source_bash_files () {
 
     declare -r CURRENT_DIR="$(pwd)"
 
-
+    add_path "$HOME/.local/bin"
 
     # Stash your environment variables in ~/bash.local. This means they'll stay out
     # of your main dotfiles repository (which may be public, like this one), but
