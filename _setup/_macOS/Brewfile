@@ -17,6 +17,7 @@ brew 'pinentry-mac'
 brew 'the_silver_searcher'
 brew 'tree'
 brew 'wget'
+brew 'yarn'
 brew 'youtube-dl'
 
 cask 'dropbox'
