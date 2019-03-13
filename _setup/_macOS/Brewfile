@@ -20,6 +20,7 @@ brew 'wget'
 brew 'yarn'
 brew 'youtube-dl'
 
+cask 'balenaetcher'
 cask 'dropbox'
 cask 'gimp'
 cask 'inkscape'
