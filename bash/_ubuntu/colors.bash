@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# To be sure TERM is defined
+export TERM=xterm-256color
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
