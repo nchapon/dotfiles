@@ -71,8 +71,8 @@ defaults write NSGlobalDomain com.apple.springing.enabled -bool true
 defaults write NSGlobalDomain com.apple.springing.delay -float 0
 
 # Avoid creating .DS_Store files on network or USB volumes
-defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+defaults write com.apple.desktopservices DSDontWriteNetworkStores true
+defaults write com.apple.desktopservices DSDontWriteUSBStores true
 
 # Disable disk image verification
 defaults write com.apple.frameworks.diskimages skip-verify -bool true
@@ -88,10 +88,6 @@ defaults write com.apple.finder OpenWindowForNewRemovableDisk -bool true
 # Four-letter codes for the other view modes: `icnv`, `clmv`, `Flwv`
 defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 
-
-# Avoid creating .DS_Store files on network or USB volumes
-defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 
 # Show the ~/Library folder
 chflags nohidden ~/Library
