@@ -15,13 +15,7 @@ source_bash_files () {
 
     add_path "$HOME/.local/bin"
 
-    # Stash your environment variables in ~/bash.local. This means they'll stay out
-    # of your main dotfiles repository (which may be public, like this one), but
-    # you'll have access to them in your scripts.
-    if [[ -a ~/.bash.local ]]
-    then
-        source ~/.bash.local
-    fi
+
 
     _load_all env.bash
     _load_all aliases.bash
@@ -32,6 +26,16 @@ source_bash_files () {
     _load bash/options.bash
 
     add_path "$HOME/.dotfiles/bin"
+
+    # Stash your environment variables in ~/bash.local. This means they'll stay out
+    # of your main dotfiles repository (which may be public, like this one), but
+    # you'll have access to them in your scripts.
+    if [[ -a ~/.bash.local ]]
+    then
+        source ~/.bash.local
+    fi
+
+
     cd "$CURRENT_DIR"
 
 
@@ -40,5 +44,7 @@ source_bash_files () {
 source_bash_files
 
 unset -f source_bash_files
+
+
 
 clear
