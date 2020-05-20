@@ -2,6 +2,7 @@ cask_args appdir: '/Applications'
 
 tap 'homebrew/bundle'
 
+brew 'awscli'
 brew 'borkdude/brew/babashka'
 brew 'bash-completion'
 brew 'coreutils'
