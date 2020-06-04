@@ -28,6 +28,7 @@ brew 'youtube-dl'
 
 
 cask 'balenaetcher'
+cask 'basictex'
 cask 'dropbox'
 cask 'gimp'
 cask 'google-chrome'
