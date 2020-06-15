@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+if [[ $# -ne 1 ]]; then
+    echo "Please specify filename"
+    exit 1
+fi
+
+filename=$1
+output="${filename%.*}"
+
+convert "${filename}" -resize 800x600 -quality 80 "${output}.jpeg"
+echo ">> ${filename} resized -> ${output}.jpeg"
