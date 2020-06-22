@@ -12,7 +12,7 @@ install_mvn () {
 
     info "Downloading Maven to: $DOWNLOAD_TO"
 
-    wget -O "$DOWNLOAD_TO" http://apache.mediamirrors.org/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz
+    wget -O "$DOWNLOAD_TO" http://apache.mediamirrors.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
 
     info 'Extracting Maven'
     tar xzf $DOWNLOAD_TO -C $TEMPORARY_DIRECTORY
@@ -25,9 +25,9 @@ install_mvn () {
 }
 
 info "[java] Running java installer"
-if test ! $(which mvn)
+if [[ -d $HOME/opt/maven ]]
 then
-    install_mvn
-else
     success "[java] maven is already installed"
+else
+    install_mvn
 fi
