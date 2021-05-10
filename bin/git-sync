@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -x
+DIR=$( pwd )
+OUTPUT="$HOME/Dropbox/nch-sync/"${DIR##*/}
+
+mkdir -p ${OUTPUT}
+git format-patch origin/master
+mv *.patch ${OUTPUT}
+
+echo "Executing format-patch in $OUTPUT..."

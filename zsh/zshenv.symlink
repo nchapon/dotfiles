@@ -1,3 +1,5 @@
+# -*- mode: sh; -*-
+
 export PATH=/opt/local/bin/:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=~/.local/bin:$PATH
@@ -6,3 +8,11 @@ export PATH=~/.local/bin:$PATH
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/Users/nchapon/.sdkman"
 [[ -s "/Users/nchapon/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/nchapon/.sdkman/bin/sdkman-init.sh"
+
+
+. $HOME/.asdf/asdf.sh
+
+
+export CLOUDSDK_PYTHON="$(brew --prefix)/opt/python@3.8/libexec/bin/python"
+source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
