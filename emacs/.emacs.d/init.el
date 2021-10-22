@@ -604,7 +604,7 @@
           company-transformers '(company-sort-by-occurrence))))
 
 (use-package org
-  :ensure org-plus-contrib
+  
   :bind (("C-c l" . org-store-link)
          ("C-c c" . org-capture)
          ("C-c a" . org-agenda)
@@ -636,6 +636,8 @@
   ;; GPG key to use for encryption
   ;; Either the Key ID or set to nil to use symmetric encryption.
   (setq org-crypt-key "0DF2D6C6E8443FE7"))
+
+  (use-package org-contrib)
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode)
