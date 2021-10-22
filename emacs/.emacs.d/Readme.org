@@ -308,7 +308,7 @@ Some custom preferences dedicated to MacOS
 *** Mac right option
  This will allow you to use the right ~⌥~ key to write symbols ={[]}=. The left ~⌥~ key can be used as the Meta
  key.
- #+begin_src emacs-lisp
+ #+begin_src emacs-lisp 
    (when is-mac
      (setq-default mac-right-option-modifier nil))
  #+end_src
@@ -1199,7 +1199,7 @@ Helpers Functions
 #+end_src
 
 
-*** Journal -> <C-c f j>
+*** Journal -> =C-z f j=
  Function to easily load weekly journal
  #+begin_src emacs-lisp
 
@@ -1216,11 +1216,11 @@ Helpers Functions
 
    (setq org-default-notes-file (nc--get-journal-file-today))
 
-   (global-set-key (kbd "C-c f j") 'nc/journal-file-today)
+   (global-set-key (kbd "C-z f j") 'nc/journal-file-today)
  #+end_src
 
 
-Insert daily heading in journal file =C-c-o-i=
+Insert daily heading in journal file =C-z-o-i=
 
    #+begin_src emacs-lisp
      (defun nc--autoinsert-yas-expand ()
@@ -1276,7 +1276,7 @@ Insert daily heading in journal file =C-c-o-i=
            (error "Insert failed"))))
 
      ;; bind-key
-      (bind-key "C-c o i" 'nc/insert-daily-heading)
+      (bind-key "C-z o i" 'nc/insert-daily-heading)
    #+end_src
 
 *** Tasks
@@ -1799,9 +1799,195 @@ Targets include this file and any file contributing to the agenda - up to 2 leve
 #+begin_src emacs-lisp
   (setq org-src-fontify-natively t)
 #+end_src
+*** Org Mode Utilities Functions
+**** Manipulate hours/minutes in tables
+From https://orgmode.org/worg/org-hacks.html#org0d09b33
+#+begin_src emacs-lisp
+(defun nc--org-time-string-to-seconds (s)
+  "Convert a string HH:MM:SS to a number of seconds."
+  (cond
+   ((and (stringp s)
+         (string-match "\\([0-9]+\\):\\([0-9]+\\):\\([0-9]+\\)" s))
+    (let ((hour (string-to-number (match-string 1 s)))
+          (min (string-to-number (match-string 2 s)))
+          (sec (string-to-number (match-string 3 s))))
+      (+ (* hour 3600) (* min 60) sec)))
+   ((and (stringp s)
+         (string-match "\\([0-9]+\\):\\([0-9]+\\)" s))
+    (let ((min (string-to-number (match-string 1 s)))
+          (sec (string-to-number (match-string 2 s))))
+      (+ (* min 60) sec)))
+   ((stringp s) (string-to-number s))
+   (t s)))
+
+(defun nc--org-time-seconds-to-string (secs)
+  "Convert a number of seconds to a time string."
+  (cond ((>= secs 3600) (format-seconds "%h:%.2m:%.2s" secs))
+        ((>= secs 60) (format-seconds "%m:%.2s" secs))
+        (t (format-seconds "%s" secs))))
+
+(defmacro nc/with-time (time-output-p &rest exprs)
+  "Evaluate an org-table formula, converting all fields that look
+like time data to integer seconds.  If TIME-OUTPUT-P then return
+the result as a time value."
+  (list
+   (if time-output-p 'nc--org-time-seconds-to-string 'identity)
+   (cons 'progn
+         (mapcar
+          (lambda (expr)
+            `,(cons (car expr)
+                    (mapcar
+                     (lambda (el)
+                       (if (listp el)
+                           (list 'with-time nil el)
+                         (nc--org-time-string-to-seconds el)))
+                     (cdr expr))))
+          `,@exprs))))
 
 
+#+end_src
 
+
+**** Attachments folder
+I'm not a big fan of =org-attachments= so I prefer to store all my
+attachements in a subfolder *assets/buffer-name-sans-extension* that
+correspond to current buffer I'm editing.
+
+#+begin_src emacs-lisp
+  (defun nc/create-buffer-attachment-directory ()
+      "Create assets directory for org mode file"
+    (interactive)
+    (let ((assets-buffer-dir (file-name-sans-extension (buffer-name) )))
+      (f-mkdir "assets" assets-buffer-dir)
+      (message "Creation %s folder for current folder" assets-buffer-dir)))
+#+end_src
+
+**** Translate capital keywords to lowercase
+From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate-capital-keywords-old-to-lower-case-new
+
+#+begin_src emacs-lisp
+  (defun nc/org-syntax-convert-keyword-case-to-lower ()
+    "Convert all #+KEYWORDS to #+keywords."
+    (interactive)
+    (save-excursion
+      (goto-char (point-min))
+      (let ((count 0)
+            (case-fold-search nil))
+        (while (re-search-forward "^[ \t]*#\\+[A-Z_]+" nil t)
+          (unless (s-matches-p "RESULTS" (match-string 0))
+            (replace-match (downcase (match-string 0)) t)
+            (setq count (1+ count))))
+        (message "Replaced %d occurences" count))))
+#+end_src
+** My functions
+
+*** Emacs Config File -> =C-z ;=
+
+ #+begin_src emacs-lisp
+   (defun nc/goto-emacs-config ()
+       "Edit Readme.org"
+       (interactive)
+       (find-file "~/.emacs.d/Readme.org"))
+
+     (global-set-key (kbd "C-z ;") 'nc/goto-emacs-config)
+ #+end_src
+
+*** My personal credentials -> =C-z f p=
+
+#+begin_src emacs-lisp
+    (defun nc/goto-my-credentials ()
+      "Goto my credentials"
+      (interactive)
+      ;; before disable super-save-mode
+      ;;(super-save-stop)
+      (find-file (concat nc/org-default-personal-dir "/password.gpg")))
+
+  (global-set-key (kbd "C-z f p") 'nc/goto-my-credentials)
+#+end_src
+
+
+*** Pseudo uuid -> =C-z i u=
+
+Generate a 32 random pseudo uuid
+
+#+begin_src emacs-lisp
+  (defun nc--random-alnum ()
+    (let* ((alnum "abcdef0123456789")
+           (i (% (abs (random)) (length alnum))))
+      (substring alnum i (1+ i))))
+
+  (defun nc/uuid ()
+    "Generate a pseudo UUID"
+    (interactive)
+    (dotimes (i 32) (insert (nc--random-alnum))))
+
+  (bind-key "C-z i u" 'nc/uuid)
+#+end_src
+
+
+*** Password generator -> =C-z i p=
+Generates a strong password
+
+ #+begin_src emacs-lisp
+   (defun nc--random-char ()
+       (let* ((alnum "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-/%+*?&#[]()={}_<>!$,;:^µ0123456789")
+              (i (% (abs (random)) (length alnum))))
+         (substring alnum i (1+ i))))
+
+
+   (defun nc/generate-password ()
+       "Generates a strong password"
+       (interactive)
+       (dotimes (i 12) (insert (nc--random-char))))
+
+   (bind-key "C-z i p" 'nc/generate-password)
+ #+end_src
+
+*** TimeSlot -> =C-z i t=
+Insert time slot mainly used when I schedule meeting or appointment.
+#+begin_src emacs-lisp
+  (defvar current-hour-format "%H:00")
+
+  (defun nc/insert-time-slot ()
+    "Insert Time Slot"
+    (interactive)
+    (let ((begin (format-time-string current-hour-format (current-time)))
+          (end (format-time-string current-hour-format (time-add (current-time) (seconds-to-time 3600)))))
+      (insert (concat begin "-" end))))
+
+  (bind-key "C-z i t" 'nc/insert-time-slot)
+
+#+end_src
+
+*** Inserting time stamps -> =C-z i d/D=
+   From : https://github.com/novoid/dot-emacs/blob/master/config.org#inserting-time-stamps--my-map-ddtt
+
+#+begin_src emacs-lisp
+  (defun nc/insert-datestamp()
+    "Insert the current date in yyyy-mm-dd format."
+    (interactive "*")
+    (if (eq major-mode 'org-mode)
+        (progn
+          (org-insert-time-stamp nil nil nil)
+          (insert " "))
+        (insert (format-time-string "%Y-%m-%d" (current-time)))))
+
+  (bind-key "C-z i d" 'nc/insert-datestamp)
+ #+end_src
+
+
+ #+begin_src emacs-lisp
+   (defun nc/insert-datestamp-inactive()
+     "Insert the current date in yyyy-mm-dd format."
+     (interactive "*")
+     (if (eq major-mode 'org-mode)
+         (progn
+       (org-insert-time-stamp nil nil t)
+       (insert " "))
+       (insert (format-time-string "%Y-%m-%d" (current-time)))))
+
+   (bind-key "C-z i D" 'nc/insert-datestamp-inactive)
+ #+end_src
 
 ** =(provide 'init)=
 

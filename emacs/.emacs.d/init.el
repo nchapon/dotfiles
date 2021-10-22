@@ -751,7 +751,7 @@
 
 (setq org-default-notes-file (nc--get-journal-file-today))
 
-(global-set-key (kbd "C-c f j") 'nc/journal-file-today)
+(global-set-key (kbd "C-z f j") 'nc/journal-file-today)
 
 (defun nc--autoinsert-yas-expand ()
       "Replace text in yasnippet template."
@@ -806,7 +806,7 @@
       (error "Insert failed"))))
 
 ;; bind-key
- (bind-key "C-c o i" 'nc/insert-daily-heading)
+ (bind-key "C-z o i" 'nc/insert-daily-heading)
 
 (setq org-todo-keywords
  '((sequence "TODO(t)" "NEXT(n)" "SOMEDAY(.)" "MAYBE(M)"  "|" "DONE(d)")
@@ -1189,6 +1189,141 @@
 (setq org-confirm-babel-evaluate nil)
 
 (setq org-src-fontify-natively t)
+
+(defun nc--org-time-string-to-seconds (s)
+  "Convert a string HH:MM:SS to a number of seconds."
+  (cond
+   ((and (stringp s)
+         (string-match "\\([0-9]+\\):\\([0-9]+\\):\\([0-9]+\\)" s))
+    (let ((hour (string-to-number (match-string 1 s)))
+          (min (string-to-number (match-string 2 s)))
+          (sec (string-to-number (match-string 3 s))))
+      (+ (* hour 3600) (* min 60) sec)))
+   ((and (stringp s)
+         (string-match "\\([0-9]+\\):\\([0-9]+\\)" s))
+    (let ((min (string-to-number (match-string 1 s)))
+          (sec (string-to-number (match-string 2 s))))
+      (+ (* min 60) sec)))
+   ((stringp s) (string-to-number s))
+   (t s)))
+
+(defun nc--org-time-seconds-to-string (secs)
+  "Convert a number of seconds to a time string."
+  (cond ((>= secs 3600) (format-seconds "%h:%.2m:%.2s" secs))
+        ((>= secs 60) (format-seconds "%m:%.2s" secs))
+        (t (format-seconds "%s" secs))))
+
+(defmacro nc/with-time (time-output-p &rest exprs)
+  "Evaluate an org-table formula, converting all fields that look
+like time data to integer seconds.  If TIME-OUTPUT-P then return
+the result as a time value."
+  (list
+   (if time-output-p 'nc--org-time-seconds-to-string 'identity)
+   (cons 'progn
+         (mapcar
+          (lambda (expr)
+            `,(cons (car expr)
+                    (mapcar
+                     (lambda (el)
+                       (if (listp el)
+                           (list 'with-time nil el)
+                         (nc--org-time-string-to-seconds el)))
+                     (cdr expr))))
+          `,@exprs))))
+
+(defun nc/create-buffer-attachment-directory ()
+    "Create assets directory for org mode file"
+  (interactive)
+  (let ((assets-buffer-dir (file-name-sans-extension (buffer-name) )))
+    (f-mkdir "assets" assets-buffer-dir)
+    (message "Creation %s folder for current folder" assets-buffer-dir)))
+
+(defun nc/org-syntax-convert-keyword-case-to-lower ()
+  "Convert all #+KEYWORDS to #+keywords."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((count 0)
+          (case-fold-search nil))
+      (while (re-search-forward "^[ \t]*#\\+[A-Z_]+" nil t)
+        (unless (s-matches-p "RESULTS" (match-string 0))
+          (replace-match (downcase (match-string 0)) t)
+          (setq count (1+ count))))
+      (message "Replaced %d occurences" count))))
+
+(defun nc/goto-emacs-config ()
+    "Edit Readme.org"
+    (interactive)
+    (find-file "~/.emacs.d/Readme.org"))
+
+  (global-set-key (kbd "C-z ;") 'nc/goto-emacs-config)
+
+(defun nc/goto-my-credentials ()
+    "Goto my credentials"
+    (interactive)
+    ;; before disable super-save-mode
+    ;;(super-save-stop)
+    (find-file (concat nc/org-default-personal-dir "/password.gpg")))
+
+(global-set-key (kbd "C-z f p") 'nc/goto-my-credentials)
+
+(defun nc--random-alnum ()
+  (let* ((alnum "abcdef0123456789")
+         (i (% (abs (random)) (length alnum))))
+    (substring alnum i (1+ i))))
+
+(defun nc/uuid ()
+  "Generate a pseudo UUID"
+  (interactive)
+  (dotimes (i 32) (insert (nc--random-alnum))))
+
+(bind-key "C-z i u" 'nc/uuid)
+
+(defun nc--random-char ()
+    (let* ((alnum "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-/%+*?&#[]()={}_<>!$,;:^µ0123456789")
+           (i (% (abs (random)) (length alnum))))
+      (substring alnum i (1+ i))))
+
+
+(defun nc/generate-password ()
+    "Generates a strong password"
+    (interactive)
+    (dotimes (i 12) (insert (nc--random-char))))
+
+(bind-key "C-z i p" 'nc/generate-password)
+
+(defvar current-hour-format "%H:00")
+
+(defun nc/insert-time-slot ()
+  "Insert Time Slot"
+  (interactive)
+  (let ((begin (format-time-string current-hour-format (current-time)))
+        (end (format-time-string current-hour-format (time-add (current-time) (seconds-to-time 3600)))))
+    (insert (concat begin "-" end))))
+
+(bind-key "C-z i t" 'nc/insert-time-slot)
+
+(defun nc/insert-datestamp()
+  "Insert the current date in yyyy-mm-dd format."
+  (interactive "*")
+  (if (eq major-mode 'org-mode)
+      (progn
+        (org-insert-time-stamp nil nil nil)
+        (insert " "))
+      (insert (format-time-string "%Y-%m-%d" (current-time)))))
+
+(bind-key "C-z i d" 'nc/insert-datestamp)
+
+(defun nc/insert-datestamp-inactive()
+  "Insert the current date in yyyy-mm-dd format."
+  (interactive "*")
+  (if (eq major-mode 'org-mode)
+      (progn
+    (org-insert-time-stamp nil nil t)
+    (insert " "))
+    (insert (format-time-string "%Y-%m-%d" (current-time)))))
+
+(bind-key "C-z i D" 'nc/insert-datestamp-inactive)
 
 ;; test
   (provide 'init)
