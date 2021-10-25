@@ -641,31 +641,43 @@
   :ensure t
   :diminish yas-minor-mode
   :config
-  (yas-global-mode 1)
-  (yas-reload-all))
+  (use-package yasnippet-snippets)
+  :hook
+  (after-init . yas-global-mode))
+
+(use-package consult-yasnippet
+  :bind
+  ("C-z y" . consult-yasnippet))
 
 (use-package company
-  :defer t
   :diminish ""
   :bind (("M-/" . company-complete)
-         ("C-c C-y" . company-yasnippet)
+         ("C-c y" . company-yasnippet)
          :map company-active-map
          ("C-p" . company-select-previous)
          ("C-n" . company-select-next)
          ("TAB" . company-complete-common-or-cycle)
          ("<tab>" . company-complete-common-or-cycle)
          ("C-d" . company-show-doc-buffer))
-  :init (global-company-mode)
+  :hook (after-init . global-company-mode)
+
+  :custom
+  (company-idle-delay 0.1)
+  (company-require-match 'never)
+  (company-minimum-prefix-length 2)
+  (company-tooltip-align-annotations t)
+  (company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
+                       company-preview-frontend
+                       company-echo-metadata-frontend))
+  (company-backends '(company-capf company-files company-dabbrev-code company-semantic))
+  (company-tooltip-minimum-width 30)
+  (company-tooltip-maximum-width 120)
+  )
+
+(use-package company-statistics
+  :after company
   :config
-  (progn
-    (setq company-idle-delay 0.1
-          ;; min prefix of 1 chars
-          company-minimum-prefix-length 2
-          company-selection-wrap-around t
-          company-show-numbers t
-          company-dabbrev-downcase nil
-          company-dabbrev-code-everywhere t
-          company-transformers '(company-sort-by-occurrence))))
+  (company-statistics-mode 1))
 
 (use-package org
   
