@@ -1028,23 +1028,29 @@ Smart parens for all modes with paredit bindings.
 #+begin_src emacs-lisp
   (use-package smartparens
     :defer t
-    :diminish ""
-    :init    
-      (require 'smartparens-config)        
-      ;(require 'smartparens-html)        
-      (smartparens-global-mode 1)
-      (show-smartparens-global-mode 1)
+    :diminish ""  
+    :hook (((clojure-mode
+             emacs-lisp-mode
+             common-lisp-mode
+             scheme-mode
+             lisp-mode
+             cider-repl-mode
+             inferior-lisp-mode
+             inferior-emacs-lisp-mode)
+            . smartparens-strict-mode)         
+           (prog-mode . smartparens-mode))
+  
     :bind (:map smartparens-mode-map
-           ("C-M-q" . sp-indent-defun)
-           :map smartparens-strict-mode-map
-           (";" . sp-comment))
+                ("C-M-q" . sp-indent-defun)
+                :map smartparens-strict-mode-map
+                (";" . sp-comment))
 
     :config
-    (progn
-      (sp-use-paredit-bindings)
-      (define-key smartparens-mode-map (kbd "M-r") 'sp-rewrap-sexp) ; needs to be set manually, because :bind section runs before config
-      (setq smartparens-strict-mode t)
-      (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p)))
+    (require 'smartparens-config)
+    (sp-use-paredit-bindings)
+    (define-key smartparens-mode-map (kbd "M-r") 'sp-rewrap-sexp) ; needs to be set manually, because :bind section runs before config
+    (setq smartparens-strict-mode t)
+    (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))
 
     (defun nc--create-newline-and-enter-sexp (&rest _ignored)
       "Open a new brace or bracket expression, with relevant newlines and indent. "
