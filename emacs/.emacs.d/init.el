@@ -1177,51 +1177,39 @@
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 
 (defun nc/org-show-next-heading-tidily ()
-    "Show next entry, keeping other entries closed."
-    (if (save-excursion (end-of-line) (outline-invisible-p))
-        (progn (org-show-entry) (show-children))
-      (outline-next-heading)
-      (unless (and (bolp) (org-on-heading-p))
-        (org-up-heading-safe)
-        (hide-subtree)
-        (error "Boundary reached"))
-      (org-overview)
-      (org-reveal t)
-      (org-show-entry)
-      (show-children)))
+  "Show next entry, keeping other entries closed."
+  (if (save-excursion (end-of-line) (outline-invisible-p))
+      (progn (org-show-entry) (show-children))
+    (outline-next-heading)
+    (unless (and (bolp) (org-on-heading-p))
+      (org-up-heading-safe)
+      (hide-subtree)
+      (error "Boundary reached"))
+    (org-overview)
+    (org-reveal t)
+    (org-show-entry)
+    (show-children)))
 
-  (defun nc/org-show-previous-heading-tidily ()
-    "Show previous entry, keeping other entries closed."
-    (let ((pos (point)))
-      (outline-previous-heading)
-      (unless (and (< (point) pos) (bolp) (org-on-heading-p))
-        (goto-char pos)
-        (hide-subtree)
-        (error "Boundary reached"))
-      (org-overview)
-      (org-reveal t)
-      (org-show-entry)
-      (show-children)))
+(defun nc/org-show-previous-heading-tidily ()
+  "Show previous entry, keeping other entries closed."
+  (let ((pos (point)))
+    (outline-previous-heading)
+    (unless (and (< (point) pos) (bolp) (org-on-heading-p))
+      (goto-char pos)
+      (hide-subtree)
+      (error "Boundary reached"))
+    (org-overview)
+    (org-reveal t)
+    (org-show-entry)
+    (show-children)))
 
-  (setq org-use-speed-commands t)
+(setq org-use-speed-commands t)
 
-(setq org-use-speed-commands
-      (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
+;; (setq org-use-speed-commands
+;;       (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
 
-(setq org-speed-commands
-      '(("n" nc/org-show-next-heading-tidily)
-        ("p" nc/org-show-previous-heading-tidily)
-        ("N" org-narrow-to-subtree)
-        ("$" org-archive-subtree)
-        ("A" org-archive-subtree)
-        ("W" widen)
-        ("d" org-down-element)
-        ("k" org-cut-subtree)
-        ("m" org-mark-subtree)
-        ("s" org-sort)
-        ("X" org-todo-done)
-        ("y" org-todo-yesterday)))
-
+(push '("N" nc/org-show-next-heading-tidily) org-speed-commands)
+(push '("P" nc/org-show-previous-heading-tidily) org-speed-commands)
 
 (defun nc/org-go-speed ()
   "Goes to the beginning of an element's header, so that you can execute speed commands."
@@ -1231,7 +1219,7 @@
         (beginning-of-line)
       (outline-previous-heading))))
 
-(bind-key "C-c o /" 'nc/org-go-speed)
+(bind-key "C-z /" 'nc/org-go-speed org-mode-map)
 
 ;; This is needed as of Org 9.2
 (require 'org-tempo)
