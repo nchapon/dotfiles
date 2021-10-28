@@ -1,6 +1,6 @@
 #+title: Emacs configuration with Org Mode
-#+author: Andrey Listopadov
-#+email: andreyorst@gmail.com
+#+author: Nicolas Chapon
+#+email: nchapon@gmail.com
 #+startup: noinlineimages
 #+property: header-args :results silent
 
@@ -356,9 +356,6 @@ Emacs Global Bindings are redefined here.
     ;; Goto Line
     ;;(global-set-key (kbd "M-g") #'goto-line)
 
-    ;; Join Lines
-    (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
-
     ;; Functions
     (global-set-key (kbd "<f5>") #'revert-buffer)
 
@@ -388,12 +385,15 @@ Emacs Global Bindings are redefined here.
      ("C-c d" . crux-duplicate-current-line-or-region)
      ("C-x 4 t" . crux-transpose-windows)
      ("C-x K" . crux-kill-other-buffers)
-     ("C-k" . crux-smart-kill-line))
+     ("C-k" . crux-smart-kill-line)
+     ("M-j" . crux-top-join-line))
     :config
     (crux-with-region-or-buffer indent-region)
     (crux-with-region-or-buffer untabify)
     (crux-with-region-or-point-to-eol kill-ring-save)
     (defalias 'rename-file-and-buffer #'crux-rename-file-and-buffer))
+
+
 #+end_src
 
 *** Exec Path From Shell
@@ -628,7 +628,7 @@ Use Input Font (http://input.fontbureau.com/)  on Linux, Monaco on MacOS
   (if (fboundp 'fringe-mode)
       (fringe-mode 2))
 #+end_src
-** Completion System
+** Completion
 Try the new Hype completion System
 - Selectrum 
 - Consult
@@ -817,7 +817,14 @@ Try the new Hype completion System
     (add-to-list 'display-buffer-alist
                  '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                    nil
-                   (window-parameters (mode-line-format . none)))))
+                   (window-parameters (mode-line-format . none))))
+
+    ;; Custom some actions
+    (define-key embark-defun-map "j" 'crux-top-join-line)
+    (define-key embark-symbol-map "j" 'crux-top-join-line)
+    (define-key embark-expression-map "j" 'crux-top-join-line)
+
+    (define-key embark-file-map (kbd "S") 'nc/sudo-find-file))
 
   ;; Consult users will also want the embark-consult package.
   (use-package embark-consult
@@ -827,6 +834,7 @@ Try the new Hype completion System
     ;; auto-updating embark collect buffer
     :hook
     (embark-collect-mode . consult-preview-at-point-mode))
+
 
 #+end_src
 
@@ -2106,9 +2114,6 @@ From : https://karthinks.com/software/fifteen-ways-to-use-embark/
                                "|sudo:root@"
                                (file-remote-p file 'host) ":" (file-remote-p file 'localname))
                      (concat "/sudo:root@localhost:" file))))
-
-  ;; Integrate with Embark Action
-  (define-key embark-file-map (kbd "S") 'nc/sudo-find-file)
 #+end_src
 
  

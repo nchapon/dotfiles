@@ -133,9 +133,6 @@
 ;; Goto Line
 ;;(global-set-key (kbd "M-g") #'goto-line)
 
-;; Join Lines
-(global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
-
 ;; Functions
 (global-set-key (kbd "<f5>") #'revert-buffer)
 
@@ -156,7 +153,8 @@
    ("C-c d" . crux-duplicate-current-line-or-region)
    ("C-x 4 t" . crux-transpose-windows)
    ("C-x K" . crux-kill-other-buffers)
-   ("C-k" . crux-smart-kill-line))
+   ("C-k" . crux-smart-kill-line)
+   ("M-j" . crux-top-join-line))
   :config
   (crux-with-region-or-buffer indent-region)
   (crux-with-region-or-buffer untabify)
@@ -477,7 +475,14 @@
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
-                 (window-parameters (mode-line-format . none)))))
+                 (window-parameters (mode-line-format . none))))
+
+  ;; Custom some actions
+  (define-key embark-defun-map "j" 'crux-top-join-line)
+  (define-key embark-symbol-map "j" 'crux-top-join-line)
+  (define-key embark-expression-map "j" 'crux-top-join-line)
+
+  (define-key embark-file-map (kbd "S") 'nc/sudo-find-file))
 
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
@@ -1390,19 +1395,16 @@ the result as a time value."
 (bind-key "C-z i D" 'nc/insert-datestamp-inactive)
 
 (defun nc/sudo-find-file (file)
-      "Open FILE as root."
-      (interactive "FOpen file as root: ")
-      (when (file-writable-p file)
-        (user-error "File is user writeable, aborting sudo"))
-      (find-file (if (file-remote-p file)
-                     (concat "/" (file-remote-p file 'method) ":"
-                             (file-remote-p file 'user) "@" (file-remote-p file 'host)
-                             "|sudo:root@"
-                             (file-remote-p file 'host) ":" (file-remote-p file 'localname))
-                   (concat "/sudo:root@localhost:" file))))
-
-;; Integrate with Embark Action
-(define-key embark-file-map (kbd "S") 'nc/sudo-find-file)
+  "Open FILE as root."
+  (interactive "FOpen file as root: ")
+  (when (file-writable-p file)
+    (user-error "File is user writeable, aborting sudo"))
+  (find-file (if (file-remote-p file)
+                 (concat "/" (file-remote-p file 'method) ":"
+                         (file-remote-p file 'user) "@" (file-remote-p file 'host)
+                         "|sudo:root@"
+                         (file-remote-p file 'host) ":" (file-remote-p file 'localname))
+               (concat "/sudo:root@localhost:" file))))
 
 ;; test
   (provide 'init)
