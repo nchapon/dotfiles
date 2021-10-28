@@ -607,7 +607,7 @@ Use Input Font (http://input.fontbureau.com/)  on Linux, Monaco on MacOS
     (add-hook 'after-init-hook #'nc/setup-font))
 #+end_src
 
-*** Windows configuration
+*** Minimalistric UI
 **** No menu and toolbar
 
 #+begin_src emacs-lisp
@@ -622,19 +622,20 @@ Use Input Font (http://input.fontbureau.com/)  on Linux, Monaco on MacOS
 (setq  inhibit-startup-message t)
 #+end_src
 
-*** Make fringe smaller
+**** Make fringe smaller
 
 #+begin_src emacs-lisp
   (if (fboundp 'fringe-mode)
       (fringe-mode 2))
 #+end_src
-*** Completion System
+** Completion System
 Try the new Hype completion System
-- Selectrum
+- Selectrum 
 - Consult
+- Marginalia
 - Embark
 
-**** Selectrum
+*** Selectrum
 
 #+begin_src emacs-lisp
 
@@ -646,7 +647,7 @@ Try the new Hype completion System
     :init (selectrum-prescient-mode +1) :after selectrum)
 
 #+end_src
-**** Marginalia
+*** Marginalia
 
 #+begin_src emacs-lisp
   (use-package marginalia
@@ -662,7 +663,7 @@ Try the new Hype completion System
 
 
 
-**** Consult
+*** Consult
 
      [[https://github.com/minad/consult][Consult]] Consulting completion Read
 
@@ -705,6 +706,7 @@ Try the new Hype completion System
            ("M-s G" . consult-git-grep)
            ("M-s r" . consult-ripgrep)
            ("M-s l" . consult-line)
+           ("C-s" . consult-line)
            ("M-s L" . consult-line-multi)
            ("M-s m" . consult-multi-occur)
            ("M-s k" . consult-keep-lines)
@@ -793,7 +795,7 @@ Try the new Hype completion System
            ("C-x C-d" . consult-dir)
            ("C-x C-j" . consult-dir-jump-file)))
 #+end_src
-**** Embark
+*** Embark
 
 [[https://github.com/oantolin/embark][Embark]] Emacs Minibuffer Actions Rooted in Key Maps
 
@@ -828,7 +830,7 @@ Try the new Hype completion System
 
 #+end_src
 
-** Windows
+** Windows Management
 *** Ace Window
 [[https://github.com/abo-abo/ace-window][ace-window]] Quickly switch and move windows
 
@@ -2088,6 +2090,28 @@ Insert time slot mainly used when I schedule meeting or appointment.
 
    (bind-key "C-z i D" 'nc/insert-datestamp-inactive)
  #+end_src
+*** Sudo Edit File
+
+From : https://karthinks.com/software/fifteen-ways-to-use-embark/
+
+#+begin_src emacs-lisp
+      (defun nc/sudo-find-file (file)
+        "Open FILE as root."
+        (interactive "FOpen file as root: ")
+        (when (file-writable-p file)
+          (user-error "File is user writeable, aborting sudo"))
+        (find-file (if (file-remote-p file)
+                       (concat "/" (file-remote-p file 'method) ":"
+                               (file-remote-p file 'user) "@" (file-remote-p file 'host)
+                               "|sudo:root@"
+                               (file-remote-p file 'host) ":" (file-remote-p file 'localname))
+                     (concat "/sudo:root@localhost:" file))))
+
+  ;; Integrate with Embark Action
+  (define-key embark-file-map (kbd "S") 'nc/sudo-find-file)
+#+end_src
+
+ 
 ** =(provide 'init)=
 
 This concludes the =init.el= file.

@@ -371,6 +371,7 @@
          ("M-s G" . consult-git-grep)
          ("M-s r" . consult-ripgrep)
          ("M-s l" . consult-line)
+         ("C-s" . consult-line)
          ("M-s L" . consult-line-multi)
          ("M-s m" . consult-multi-occur)
          ("M-s k" . consult-keep-lines)
@@ -1387,6 +1388,21 @@ the result as a time value."
     (insert (format-time-string "%Y-%m-%d" (current-time)))))
 
 (bind-key "C-z i D" 'nc/insert-datestamp-inactive)
+
+(defun nc/sudo-find-file (file)
+      "Open FILE as root."
+      (interactive "FOpen file as root: ")
+      (when (file-writable-p file)
+        (user-error "File is user writeable, aborting sudo"))
+      (find-file (if (file-remote-p file)
+                     (concat "/" (file-remote-p file 'method) ":"
+                             (file-remote-p file 'user) "@" (file-remote-p file 'host)
+                             "|sudo:root@"
+                             (file-remote-p file 'host) ":" (file-remote-p file 'localname))
+                   (concat "/sudo:root@localhost:" file))))
+
+;; Integrate with Embark Action
+(define-key embark-file-map (kbd "S") 'nc/sudo-find-file)
 
 ;; test
   (provide 'init)
