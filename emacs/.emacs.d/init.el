@@ -685,6 +685,34 @@
   :config
   (company-statistics-mode 1))
 
+(use-package vterm
+  :ensure
+  :commands vterm
+  :custom
+  (vterm-disable-bold-font nil)
+  (vterm-disable-inverse-video nil)
+  (vterm-disable-underline nil)
+  (vterm-kill-buffer-on-exit t)
+  (vterm-max-scrollback 9999)
+  (vterm-shell "/bin/zsh")
+  (vterm-term-environment-variable "xterm-256color")
+
+  :bind (("C-z v" . vterm)
+         ("M-<f12>" . vterm)))
+
+(use-package aweshell
+  :straight (aweshell
+             :type git
+             :host github
+             :repo "manateelazycat/aweshell")
+  :custom
+  (eshell-highlight-prompt nil)
+  ;; (eshell-prompt-function 'epe-theme-pipeline)
+
+  :bind
+  (("C-z e" . aweshell-dedicated-toggle))
+  )
+
 (use-package org
   
   :bind (("C-c l" . org-store-link)
