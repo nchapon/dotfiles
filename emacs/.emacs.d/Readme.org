@@ -294,35 +294,31 @@ Remove to bindings
  #+end_src
 
 
-** Mac OS Preferences
+** System Preferences
+*** MacOS
 Some custom preferences dedicated to MacOS
-*** Keys for apple keyboard
+- keys for apple keyboard
+- use the right ~⌥~ key to write symbols ={[]}=. The left ~⌥~ key can be used as the Meta
+- GPG
+- ...
+
  #+begin_src emacs-lisp
    (when is-mac
+     ;; Keys for Appel keyboard
      (setq mac-command-modifier 'meta)    ; make cmd key do Meta
      (setq mac-option-modifier 'super)    ; make opt key do Super
      (setq mac-control-modifier 'control) ; make Control key do Control
      (setq ns-function-modifier 'hyper)   ; make Fn key do Hyper
-   )
- #+end_src
-*** Mac right option
- This will allow you to use the right ~⌥~ key to write symbols ={[]}=. The left ~⌥~ key can be used as the Meta
- key.
- #+begin_src emacs-lisp 
-   (when is-mac
-     (setq-default mac-right-option-modifier nil))
- #+end_src
-*** GPG
- #+begin_src emacs-lisp
-   (when is-mac
-     (setf epa-pinentry-mode 'loopback))
- #+end_src
-*** French Locale
- #+begin_src emacs-lisp
-   (when is-mac
+
+     ;; Write Symbols [{}]
+     (setq-default mac-right-option-modifier nil)
+
+     ;; GPG
+     (setf epa-pinentry-mode 'loopback)
+
+     ;; Freench Locale
      (set-locale-environment "fr_FR.UTF-8"))
  #+end_src
-
 ** Global Functionnalities
 *** No Littering
 

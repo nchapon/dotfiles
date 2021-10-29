@@ -95,19 +95,19 @@
       calendar-mark-diary-entries-flag t)
 
 (when is-mac
+  ;; Keys for Appel keyboard
   (setq mac-command-modifier 'meta)    ; make cmd key do Meta
   (setq mac-option-modifier 'super)    ; make opt key do Super
   (setq mac-control-modifier 'control) ; make Control key do Control
   (setq ns-function-modifier 'hyper)   ; make Fn key do Hyper
-)
 
-(when is-mac
-  (setq-default mac-right-option-modifier nil))
+  ;; Write Symbols [{}]
+  (setq-default mac-right-option-modifier nil)
 
-(when is-mac
-  (setf epa-pinentry-mode 'loopback))
+  ;; GPG
+  (setf epa-pinentry-mode 'loopback)
 
-(when is-mac
+  ;; Freench Locale
   (set-locale-environment "fr_FR.UTF-8"))
 
 (use-package no-littering)
