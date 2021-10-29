@@ -1319,6 +1319,30 @@ the result as a time value."
           (setq count (1+ count))))
       (message "Replaced %d occurences" count))))
 
+(use-package deft
+    :bind
+    (("<f8>" . deft))
+    :config
+    (setq deft-directory "~/notes"
+          deft-recursive t
+          deft-extensions '("org")
+          deft-default-extension "org"
+          deft-text-mode 'org-mode
+          deft-org-mode-title-prefix t
+          deft-use-filter-string-for-filename t
+          deft-auto-save-interval 0
+          deft-recursive-ignore-dir-regexp
+            (concat "\\(?:"
+                    "\\."
+                    "\\|\\.\\."
+                    "\\\|valtech"
+                    "\\|journal"
+                    "\\)$")
+          deft-file-naming-rules
+            '((noslash . "-")
+              (nospace . "-")
+              (case-fn . downcase))))
+
 (defun nc/goto-emacs-config ()
     "Edit Readme.org"
     (interactive)

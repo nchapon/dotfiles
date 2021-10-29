@@ -1984,8 +1984,37 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
             (setq count (1+ count))))
         (message "Replaced %d occurences" count))))
 #+end_src
-** My functions
+*** Deft -> =<F8>=
 
+[[https://github.com/jrblevin/deft][Deft]] is an emacs mode for quickly searching (or editing) in his directory notes.
+
+#+begin_src emacs-lisp
+  (use-package deft
+      :bind
+      (("<f8>" . deft))
+      :config
+      (setq deft-directory "~/notes"
+            deft-recursive t
+            deft-extensions '("org")
+            deft-default-extension "org"
+            deft-text-mode 'org-mode
+            deft-org-mode-title-prefix t
+            deft-use-filter-string-for-filename t
+            deft-auto-save-interval 0
+            deft-recursive-ignore-dir-regexp
+              (concat "\\(?:"
+                      "\\."
+                      "\\|\\.\\."
+                      "\\\|valtech"
+                      "\\|journal"
+                      "\\)$")
+            deft-file-naming-rules
+              '((noslash . "-")
+                (nospace . "-")
+                (case-fn . downcase))))
+#+end_src
+
+** My functions
 *** Emacs Config File -> =C-z ;=
 
  #+begin_src emacs-lisp
