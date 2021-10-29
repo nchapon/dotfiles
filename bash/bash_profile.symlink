@@ -4,4 +4,3 @@ source $HOME/.bashrc
 export SDKMAN_DIR="/Users/nchapon/.sdkman"
 [[ -s "/Users/nchapon/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/nchapon/.sdkman/bin/sdkman-init.sh"
 
-export PATH="$HOME/.cargo/bin:$PATH"

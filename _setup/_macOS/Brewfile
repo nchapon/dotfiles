@@ -3,6 +3,7 @@ cask_args appdir: '/Applications'
 tap 'homebrew/bundle'
 
 brew 'awscli'
+brew 'ansible'
 brew 'borkdude/brew/babashka'
 brew 'bash-completion'
 brew 'clojure/tools/clojure'

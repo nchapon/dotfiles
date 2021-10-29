@@ -21,4 +21,4 @@ fi
 
 info "Running initializers"
 
-find -H "$DOTFILES" -name _init.sh | while read init ; do sh -c "${init}" ; done
+# find -H "$DOTFILES" -name _init.sh | while read init ; do sh -c "${init}" ; done
