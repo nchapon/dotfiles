@@ -1343,6 +1343,20 @@ the result as a time value."
               (nospace . "-")
               (case-fn . downcase))))
 
+(use-package yankpad
+  :ensure t
+  :init
+  (setq yankpad-file (concat org-directory "/templates/yankpad.org"))
+  :config
+  ;; If you want to complete snippets using company-mode
+  ;; (add-to-list 'company-backends 'company-yankpad)
+  ;; If you want to expand snippets with hippie-expand
+  (add-to-list 'hippie-expand-try-functions-list #'yankpad-expand)
+
+  :bind
+  (("<f7>"   . yankpad-insert)
+   ("C-<f7>"   . yankpad-map)))
+
 (defun nc/goto-emacs-config ()
     "Edit Readme.org"
     (interactive)

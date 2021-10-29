@@ -2014,6 +2014,26 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
                 (case-fn . downcase))))
 #+end_src
 
+*** Yankpad  -> =<F7>=
+
+[[https://github.com/Kungsgeten/yankpad][Yankpad]] paste snippets from an org-mode file. 
+
+#+begin_src emacs-lisp
+  (use-package yankpad
+    :ensure t
+    :init
+    (setq yankpad-file (concat org-directory "/templates/yankpad.org"))
+    :config
+    ;; If you want to complete snippets using company-mode
+    ;; (add-to-list 'company-backends 'company-yankpad)
+    ;; If you want to expand snippets with hippie-expand
+    (add-to-list 'hippie-expand-try-functions-list #'yankpad-expand)
+
+    :bind
+    (("<f7>"   . yankpad-insert)
+     ("C-<f7>"   . yankpad-map)))
+#+end_src
+
 ** My functions
 *** Emacs Config File -> =C-z ;=
 
