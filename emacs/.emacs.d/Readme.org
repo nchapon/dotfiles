@@ -644,7 +644,7 @@ Use Input Font (http://input.fontbureau.com/)  on Linux, Monaco on MacOS
  Resize automatically the windows you are working
 
  #+begin_src emacs-lisp
-   (use-package golden-ratio  
+   (use-package golden-ratio
      :diminish t
      :init
      (golden-ratio-mode 1)
@@ -708,7 +708,7 @@ If windows are splitted delete other windows.
 
 ** Completion
 Try the new Hype completion System
-- Selectrum 
+- Selectrum
 - Consult
 - Marginalia
 - Embark
@@ -755,7 +755,7 @@ Try the new Hype completion System
            ("C-c b" . consult-bookmark)
            ("C-c k" . consult-kmacro)
            ;; C-x bindings (ctl-x-map)
-           ("C-x C-r" . consult-recent-file)     
+           ("C-x C-r" . consult-recent-file)
            ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
            ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
            ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
@@ -1035,7 +1035,7 @@ Smart parens for all programming modes with paredit bindings.
 #+begin_src emacs-lisp
   (use-package smartparens
     :defer t
-    :diminish ""  
+    :diminish ""
     :hook (((clojure-mode
              emacs-lisp-mode
              common-lisp-mode
@@ -1044,9 +1044,9 @@ Smart parens for all programming modes with paredit bindings.
              cider-repl-mode
              inferior-lisp-mode
              inferior-emacs-lisp-mode)
-            . smartparens-strict-mode)         
+            . smartparens-strict-mode)
            (prog-mode . smartparens-mode))
-  
+
     :bind (:map smartparens-mode-map
                 ("C-M-q" . sp-indent-defun)
                 :map smartparens-strict-mode-map
@@ -1126,8 +1126,8 @@ Consult integration
 
   #+end_src
 
-[[https://github.com/company-mode/company-statistics/][company-statistics]] extension to show the top ranked candidates 
-  
+[[https://github.com/company-mode/company-statistics/][company-statistics]] extension to show the top ranked candidates
+
   #+begin_src emacs-lisp
     (use-package company-statistics
       :after company
@@ -1173,14 +1173,14 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
 #+end_src
 
 
-   
+
 ** Programming
 ** Org
 *** Org Base Configuration
 
 #+begin_src emacs-lisp
 (use-package org
-  
+
   :bind (("C-c l" . org-store-link)
          ("C-c c" . org-capture)
          ("C-c a" . org-agenda)
@@ -1191,7 +1191,7 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
   ;; New template exapnsion
   (require 'org-tempo)
 
-  (setq org-directory "~/notes/"
+  (setq org-directory "~/notes"
         org-ellipsis " ⬎"
         org-cycle-separator-lines 0                 ;; Hide empty lines between subtrees
         org-catch-invisible-edits 'show-and-error   ;; Avoid inadvertent text edit in invisible area
@@ -1217,7 +1217,7 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
 #+end_src
 
 *** Org UI
-**** Org Bullets 
+**** Org Bullets
 
 #+begin_src emacs-lisp
 (use-package org-bullets
@@ -1309,27 +1309,23 @@ Change priorities colors
  My default org files
 
  #+begin_src emacs-lisp
-      ;; One default notes files by week in *journal/* folder
-   (setq org-directory "~/notes/")
-
-
    ;; Org constant files
-    (defconst nc/org-default-projects-dir (concat org-directory "projects"))
-    (defconst nc/org-default-projects-file (concat org-directory "projects.org"))
-    (defconst nc/org-default-resources-dir (concat org-directory "resources"))
-    (defconst nc/org-default-personal-dir (concat org-directory "personal"))
-    (defconst nc/org-default-completed-dir (concat org-directory "projects/_completed"))
-    (defconst nc/org-journal-dir (concat org-directory "journal"))
-    (defconst nc/inbox-file (concat org-directory "gtd.org"))
-    (defconst nc/org-default-inbox-file (concat org-directory "gtd.org"))
-    (defconst nc/org-default-tasks-file (concat org-directory "gtd.org"))
-    (defconst nc/watching-file (concat org-directory "personal/watching.org"))
-    (defconst nc/reading-file (concat org-directory "personal/books.org"))
-    (defconst nc/org-default-media-files (concat org-directory "personal/watching.org"))
-    (defconst nc/org-default-someday-file (concat org-directory "someday.org"))
-    (defconst nc/fishing-file (concat org-directory "personal/sports/fishing.org"))
-    (defconst nc/calendar-file (concat org-directory "personal/calendar.org"))
-    (defconst nc/weekly-review-file (concat org-directory "personal/reviews/weekly-review.org"))
+    (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
+    (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
+    (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
+    (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
+    (defconst nc/org-default-completed-dir (concat org-directory "/projects/_completed"))
+    (defconst nc/org-journal-dir (concat org-directory "/journal"))
+    (defconst nc/inbox-file (concat org-directory "/gtd.org"))
+    (defconst nc/org-default-inbox-file (concat org-directory "/gtd.org"))
+    (defconst nc/org-default-tasks-file (concat org-directory "/gtd.org"))
+    (defconst nc/watching-file (concat org-directory "/personal/watching.org"))
+    (defconst nc/reading-file (concat org-directory "/personal/books.org"))
+    (defconst nc/org-default-media-files (concat org-directory "/personal/watching.org"))
+    (defconst nc/org-default-someday-file (concat org-directory "/someday.org"))
+    (defconst nc/fishing-file (concat org-directory "/personal/sports/fishing.org"))
+    (defconst nc/calendar-file (concat org-directory "/personal/calendar.org"))
+    (defconst nc/weekly-review-file (concat org-directory "/personal/reviews/weekly-review.org"))
  #+end_src
 
 Helpers Functions
@@ -1381,7 +1377,7 @@ Insert daily heading in journal file =C-z-o-i=
 
          (custom-set-variables
           '(auto-insert 'other)
-          '(auto-insert-directory "~/notes/templates"))
+          '(auto-insert-directory (concat org-directory "/templates")))
 
          (define-auto-insert "\\.org\\'" ["week.org" nc--autoinsert-yas-expand])
 
@@ -1844,7 +1840,7 @@ Targets include this file and any file contributing to the agenda - up to 2 leve
 Customize speed-commands :
 - N :: Show next entry keeping other entries closed
 - P :: Show previous entry keeping previous entries closed
- 
+
  #+begin_src emacs-lisp
    (defun nc/org-show-next-heading-tidily ()
      "Show next entry, keeping other entries closed."
@@ -2054,7 +2050,7 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
 
 *** Yankpad  -> =<F7>=
 
-[[https://github.com/Kungsgeten/yankpad][Yankpad]] paste snippets from an org-mode file. 
+[[https://github.com/Kungsgeten/yankpad][Yankpad]] paste snippets from an org-mode file.
 
 #+begin_src emacs-lisp
   (use-package yankpad
@@ -2198,7 +2194,7 @@ From : https://karthinks.com/software/fifteen-ways-to-use-embark/
                      (concat "/sudo:root@localhost:" file))))
 #+end_src
 
- 
+
 ** =(provide 'init)=
 
 This concludes the =init.el= file.

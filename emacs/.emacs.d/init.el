@@ -323,7 +323,7 @@
    '(aw-leading-char-face
      ((t (:inherit ace-jump-face-foreground :height 3.0))))))
 
-(use-package golden-ratio  
+(use-package golden-ratio
   :diminish t
   :init
   (golden-ratio-mode 1)
@@ -397,7 +397,7 @@
          ("C-c b" . consult-bookmark)
          ("C-c k" . consult-kmacro)
          ;; C-x bindings (ctl-x-map)
-         ("C-x C-r" . consult-recent-file)     
+         ("C-x C-r" . consult-recent-file)
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
          ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
@@ -607,7 +607,7 @@
 
 (use-package smartparens
   :defer t
-  :diminish ""  
+  :diminish ""
   :hook (((clojure-mode
            emacs-lisp-mode
            common-lisp-mode
@@ -616,7 +616,7 @@
            cider-repl-mode
            inferior-lisp-mode
            inferior-emacs-lisp-mode)
-          . smartparens-strict-mode)         
+          . smartparens-strict-mode)
          (prog-mode . smartparens-mode))
 
   :bind (:map smartparens-mode-map
@@ -714,7 +714,7 @@
   )
 
 (use-package org
-  
+
   :bind (("C-c l" . org-store-link)
          ("C-c c" . org-capture)
          ("C-c a" . org-agenda)
@@ -725,7 +725,7 @@
   ;; New template exapnsion
   (require 'org-tempo)
 
-  (setq org-directory "~/notes/"
+  (setq org-directory "~/notes"
         org-ellipsis " ⬎"
         org-cycle-separator-lines 0                 ;; Hide empty lines between subtrees
         org-catch-invisible-edits 'show-and-error   ;; Avoid inadvertent text edit in invisible area
@@ -813,27 +813,23 @@
       org-hide-emphasis-markers t
       org-fontify-quote-and-verse-blocks t)
 
-;; One default notes files by week in *journal/* folder
-(setq org-directory "~/notes/")
-
-
 ;; Org constant files
- (defconst nc/org-default-projects-dir (concat org-directory "projects"))
- (defconst nc/org-default-projects-file (concat org-directory "projects.org"))
- (defconst nc/org-default-resources-dir (concat org-directory "resources"))
- (defconst nc/org-default-personal-dir (concat org-directory "personal"))
- (defconst nc/org-default-completed-dir (concat org-directory "projects/_completed"))
- (defconst nc/org-journal-dir (concat org-directory "journal"))
- (defconst nc/inbox-file (concat org-directory "gtd.org"))
- (defconst nc/org-default-inbox-file (concat org-directory "gtd.org"))
- (defconst nc/org-default-tasks-file (concat org-directory "gtd.org"))
- (defconst nc/watching-file (concat org-directory "personal/watching.org"))
- (defconst nc/reading-file (concat org-directory "personal/books.org"))
- (defconst nc/org-default-media-files (concat org-directory "personal/watching.org"))
- (defconst nc/org-default-someday-file (concat org-directory "someday.org"))
- (defconst nc/fishing-file (concat org-directory "personal/sports/fishing.org"))
- (defconst nc/calendar-file (concat org-directory "personal/calendar.org"))
- (defconst nc/weekly-review-file (concat org-directory "personal/reviews/weekly-review.org"))
+ (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
+ (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
+ (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
+ (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
+ (defconst nc/org-default-completed-dir (concat org-directory "/projects/_completed"))
+ (defconst nc/org-journal-dir (concat org-directory "/journal"))
+ (defconst nc/inbox-file (concat org-directory "/gtd.org"))
+ (defconst nc/org-default-inbox-file (concat org-directory "/gtd.org"))
+ (defconst nc/org-default-tasks-file (concat org-directory "/gtd.org"))
+ (defconst nc/watching-file (concat org-directory "/personal/watching.org"))
+ (defconst nc/reading-file (concat org-directory "/personal/books.org"))
+ (defconst nc/org-default-media-files (concat org-directory "/personal/watching.org"))
+ (defconst nc/org-default-someday-file (concat org-directory "/someday.org"))
+ (defconst nc/fishing-file (concat org-directory "/personal/sports/fishing.org"))
+ (defconst nc/calendar-file (concat org-directory "/personal/calendar.org"))
+ (defconst nc/weekly-review-file (concat org-directory "/personal/reviews/weekly-review.org"))
 
 (defun nc/go-to-inbox ()
   (interactive)
@@ -868,7 +864,7 @@
 
     (custom-set-variables
      '(auto-insert 'other)
-     '(auto-insert-directory "~/notes/templates"))
+     '(auto-insert-directory (concat org-directory "/templates")))
 
     (define-auto-insert "\\.org\\'" ["week.org" nc--autoinsert-yas-expand])
 
