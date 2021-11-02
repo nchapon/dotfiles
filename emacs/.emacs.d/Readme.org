@@ -1179,41 +1179,39 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
 *** Org Base Configuration
 
 #+begin_src emacs-lisp
-(use-package org
+  (use-package org
 
-  :bind (("C-c l" . org-store-link)
-         ("C-c c" . org-capture)
-         ("C-c a" . org-agenda)
-         ("<f12>" . org-agenda)
-         ("C-c C-b" . org-iswitchb))
+    :bind (("C-c l" . org-store-link)
+           ("C-c c" . org-capture)
+           ("C-c a" . org-agenda)
+           ("<f12>" . org-agenda)
+           ("C-c C-b" . org-iswitchb))
 
-  :config
-  ;; New template exapnsion
-  (require 'org-tempo)
+    :config
+    ;; New template exapnsion
+    (require 'org-tempo)
 
-  (setq org-directory "~/notes"
-        org-ellipsis " ⬎"
-        org-cycle-separator-lines 0                 ;; Hide empty lines between subtrees
-        org-catch-invisible-edits 'show-and-error   ;; Avoid inadvertent text edit in invisible area
-        )
+    (setq org-ellipsis " ⬎"
+          org-cycle-separator-lines 0                 ;; Hide empty lines between subtrees
+          org-catch-invisible-edits 'show-and-error   ;; Avoid inadvertent text edit in invisible area
+          )
 
-  (set-face-attribute 'org-ellipsis nil :underline nil)
+    (set-face-attribute 'org-ellipsis nil :underline nil)
 
-  ;; Autamatically add =ID= (unique identifier) in heading drawers to keep links unique
-  (require 'org-id)
-  (setq org-id-method 'uuidgen)
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+    ;; Autamatically add =ID= (unique identifier) in heading drawers to keep links unique
+    (require 'org-id)
+    (setq org-id-method 'uuidgen)
+    (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
+    (require 'org-crypt)
+    (org-crypt-use-before-save-magic)
 
-  (require 'org-crypt)
-  (org-crypt-use-before-save-magic)
+    (add-to-list 'org-tags-exclude-from-inheritance "crypt")
+    ;; GPG key to use for encryption
+    ;; Either the Key ID or set to nil to use symmetric encryption.
+    (setq org-crypt-key "0DF2D6C6E8443FE7"))
 
-  (add-to-list 'org-tags-exclude-from-inheritance "crypt")
-  ;; GPG key to use for encryption
-  ;; Either the Key ID or set to nil to use symmetric encryption.
-  (setq org-crypt-key "0DF2D6C6E8443FE7"))
-
-  (use-package org-contrib)
+    (use-package org-contrib)
 #+end_src
 
 *** Org UI
@@ -1304,47 +1302,48 @@ Change priorities colors
 #+end_src
 
 
-*** Org Files Paths
+*** My Org Files
 
  My default org files
 
  #+begin_src emacs-lisp
-   ;; Org constant files
-    (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
-    (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
-    (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
-    (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
-    (defconst nc/org-default-completed-dir (concat org-directory "/projects/_completed"))
-    (defconst nc/org-journal-dir (concat org-directory "/journal"))
-    (defconst nc/inbox-file (concat org-directory "/gtd.org"))
-    (defconst nc/org-default-inbox-file (concat org-directory "/gtd.org"))
-    (defconst nc/org-default-tasks-file (concat org-directory "/gtd.org"))
-    (defconst nc/watching-file (concat org-directory "/personal/watching.org"))
-    (defconst nc/reading-file (concat org-directory "/personal/books.org"))
-    (defconst nc/org-default-media-files (concat org-directory "/personal/watching.org"))
-    (defconst nc/org-default-someday-file (concat org-directory "/someday.org"))
-    (defconst nc/fishing-file (concat org-directory "/personal/sports/fishing.org"))
-    (defconst nc/calendar-file (concat org-directory "/personal/calendar.org"))
-    (defconst nc/weekly-review-file (concat org-directory "/personal/reviews/weekly-review.org"))
+   (use-package org
+
+     :config
+     (setq org-directory "~/notes")
+     (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
+     (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
+     (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
+     (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
+     (defconst nc/org-default-completed-dir (concat org-directory "/projects/_completed"))
+     (defconst nc/org-journal-dir (concat org-directory "/journal"))
+     (defconst nc/inbox-file (concat org-directory "/gtd.org"))
+     (defconst nc/org-default-inbox-file (concat org-directory "/gtd.org"))
+     (defconst nc/org-default-tasks-file (concat org-directory "/gtd.org"))
+     (defconst nc/watching-file (concat org-directory "/personal/watching.org"))
+     (defconst nc/reading-file (concat org-directory "/personal/books.org"))
+     (defconst nc/org-default-media-files (concat org-directory "/personal/watching.org"))
+     (defconst nc/org-default-someday-file (concat org-directory "/someday.org"))
+     (defconst nc/fishing-file (concat org-directory "/personal/sports/fishing.org"))
+     (defconst nc/calendar-file (concat org-directory "/personal/calendar.org"))
+     (defconst nc/weekly-review-file (concat org-directory "/personal/reviews/weekly-review.org"))
+
+
+     (defun nc/go-to-inbox ()
+       (interactive)
+       (find-file nc/inbox-file )
+       (widen)
+       (beginning-of-buffer)
+       (re-search-forward "* Inbox")
+       (beginning-of-line))
+
+
+     (defun nc/go-to-resources-dir ()
+       (interactive)
+       (dired nc/org-default-resources-dir))
+
+     )
  #+end_src
-
-Helpers Functions
-
-#+begin_src emacs-lisp
-  (defun nc/go-to-inbox ()
-    (interactive)
-    (find-file nc/inbox-file )
-    (widen)
-    (beginning-of-buffer)
-    (re-search-forward "* Inbox")
-    (beginning-of-line))
-#+end_src
-
-#+begin_src emacs-lisp
-  (defun nc/go-to-resources-dir ()
-    (interactive)
-    (dired nc/org-default-resources-dir))
-#+end_src
 
 
 *** Journal -> =C-z f j=
