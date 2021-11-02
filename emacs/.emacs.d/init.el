@@ -729,6 +729,19 @@
   (("C-z e" . aweshell-dedicated-toggle))
   )
 
+(use-package rainbow-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-mode)
+  (diminish 'rainbow-mode))
+
+(use-package paren
+  :straight nil
+  :hook (prog-mode . show-paren-mode)
+  :custom
+  (show-paren-delay 0)
+  (show-paren-when-point-in-periphery t))
+
 (use-package org
 
   :bind (("C-c l" . org-store-link)

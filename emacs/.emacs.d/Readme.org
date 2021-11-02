@@ -1174,8 +1174,6 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
      ))
 #+end_src
 
-
-
 *** aweshell -> =C-z e=
 
 [[https://github.com/manateelazycat/aweshell][aweshell]] Awesome eshell (eshell extensions)
@@ -1193,6 +1191,27 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
     :bind
     (("C-z e" . aweshell-dedicated-toggle))
     )
+#+end_src
+
+*** rainbow mode
+
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-mode)
+  (diminish 'rainbow-mode))
+#+end_src
+
+*** show paren mode
+Emacs builtin show paren mode.
+#+begin_src emacs-lisp
+  (use-package paren
+    :straight nil
+    :hook (prog-mode . show-paren-mode)
+    :custom
+    (show-paren-delay 0)
+    (show-paren-when-point-in-periphery t))
 #+end_src
 
 
