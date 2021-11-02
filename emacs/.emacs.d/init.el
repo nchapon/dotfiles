@@ -686,19 +686,35 @@
   (company-statistics-mode 1))
 
 (use-package vterm
-  :ensure
   :commands vterm
   :custom
-  (vterm-disable-bold-font nil)
+  (vterm-disable-bold-font t)
   (vterm-disable-inverse-video nil)
   (vterm-disable-underline nil)
   (vterm-kill-buffer-on-exit t)
   (vterm-max-scrollback 9999)
   (vterm-shell "/bin/zsh")
-  (vterm-term-environment-variable "xterm-256color")
+  (vterm-term-environment-variable "xterm-256color"))
 
-  :bind (("C-z v" . vterm)
-         ("M-<f12>" . vterm)))
+(use-package vterm-toggle
+  :custom
+  ;; Show Vterm Buffer in bottom side
+  (vterm-toggle-fullscreen-p nil)
+  :init
+   (add-to-list 'display-buffer-alist
+               '((lambda(bufname _) (with-current-buffer bufname (equal major-mode 'vterm-mode)))
+                 (display-buffer-reuse-window display-buffer-in-side-window)
+                 (side . bottom)
+                 (dedicated . t) ;dedicated is supported in emacs27
+                 (reusable-frames . visible)
+                 (window-height . 0.3)))
+  :bind
+  (("C-z t" . vterm-toggle)
+   :map vterm-mode-map
+   ("C-<return>" . vterm-toggle-insert-cd)
+   ("C-S-n" . vterm-toggle-forward)
+   ("C-S-p" . vterm-toggle-backward)
+   ))
 
 (use-package aweshell
   :straight (aweshell
@@ -707,7 +723,7 @@
              :repo "manateelazycat/aweshell")
   :custom
   (eshell-highlight-prompt nil)
-  ;; (eshell-prompt-function 'epe-theme-pipeline)
+  (eshell-prompt-function 'epe-theme-dakrone)
 
   :bind
   (("C-z e" . aweshell-dedicated-toggle))
@@ -725,8 +741,7 @@
   ;; New template exapnsion
   (require 'org-tempo)
 
-  (setq org-directory "~/notes"
-        org-ellipsis " ⬎"
+  (setq org-ellipsis " ⬎"
         org-cycle-separator-lines 0                 ;; Hide empty lines between subtrees
         org-catch-invisible-edits 'show-and-error   ;; Avoid inadvertent text edit in invisible area
         )
@@ -737,7 +752,6 @@
   (require 'org-id)
   (setq org-id-method 'uuidgen)
   (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
-
 
   (require 'org-crypt)
   (org-crypt-use-before-save-magic)
@@ -813,35 +827,42 @@
       org-hide-emphasis-markers t
       org-fontify-quote-and-verse-blocks t)
 
-;; Org constant files
- (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
- (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
- (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
- (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
- (defconst nc/org-default-completed-dir (concat org-directory "/projects/_completed"))
- (defconst nc/org-journal-dir (concat org-directory "/journal"))
- (defconst nc/inbox-file (concat org-directory "/gtd.org"))
- (defconst nc/org-default-inbox-file (concat org-directory "/gtd.org"))
- (defconst nc/org-default-tasks-file (concat org-directory "/gtd.org"))
- (defconst nc/watching-file (concat org-directory "/personal/watching.org"))
- (defconst nc/reading-file (concat org-directory "/personal/books.org"))
- (defconst nc/org-default-media-files (concat org-directory "/personal/watching.org"))
- (defconst nc/org-default-someday-file (concat org-directory "/someday.org"))
- (defconst nc/fishing-file (concat org-directory "/personal/sports/fishing.org"))
- (defconst nc/calendar-file (concat org-directory "/personal/calendar.org"))
- (defconst nc/weekly-review-file (concat org-directory "/personal/reviews/weekly-review.org"))
+(use-package org
 
-(defun nc/go-to-inbox ()
-  (interactive)
-  (find-file nc/inbox-file )
-  (widen)
-  (beginning-of-buffer)
-  (re-search-forward "* Inbox")
-  (beginning-of-line))
+  :config
+  (setq org-directory "~/notes")
+  (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
+  (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
+  (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
+  (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
+  (defconst nc/org-default-completed-dir (concat org-directory "/projects/_completed"))
+  (defconst nc/org-journal-dir (concat org-directory "/journal"))
+  (defconst nc/inbox-file (concat org-directory "/gtd.org"))
+  (defconst nc/org-default-inbox-file (concat org-directory "/gtd.org"))
+  (defconst nc/org-default-tasks-file (concat org-directory "/gtd.org"))
+  (defconst nc/watching-file (concat org-directory "/personal/watching.org"))
+  (defconst nc/reading-file (concat org-directory "/personal/books.org"))
+  (defconst nc/org-default-media-files (concat org-directory "/personal/watching.org"))
+  (defconst nc/org-default-someday-file (concat org-directory "/someday.org"))
+  (defconst nc/fishing-file (concat org-directory "/personal/sports/fishing.org"))
+  (defconst nc/calendar-file (concat org-directory "/personal/calendar.org"))
+  (defconst nc/weekly-review-file (concat org-directory "/personal/reviews/weekly-review.org"))
 
-(defun nc/go-to-resources-dir ()
-  (interactive)
-  (dired nc/org-default-resources-dir))
+
+  (defun nc/go-to-inbox ()
+    (interactive)
+    (find-file nc/inbox-file )
+    (widen)
+    (beginning-of-buffer)
+    (re-search-forward "* Inbox")
+    (beginning-of-line))
+
+
+  (defun nc/go-to-resources-dir ()
+    (interactive)
+    (dired nc/org-default-resources-dir))
+
+  )
 
 (defun nc/journal-file-today ()
       "Create and load a journal file based on today's date."

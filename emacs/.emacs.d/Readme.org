@@ -1135,26 +1135,50 @@ Consult integration
       (company-statistics-mode 1))
    #+end_src
 
-*** vterm -> =C-z v=  =M-<f12>=
+*** vterm -> =C-z t=
+
 Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
+
+[[https://github.com/jixiuf/vterm-toggle][vterm-toggle]] toggles between the Vterm buffer and the current editing buffer 
+
 #+begin_src emacs-lisp
   (use-package vterm
-    :ensure
     :commands vterm
     :custom
-    (vterm-disable-bold-font nil)
+    (vterm-disable-bold-font t)
     (vterm-disable-inverse-video nil)
     (vterm-disable-underline nil)
     (vterm-kill-buffer-on-exit t)
     (vterm-max-scrollback 9999)
     (vterm-shell "/bin/zsh")
-    (vterm-term-environment-variable "xterm-256color")
+    (vterm-term-environment-variable "xterm-256color"))
 
-    :bind (("C-z v" . vterm)
-           ("M-<f12>" . vterm)))
-
+  (use-package vterm-toggle
+    :custom
+    ;; Show Vterm Buffer in bottom side
+    (vterm-toggle-fullscreen-p nil)
+    :init
+     (add-to-list 'display-buffer-alist
+                 '((lambda(bufname _) (with-current-buffer bufname (equal major-mode 'vterm-mode)))
+                   (display-buffer-reuse-window display-buffer-in-side-window)
+                   (side . bottom)
+                   (dedicated . t) ;dedicated is supported in emacs27
+                   (reusable-frames . visible)
+                   (window-height . 0.3)))
+    :bind
+    (("C-z t" . vterm-toggle)
+     :map vterm-mode-map
+     ("C-<return>" . vterm-toggle-insert-cd)
+     ("C-S-n" . vterm-toggle-forward)
+     ("C-S-p" . vterm-toggle-backward)
+     ))
 #+end_src
+
+
+
 *** aweshell -> =C-z e=
+
+[[https://github.com/manateelazycat/aweshell][aweshell]] Awesome eshell (eshell extensions)
 
 #+begin_src emacs-lisp
   (use-package aweshell
@@ -1164,12 +1188,11 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
                :repo "manateelazycat/aweshell")
     :custom
     (eshell-highlight-prompt nil)
-    ;; (eshell-prompt-function 'epe-theme-pipeline)
+    (eshell-prompt-function 'epe-theme-dakrone)
 
     :bind
     (("C-z e" . aweshell-dedicated-toggle))
     )
-
 #+end_src
 
 
