@@ -1,2 +1,4 @@
 /_setup/_macOS/Brewfile.lock.json
 .DS_Store
+/emacs/.emacs.d/%backup%~
+/emacs/.emacs.d/custom.el

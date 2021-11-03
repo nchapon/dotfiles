@@ -1,0 +1,15 @@
+elpa/
+/var/
+straight/build-27.2.50/
+straight/build-27.1/
+straight/repos/
+straight/watcher/
+straight/build-27.2.50-cache.el
+straight/build-27.1-cache.el
+straight/modified
+
+# ignore the emacs lisp nativecomp cache
+eln-cache/
+
+# ignore the org roam database
+org-roam.db
