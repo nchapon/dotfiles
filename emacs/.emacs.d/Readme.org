@@ -1028,8 +1028,8 @@ Expand region increases the selected region by semantic units. Just keep pressin
        (setq undo-tree-visualizer-diff t)))
  #+end_src
 
-*** Smartparens
-
+*** Parenthesis
+**** Smart Parens
 Smart parens for all programming modes with paredit bindings.
 
 #+begin_src emacs-lisp
@@ -1073,6 +1073,28 @@ Smart parens for all programming modes with paredit bindings.
 
 #+end_src
 
+**** Show Paren Mode
+Emacs builtin show paren mode.
+#+begin_src emacs-lisp
+  (use-package paren
+    :straight nil
+    :hook (prog-mode . show-paren-mode)
+    :custom
+    (show-paren-delay 0)
+    (show-paren-when-point-in-periphery t))
+#+end_src
+
+
+
+*** Rainbow mode
+
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-mode)
+  (diminish 'rainbow-mode))
+#+end_src
 
 *** Yasnippet
 Snippets for programming.
@@ -1193,30 +1215,112 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
     )
 #+end_src
 
-*** rainbow mode
-
-#+begin_src emacs-lisp
-(use-package rainbow-mode
-  :ensure t
-  :config
-  (add-hook 'prog-mode-hook #'rainbow-mode)
-  (diminish 'rainbow-mode))
-#+end_src
-
-*** show paren mode
-Emacs builtin show paren mode.
-#+begin_src emacs-lisp
-  (use-package paren
-    :straight nil
-    :hook (prog-mode . show-paren-mode)
-    :custom
-    (show-paren-delay 0)
-    (show-paren-when-point-in-periphery t))
-#+end_src
-
-
-
 ** Programming
+*** Clojure
+
+*** Docker
+#+begin_src emacs-lisp
+(use-package dockerfile-mode
+  :mode "Dockerfile.*\\'")
+#+end_src
+*** Lua
+#+begin_src emacs-lisp
+(use-package lua-mode
+  :mode "\\.lua\\'")
+#+end_src
+*** Markdown
+
+GitHub Flavored Markdown by default for README.md files.
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'"       . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
+    :config
+
+    (setq markdown-fontify-code-blocks-natively t)
+  
+    ;; Process Markdown with Pandoc, using GitHub stylesheet for nice output
+    (let ((stylesheet (expand-file-name
+                       (locate-user-emacs-file "etc/pandoc.css"))))
+      (setq markdown-command
+            (mapconcat #'shell-quote-argument
+                       `("pandoc" "--toc" "--section-divs"
+                         "--css" ,(concat "file://" stylesheet)
+                         "--standalone" "-f" "markdown" "-t" "html5")
+                       " "))))
+
+
+  (use-package markdown-toc
+    :after markdown-mode)
+
+#+end_src
+*** Python
+#+begin_src emacs-lisp
+(use-package python-mode
+  :straight nil
+  :mode ("\\.py\\'")
+  :custom
+  (python-shell-interpreter "python3"))
+
+#+end_src
+*** Web
+**** Rest Client
+[[https://github.com/pashky/restclient.el][Restclient]] Emacs client for testing API
+
+#+begin_src emacs-lisp
+(use-package restclient
+  :mode (("\\.restclient\\'" . restclient-mode)
+         ("\\.http\\'" . restclient-mode)))
+#+end_src
+**** Web Mode
+[[https://web-mode.org/][Web Mode]] major mode for editing HTML pages
+
+#+begin_src emacs-lisp
+(use-package web-mode
+  :mode (("\\.html\\'" . web-mode)
+         ("\\.hbs\\'" . web-mode)
+         ("\\.tag$" . web-mode)
+         ("\\.ftl$" . web-mode)
+         ("\\.jsp$" . web-mode)
+         ("\\.php$" . web-mode))
+  :config
+  (add-hook 'web-mode-hook (lambda ()
+                             (setq web-mode-markup-indent-offset 4)
+                             (setq web-mode-code-indent-offset 4))))
+
+#+end_src
+
+**** Javascript
+[[https://github.com/mooz/js2-mode][JS2 mode]] improved javascript editing mode
+#+begin_src emacs-lisp
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :init
+  (defalias 'javascript-generic-mode 'js2-mode)
+  :config
+  (js2-imenu-extras-setup)
+  (setq-default js-auto-indent-flag nil
+                js2-strict-missing-semi-warning nil
+                js-indent-level 2)
+
+  ;; Don't override global M-j keybinding (join lines)
+  (define-key js2-mode-map (kbd "M-j") nil))
+
+#+end_src
+
+
+*** YAML
+
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :mode (("\\.yaml\\'" . yaml-mode)
+             ("\\.yml\\'" . yaml-mode))
+    :custom
+    (yaml-indent-offset 4))
+#+end_src
+
 ** Org
 *** Org Base Configuration
 

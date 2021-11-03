@@ -643,6 +643,19 @@
     (sp-local-pair "{" nil :post-handlers
                    '((nc--create-newline-and-enter-sexp "RET")))))
 
+(use-package paren
+  :straight nil
+  :hook (prog-mode . show-paren-mode)
+  :custom
+  (show-paren-delay 0)
+  (show-paren-when-point-in-periphery t))
+
+(use-package rainbow-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-mode)
+  (diminish 'rainbow-mode))
+
 (use-package yasnippet
   :ensure t
   :diminish yas-minor-mode
@@ -729,18 +742,74 @@
   (("C-z e" . aweshell-dedicated-toggle))
   )
 
-(use-package rainbow-mode
-  :ensure t
-  :config
-  (add-hook 'prog-mode-hook #'rainbow-mode)
-  (diminish 'rainbow-mode))
+(use-package dockerfile-mode
+  :mode "Dockerfile.*\\'")
 
-(use-package paren
+(use-package lua-mode
+  :mode "\\.lua\\'")
+
+(use-package markdown-mode
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'"       . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :config
+
+  (setq markdown-fontify-code-blocks-natively t)
+
+  ;; Process Markdown with Pandoc, using GitHub stylesheet for nice output
+  (let ((stylesheet (expand-file-name
+                     (locate-user-emacs-file "etc/pandoc.css"))))
+    (setq markdown-command
+          (mapconcat #'shell-quote-argument
+                     `("pandoc" "--toc" "--section-divs"
+                       "--css" ,(concat "file://" stylesheet)
+                       "--standalone" "-f" "markdown" "-t" "html5")
+                     " "))))
+
+
+(use-package markdown-toc
+  :after markdown-mode)
+
+(use-package python-mode
   :straight nil
-  :hook (prog-mode . show-paren-mode)
+  :mode ("\\.py\\'")
   :custom
-  (show-paren-delay 0)
-  (show-paren-when-point-in-periphery t))
+  (python-shell-interpreter "python3"))
+
+(use-package restclient
+  :mode (("\\.restclient\\'" . restclient-mode)
+         ("\\.http\\'" . restclient-mode)))
+
+(use-package web-mode
+  :mode (("\\.html\\'" . web-mode)
+         ("\\.hbs\\'" . web-mode)
+         ("\\.tag$" . web-mode)
+         ("\\.ftl$" . web-mode)
+         ("\\.jsp$" . web-mode)
+         ("\\.php$" . web-mode))
+  :config
+  (add-hook 'web-mode-hook (lambda ()
+                             (setq web-mode-markup-indent-offset 4)
+                             (setq web-mode-code-indent-offset 4))))
+
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :init
+  (defalias 'javascript-generic-mode 'js2-mode)
+  :config
+  (js2-imenu-extras-setup)
+  (setq-default js-auto-indent-flag nil
+                js2-strict-missing-semi-warning nil
+                js-indent-level 2)
+
+  ;; Don't override global M-j keybinding (join lines)
+  (define-key js2-mode-map (kbd "M-j") nil))
+
+(use-package yaml-mode
+  :mode (("\\.yaml\\'" . yaml-mode)
+           ("\\.yml\\'" . yaml-mode))
+  :custom
+  (yaml-indent-offset 4))
 
 (use-package org
 
