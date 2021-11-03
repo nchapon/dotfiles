@@ -1028,8 +1028,8 @@ Expand region increases the selected region by semantic units. Just keep pressin
        (setq undo-tree-visualizer-diff t)))
  #+end_src
 
-*** Smartparens
-
+*** Parenthesis
+**** Smart Parens
 Smart parens for all programming modes with paredit bindings.
 
 #+begin_src emacs-lisp
@@ -1073,6 +1073,28 @@ Smart parens for all programming modes with paredit bindings.
 
 #+end_src
 
+**** Show Paren Mode
+Emacs builtin show paren mode.
+#+begin_src emacs-lisp
+  (use-package paren
+    :straight nil
+    :hook (prog-mode . show-paren-mode)
+    :custom
+    (show-paren-delay 0)
+    (show-paren-when-point-in-periphery t))
+#+end_src
+
+
+
+*** Rainbow mode
+
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-mode)
+  (diminish 'rainbow-mode))
+#+end_src
 
 *** Yasnippet
 Snippets for programming.
@@ -1135,26 +1157,48 @@ Consult integration
       (company-statistics-mode 1))
    #+end_src
 
-*** vterm -> =C-z v=  =M-<f12>=
+*** vterm -> =C-z t=
+
 Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
+
+[[https://github.com/jixiuf/vterm-toggle][vterm-toggle]] toggles between the Vterm buffer and the current editing buffer 
+
 #+begin_src emacs-lisp
   (use-package vterm
-    :ensure
     :commands vterm
     :custom
-    (vterm-disable-bold-font nil)
+    (vterm-disable-bold-font t)
     (vterm-disable-inverse-video nil)
     (vterm-disable-underline nil)
     (vterm-kill-buffer-on-exit t)
     (vterm-max-scrollback 9999)
     (vterm-shell "/bin/zsh")
-    (vterm-term-environment-variable "xterm-256color")
+    (vterm-term-environment-variable "xterm-256color"))
 
-    :bind (("C-z v" . vterm)
-           ("M-<f12>" . vterm)))
-
+  (use-package vterm-toggle
+    :custom
+    ;; Show Vterm Buffer in bottom side
+    (vterm-toggle-fullscreen-p nil)
+    :init
+     (add-to-list 'display-buffer-alist
+                 '((lambda(bufname _) (with-current-buffer bufname (equal major-mode 'vterm-mode)))
+                   (display-buffer-reuse-window display-buffer-in-side-window)
+                   (side . bottom)
+                   (dedicated . t) ;dedicated is supported in emacs27
+                   (reusable-frames . visible)
+                   (window-height . 0.3)))
+    :bind
+    (("C-z t" . vterm-toggle)
+     :map vterm-mode-map
+     ("C-<return>" . vterm-toggle-insert-cd)
+     ("C-S-n" . vterm-toggle-forward)
+     ("C-S-p" . vterm-toggle-backward)
+     ))
 #+end_src
+
 *** aweshell -> =C-z e=
+
+[[https://github.com/manateelazycat/aweshell][aweshell]] Awesome eshell (eshell extensions)
 
 #+begin_src emacs-lisp
   (use-package aweshell
@@ -1164,56 +1208,156 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
                :repo "manateelazycat/aweshell")
     :custom
     (eshell-highlight-prompt nil)
-    ;; (eshell-prompt-function 'epe-theme-pipeline)
+    (eshell-prompt-function 'epe-theme-dakrone)
 
     :bind
     (("C-z e" . aweshell-dedicated-toggle))
     )
+#+end_src
+
+** Programming
+*** Clojure
+
+*** Docker
+#+begin_src emacs-lisp
+(use-package dockerfile-mode
+  :mode "Dockerfile.*\\'")
+#+end_src
+*** Lua
+#+begin_src emacs-lisp
+(use-package lua-mode
+  :mode "\\.lua\\'")
+#+end_src
+*** Markdown
+
+GitHub Flavored Markdown by default for README.md files.
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'"       . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
+    :config
+
+    (setq markdown-fontify-code-blocks-natively t)
+  
+    ;; Process Markdown with Pandoc, using GitHub stylesheet for nice output
+    (let ((stylesheet (expand-file-name
+                       (locate-user-emacs-file "etc/pandoc.css"))))
+      (setq markdown-command
+            (mapconcat #'shell-quote-argument
+                       `("pandoc" "--toc" "--section-divs"
+                         "--css" ,(concat "file://" stylesheet)
+                         "--standalone" "-f" "markdown" "-t" "html5")
+                       " "))))
+
+
+  (use-package markdown-toc
+    :after markdown-mode)
+
+#+end_src
+*** Python
+#+begin_src emacs-lisp
+(use-package python-mode
+  :straight nil
+  :mode ("\\.py\\'")
+  :custom
+  (python-shell-interpreter "python3"))
+
+#+end_src
+*** Web
+**** Rest Client
+[[https://github.com/pashky/restclient.el][Restclient]] Emacs client for testing API
+
+#+begin_src emacs-lisp
+(use-package restclient
+  :mode (("\\.restclient\\'" . restclient-mode)
+         ("\\.http\\'" . restclient-mode)))
+#+end_src
+**** Web Mode
+[[https://web-mode.org/][Web Mode]] major mode for editing HTML pages
+
+#+begin_src emacs-lisp
+(use-package web-mode
+  :mode (("\\.html\\'" . web-mode)
+         ("\\.hbs\\'" . web-mode)
+         ("\\.tag$" . web-mode)
+         ("\\.ftl$" . web-mode)
+         ("\\.jsp$" . web-mode)
+         ("\\.php$" . web-mode))
+  :config
+  (add-hook 'web-mode-hook (lambda ()
+                             (setq web-mode-markup-indent-offset 4)
+                             (setq web-mode-code-indent-offset 4))))
+
+#+end_src
+
+**** Javascript
+[[https://github.com/mooz/js2-mode][JS2 mode]] improved javascript editing mode
+#+begin_src emacs-lisp
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :init
+  (defalias 'javascript-generic-mode 'js2-mode)
+  :config
+  (js2-imenu-extras-setup)
+  (setq-default js-auto-indent-flag nil
+                js2-strict-missing-semi-warning nil
+                js-indent-level 2)
+
+  ;; Don't override global M-j keybinding (join lines)
+  (define-key js2-mode-map (kbd "M-j") nil))
 
 #+end_src
 
 
+*** YAML
 
-** Programming
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :mode (("\\.yaml\\'" . yaml-mode)
+             ("\\.yml\\'" . yaml-mode))
+    :custom
+    (yaml-indent-offset 4))
+#+end_src
+
 ** Org
 *** Org Base Configuration
 
 #+begin_src emacs-lisp
-(use-package org
+  (use-package org
 
-  :bind (("C-c l" . org-store-link)
-         ("C-c c" . org-capture)
-         ("C-c a" . org-agenda)
-         ("<f12>" . org-agenda)
-         ("C-c C-b" . org-iswitchb))
+    :bind (("C-c l" . org-store-link)
+           ("C-c c" . org-capture)
+           ("C-c a" . org-agenda)
+           ("<f12>" . org-agenda)
+           ("C-c C-b" . org-iswitchb))
 
-  :config
-  ;; New template exapnsion
-  (require 'org-tempo)
+    :config
+    ;; New template exapnsion
+    (require 'org-tempo)
 
-  (setq org-directory "~/notes"
-        org-ellipsis " ⬎"
-        org-cycle-separator-lines 0                 ;; Hide empty lines between subtrees
-        org-catch-invisible-edits 'show-and-error   ;; Avoid inadvertent text edit in invisible area
-        )
+    (setq org-ellipsis " ⬎"
+          org-cycle-separator-lines 0                 ;; Hide empty lines between subtrees
+          org-catch-invisible-edits 'show-and-error   ;; Avoid inadvertent text edit in invisible area
+          )
 
-  (set-face-attribute 'org-ellipsis nil :underline nil)
+    (set-face-attribute 'org-ellipsis nil :underline nil)
 
-  ;; Autamatically add =ID= (unique identifier) in heading drawers to keep links unique
-  (require 'org-id)
-  (setq org-id-method 'uuidgen)
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+    ;; Autamatically add =ID= (unique identifier) in heading drawers to keep links unique
+    (require 'org-id)
+    (setq org-id-method 'uuidgen)
+    (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
+    (require 'org-crypt)
+    (org-crypt-use-before-save-magic)
 
-  (require 'org-crypt)
-  (org-crypt-use-before-save-magic)
+    (add-to-list 'org-tags-exclude-from-inheritance "crypt")
+    ;; GPG key to use for encryption
+    ;; Either the Key ID or set to nil to use symmetric encryption.
+    (setq org-crypt-key "0DF2D6C6E8443FE7"))
 
-  (add-to-list 'org-tags-exclude-from-inheritance "crypt")
-  ;; GPG key to use for encryption
-  ;; Either the Key ID or set to nil to use symmetric encryption.
-  (setq org-crypt-key "0DF2D6C6E8443FE7"))
-
-  (use-package org-contrib)
+    (use-package org-contrib)
 #+end_src
 
 *** Org UI
@@ -1304,47 +1448,48 @@ Change priorities colors
 #+end_src
 
 
-*** Org Files Paths
+*** My Org Files
 
  My default org files
 
  #+begin_src emacs-lisp
-   ;; Org constant files
-    (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
-    (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
-    (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
-    (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
-    (defconst nc/org-default-completed-dir (concat org-directory "/projects/_completed"))
-    (defconst nc/org-journal-dir (concat org-directory "/journal"))
-    (defconst nc/inbox-file (concat org-directory "/gtd.org"))
-    (defconst nc/org-default-inbox-file (concat org-directory "/gtd.org"))
-    (defconst nc/org-default-tasks-file (concat org-directory "/gtd.org"))
-    (defconst nc/watching-file (concat org-directory "/personal/watching.org"))
-    (defconst nc/reading-file (concat org-directory "/personal/books.org"))
-    (defconst nc/org-default-media-files (concat org-directory "/personal/watching.org"))
-    (defconst nc/org-default-someday-file (concat org-directory "/someday.org"))
-    (defconst nc/fishing-file (concat org-directory "/personal/sports/fishing.org"))
-    (defconst nc/calendar-file (concat org-directory "/personal/calendar.org"))
-    (defconst nc/weekly-review-file (concat org-directory "/personal/reviews/weekly-review.org"))
+   (use-package org
+
+     :config
+     (setq org-directory "~/notes")
+     (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
+     (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
+     (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
+     (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
+     (defconst nc/org-default-completed-dir (concat org-directory "/projects/_completed"))
+     (defconst nc/org-journal-dir (concat org-directory "/journal"))
+     (defconst nc/inbox-file (concat org-directory "/gtd.org"))
+     (defconst nc/org-default-inbox-file (concat org-directory "/gtd.org"))
+     (defconst nc/org-default-tasks-file (concat org-directory "/gtd.org"))
+     (defconst nc/watching-file (concat org-directory "/personal/watching.org"))
+     (defconst nc/reading-file (concat org-directory "/personal/books.org"))
+     (defconst nc/org-default-media-files (concat org-directory "/personal/watching.org"))
+     (defconst nc/org-default-someday-file (concat org-directory "/someday.org"))
+     (defconst nc/fishing-file (concat org-directory "/personal/sports/fishing.org"))
+     (defconst nc/calendar-file (concat org-directory "/personal/calendar.org"))
+     (defconst nc/weekly-review-file (concat org-directory "/personal/reviews/weekly-review.org"))
+
+
+     (defun nc/go-to-inbox ()
+       (interactive)
+       (find-file nc/inbox-file )
+       (widen)
+       (beginning-of-buffer)
+       (re-search-forward "* Inbox")
+       (beginning-of-line))
+
+
+     (defun nc/go-to-resources-dir ()
+       (interactive)
+       (dired nc/org-default-resources-dir))
+
+     )
  #+end_src
-
-Helpers Functions
-
-#+begin_src emacs-lisp
-  (defun nc/go-to-inbox ()
-    (interactive)
-    (find-file nc/inbox-file )
-    (widen)
-    (beginning-of-buffer)
-    (re-search-forward "* Inbox")
-    (beginning-of-line))
-#+end_src
-
-#+begin_src emacs-lisp
-  (defun nc/go-to-resources-dir ()
-    (interactive)
-    (dired nc/org-default-resources-dir))
-#+end_src
 
 
 *** Journal -> =C-z f j=
@@ -2067,6 +2212,33 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
     (("<f7>"   . yankpad-insert)
      ("C-<f7>"   . yankpad-map)))
 #+end_src
+*** Org Roam
+
+#+begin_src emacs-lisp
+
+  ;; (when is-windows  
+  ;;   (add-to-list 'exec-path "C:/ProgramJava/tools/sqlite-tools-win32-x86-3340100"))
+  
+  (use-package org-roam
+    :after org
+    :custom
+    (org-roam-directory (concat org-directory "/slipbox"))
+    :init
+    (setq org-roam-v2-ack t)
+    :bind
+    ("C-c n l" . org-roam-buffer-toggle)
+    ("C-c n f" . org-roam-node-find)
+    (:map org-mode-map
+          (("C-c n i" . org-roam-node-insert)))
+    :config
+    (setq org-roam-capture-templates '(("d" "default" plain "%?"
+                                        :if-new (file+head "%<%Y-%m-%d--%H-%M>--${slug}.org"
+                                                           "#+TITLE: ${title}\n#+DATE: %T\n")
+                                        :unnarrowed t)))
+    ;; this sets up various file handling hooks so your DB remains up to date
+    (org-roam-setup))
+#+end_src
+
 
 ** My functions
 *** Emacs Config File -> =C-z ;=

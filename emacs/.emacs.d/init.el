@@ -643,6 +643,19 @@
     (sp-local-pair "{" nil :post-handlers
                    '((nc--create-newline-and-enter-sexp "RET")))))
 
+(use-package paren
+  :straight nil
+  :hook (prog-mode . show-paren-mode)
+  :custom
+  (show-paren-delay 0)
+  (show-paren-when-point-in-periphery t))
+
+(use-package rainbow-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-mode)
+  (diminish 'rainbow-mode))
+
 (use-package yasnippet
   :ensure t
   :diminish yas-minor-mode
@@ -686,19 +699,35 @@
   (company-statistics-mode 1))
 
 (use-package vterm
-  :ensure
   :commands vterm
   :custom
-  (vterm-disable-bold-font nil)
+  (vterm-disable-bold-font t)
   (vterm-disable-inverse-video nil)
   (vterm-disable-underline nil)
   (vterm-kill-buffer-on-exit t)
   (vterm-max-scrollback 9999)
   (vterm-shell "/bin/zsh")
-  (vterm-term-environment-variable "xterm-256color")
+  (vterm-term-environment-variable "xterm-256color"))
 
-  :bind (("C-z v" . vterm)
-         ("M-<f12>" . vterm)))
+(use-package vterm-toggle
+  :custom
+  ;; Show Vterm Buffer in bottom side
+  (vterm-toggle-fullscreen-p nil)
+  :init
+   (add-to-list 'display-buffer-alist
+               '((lambda(bufname _) (with-current-buffer bufname (equal major-mode 'vterm-mode)))
+                 (display-buffer-reuse-window display-buffer-in-side-window)
+                 (side . bottom)
+                 (dedicated . t) ;dedicated is supported in emacs27
+                 (reusable-frames . visible)
+                 (window-height . 0.3)))
+  :bind
+  (("C-z t" . vterm-toggle)
+   :map vterm-mode-map
+   ("C-<return>" . vterm-toggle-insert-cd)
+   ("C-S-n" . vterm-toggle-forward)
+   ("C-S-p" . vterm-toggle-backward)
+   ))
 
 (use-package aweshell
   :straight (aweshell
@@ -707,11 +736,80 @@
              :repo "manateelazycat/aweshell")
   :custom
   (eshell-highlight-prompt nil)
-  ;; (eshell-prompt-function 'epe-theme-pipeline)
+  (eshell-prompt-function 'epe-theme-dakrone)
 
   :bind
   (("C-z e" . aweshell-dedicated-toggle))
   )
+
+(use-package dockerfile-mode
+  :mode "Dockerfile.*\\'")
+
+(use-package lua-mode
+  :mode "\\.lua\\'")
+
+(use-package markdown-mode
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'"       . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :config
+
+  (setq markdown-fontify-code-blocks-natively t)
+
+  ;; Process Markdown with Pandoc, using GitHub stylesheet for nice output
+  (let ((stylesheet (expand-file-name
+                     (locate-user-emacs-file "etc/pandoc.css"))))
+    (setq markdown-command
+          (mapconcat #'shell-quote-argument
+                     `("pandoc" "--toc" "--section-divs"
+                       "--css" ,(concat "file://" stylesheet)
+                       "--standalone" "-f" "markdown" "-t" "html5")
+                     " "))))
+
+
+(use-package markdown-toc
+  :after markdown-mode)
+
+(use-package python-mode
+  :straight nil
+  :mode ("\\.py\\'")
+  :custom
+  (python-shell-interpreter "python3"))
+
+(use-package restclient
+  :mode (("\\.restclient\\'" . restclient-mode)
+         ("\\.http\\'" . restclient-mode)))
+
+(use-package web-mode
+  :mode (("\\.html\\'" . web-mode)
+         ("\\.hbs\\'" . web-mode)
+         ("\\.tag$" . web-mode)
+         ("\\.ftl$" . web-mode)
+         ("\\.jsp$" . web-mode)
+         ("\\.php$" . web-mode))
+  :config
+  (add-hook 'web-mode-hook (lambda ()
+                             (setq web-mode-markup-indent-offset 4)
+                             (setq web-mode-code-indent-offset 4))))
+
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :init
+  (defalias 'javascript-generic-mode 'js2-mode)
+  :config
+  (js2-imenu-extras-setup)
+  (setq-default js-auto-indent-flag nil
+                js2-strict-missing-semi-warning nil
+                js-indent-level 2)
+
+  ;; Don't override global M-j keybinding (join lines)
+  (define-key js2-mode-map (kbd "M-j") nil))
+
+(use-package yaml-mode
+  :mode (("\\.yaml\\'" . yaml-mode)
+           ("\\.yml\\'" . yaml-mode))
+  :custom
+  (yaml-indent-offset 4))
 
 (use-package org
 
@@ -725,8 +823,7 @@
   ;; New template exapnsion
   (require 'org-tempo)
 
-  (setq org-directory "~/notes"
-        org-ellipsis " ⬎"
+  (setq org-ellipsis " ⬎"
         org-cycle-separator-lines 0                 ;; Hide empty lines between subtrees
         org-catch-invisible-edits 'show-and-error   ;; Avoid inadvertent text edit in invisible area
         )
@@ -737,7 +834,6 @@
   (require 'org-id)
   (setq org-id-method 'uuidgen)
   (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
-
 
   (require 'org-crypt)
   (org-crypt-use-before-save-magic)
@@ -813,35 +909,42 @@
       org-hide-emphasis-markers t
       org-fontify-quote-and-verse-blocks t)
 
-;; Org constant files
- (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
- (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
- (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
- (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
- (defconst nc/org-default-completed-dir (concat org-directory "/projects/_completed"))
- (defconst nc/org-journal-dir (concat org-directory "/journal"))
- (defconst nc/inbox-file (concat org-directory "/gtd.org"))
- (defconst nc/org-default-inbox-file (concat org-directory "/gtd.org"))
- (defconst nc/org-default-tasks-file (concat org-directory "/gtd.org"))
- (defconst nc/watching-file (concat org-directory "/personal/watching.org"))
- (defconst nc/reading-file (concat org-directory "/personal/books.org"))
- (defconst nc/org-default-media-files (concat org-directory "/personal/watching.org"))
- (defconst nc/org-default-someday-file (concat org-directory "/someday.org"))
- (defconst nc/fishing-file (concat org-directory "/personal/sports/fishing.org"))
- (defconst nc/calendar-file (concat org-directory "/personal/calendar.org"))
- (defconst nc/weekly-review-file (concat org-directory "/personal/reviews/weekly-review.org"))
+(use-package org
 
-(defun nc/go-to-inbox ()
-  (interactive)
-  (find-file nc/inbox-file )
-  (widen)
-  (beginning-of-buffer)
-  (re-search-forward "* Inbox")
-  (beginning-of-line))
+  :config
+  (setq org-directory "~/notes")
+  (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
+  (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
+  (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
+  (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
+  (defconst nc/org-default-completed-dir (concat org-directory "/projects/_completed"))
+  (defconst nc/org-journal-dir (concat org-directory "/journal"))
+  (defconst nc/inbox-file (concat org-directory "/gtd.org"))
+  (defconst nc/org-default-inbox-file (concat org-directory "/gtd.org"))
+  (defconst nc/org-default-tasks-file (concat org-directory "/gtd.org"))
+  (defconst nc/watching-file (concat org-directory "/personal/watching.org"))
+  (defconst nc/reading-file (concat org-directory "/personal/books.org"))
+  (defconst nc/org-default-media-files (concat org-directory "/personal/watching.org"))
+  (defconst nc/org-default-someday-file (concat org-directory "/someday.org"))
+  (defconst nc/fishing-file (concat org-directory "/personal/sports/fishing.org"))
+  (defconst nc/calendar-file (concat org-directory "/personal/calendar.org"))
+  (defconst nc/weekly-review-file (concat org-directory "/personal/reviews/weekly-review.org"))
 
-(defun nc/go-to-resources-dir ()
-  (interactive)
-  (dired nc/org-default-resources-dir))
+
+  (defun nc/go-to-inbox ()
+    (interactive)
+    (find-file nc/inbox-file )
+    (widen)
+    (beginning-of-buffer)
+    (re-search-forward "* Inbox")
+    (beginning-of-line))
+
+
+  (defun nc/go-to-resources-dir ()
+    (interactive)
+    (dired nc/org-default-resources-dir))
+
+  )
 
 (defun nc/journal-file-today ()
       "Create and load a journal file based on today's date."
@@ -1380,6 +1483,28 @@ the result as a time value."
   :bind
   (("<f7>"   . yankpad-insert)
    ("C-<f7>"   . yankpad-map)))
+
+;; (when is-windows  
+;;   (add-to-list 'exec-path "C:/ProgramJava/tools/sqlite-tools-win32-x86-3340100"))
+
+(use-package org-roam
+  :after org
+  :custom
+  (org-roam-directory (concat org-directory "/slipbox"))
+  :init
+  (setq org-roam-v2-ack t)
+  :bind
+  ("C-c n l" . org-roam-buffer-toggle)
+  ("C-c n f" . org-roam-node-find)
+  (:map org-mode-map
+        (("C-c n i" . org-roam-node-insert)))
+  :config
+  (setq org-roam-capture-templates '(("d" "default" plain "%?"
+                                      :if-new (file+head "%<%Y-%m-%d--%H-%M>--${slug}.org"
+                                                         "#+TITLE: ${title}\n#+DATE: %T\n")
+                                      :unnarrowed t)))
+  ;; this sets up various file handling hooks so your DB remains up to date
+  (org-roam-setup))
 
 (defun nc/goto-emacs-config ()
     "Edit Readme.org"
