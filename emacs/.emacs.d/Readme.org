@@ -463,7 +463,6 @@ filter string into the minibuffer.
 
 #+begin_src emacs-lisp
 (use-package dired-narrow
-  :ensure t
   :bind (:map dired-mode-map
               ("/" . dired-narrow)))
 #+end_src
