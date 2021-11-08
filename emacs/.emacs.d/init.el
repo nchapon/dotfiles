@@ -213,7 +213,6 @@
                                  (lambda () (interactive) (find-alternate-file ".."))))))
 
 (use-package dired-narrow
-  :ensure t
   :bind (:map dired-mode-map
               ("/" . dired-narrow)))
 
@@ -1342,6 +1341,7 @@
 
 (push '("N" nc/org-show-next-heading-tidily) org-speed-commands)
 (push '("P" nc/org-show-previous-heading-tidily) org-speed-commands)
+(push '("m" org-mark-subtree) org-speed-commands)
 
 (defun nc/org-go-speed ()
   "Goes to the beginning of an element's header, so that you can execute speed commands."
