@@ -1,6 +1,19 @@
 # dotfiles
 
-Personal dotfiles used when I setup a new environnement.
+My personal dotfiles used when I setup a new environnement.
+
+**Under Construction**
+
+Pré Requis
+- stow
+- asdf
+- emacs 27.1
+
+
+Testé sur :
+- Ubuntu 20
+
+
 
 ## Usage
 
@@ -8,13 +21,9 @@ Personal dotfiles used when I setup a new environnement.
 
 > cd .dotfiles/
 
-> ./setup.sh
+> stow
 
 ## Local Settings ##
 
 Stash your environment variables and others sepcific settings in `~/.bash.local`
 
-## Credits ##
-- [Holman does dotfiles](https://github.com/holman/dotfiles)
-- [Cătălin Mariș](https://github.com/alrra/dotfiles)
-- [hlissner dot files](https://github.com/hlissner/dotfiles)
