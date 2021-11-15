@@ -1,6 +1,7 @@
 /_setup/_macOS/Brewfile.lock.json
 .DS_Store
-/emacs/.emacs.d/%backup%~
-/emacs/.emacs.d/custom.el
-/emacs/.emacs.d/straight/build*/
-/emacs/.emacs.d/straight/build*-cache.el
+emacs/.emacs.d/%backup%~
+emacs/.emacs.d/custom.el
+emacs/.emacs.d/var/
+emacs/.emacs.d/straight/*
+!emacs/.emacs.d/straight/versions/
