@@ -1216,6 +1216,19 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
 
 ** Programming
 *** Clojure
+**** clojure-mode
+#+begin_src emacs-lisp
+  (use-package clojure-mode
+    :mode "\\.clj$"
+    :init
+    (setq clojure-align-forms-automatically t))
+#+end_src
+**** Cider
+#+begin_src emacs-lisp
+  (use-package cider
+    :init
+    (setq org-babel-clojure-backend 'cider))
+#+end_src
 
 *** Docker
 #+begin_src emacs-lisp

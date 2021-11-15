@@ -101,3 +101,12 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 alias cdp="cd ~/Projects"
+
+
+# Set JAVA_HOME
+if [ -f $HOME/.asdf/plugins/java/set-java-home.zsh ]; then
+    source $HOME/.asdf/plugins/java/set-java-home.zsh
+fi
+
+
+

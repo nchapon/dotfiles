@@ -741,6 +741,15 @@
   (("C-z e" . aweshell-dedicated-toggle))
   )
 
+(use-package clojure-mode
+  :mode "\\.clj$"
+  :init
+  (setq clojure-align-forms-automatically t))
+
+(use-package cider
+  :init
+  (setq org-babel-clojure-backend 'cider))
+
 (use-package dockerfile-mode
   :mode "Dockerfile.*\\'")
 
