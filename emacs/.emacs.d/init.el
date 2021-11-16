@@ -195,8 +195,6 @@
   :config
   ;; Enable global auto-revert
   (global-auto-revert-mode t)
-  ;; Reuse same dired buffer, to prevent numerous buffers while navigating in dired
-  (put 'dired-find-alternate-file 'disabled nil)
 
   ;; Using GNU ls on macOS instead of ls
   (if (executable-find "gls")
