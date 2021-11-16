@@ -1454,28 +1454,42 @@ the result as a time value."
       (message "Replaced %d occurences" count))))
 
 (use-package deft
-    :bind
-    (("<f8>" . deft))
-    :config
-    (setq deft-directory "~/notes"
-          deft-recursive t
-          deft-extensions '("org")
-          deft-default-extension "org"
-          deft-text-mode 'org-mode
-          deft-org-mode-title-prefix t
-          deft-use-filter-string-for-filename t
-          deft-auto-save-interval 0
-          deft-recursive-ignore-dir-regexp
-            (concat "\\(?:"
-                    "\\."
-                    "\\|\\.\\."
-                    "\\\|valtech"
-                    "\\|journal"
-                    "\\)$")
-          deft-file-naming-rules
-            '((noslash . "-")
-              (nospace . "-")
-              (case-fn . downcase))))
+  :bind
+  (("<f8>" . deft))
+  :config
+  (setq deft-directory "~/notes"
+        deft-recursive t
+        deft-extensions '("org")
+        deft-default-extension "org"
+        deft-text-mode 'org-mode
+        deft-org-mode-title-prefix t
+        deft-use-filter-string-for-filename t
+        deft-auto-save-interval 0
+        deft-recursive-ignore-dir-regexp
+        (concat "\\(?:"
+                "\\."
+                "\\|\\.\\."
+                "\\\|valtech"
+                "\\|journal"
+                "\\)$")
+        deft-file-naming-rules
+        '((noslash . "-")
+          (nospace . "-")
+          (case-fn . downcase)))
+
+  ;; With Org-roam V2, we need to adapt Deft Title
+  ;; Cf https://github.com/jrblevin/deft/issues/75#issuecomment-905031872
+  (defun nc/deft-parse-title (file contents)
+    "Parse the given FILE and CONTENTS and determine the title.
+  If `deft-use-filename-as-title' is nil, the title is taken to
+  be the first non-empty line of the FILE.  Else the base name of the FILE is
+  used as title."
+    (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
+      (if begin
+          (string-trim (substring contents begin (match-end 0)) "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
+        (deft-base-filename file))))
+
+  (advice-add 'deft-parse-title :override #'nc/deft-parse-title))
 
 (use-package yankpad
   :ensure t
