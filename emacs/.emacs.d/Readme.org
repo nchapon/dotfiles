@@ -1502,7 +1502,7 @@ Change priorities colors
  #+end_src
 
 
-*** Journal -> =C-z f j=
+*** Journal -> =C-z g j=
  Function to easily load weekly journal
  #+begin_src emacs-lisp
 
@@ -1519,11 +1519,12 @@ Change priorities colors
 
    (setq org-default-notes-file (nc--get-journal-file-today))
 
-   (global-set-key (kbd "C-z f j") 'nc/journal-file-today)
+   (global-set-key (kbd "C-z g j") 'nc/journal-file-today)
+   (global-set-key (kbd "C-z j") 'nc/journal-file-today)
  #+end_src
 
 
-Insert daily heading in journal file =C-z-o-i=
+Insert daily heading in journal file =C-z-o-d=
 
    #+begin_src emacs-lisp
      (defun nc--autoinsert-yas-expand ()
@@ -1579,7 +1580,7 @@ Insert daily heading in journal file =C-z-o-i=
            (error "Insert failed"))))
 
      ;; bind-key
-      (bind-key "C-z o i" 'nc/insert-daily-heading)
+      (bind-key "C-z o d" 'nc/insert-daily-heading org-mode-map)
    #+end_src
 
 *** Tasks
@@ -1752,7 +1753,7 @@ I have my own template for creating new projects
                (file "~/notes/templates/newproject.org")))
 #+end_src
 
-**** Daily Review
+**** Daily Review =C-z o D=
 
  #+begin_src emacs-lisp
    (defun org-journal-find-location ()
@@ -1772,15 +1773,16 @@ I have my own template for creating new projects
 
 
  #+begin_src emacs-lisp
-   (defun nc/insert-daily-review ()
-         (interactive)
-           (progn
-             (org-capture nil "d")
-             (org-capture-finalize t)
-             (org-narrow-to-subtree)
-             (org-clock-in)))
+   (defun nc/org-insert-daily-review ()
+     "Insert daily review in org file"
+     (interactive)
+     (progn
+       (org-capture nil "d")
+       (org-capture-finalize t)
+       (org-narrow-to-subtree)
+       (org-clock-in)))
 
-    (bind-key "C-c o D" 'nc/insert-daily-review)
+   (bind-key "C-z o D" 'nc/org-insert-daily-review org-mode-map)
  #+end_src
 **** WeeklyReview
  #+begin_src emacs-lisp
@@ -2041,6 +2043,8 @@ Customize speed-commands :
          (outline-previous-heading))))
 
    (bind-key "C-z /" 'nc/org-go-speed org-mode-map)
+   (bind-key "s-*" 'nc/org-go-speed org-mode-map)
+   (bind-key "C-z o /" 'nc/org-go-speed org-mode-map)
  #+end_src
 
 *** Org Structure templates
@@ -2174,14 +2178,14 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
             (setq count (1+ count))))
         (message "Replaced %d occurences" count))))
 #+end_src
-*** Deft -> =<F8>=
+*** Deft -> =<C-c n d>=
 
 [[https://github.com/jrblevin/deft][Deft]] is an emacs mode for quickly searching (or editing) in his directory notes.
 
 #+begin_src emacs-lisp
   (use-package deft
     :bind
-    (("<f8>" . deft))
+    (("C-c n d" . deft))
     :config
     (setq deft-directory "~/notes"
           deft-recursive t
@@ -2223,8 +2227,7 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
 [[https://github.com/Kungsgeten/yankpad][Yankpad]] paste snippets from an org-mode file.
 
 #+begin_src emacs-lisp
-  (use-package yankpad
-    :ensure t
+  (use-package yankpad    
     :init
     (setq yankpad-file (concat org-directory "/templates/yankpad.org"))
     :config
@@ -2280,9 +2283,10 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
        (find-file "~/.emacs.d/Readme.org"))
 
      (global-set-key (kbd "C-z ;") 'nc/goto-emacs-config)
+     (global-set-key (kbd "C-z g ;") 'nc/goto-emacs-config)
  #+end_src
 
-*** My personal credentials -> =C-z f p=
+*** My personal credentials -> =C-z g p=
 
 #+begin_src emacs-lisp
     (defun nc/goto-my-credentials ()
@@ -2292,7 +2296,7 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
       ;;(super-save-stop)
       (find-file (concat nc/org-default-personal-dir "/password.gpg")))
 
-  (global-set-key (kbd "C-z f p") 'nc/goto-my-credentials)
+  (global-set-key (kbd "C-z g p") 'nc/goto-my-credentials)
 #+end_src
 
 

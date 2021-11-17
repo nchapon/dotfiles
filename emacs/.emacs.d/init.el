@@ -965,7 +965,8 @@
 
 (setq org-default-notes-file (nc--get-journal-file-today))
 
-(global-set-key (kbd "C-z f j") 'nc/journal-file-today)
+(global-set-key (kbd "C-z g j") 'nc/journal-file-today)
+(global-set-key (kbd "C-z j") 'nc/journal-file-today)
 
 (defun nc--autoinsert-yas-expand ()
       "Replace text in yasnippet template."
@@ -1020,7 +1021,7 @@
       (error "Insert failed"))))
 
 ;; bind-key
- (bind-key "C-z o i" 'nc/insert-daily-heading)
+ (bind-key "C-z o d" 'nc/insert-daily-heading org-mode-map)
 
 (setq org-todo-keywords
  '((sequence "TODO(t)" "NEXT(n)" "SOMEDAY(.)" "MAYBE(M)"  "|" "DONE(d)")
@@ -1152,15 +1153,16 @@
                  (file "~/notes/templates/dailyreview.org")
                  :clock-in t :clock-resume t))
 
-(defun nc/insert-daily-review ()
-      (interactive)
-        (progn
-          (org-capture nil "d")
-          (org-capture-finalize t)
-          (org-narrow-to-subtree)
-          (org-clock-in)))
+(defun nc/org-insert-daily-review ()
+  "Insert daily review in org file"
+  (interactive)
+  (progn
+    (org-capture nil "d")
+    (org-capture-finalize t)
+    (org-narrow-to-subtree)
+    (org-clock-in)))
 
- (bind-key "C-c o D" 'nc/insert-daily-review)
+(bind-key "C-z o D" 'nc/org-insert-daily-review org-mode-map)
 
 (add-to-list 'org-capture-templates
                  `("w" "WeeklyReview" entry (file+datetree+prompt nc/weekly-review-file)
@@ -1359,6 +1361,8 @@
       (outline-previous-heading))))
 
 (bind-key "C-z /" 'nc/org-go-speed org-mode-map)
+(bind-key "s-*" 'nc/org-go-speed org-mode-map)
+(bind-key "C-z o /" 'nc/org-go-speed org-mode-map)
 
 ;; This is needed as of Org 9.2
 (require 'org-tempo)
@@ -1455,7 +1459,7 @@ the result as a time value."
 
 (use-package deft
   :bind
-  (("<f8>" . deft))
+  (("C-c n d" . deft))
   :config
   (setq deft-directory "~/notes"
         deft-recursive t
@@ -1491,8 +1495,7 @@ the result as a time value."
 
   (advice-add 'deft-parse-title :override #'nc/deft-parse-title))
 
-(use-package yankpad
-  :ensure t
+(use-package yankpad    
   :init
   (setq yankpad-file (concat org-directory "/templates/yankpad.org"))
   :config
@@ -1537,6 +1540,7 @@ the result as a time value."
     (find-file "~/.emacs.d/Readme.org"))
 
   (global-set-key (kbd "C-z ;") 'nc/goto-emacs-config)
+  (global-set-key (kbd "C-z g ;") 'nc/goto-emacs-config)
 
 (defun nc/goto-my-credentials ()
     "Goto my credentials"
@@ -1545,7 +1549,7 @@ the result as a time value."
     ;;(super-save-stop)
     (find-file (concat nc/org-default-personal-dir "/password.gpg")))
 
-(global-set-key (kbd "C-z f p") 'nc/goto-my-credentials)
+(global-set-key (kbd "C-z g p") 'nc/goto-my-credentials)
 
 (defun nc--random-alnum ()
   (let* ((alnum "abcdef0123456789")
