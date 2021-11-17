@@ -1520,10 +1520,14 @@ the result as a time value."
   (:map org-mode-map
         (("C-c n i" . org-roam-node-insert)))
   :config
+
   (setq org-roam-capture-templates '(("d" "default" plain "%?"
-                                      :if-new (file+head "%<%Y-%m-%d--%H-%M>--${slug}.org"
-                                                         "#+TITLE: ${title}\n#+DATE: %T\n")
-                                      :unnarrowed t)))
+                                      :if-new
+                                      (file+head "%<%Y-%m-%d--%H-%M>--${slug}.org"
+                                                 "#+title: ${title}\n#+date: %u\n\n -links::\n\n")
+                                      :unnarrowed t
+                                      :immediate-finish t))
+        )
   ;; this sets up various file handling hooks so your DB remains up to date
   (org-roam-setup))
 
