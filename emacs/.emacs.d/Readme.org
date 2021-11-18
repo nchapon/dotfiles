@@ -740,7 +740,9 @@ Try the new Hype completion System
 
 *** Consult
 
-     [[https://github.com/minad/consult][Consult]] Consulting completion Read
+     [[https://github.com/minad/consult][Consult]] Consulting completion Read with some custom bindings :
+     - =<F2>= consult-find : find file in current project
+     - =<C-F2>= consult-ripgrep : search in project files with =rg=  
 
 #+begin_src emacs-lisp
   ;; Example configuration for Consult
@@ -776,10 +778,12 @@ Try the new Hype completion System
            ("M-g I" . consult-imenu-multi)
            ;; M-s bindings (search-map)
            ("M-s f" . consult-find)
+           ("<f2>" . consult-find)
            ("M-s F" . consult-locate)
            ("M-s g" . consult-grep)
            ("M-s G" . consult-git-grep)
            ("M-s r" . consult-ripgrep)
+           ("C-<f2>" . consult-ripgrep)
            ("M-s l" . consult-line)
            ("C-s" . consult-line)
            ("M-s L" . consult-line-multi)
