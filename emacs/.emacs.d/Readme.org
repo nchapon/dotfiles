@@ -543,6 +543,23 @@ your currently entered incomplete command (a prefix) in a popup.
   :config
   (which-key-mode))
 #+end_src
+*** Hippie Expand
+[[https://www.emacswiki.org/emacs/HippieExpand][Hippie Expand]] custom configuration 
+
+#+begin_src emacs-lisp
+  (setq hippie-expand-try-functions-list '(try-expand-dabbrev
+                                           try-expand-dabbrev-all-buffers
+                                           try-expand-dabbrev-from-kill
+                                           try-complete-file-name-partially
+                                           try-complete-file-name
+                                           try-expand-all-abbrevs
+                                           try-expand-list
+                                           try-expand-line
+                                           try-complete-lisp-symbol-partially
+                                           try-complete-lisp-symbol))
+  
+  (global-set-key (kbd "M-/") #'hippie-expand)
+#+end_src
 
 ** UI
 *** All The Icons
