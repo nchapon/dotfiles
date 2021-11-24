@@ -192,10 +192,13 @@
   ;; Detect external file changes and auto refresh file
   (auto-revert-use-notify nil)
   (auto-revert-interval 3) ; Auto revert every 3 sec
+
+
   :config
   ;; Enable global auto-revert
   (global-auto-revert-mode t)
 
+  (put 'dired-find-alternate-file 'disabled nil)
   ;; Using GNU ls on macOS instead of ls
   (if (executable-find "gls")
       (progn
@@ -211,6 +214,8 @@
                                  (lambda () (interactive) (find-alternate-file ".."))))))
 
 (use-package dired-narrow
+  :commands dired-narrow
+  :after dired
   :bind (:map dired-mode-map
               ("/" . dired-narrow)))
 
