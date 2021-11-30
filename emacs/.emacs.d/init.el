@@ -1552,6 +1552,14 @@ if nil,the top of the file."
 (push '("P" nc/org-show-previous-heading-tidily) org-speed-commands)
 (push '("m" org-mark-subtree) org-speed-commands)
 
+
+(add-to-list
+ 'org-speed-commands
+ '("!" .
+   (progn
+     (outline-show-subtree)
+     (org-end-of-subtree))))
+
 (defun nc/org-go-speed ()
   "Goes to the beginning of an element's header, so that you can execute speed commands."
   (interactive)

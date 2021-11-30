@@ -2216,6 +2216,8 @@ Customize speed-commands :
 - N :: Show next entry keeping other entries closed
 - P :: Show previous entry keeping previous entries closed
 - m :: org-mark-subtree
+- ! :: Jump to the end of the current node
+  
  #+begin_src emacs-lisp
    (defun nc/org-show-next-heading-tidily ()
      "Show next entry, keeping other entries closed."
@@ -2251,6 +2253,14 @@ Customize speed-commands :
    (push '("N" nc/org-show-next-heading-tidily) org-speed-commands)
    (push '("P" nc/org-show-previous-heading-tidily) org-speed-commands)
    (push '("m" org-mark-subtree) org-speed-commands)
+
+
+   (add-to-list
+    'org-speed-commands
+    '("!" .
+      (progn
+        (outline-show-subtree)
+        (org-end-of-subtree))))
 
    (defun nc/org-go-speed ()
      "Goes to the beginning of an element's header, so that you can execute speed commands."
