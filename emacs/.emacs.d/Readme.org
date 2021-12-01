@@ -356,20 +356,32 @@ Emacs Global Bindings are redefined here.
     (global-set-key (kbd "<f5>") #'revert-buffer)
 
 #+end_src
+*** My custom key bindings
+
+#+begin_src emacs-lisp
+  (bind-keys
+   :prefix-map nc-map
+   :prefix-docstring "My own keyboard map"
+   :prefix "C-<"
+   ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
+   (";" . nc/goto-emacs-config))
+
+#+end_src
+
 
 *** Avy
 
 #+begin_src emacs-lisp
-(use-package avy
-  :defer t
-  :bind
-  (("C-z c" . avy-goto-char-timer)
-   ("C-z l" . avy-goto-line))
-  :custom
-  (avy-timeout-seconds 0.3)
-  (avy-style 'pre)
-  :custom-face
-  (avy-lead-face ((t (:background "#51afef" :foreground "#870000" :weight bold)))))
+  (use-package avy
+    :defer t
+    :bind
+    (:map nc-map ((">" . avy-goto-char-timer)
+                 ("l" . avy-goto-line)))
+    :custom
+    (avy-timeout-seconds 0.3)
+    (avy-style 'pre)
+    :custom-face
+    (avy-lead-face ((t (:background "#51afef" :foreground "#870000" :weight bold)))))
 #+end_src
 
 *** Crux
@@ -674,7 +686,7 @@ Use Input Font (http://input.fontbureau.com/)  on Linux, Monaco on MacOS
  #+end_src
 
 
-*** Toggle Window Split Horizontally ==C-z w -=
+*** Toggle Window Split Horizontally
 
 Bound to =C-z w -=.
 #+begin_src emacs-lisp
@@ -703,12 +715,12 @@ Bound to =C-z w -=.
             (select-window first-win)
             (if this-win-2nd (other-window 1))))))
 
-  (bind-key "C-z w  -" 'nc/toggle-split-window-horizontally)
+  (bind-key "wh" 'nc/toggle-split-window-horizontally nc-map)
 #+end_src
 
 
-*** Toggle Window Split Vertically =C-z w +=
-Split window right with =C-z w += and move there.
+*** Toggle Window Split Vertically 
+Split window right with =C-< w v= and move there.
 If windows are splitted delete other windows.
 #+begin_src emacs-lisp
   (defun nc--split-window-right-and-move-there-dammit ()
@@ -721,7 +733,8 @@ If windows are splitted delete other windows.
         (delete-other-windows)
       (nc--split-window-right-and-move-there-dammit)))
 
-  (bind-key "C-z w +" 'nc/toggle-split-window-vertically)
+  (bind-key "wv" 'nc/toggle-split-window-vertically nc-map)
+  (bind-key "C-w" 'nc/toggle-split-window-vertically nc-map)
   #+end_src
 
 
@@ -763,8 +776,8 @@ Try the new Hype completion System
 *** Consult
 
      [[https://github.com/minad/consult][Consult]] Consulting completion Read with some custom bindings :
-     - =<F2>= consult-find : find file in current project
-     - =<C-F2>= consult-ripgrep : search in project files with =rg=  
+     - =<C-< s f>= consult-ripgrep : find file in current project
+     - =<F2>= consult-ripgrep : search in project files with =rg=  
 
 #+begin_src emacs-lisp
   ;; Example configuration for Consult
@@ -800,12 +813,12 @@ Try the new Hype completion System
            ("M-g I" . consult-imenu-multi)
            ;; M-s bindings (search-map)
            ("M-s f" . consult-find)
-           ("<f2>" . consult-find)
+           ("C-< s f" . consult-find)
            ("M-s F" . consult-locate)
            ("M-s g" . consult-grep)
            ("M-s G" . consult-git-grep)
            ("M-s r" . consult-ripgrep)
-           ("C-<f2>" . consult-ripgrep)
+           ("<f2>" . consult-ripgrep)
            ("M-s l" . consult-line)
            ("C-s" . consult-line)
            ("M-s L" . consult-line-multi)
@@ -1031,8 +1044,9 @@ Expand region increases the selected region by semantic units. Just keep pressin
      (("C-S-c C-S-c" .  mc/edit-lines)
       ("C-$" .  mc/edit-ends-of-lines)
       ("C-S-b" .  mc/edit-beginnings-of-lines)
-      ("C-<" .  mc/mark-previous-word-like-this)
-      ("C->" .  mc/mark-next-word-like-this)
+      ;; Conflict my own map
+      ;("C-<" .  mc/mark-previous-word-like-this) 
+      ;("C->" .  mc/mark-next-word-like-this)
       ("C-S-n" .  mc/mark-next-like-this)
       ("C-S-p" .  mc/mark-previous-like-this)
       ("C-*" .  mc/mark-all-dwim)))
@@ -1136,9 +1150,9 @@ Consult integration
 #+begin_src emacs-lisp
   (use-package consult-yasnippet
     :bind
-    ("C-z y" . consult-yasnippet))
+    (:map nc-map 
+          ("y" . consult-yasnippet)))
 #+end_src
-
 
 *** Company
 
@@ -1146,7 +1160,6 @@ Consult integration
      (use-package company
        :diminish ""
        :bind (("M-/" . company-complete)
-              ("C-c y" . company-yasnippet)
               :map company-active-map
               ("C-p" . company-select-previous)
               ("C-n" . company-select-next)
@@ -1165,8 +1178,7 @@ Consult integration
                             company-echo-metadata-frontend))
        (company-backends '(company-capf company-files company-dabbrev-code company-semantic))
        (company-tooltip-minimum-width 30)
-       (company-tooltip-maximum-width 120)
-       )
+       (company-tooltip-maximum-width 120))
 
 
   #+end_src
@@ -1180,7 +1192,7 @@ Consult integration
       (company-statistics-mode 1))
    #+end_src
 
-*** vterm -> =C-z t=
+*** vterm 
 
 Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
 
@@ -1203,7 +1215,7 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
     ;; Show Vterm Buffer in bottom side
     (vterm-toggle-fullscreen-p nil)
     :init
-     (add-to-list 'display-buffer-alist
+    (add-to-list 'display-buffer-alist
                  '((lambda(bufname _) (with-current-buffer bufname (equal major-mode 'vterm-mode)))
                    (display-buffer-reuse-window display-buffer-in-side-window)
                    (side . bottom)
@@ -1211,15 +1223,16 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
                    (reusable-frames . visible)
                    (window-height . 0.3)))
     :bind
-    (("C-z t" . vterm-toggle)
-     :map vterm-mode-map
-     ("C-<return>" . vterm-toggle-insert-cd)
-     ("C-S-n" . vterm-toggle-forward)
-     ("C-S-p" . vterm-toggle-backward)
-     ))
+    (:map nc-map
+          ("t" . vterm-toggle)
+          :map vterm-mode-map
+          ("C-<return>" . vterm-toggle-insert-cd)
+          ("C-S-n" . vterm-toggle-forward)
+          ("C-S-p" . vterm-toggle-backward)
+          ))
 #+end_src
 
-*** aweshell -> =C-z e=
+*** aweshell
 
 [[https://github.com/manateelazycat/aweshell][aweshell]] Awesome eshell (eshell extensions)
 
@@ -1234,8 +1247,8 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
     (eshell-prompt-function 'epe-theme-dakrone)
 
     :bind
-    (("C-z e" . aweshell-dedicated-toggle))
-    )
+    (:map nc-map
+          ("C-e" . aweshell-dedicated-toggle)))
 #+end_src
 *** LSP Mode
 
@@ -1543,7 +1556,7 @@ Change priorities colors
      (defconst nc/weekly-review-file (concat org-directory "/personal/reviews/weekly-review.org"))
 
 
-     (defun nc/go-to-inbox ()
+     (defun nc/goto-inbox ()
        (interactive)
        (find-file nc/inbox-file )
        (widen)
@@ -1551,20 +1564,23 @@ Change priorities colors
        (re-search-forward "* Inbox")
        (beginning-of-line))
 
+     (bind-key "gi" 'nc/goto-inbox nc-map)
+  
 
-     (defun nc/go-to-resources-dir ()
+     (defun nc/goto-resources-dir ()
        (interactive)
        (dired nc/org-default-resources-dir))
-
+  
+     (bind-key "gR" 'nc/goto-resources-dir nc-map)
      )
  #+end_src
 
 
-*** Journal -> =C-z g j=
+*** Journal
  Function to easily load weekly journal
  #+begin_src emacs-lisp
 
-   (defun nc/journal-file-today ()
+   (defun nc/goto-journal-file ()
          "Create and load a journal file based on today's date."
          (interactive)
 
@@ -1577,12 +1593,12 @@ Change priorities colors
 
    (setq org-default-notes-file (nc--get-journal-file-today))
 
-   (global-set-key (kbd "C-z g j") 'nc/journal-file-today)
-   (global-set-key (kbd "C-z j") 'nc/journal-file-today)
+   (bind-key "gj" 'nc/goto-journal-file nc-map)
+   (bind-key "j" 'nc/goto-journal-file nc-map)
  #+end_src
 
 
-Insert daily heading in journal file =C-z-o-d=
+Insert daily heading in journal file =C-<-o-d=
 
    #+begin_src emacs-lisp
      (defun nc--autoinsert-yas-expand ()
@@ -1638,7 +1654,7 @@ Insert daily heading in journal file =C-z-o-d=
            (error "Insert failed"))))
 
      ;; bind-key
-      (bind-key "C-z o d" 'nc/insert-daily-heading org-mode-map)
+      (bind-key "od" 'nc/insert-daily-heading nc-map)
    #+end_src
 
 *** Tasks
@@ -1811,7 +1827,7 @@ I have my own template for creating new projects
                (file "~/notes/templates/newproject.org")))
 #+end_src
 
-**** Daily Review =C-z o D=
+**** Daily Review
 
  #+begin_src emacs-lisp
    (defun org-journal-find-location ()
@@ -1840,7 +1856,7 @@ I have my own template for creating new projects
        (org-narrow-to-subtree)
        (org-clock-in)))
 
-   (bind-key "C-z o D" 'nc/org-insert-daily-review org-mode-map)
+   (bind-key "oD" 'nc/org-insert-daily-review nc-map)
  #+end_src
 **** WeeklyReview
  #+begin_src emacs-lisp
@@ -2050,7 +2066,7 @@ Targets include this file and any file contributing to the agenda - up to 2 leve
  #+begin_src emacs-lisp
  (setq org-refile-allow-creating-parent-nodes 'confirm)
  #+end_src
-*** Refiling a subtree to a new file =C-z o r=
+*** Refiling a subtree to a new file
 
 Adapted from GTD Boxes https://gitlab.com/howardabrams/spacemacs.d/-/blob/master/elisp/boxes-extras.el
 Documentation : http://www.howardism.org/Technical/Emacs/getting-more-boxes-done.html
@@ -2207,7 +2223,7 @@ Documentation : http://www.howardism.org/Technical/Emacs/getting-more-boxes-done
           (insert (format "#+%s: %s\n" (upcase key) value))))))
 
 
-  (bind-key "C-z o r" 'nc/org-refile-subtree-to-file org-mode-map)
+  (bind-key "or" 'nc/org-refile-subtree-to-file nc-map)
 #+end_src
 
 *** Speed commands
@@ -2270,9 +2286,8 @@ Customize speed-commands :
            (beginning-of-line)
          (outline-previous-heading))))
 
-   (bind-key "C-z /" 'nc/org-go-speed org-mode-map)
-   (bind-key "s-*" 'nc/org-go-speed org-mode-map)
-   (bind-key "C-z o /" 'nc/org-go-speed org-mode-map)
+   (bind-key "C-< C-<" 'nc/org-go-speed org-mode-map)
+   
  #+end_src
 
 *** Org Structure templates
@@ -2370,10 +2385,7 @@ the result as a time value."
                          (nc--org-time-string-to-seconds el)))
                      (cdr expr))))
           `,@exprs))))
-
-
 #+end_src
-
 
 **** Attachments folder
 I'm not a big fan of =org-attachments= so I prefer to store all my
@@ -2406,7 +2418,7 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
             (setq count (1+ count))))
         (message "Replaced %d occurences" count))))
 #+end_src
-*** Deft -> =<C-c n d>=
+*** Deft 
 
 [[https://github.com/jrblevin/deft][Deft]] is an emacs mode for quickly searching (or editing) in his directory notes.
 
@@ -2450,7 +2462,7 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
     (advice-add 'deft-parse-title :override #'nc/deft-parse-title))
 #+end_src
 
-*** Yankpad  -> =<F7>=
+*** Yankpad
 
 [[https://github.com/Kungsgeten/yankpad][Yankpad]] paste snippets from an org-mode file.
 
@@ -2465,8 +2477,8 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
     (add-to-list 'hippie-expand-try-functions-list #'yankpad-expand)
 
     :bind
-    (("<f7>"   . yankpad-insert)
-     ("C-<f7>"   . yankpad-map)))
+    (:map nc-map ("C-y". yankpad-insert)))
+
 #+end_src
 *** Org Roam
 
@@ -2503,19 +2515,16 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
 
 
 ** My functions
-*** Emacs Config File -> =C-z ;=
+*** Emacs Config File
 
  #+begin_src emacs-lisp
    (defun nc/goto-emacs-config ()
        "Edit Readme.org"
        (interactive)
-       (find-file "~/.emacs.d/Readme.org"))
-
-     (global-set-key (kbd "C-z ;") 'nc/goto-emacs-config)
-     (global-set-key (kbd "C-z g ;") 'nc/goto-emacs-config)
+       (find-file "~/.emacs.d/Readme.org"))     
  #+end_src
 
-*** My personal credentials -> =C-z g p=
+*** My personal credentials
 
 #+begin_src emacs-lisp
     (defun nc/goto-my-credentials ()
@@ -2525,11 +2534,11 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
       ;;(super-save-stop)
       (find-file (concat nc/org-default-personal-dir "/password.gpg")))
 
-  (global-set-key (kbd "C-z g p") 'nc/goto-my-credentials)
+  (bind-key "gp" 'nc/goto-my-credentials nc-map)
 #+end_src
 
 
-*** Pseudo uuid -> =C-z i u=
+*** Pseudo uuid
 
 Generate a 32 random pseudo uuid
 
@@ -2544,11 +2553,11 @@ Generate a 32 random pseudo uuid
     (interactive)
     (dotimes (i 32) (insert (nc--random-alnum))))
 
-  (bind-key "C-z i u" 'nc/uuid)
+  (bind-key "iu" 'nc/uuid nc-map)
 #+end_src
 
 
-*** Password generator -> =C-z i p=
+*** Password generator
 Generates a strong password
 
  #+begin_src emacs-lisp
@@ -2563,10 +2572,10 @@ Generates a strong password
        (interactive)
        (dotimes (i 12) (insert (nc--random-char))))
 
-   (bind-key "C-z i p" 'nc/generate-password)
+   (bind-key "ip" 'nc/generate-password nc-map)
  #+end_src
 
-*** TimeSlot -> =C-z i t=
+*** TimeSlot
 Insert time slot mainly used when I schedule meeting or appointment.
 #+begin_src emacs-lisp
   (defvar current-hour-format "%H:00")
@@ -2578,11 +2587,11 @@ Insert time slot mainly used when I schedule meeting or appointment.
           (end (format-time-string current-hour-format (time-add (current-time) (seconds-to-time 3600)))))
       (insert (concat begin "-" end))))
 
-  (bind-key "C-z i t" 'nc/insert-time-slot)
+  (bind-key "it" 'nc/insert-time-slot nc-map)
 
 #+end_src
 
-*** Inserting time stamps -> =C-z i d/D=
+*** Inserting time stamps
    From : https://github.com/novoid/dot-emacs/blob/master/config.org#inserting-time-stamps--my-map-ddtt
 
 #+begin_src emacs-lisp
@@ -2595,7 +2604,7 @@ Insert time slot mainly used when I schedule meeting or appointment.
           (insert " "))
         (insert (format-time-string "%Y-%m-%d" (current-time)))))
 
-  (bind-key "C-z i d" 'nc/insert-datestamp)
+  (bind-key "id" 'nc/insert-datestamp nc-map)
  #+end_src
 
 
@@ -2609,7 +2618,7 @@ Insert time slot mainly used when I schedule meeting or appointment.
        (insert " "))
        (insert (format-time-string "%Y-%m-%d" (current-time)))))
 
-   (bind-key "C-z i D" 'nc/insert-datestamp-inactive)
+   (bind-key "iD" 'nc/insert-datestamp-inactive nc-map)
  #+end_src
 *** Sudo Edit File
 

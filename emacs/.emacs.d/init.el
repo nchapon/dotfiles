@@ -136,11 +136,18 @@
 ;; Functions
 (global-set-key (kbd "<f5>") #'revert-buffer)
 
+(bind-keys
+ :prefix-map nc-map
+ :prefix-docstring "My own keyboard map"
+ :prefix "C-<"
+ ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
+ (";" . nc/goto-emacs-config))
+
 (use-package avy
   :defer t
   :bind
-  (("C-z c" . avy-goto-char-timer)
-   ("C-z l" . avy-goto-line))
+  (:map nc-map ((">" . avy-goto-char-timer)
+               ("l" . avy-goto-line)))
   :custom
   (avy-timeout-seconds 0.3)
   (avy-style 'pre)
@@ -372,7 +379,7 @@
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
 
-(bind-key "C-z w  -" 'nc/toggle-split-window-horizontally)
+(bind-key "wh" 'nc/toggle-split-window-horizontally nc-map)
 
 (defun nc--split-window-right-and-move-there-dammit ()
   (split-window-right)
@@ -384,7 +391,8 @@
       (delete-other-windows)
     (nc--split-window-right-and-move-there-dammit)))
 
-(bind-key "C-z w +" 'nc/toggle-split-window-vertically)
+(bind-key "wv" 'nc/toggle-split-window-vertically nc-map)
+(bind-key "C-w" 'nc/toggle-split-window-vertically nc-map)
 
 (use-package selectrum
   :init (selectrum-mode +1))
@@ -436,12 +444,12 @@
          ("M-g I" . consult-imenu-multi)
          ;; M-s bindings (search-map)
          ("M-s f" . consult-find)
-         ("<f2>" . consult-find)
+         ("C-< s f" . consult-find)
          ("M-s F" . consult-locate)
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)
          ("M-s r" . consult-ripgrep)
-         ("C-<f2>" . consult-ripgrep)
+         ("<f2>" . consult-ripgrep)
          ("M-s l" . consult-line)
          ("C-s" . consult-line)
          ("M-s L" . consult-line-multi)
@@ -608,8 +616,9 @@
   (("C-S-c C-S-c" .  mc/edit-lines)
    ("C-$" .  mc/edit-ends-of-lines)
    ("C-S-b" .  mc/edit-beginnings-of-lines)
-   ("C-<" .  mc/mark-previous-word-like-this)
-   ("C->" .  mc/mark-next-word-like-this)
+   ;; Conflict my own map
+   ;("C-<" .  mc/mark-previous-word-like-this) 
+   ;("C->" .  mc/mark-next-word-like-this)
    ("C-S-n" .  mc/mark-next-like-this)
    ("C-S-p" .  mc/mark-previous-like-this)
    ("C-*" .  mc/mark-all-dwim)))
@@ -683,12 +692,12 @@
 
 (use-package consult-yasnippet
   :bind
-  ("C-z y" . consult-yasnippet))
+  (:map nc-map 
+        ("y" . consult-yasnippet)))
 
 (use-package company
   :diminish ""
   :bind (("M-/" . company-complete)
-         ("C-c y" . company-yasnippet)
          :map company-active-map
          ("C-p" . company-select-previous)
          ("C-n" . company-select-next)
@@ -707,8 +716,7 @@
                        company-echo-metadata-frontend))
   (company-backends '(company-capf company-files company-dabbrev-code company-semantic))
   (company-tooltip-minimum-width 30)
-  (company-tooltip-maximum-width 120)
-  )
+  (company-tooltip-maximum-width 120))
 
 (use-package company-statistics
   :after company
@@ -731,7 +739,7 @@
   ;; Show Vterm Buffer in bottom side
   (vterm-toggle-fullscreen-p nil)
   :init
-   (add-to-list 'display-buffer-alist
+  (add-to-list 'display-buffer-alist
                '((lambda(bufname _) (with-current-buffer bufname (equal major-mode 'vterm-mode)))
                  (display-buffer-reuse-window display-buffer-in-side-window)
                  (side . bottom)
@@ -739,12 +747,13 @@
                  (reusable-frames . visible)
                  (window-height . 0.3)))
   :bind
-  (("C-z t" . vterm-toggle)
-   :map vterm-mode-map
-   ("C-<return>" . vterm-toggle-insert-cd)
-   ("C-S-n" . vterm-toggle-forward)
-   ("C-S-p" . vterm-toggle-backward)
-   ))
+  (:map nc-map
+        ("t" . vterm-toggle)
+        :map vterm-mode-map
+        ("C-<return>" . vterm-toggle-insert-cd)
+        ("C-S-n" . vterm-toggle-forward)
+        ("C-S-p" . vterm-toggle-backward)
+        ))
 
 (use-package aweshell
   :straight (aweshell
@@ -756,8 +765,8 @@
   (eshell-prompt-function 'epe-theme-dakrone)
 
   :bind
-  (("C-z e" . aweshell-dedicated-toggle))
-  )
+  (:map nc-map
+        ("C-e" . aweshell-dedicated-toggle)))
 
 (use-package lsp-mode
   :commands lsp
@@ -985,7 +994,7 @@
   (defconst nc/weekly-review-file (concat org-directory "/personal/reviews/weekly-review.org"))
 
 
-  (defun nc/go-to-inbox ()
+  (defun nc/goto-inbox ()
     (interactive)
     (find-file nc/inbox-file )
     (widen)
@@ -993,14 +1002,17 @@
     (re-search-forward "* Inbox")
     (beginning-of-line))
 
+  (bind-key "gi" 'nc/goto-inbox nc-map)
 
-  (defun nc/go-to-resources-dir ()
+
+  (defun nc/goto-resources-dir ()
     (interactive)
     (dired nc/org-default-resources-dir))
 
+  (bind-key "gR" 'nc/goto-resources-dir nc-map)
   )
 
-(defun nc/journal-file-today ()
+(defun nc/goto-journal-file ()
       "Create and load a journal file based on today's date."
       (interactive)
 
@@ -1013,8 +1025,8 @@
 
 (setq org-default-notes-file (nc--get-journal-file-today))
 
-(global-set-key (kbd "C-z g j") 'nc/journal-file-today)
-(global-set-key (kbd "C-z j") 'nc/journal-file-today)
+(bind-key "gj" 'nc/goto-journal-file nc-map)
+(bind-key "j" 'nc/goto-journal-file nc-map)
 
 (defun nc--autoinsert-yas-expand ()
       "Replace text in yasnippet template."
@@ -1069,7 +1081,7 @@
       (error "Insert failed"))))
 
 ;; bind-key
- (bind-key "C-z o d" 'nc/insert-daily-heading org-mode-map)
+ (bind-key "od" 'nc/insert-daily-heading nc-map)
 
 (setq org-todo-keywords
  '((sequence "TODO(t)" "NEXT(n)" "SOMEDAY(.)" "MAYBE(M)"  "|" "DONE(d)")
@@ -1210,7 +1222,7 @@
     (org-narrow-to-subtree)
     (org-clock-in)))
 
-(bind-key "C-z o D" 'nc/org-insert-daily-review org-mode-map)
+(bind-key "oD" 'nc/org-insert-daily-review nc-map)
 
 (add-to-list 'org-capture-templates
                  `("w" "WeeklyReview" entry (file+datetree+prompt nc/weekly-review-file)
@@ -1515,7 +1527,7 @@ if nil,the top of the file."
         (insert (format "#+%s: %s\n" (upcase key) value))))))
 
 
-(bind-key "C-z o r" 'nc/org-refile-subtree-to-file org-mode-map)
+(bind-key "or" 'nc/org-refile-subtree-to-file nc-map)
 
 (defun nc/org-show-next-heading-tidily ()
   "Show next entry, keeping other entries closed."
@@ -1568,9 +1580,7 @@ if nil,the top of the file."
         (beginning-of-line)
       (outline-previous-heading))))
 
-(bind-key "C-z /" 'nc/org-go-speed org-mode-map)
-(bind-key "s-*" 'nc/org-go-speed org-mode-map)
-(bind-key "C-z o /" 'nc/org-go-speed org-mode-map)
+(bind-key "C-< C-<" 'nc/org-go-speed org-mode-map)
 
 ;; This is needed as of Org 9.2
 (require 'org-tempo)
@@ -1713,8 +1723,7 @@ the result as a time value."
   (add-to-list 'hippie-expand-try-functions-list #'yankpad-expand)
 
   :bind
-  (("<f7>"   . yankpad-insert)
-   ("C-<f7>"   . yankpad-map)))
+  (:map nc-map ("C-y". yankpad-insert)))
 
 ;; (when is-windows  
 ;;   (add-to-list 'exec-path "C:/ProgramJava/tools/sqlite-tools-win32-x86-3340100"))
@@ -1748,9 +1757,6 @@ the result as a time value."
     (interactive)
     (find-file "~/.emacs.d/Readme.org"))
 
-  (global-set-key (kbd "C-z ;") 'nc/goto-emacs-config)
-  (global-set-key (kbd "C-z g ;") 'nc/goto-emacs-config)
-
 (defun nc/goto-my-credentials ()
     "Goto my credentials"
     (interactive)
@@ -1758,7 +1764,7 @@ the result as a time value."
     ;;(super-save-stop)
     (find-file (concat nc/org-default-personal-dir "/password.gpg")))
 
-(global-set-key (kbd "C-z g p") 'nc/goto-my-credentials)
+(bind-key "gp" 'nc/goto-my-credentials nc-map)
 
 (defun nc--random-alnum ()
   (let* ((alnum "abcdef0123456789")
@@ -1770,7 +1776,7 @@ the result as a time value."
   (interactive)
   (dotimes (i 32) (insert (nc--random-alnum))))
 
-(bind-key "C-z i u" 'nc/uuid)
+(bind-key "iu" 'nc/uuid nc-map)
 
 (defun nc--random-char ()
     (let* ((alnum "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-/%+*?&#[]()={}_<>!$,;:^µ0123456789")
@@ -1783,7 +1789,7 @@ the result as a time value."
     (interactive)
     (dotimes (i 12) (insert (nc--random-char))))
 
-(bind-key "C-z i p" 'nc/generate-password)
+(bind-key "ip" 'nc/generate-password nc-map)
 
 (defvar current-hour-format "%H:00")
 
@@ -1794,7 +1800,7 @@ the result as a time value."
         (end (format-time-string current-hour-format (time-add (current-time) (seconds-to-time 3600)))))
     (insert (concat begin "-" end))))
 
-(bind-key "C-z i t" 'nc/insert-time-slot)
+(bind-key "it" 'nc/insert-time-slot nc-map)
 
 (defun nc/insert-datestamp()
   "Insert the current date in yyyy-mm-dd format."
@@ -1805,7 +1811,7 @@ the result as a time value."
         (insert " "))
       (insert (format-time-string "%Y-%m-%d" (current-time)))))
 
-(bind-key "C-z i d" 'nc/insert-datestamp)
+(bind-key "id" 'nc/insert-datestamp nc-map)
 
 (defun nc/insert-datestamp-inactive()
   "Insert the current date in yyyy-mm-dd format."
@@ -1816,7 +1822,7 @@ the result as a time value."
     (insert " "))
     (insert (format-time-string "%Y-%m-%d" (current-time)))))
 
-(bind-key "C-z i D" 'nc/insert-datestamp-inactive)
+(bind-key "iD" 'nc/insert-datestamp-inactive nc-map)
 
 (defun nc/sudo-find-file (file)
   "Open FILE as root."
