@@ -143,6 +143,19 @@
  ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
  (";" . nc/goto-emacs-config))
 
+(use-package key-chord
+  :init
+  (key-chord-mode 1)
+  (key-chord-define-global "FF" 'projectile-find-file)
+  (key-chord-define-global "GG" 'consult-ripgrep)
+  (key-chord-define-global "OO" 'consult-outline)
+  (key-chord-define-global "DD" 'delete-region)
+  ;(key-chord-define-global "OO" 'helm-occur)
+  ;(key-chord-define-global "??" 'nc/helm-do-grep-notes)
+  (key-chord-define-global "BB" 'beginning-of-buffer)
+
+  (key-chord-define-global "$$" 'end-of-buffer))
+
 (use-package avy
   :defer t
   :bind

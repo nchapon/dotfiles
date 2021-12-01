@@ -367,7 +367,23 @@ Emacs Global Bindings are redefined here.
    (";" . nc/goto-emacs-config))
 
 #+end_src
+*** Key Chords
 
+#+begin_src emacs-lisp
+  (use-package key-chord
+    :init
+    (key-chord-mode 1)
+    (key-chord-define-global "FF" 'projectile-find-file)
+    (key-chord-define-global "GG" 'consult-ripgrep)
+    (key-chord-define-global "OO" 'consult-outline)
+    (key-chord-define-global "DD" 'delete-region)
+    ;(key-chord-define-global "OO" 'helm-occur)
+    ;(key-chord-define-global "??" 'nc/helm-do-grep-notes)
+    (key-chord-define-global "BB" 'beginning-of-buffer)
+
+    (key-chord-define-global "$$" 'end-of-buffer))
+
+#+end_src
 
 *** Avy
 
