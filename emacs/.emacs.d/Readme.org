@@ -377,10 +377,8 @@ Emacs Global Bindings are redefined here.
     (key-chord-define-global "GG" 'consult-ripgrep)
     (key-chord-define-global "OO" 'consult-outline)
     (key-chord-define-global "DD" 'delete-region)
-    ;(key-chord-define-global "OO" 'helm-occur)
-    ;(key-chord-define-global "??" 'nc/helm-do-grep-notes)
+    (key-chord-define-global "??" 'nc/search-notes)
     (key-chord-define-global "BB" 'beginning-of-buffer)
-
     (key-chord-define-global "$$" 'end-of-buffer))
 
 #+end_src
@@ -2357,7 +2355,7 @@ Customize speed-commands :
 #+begin_src emacs-lisp
   (setq org-src-fontify-natively t)
 #+end_src
-*** Org Mode Utilities Functions
+*** My Org Mode Utilities Functions
 **** Manipulate hours/minutes in tables
 From https://orgmode.org/worg/org-hacks.html#org0d09b33
 #+begin_src emacs-lisp
@@ -2636,6 +2634,18 @@ Insert time slot mainly used when I schedule meeting or appointment.
 
    (bind-key "iD" 'nc/insert-datestamp-inactive nc-map)
  #+end_src
+
+*** Searching in my notes
+
+#+begin_src emacs-lisp
+  (defun nc/search-notes ()
+    "Search in all my org notes"
+    (interactive)
+    (consult-ripgrep org-directory ""))
+
+  (bind-key "sn" 'nc/search-notes nc-map)
+#+end_src
+
 *** Sudo Edit File
 
 From : https://karthinks.com/software/fifteen-ways-to-use-embark/

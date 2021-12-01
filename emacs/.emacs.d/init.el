@@ -150,10 +150,8 @@
   (key-chord-define-global "GG" 'consult-ripgrep)
   (key-chord-define-global "OO" 'consult-outline)
   (key-chord-define-global "DD" 'delete-region)
-  ;(key-chord-define-global "OO" 'helm-occur)
-  ;(key-chord-define-global "??" 'nc/helm-do-grep-notes)
+  (key-chord-define-global "??" 'nc/search-notes)
   (key-chord-define-global "BB" 'beginning-of-buffer)
-
   (key-chord-define-global "$$" 'end-of-buffer))
 
 (use-package avy
@@ -1836,6 +1834,13 @@ the result as a time value."
     (insert (format-time-string "%Y-%m-%d" (current-time)))))
 
 (bind-key "iD" 'nc/insert-datestamp-inactive nc-map)
+
+(defun nc/search-notes ()
+  "Search in all my org notes"
+  (interactive)
+  (consult-ripgrep org-directory ""))
+
+(bind-key "sn" 'nc/search-notes nc-map)
 
 (defun nc/sudo-find-file (file)
   "Open FILE as root."
