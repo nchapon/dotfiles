@@ -1171,7 +1171,7 @@
 (defun org-journal-find-bookmark ()
   ;; Open today's journal, but specify a non-nil prefix argument in order to
   ;; inhibit inserting the heading; org-capture will insert the heading.
-  (nc/journal-file-today)
+  (nc/goto-journal-file)
   ;; Position point on the journal's top-level heading so that org-capture
   ;; will add the new entry as a child entry.
 
@@ -1213,7 +1213,7 @@
 (defun org-journal-find-location ()
  ;; Open today's journal, but specify a non-nil prefix argument in order to
  ;; inhibit inserting the heading; org-capture will insert the heading.
- (nc/journal-file-today)
+ (nc/goto-journal-file)
  ;; Position point on the journal's top-level heading so that org-capture
  ;; will add the new entry as a child entry.
 
