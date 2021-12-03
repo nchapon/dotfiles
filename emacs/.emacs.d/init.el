@@ -895,6 +895,8 @@
 ;; optionally
 (use-package lsp-ui :commands lsp-ui-mode)
 
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
 (use-package clojure-mode
   :hook
   ((clojure-mode . lsp)

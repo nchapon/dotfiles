@@ -1392,6 +1392,7 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
   ;; optionally
   (use-package lsp-ui :commands lsp-ui-mode)
 
+  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 #+end_src
 
 ** Programming
