@@ -36,6 +36,7 @@
  ("js2-mode" . "d2636f95ebe4d423dc9b4311aff248c7688271c5")
  ("key-chord" . "7f7fd7c5bd2b996fa054779357e1566f7989e07d")
  ("lsp-mode" . "9865d315123bb0482de358e6905838ba1acb5b45")
+ ("lsp-treemacs" . "c40a381730251039d33400cc14539c1e0729385f")
  ("lsp-ui" . "dd4c181a22d19a28236c442cf6c9cd4bbd6d85f8")
  ("lua-mode" . "5a9bee8d5fc978dc64fcb677167417010321ba65")
  ("magit" . "f15becef69f4695f76dd8d00b7dd571663dd8a33")
