@@ -296,6 +296,8 @@
 
 (global-set-key (kbd "M-/") #'hippie-expand)
 
+(bind-key "," #'expand-abbrev nc-map)
+
 (use-package all-the-icons)
 
 (use-package doom-themes

@@ -591,6 +591,12 @@ your currently entered incomplete command (a prefix) in a popup.
   
   (global-set-key (kbd "M-/") #'hippie-expand)
 #+end_src
+*** Abbrev
+
+#+begin_src emacs-lisp
+  (bind-key "," #'expand-abbrev nc-map)
+
+#+end_src
 
 ** UI
 *** All The Icons
