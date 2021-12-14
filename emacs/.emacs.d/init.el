@@ -116,6 +116,8 @@
 (global-set-key (kbd "C-z") nil)
 (global-set-key (kbd "M-z") nil)
 (global-set-key (kbd "C-x C-z") nil)
+(global-set-key (kbd "M-o") nil)
+
 
 (global-set-key (kbd "C-+") #'text-scale-increase)
 (global-set-key (kbd "C--") #'text-scale-decrease)
@@ -712,7 +714,7 @@
   :bind
   (:map nc-map ("t" . treemacs))
   (:map global-map
-        ("M-0"       . treemacs-select-window)
+        ("M-o"       . treemacs-select-window)
         ("C-x t 1"   . treemacs-delete-other-windows)
         ("C-x t t"   . treemacs)
         ("C-x t B"   . treemacs-bookmark)

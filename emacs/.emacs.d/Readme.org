@@ -331,29 +331,31 @@ Help keeping =~/.emacs.d= clean.
 *** Emacs Bindings
 Emacs Global Bindings are redefined here.
 #+begin_src emacs-lisp
-    ;; Unbind unneeded keys
-    (global-set-key (kbd "C-z") nil)
-    (global-set-key (kbd "M-z") nil)
-    (global-set-key (kbd "C-x C-z") nil)
+  ;; Unbind unneeded keys
+  (global-set-key (kbd "C-z") nil)
+  (global-set-key (kbd "M-z") nil)
+  (global-set-key (kbd "C-x C-z") nil)
+  (global-set-key (kbd "M-o") nil)
 
-    (global-set-key (kbd "C-+") #'text-scale-increase)
-    (global-set-key (kbd "C--") #'text-scale-decrease)
 
-    ;; Prefer backward-kill-word over Backspace
-    (global-set-key (kbd "C-w") #'backward-kill-word)
-    (global-set-key (kbd "C-x C-k") #'kill-region)
+  (global-set-key (kbd "C-+") #'text-scale-increase)
+  (global-set-key (kbd "C--") #'text-scale-decrease)
 
-    (global-set-key (kbd "C-x C-r") #'recentf-open-files)
+  ;; Prefer backward-kill-word over Backspace
+  (global-set-key (kbd "C-w") #'backward-kill-word)
+  (global-set-key (kbd "C-x C-k") #'kill-region)
 
-    ;; Move up/down paragraph
-    (global-set-key (kbd "M-n") #'forward-paragraph)
-    (global-set-key (kbd "M-p") #'backward-paragraph)
+  (global-set-key (kbd "C-x C-r") #'recentf-open-files)
 
-    ;; Goto Line
-    ;;(global-set-key (kbd "M-g") #'goto-line)
+  ;; Move up/down paragraph
+  (global-set-key (kbd "M-n") #'forward-paragraph)
+  (global-set-key (kbd "M-p") #'backward-paragraph)
 
-    ;; Functions
-    (global-set-key (kbd "<f5>") #'revert-buffer)
+  ;; Goto Line
+  ;;(global-set-key (kbd "M-g") #'goto-line)
+
+  ;; Functions
+  (global-set-key (kbd "<f5>") #'revert-buffer)
 
 #+end_src
 *** My custom key bindings
@@ -1157,7 +1159,7 @@ https://github.com/Alexander-Miller/treemacs
     :bind
     (:map nc-map ("t" . treemacs))
     (:map global-map
-          ("M-0"       . treemacs-select-window)
+          ("M-o"       . treemacs-select-window)
           ("C-x t 1"   . treemacs-delete-other-windows)
           ("C-x t t"   . treemacs)
           ("C-x t B"   . treemacs-bookmark)
