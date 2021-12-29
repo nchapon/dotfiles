@@ -877,6 +877,10 @@
 
 (use-package lsp-mode
   :commands lsp
+  :bind-keymap ("C-< l" . lsp-command-map)
+  :hook (lsp-mode . (lambda ()
+                      (let ((lsp-keymap-prefix "C-< l"))
+                        (lsp-enable-which-key-integration))))
   :config
   (setq ; recommended
         gc-cons-threshold (* 100 1024 1024)
@@ -898,15 +902,24 @@
         ))
 
 ;; optionally
-(use-package lsp-ui :commands lsp-ui-mode)
+(use-package lsp-ui
+  :commands lsp-ui-mode
+  :config
+  (setq lsp-ui-doc-position 'at-point
+        lsp-ui-doc-alignment 'window))
 
 (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+(defun lsp-save-hooks () "Install save hooks for lsp."
+       (add-hook 'before-save-hook #'lsp-format-buffer t t)
+       (add-hook 'before-save-hook #'lsp-organize-imports t t))
 
 (use-package clojure-mode
   :hook
   ((clojure-mode . lsp)
    (clojurec-mode . lsp)
-   (clojurescript-mode . lsp))
+   (clojurescript-mode . lsp)
+   (clojure-mode . lsp-save-hooks))
   :init
   (setq clojure-align-forms-automatically t))
 
