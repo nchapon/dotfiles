@@ -45,7 +45,8 @@
       delete-by-moving-to-trash t
       confirm-nonexistent-file-or-buffer nil
       query-replace-highlight t
-      ring-bell-function 'ignore)
+      ring-bell-function 'ignore
+      sentence-end-double-space nil)
 
 (auto-compression-mode t)
 
