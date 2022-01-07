@@ -1479,13 +1479,11 @@
 
 (advice-add 'org-clocktable-indent-string :override #'nc--org-clocktable-indent-string)
 
-;;(setq org-reverse-note-order t)
-
 (setq org-refile-targets (append '((org-default-notes-file :level . 2))
                                  '((nc/org-default-tasks-file :level . 1)
                                    (nc/org-default-projects-file :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")
                                    (nc/org-default-someday-file :level . 0)
-                                   (nil :maxlevel . 1)))) ;; current file
+                                   (nil :maxlevel . 3)))) ;; current file
 
 (setq org-blank-before-new-entry nil)
 
