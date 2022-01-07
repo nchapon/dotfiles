@@ -1102,6 +1102,7 @@
   (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
   (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
   (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
+  (defconst nc/org-default-archives-dir (concat org-directory "/archives"))
   (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
   (defconst nc/org-default-completed-dir (concat org-directory "/projects/_completed"))
   (defconst nc/org-journal-dir (concat org-directory "/journal"))
@@ -1133,7 +1134,14 @@
     (dired nc/org-default-resources-dir))
 
   (bind-key "gR" 'nc/goto-resources-dir nc-map)
-  )
+
+  (defun nc/goto-archives-dir ()
+    (interactive)
+    (dired nc/org-default-archives-dir))
+
+  (bind-key "gA" 'nc/goto-archives-dir nc-map)
+
+)
 
 (defun nc/goto-journal-file ()
       "Create and load a journal file based on today's date."
