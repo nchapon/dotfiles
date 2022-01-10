@@ -35,16 +35,6 @@
   (setq native-comp-deferred-compilation t)
   (setq native-comp-async-report-warnings-errors nil))
 
-;; (setq-default initial-frame-alist '((width . 170)
-;;                                     (height . 56)
-;;                                     (tool-bar-lines . 0)
-;;                                     (bottom-divider-width . 0)
-;;                                     (right-divider-width . 1))
-;;               default-frame-alist initial-frame-alist
-;;               frame-inhibit-implied-resize t
-;;               x-gtk-resize-child-frames 'resize-mode
-;;               fringe-indicator-alist (assq-delete-all 'truncation fringe-indicator-alist))
-
 (defvar straight-process-buffer)
 (setq-default straight-process-buffer " *straight-process*")
 

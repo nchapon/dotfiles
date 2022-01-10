@@ -11,13 +11,11 @@ You can review which files are created by searching for =:tangle= entries in thi
 Both =init.el= and =early-init.el= are in read only mode by default, and only this file is meant for editing, and the changes are automatically tangled on save.
 
 * Early Init
-:properties:
-:header-args+: :tangle "./early-init.el"
-:end:
+
 Emacs 27 introduced new initialization file called =early-init.el=, which is executed before =init.el=.
 It is meant to configure package initialization and early graphical interface tweaks, before actually drawing a window.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle early-init.el
   ;;; early-init.el --- Early initialization -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
 
   ;; Author: Nicolas CHAPON
@@ -36,7 +34,7 @@ It is meant to configure package initialization and early graphical interface tw
 One of the main reasons why Emacs startup time is big is that the garbage collection is invoked a lot, causing the increase of the startup time.
 This can be migrated by setting high GC threshold and restoring it back in =after-init-hook=.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle early-init.el
   (defvar nc--gc-cons-threshold gc-cons-threshold)
   (defvar nc--gc-cons-percentage gc-cons-percentage)
   (defvar nc--file-name-handler-alist file-name-handler-alist)
@@ -62,33 +60,17 @@ This can be migrated by setting high GC threshold and restoring it back in =afte
 Emacs 28 can compile Emacs Lisp to native code.
 These settings enable background asynchronous compilation, and dynamic reloading of compiled modules.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle early-init.el
   (when (featurep 'native-compile)
     (setq native-comp-deferred-compilation t)
     (setq native-comp-async-report-warnings-errors nil))
-#+end_src
-
-** User Interface
-This code sets default size of the frame and prevents the glimpse of unstyled Emacs by disabling some UI elements early.
-Resizing frame is also expensive, and setting =x-gtk-resize-child-frames= variable to =resize-mode= is a workaround for the [[https://gitlab.gnome.org/GNOME/mutter/-/issues/840][issue]] with child frames not being resized correctly under Mutter.
-
-#+begin_src emacs-lisp
-  ;; (setq-default initial-frame-alist '((width . 170)
-  ;;                                     (height . 56)
-  ;;                                     (tool-bar-lines . 0)
-  ;;                                     (bottom-divider-width . 0)
-  ;;                                     (right-divider-width . 1))
-  ;;               default-frame-alist initial-frame-alist
-  ;;               frame-inhibit-implied-resize t
-  ;;               x-gtk-resize-child-frames 'resize-mode
-  ;;               fringe-indicator-alist (assq-delete-all 'truncation fringe-indicator-alist))
 #+end_src
 
 ** Straight
 Straight is an alternative way to manage package installations.
 It can install packages from Git repositories listed on ELPA, MELPA, and directly from Git URLs.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle early-init.el
   (defvar straight-process-buffer)
   (setq-default straight-process-buffer " *straight-process*")
 
@@ -112,7 +94,7 @@ It can install packages from Git repositories listed on ELPA, MELPA, and directl
 ** Early =package.el= settings
 =package.el= initialization is expensive, thus should be disabled before loading main init file:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle early-init.el
   (setq package-enable-at-startup nil)
 #+end_src
 
@@ -120,19 +102,19 @@ It can install packages from Git repositories listed on ELPA, MELPA, and directl
 Prefer loading newer files to the byte-compiled ones that have older time-stamp when running non-interactively to prevent the use of stale byte-code.
 Saves us a little IO time to skip the mtime checks on every =*.elc= file.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle early-init.el
   (setq load-prefer-newer noninteractive)
 #+end_src
 
 ** =(provide 'early-init)=
 This concludes the =early-init.el= file.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle early-init.el
   (provide 'early-init)
   ;;; early-init.el ends here
 #+end_src
 
-* =init.el=
+* Init.el
 :properties:
 :header-args+: :tangle "./init.el"
 :end:
@@ -623,13 +605,13 @@ Using moe theme dark all the day
     ;; Enable flashing mode-line on errors
     (doom-themes-visual-bell-config)
 
-    (doom-themes-org-config)
-
     ;; or for treemacs users
     ;;(doom-themes-treemacs-config)
 
     ;; Corrects (and improves) org-mode's native fontification.
-    (doom-themes-org-config))
+    ;; (with-eval-after-load 'org-mode
+    ;;     (doom-themes-org-config))
+    )
 #+end_src
 *** Mode line
 #+begin_src emacs-lisp
@@ -1543,8 +1525,26 @@ GitHub Flavored Markdown by default for README.md files.
     (yaml-indent-offset 4))
 #+end_src
 
-** Org
-*** Org Base Configuration
+** =(provide 'init)=
+
+This concludes the =init.el= file.
+
+#+begin_src emacs-lisp
+  (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+  (require 'nc-org)
+  (require 'nc-functions)
+
+
+  (provide 'init)
+  ;;; init.el ends here
+#+end_src
+
+* Org
+:properties:
+:header-args+: :tangle "./lisp/nc-org.el"
+:end:
+** Org Base Configuration
 
 #+begin_src emacs-lisp
   (use-package org
@@ -1582,8 +1582,8 @@ GitHub Flavored Markdown by default for README.md files.
     (use-package org-contrib)
 #+end_src
 
-*** Org UI
-**** Org Bullets
+** Org UI
+*** Org Bullets
 
 #+begin_src emacs-lisp
 (use-package org-bullets
@@ -1595,7 +1595,7 @@ GitHub Flavored Markdown by default for README.md files.
 (setq org-hide-leading-stars t)
 #+end_src
 
-**** Org Heading Styles
+*** Org Heading Styles
 
 #+begin_src emacs-lisp
   (let* ((variable-tuple (cond ((x-list-fonts "Input Sans") '(:font "Input Sans"))
@@ -1637,7 +1637,7 @@ GitHub Flavored Markdown by default for README.md files.
 #+end_src
 
 
-**** org-fancy-priorities
+*** org-fancy-priorities
 
 #+begin_src emacs-lisp
 (use-package org-fancy-priorities
@@ -1660,7 +1660,7 @@ Change priorities colors
 #+end_src
 
 
-**** Startup Indented
+*** Startup Indented
 #+begin_src emacs-lisp
   (setq org-startup-indented t
         org-pretty-entities t
@@ -1670,7 +1670,7 @@ Change priorities colors
 #+end_src
 
 
-*** My Org Files
+** My Org Files
 
  My default org files
 
@@ -1725,7 +1725,7 @@ Change priorities colors
  #+end_src
 
 
-*** Journal
+** Journal
  Function to easily load weekly journal
  #+begin_src emacs-lisp
 
@@ -1806,7 +1806,7 @@ Insert daily heading in journal file =C-<-o-d=
       (bind-key "od" 'nc/insert-daily-heading nc-map)
    #+end_src
 
-*** Tasks
+** Tasks
 My Todos tasks
   - parentheses indicate keyboard shortcuts
   - =@= prompts for a note
@@ -1841,7 +1841,7 @@ Keep track when the task is completed.
                  ("CANCELLED" :foreground "#7f8c8d" :weight bold))))
  #+end_src
 
-*** Tags (contexts)
+** Tags (contexts)
 In GTD tags are contexts
  #+begin_src emacs-lisp
    (setq org-tag-alist (quote ((:startgroup)
@@ -1870,7 +1870,7 @@ will appear as projects.
                                 ("TODO" "NEXT") ()))
  #+end_src
 
-*** Capture templates
+** Capture templates
 
  #+begin_src emacs-lisp
    (setq org-capture-templates
@@ -1900,7 +1900,7 @@ will appear as projects.
                 :clock-in t :clock-resume t)
              ))
  #+end_src
-**** TODO Meeting
+*** TODO Meeting
  Should be moved in gcal.org
 
  #+begin_src emacs-lisp
@@ -1908,14 +1908,14 @@ will appear as projects.
                   `("m" "Meeting" entry (file+headline nc/calendar-file "Réunions")
             "* MEETING %? :meeting:\n%U\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n"))
  #+end_src
-**** TODO RendezVous
+*** TODO RendezVous
  Should be moved in gcal.org
  #+begin_src emacs-lisp
  (add-to-list 'org-capture-templates
                   `("a" "RendezVous" entry (file+headline nc/calendar-file "RendezVous")
                   "* RDV %? :rdv:\n%U\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n"))
  #+end_src
-**** Link
+*** Link
 
  Bookmark entry are captured in journal Links heading.
 
@@ -1934,21 +1934,21 @@ will appear as projects.
                   `("l" "Linkk" entry (function org-journal-find-bookmark)
                          "* %?\n  %i\n  From: %a" :empty-lines 1))
  #+end_src
-**** Note
+*** Note
 #+begin_src emacs-lisp
   (add-to-list 'org-capture-templates
                    '("n" "Note"  entry
                      (file+headline nc/inbox-file "Notes")
                      "* %(org-insert-time-stamp nil nil t) %?\n  %i \n  See: %a" :empty-lines 1))
 #+end_src
-**** Book
+*** Book
 #+begin_src emacs-lisp
   (add-to-list 'org-capture-templates
                    '("b" "Book"  entry
                      (file+headline nc/reading-file "Inbox")
                      "* NEXT %^{Title}\n:PROPERTIES:\n:author: %^{Author}\n:name: %^{Title}\n:END:\n\n%i\n\n" :empty-lines 1))
 #+end_src
-**** Interruption task
+*** Interruption task
  #+begin_src emacs-lisp
    (add-to-list 'org-capture-templates
                 `("i" "Interrupting task" entry
@@ -1967,7 +1967,7 @@ will appear as projects.
    ;; Override the key definition
    (global-set-key (kbd "<f9>") 'my/capture-interruption-task)
  #+end_src
-**** New project
+*** New project
 I have my own template for creating new projects
 
 #+begin_src emacs-lisp
@@ -1976,7 +1976,7 @@ I have my own template for creating new projects
                (file "~/notes/templates/newproject.org")))
 #+end_src
 
-**** Daily Review
+*** Daily Review
 
  #+begin_src emacs-lisp
    (defun org-journal-find-location ()
@@ -2007,15 +2007,15 @@ I have my own template for creating new projects
 
    (bind-key "oD" 'nc/org-insert-daily-review nc-map)
  #+end_src
-**** WeeklyReview
+*** WeeklyReview
  #+begin_src emacs-lisp
  (add-to-list 'org-capture-templates
                   `("w" "WeeklyReview" entry (file+datetree+prompt nc/weekly-review-file)
             "* Summary of the week :REVIEW:\n%[~/notes/templates/review.org]"))
  #+end_src
 
-*** Agenda
-**** Agenda configuration
+** Agenda
+*** Agenda configuration
 By default all files in GTD and journal folder will be in my agenda, to be searchable
 
 Setting =org-agenda-file-regexp= to include all numeric files (journal files)
@@ -2032,20 +2032,20 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
           org-deadline-warning-days 5)
 #+end_src
 
-**** Diary
+*** Diary
  #+begin_src emacs-lisp
    (setq diary-file "~/notes/diary"
          org-agenda-include-diary t)
  #+end_src
-**** Custom Agenda commands
-***** Function to skip headline tagged with =:project:=
+*** Custom Agenda commands
+**** Function to skip headline tagged with =:project:=
 
  #+begin_src emacs-lisp
  (defun nc--org-agenda-skip-project ()
      (org-agenda-skip-entry-if 'regexp ":project:"))
  #+end_src
 
-***** Display Header parent
+**** Display Header parent
 
  #+begin_src emacs-lisp
  (defun nc--org-agenda-format-parent (n)
@@ -2056,7 +2056,7 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
        (org-up-heading-safe)
        (s-truncate n (org-get-heading t t)))))
  #+end_src
-***** Agenda Commands
+**** Agenda Commands
 
      #+begin_src emacs-lisp
        (defun org-current-is-todo ()
@@ -2115,7 +2115,7 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
                ("p" "Projects" tags "project")
                   ))
      #+end_src
-**** Recent open loops
+*** Recent open loops
 
  #+begin_src emacs-lisp
  (defun nc/org-agenda-recent-open-loops ()
@@ -2126,7 +2126,7 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
        (org-agenda-list nil (org-read-date nil nil "-2d") 4)))
  #+end_src
 
-*** Org Clock Configuration
+** Org Clock Configuration
 
 Too many clock entries clutter up a heading.
 
@@ -2178,7 +2178,7 @@ Fix timereport indentation
 #+end_src
 
 
-*** Refiling
+** Refiling
 Targets include this file and any file contributing to the agenda - up to 2 levels deep
  #+begin_src emacs-lisp
    (setq org-refile-targets (append '((org-default-notes-file :level . 2))
@@ -2213,7 +2213,7 @@ Targets include this file and any file contributing to the agenda - up to 2 leve
  #+begin_src emacs-lisp
  (setq org-refile-allow-creating-parent-nodes 'confirm)
  #+end_src
-*** Refiling a subtree to a new file
+** Refiling a subtree to a new file
 
 Adapted from GTD Boxes https://gitlab.com/howardabrams/spacemacs.d/-/blob/master/elisp/boxes-extras.el
 Documentation : http://www.howardism.org/Technical/Emacs/getting-more-boxes-done.html
@@ -2373,7 +2373,7 @@ Documentation : http://www.howardism.org/Technical/Emacs/getting-more-boxes-done
   (bind-key "or" 'nc/org-refile-subtree-to-file nc-map)
 #+end_src
 
-*** Speed commands
+** Speed commands
  From https://orgmode.org/worg/org-hacks.html
 Customize speed-commands :
 - N :: Show next entry keeping other entries closed
@@ -2437,7 +2437,7 @@ Customize speed-commands :
    
  #+end_src
 
-*** Org Structure templates
+** Org Structure templates
 
 #+begin_src emacs-lisp
   ;; This is needed as of Org 9.2
@@ -2448,8 +2448,8 @@ Customize speed-commands :
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
 #+end_src
 
-*** Babel
-**** Babel languages
+** Babel
+*** Babel languages
 
 #+begin_src emacs-lisp
   (use-package ob-restclient)
@@ -2474,22 +2474,22 @@ Customize speed-commands :
 
 #+RESULTS:
 
-**** Editing source code
+*** Editing source code
  I don't want to get distracted by the same code in the other window, so I want org src to use the current window.
 
  #+begin_src emacs-lisp
    (setq org-src-window-setup 'current-window)
  #+end_src
-**** Evaluate code blocks without prompting
+*** Evaluate code blocks without prompting
 #+begin_src emacs-lisp
   (setq org-confirm-babel-evaluate nil)
 #+end_src
-**** Syntax highlight in source blocks
+*** Syntax highlight in source blocks
 #+begin_src emacs-lisp
   (setq org-src-fontify-natively t)
 #+end_src
-*** My Org Mode Utilities Functions
-**** Manipulate hours/minutes in tables
+** My Org Mode Utilities Functions
+*** Manipulate hours/minutes in tables
 From https://orgmode.org/worg/org-hacks.html#org0d09b33
 #+begin_src emacs-lisp
 (defun nc--org-time-string-to-seconds (s)
@@ -2534,7 +2534,7 @@ the result as a time value."
           `,@exprs))))
 #+end_src
 
-**** Attachments folder
+*** Attachments folder
 I'm not a big fan of =org-attachments= so I prefer to store all my
 attachements in a subfolder *assets/buffer-name-sans-extension* that
 correspond to current buffer I'm editing.
@@ -2548,7 +2548,7 @@ correspond to current buffer I'm editing.
       (message "Creation %s folder for current folder" assets-buffer-dir)))
 #+end_src
 
-**** Translate capital keywords to lowercase
+*** Translate capital keywords to lowercase
 From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate-capital-keywords-old-to-lower-case-new
 
 #+begin_src emacs-lisp
@@ -2565,7 +2565,7 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
             (setq count (1+ count))))
         (message "Replaced %d occurences" count))))
 #+end_src
-*** Deft 
+** Deft 
 
 [[https://github.com/jrblevin/deft][Deft]] is an emacs mode for quickly searching (or editing) in his directory notes.
 
@@ -2609,7 +2609,7 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
     (advice-add 'deft-parse-title :override #'nc/deft-parse-title))
 #+end_src
 
-*** Yankpad
+** Yankpad
 
 [[https://github.com/Kungsgeten/yankpad][Yankpad]] paste snippets from an org-mode file.
 
@@ -2627,7 +2627,7 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
     (:map nc-map ("C-y". yankpad-insert)))
 
 #+end_src
-*** Org Roam
+** Org Roam
 
 #+begin_src emacs-lisp
 
@@ -2659,10 +2659,17 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
     (org-roam-setup))
 
 #+end_src
+** Provide =nc-org= module
+#+begin_src emacs-lisp
+  (provide 'nc-org)
+  ;;; nc-org.el ends here
+#+end_src
 
-
-** My functions
-*** Emacs Config File
+* Custom Functions
+:properties:
+:header-args+: :tangle "./lisp/nc-functions.el"
+:end:
+** Emacs Config File
 
  #+begin_src emacs-lisp
    (defun nc/goto-emacs-config ()
@@ -2671,7 +2678,7 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
        (find-file "~/.emacs.d/Readme.org"))     
  #+end_src
 
-*** My personal credentials
+** My personal credentials
 
 #+begin_src emacs-lisp
     (defun nc/goto-my-credentials ()
@@ -2685,7 +2692,7 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
 #+end_src
 
 
-*** Pseudo uuid
+** Pseudo uuid
 
 Generate a 32 random pseudo uuid
 
@@ -2704,7 +2711,7 @@ Generate a 32 random pseudo uuid
 #+end_src
 
 
-*** Password generator
+** Password generator
 Generates a strong password
 
  #+begin_src emacs-lisp
@@ -2722,7 +2729,7 @@ Generates a strong password
    (bind-key "ip" 'nc/generate-password nc-map)
  #+end_src
 
-*** TimeSlot
+** TimeSlot
 Insert time slot mainly used when I schedule meeting or appointment.
 #+begin_src emacs-lisp
   (defvar current-hour-format "%H:00")
@@ -2738,7 +2745,7 @@ Insert time slot mainly used when I schedule meeting or appointment.
 
 #+end_src
 
-*** Inserting time stamps
+** Inserting time stamps
    From : https://github.com/novoid/dot-emacs/blob/master/config.org#inserting-time-stamps--my-map-ddtt
 
 #+begin_src emacs-lisp
@@ -2768,7 +2775,7 @@ Insert time slot mainly used when I schedule meeting or appointment.
    (bind-key "iD" 'nc/insert-datestamp-inactive nc-map)
  #+end_src
 
-*** Searching in my notes
+** Searching in my notes
 
 #+begin_src emacs-lisp
   (defun nc/search-notes ()
@@ -2779,7 +2786,7 @@ Insert time slot mainly used when I schedule meeting or appointment.
   (bind-key "sn" 'nc/search-notes nc-map)
 #+end_src
 
-*** Sudo Edit File
+** Sudo Edit File
 
 From : https://karthinks.com/software/fifteen-ways-to-use-embark/
 
@@ -2796,18 +2803,17 @@ From : https://karthinks.com/software/fifteen-ways-to-use-embark/
                                (file-remote-p file 'host) ":" (file-remote-p file 'localname))
                      (concat "/sudo:root@localhost:" file))))
 #+end_src
-
-
-** =(provide 'init)=
-
-This concludes the =init.el= file.
-
+** Provide =nc-functions= module
 #+begin_src emacs-lisp
-;; test
-  (provide 'init)
-    ;;; init.el ends here
+  (provide 'nc-functions)
+  ;;; nc-functions.el ends here
 #+end_src
+
+
 
 # Local Variables:
 # eval: (add-hook 'after-save-hook #'org-babel-tangle nil t)
 # End:
+* Key Bindings
+* Completion
+* Core Packages
