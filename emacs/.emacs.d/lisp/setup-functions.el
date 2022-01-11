@@ -89,5 +89,5 @@
                          (file-remote-p file 'host) ":" (file-remote-p file 'localname))
                (concat "/sudo:root@localhost:" file))))
 
-(provide 'nc-functions)
-;;; nc-functions.el ends here
+(provide 'setup-functions)
+;;; setup-functions.el ends here

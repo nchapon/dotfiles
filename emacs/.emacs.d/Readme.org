@@ -114,7 +114,7 @@ This concludes the =early-init.el= file.
   ;;; early-init.el ends here
 #+end_src
 
-* Init.el
+* Init configuration
 :properties:
 :header-args+: :tangle "./init.el"
 :end:
@@ -159,15 +159,66 @@ Remove minor modes from mode line
 (use-package diminish)
 #+end_src
 
-** Custom Preferences
-My custom Emacs Preferences.
-*** Personal Information
+** Exec Path From Shell
+
+[[https://github.com/purcell/exec-path-from-shell][Exec Path From Shell]] A GNU Emacs library to ensure environment variables inside Emacs look the same as in the user's shell.
+
+This happens a lot on OS X, where an Emacs instance started from the GUI inherits a default set of environment variables.
+
+#+begin_src emacs-lisp
+  (use-package exec-path-from-shell
+    :config
+    (when (memq window-system '(mac ns x))
+      (progn
+        (exec-path-from-shell-initialize)
+        ;; (exec-path-from-shell-copy-env "GOPATH")
+        ;;(exec-path-from-shell-copy-env "JAVA_HOME")
+        ;; (exec-path-from-shell-copy-env "PATH")
+        ;; (exec-path-from-shell-copy-env "RUST_SRC_PATH")
+        )))
+#+end_src
+
+** No Littering
+
+Help keeping =~/.emacs.d= clean.
+[[https://github.com/emacscollective/no-littering][https://github.com/emacscollective/no-littering]]
+
+#+begin_src emacs-lisp
+(use-package no-littering)
+#+end_src
+** Setup modules
+
+This concludes the =init.el= file.
+
+#+begin_src emacs-lisp
+  (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+  (require 'setup-prefs)
+  (require 'setup-ui)
+  (require 'setup-keys)
+  (require 'setup-windows)
+  (require 'setup-core)
+  (require 'setup-completion)
+  (require 'setup-org)
+  (require 'setup-programming)
+  (require 'setup-shell)
+  (require 'setup-functions)
+
+  (provide 'init)
+  ;;; init.el ends here
+#+end_src
+
+* Global Preferences
+:properties:
+:header-args+: :tangle "./lisp/setup-prefs.el"
+:end:
+** Personal Information
  #+begin_src emacs-lisp
  (setq user-full-name "Nicolas Chapon"
          user-mail-address "nchapon@gmail.com")
  #+end_src
 
-*** Define constants
+** Define constants
 
 #+begin_src emacs-lisp
   (defconst is-mac (equal system-type 'darwin))
@@ -175,7 +226,7 @@ My custom Emacs Preferences.
   (defconst is-windows (equal system-type 'windows-nt))
   (defconst has-gui (display-graphic-p))
 #+end_src
-*** Customization File
+** Customization File
 To avoid overloading the GNU Emacs custormization =init.el= file made by the
 user with the UI, I add the generated code in a separate file.
 
@@ -184,7 +235,7 @@ user with the UI, I add the generated code in a separate file.
   (when (file-exists-p custom-file)
     (load custom-file t))
 #+end_src
-*** Better Defaults
+** Better Defaults
 Small configs for better emacs experience...
 
 #+begin_src emacs-lisp
@@ -204,30 +255,30 @@ Small configs for better emacs experience...
         sentence-end-double-space nil)
  #+end_src
 
-**** Transparently open compressed files
+*** Transparently open compressed files
  #+begin_src emacs-lisp
  (auto-compression-mode t)
  #+end_src
 
-**** Answering just 'y' or 'n'
+*** Answering just 'y' or 'n'
 
  #+begin_src emacs-lisp
  (defalias 'yes-or-no-p 'y-or-n-p)
  #+end_src
 
-**** Indentation & Tabs
+*** Indentation & Tabs
 
  Always spaces with width of 4
  #+begin_src emacs-lisp
  (setq-default indent-tabs-mode nil)
  (setq-default tab-width 4)
  #+end_src
-**** TODO Indent new line if necessary
+*** TODO Indent new line if necessary
 Remove to bindings
 #+begin_src emacs-lisp
  (define-key global-map (kbd "RET") 'newline-and-indent)
  #+end_src
-*** UTF-8 Encoding
+** UTF-8 Encoding
 
  Set all coding systems to utf-8
  #+begin_src emacs-lisp
@@ -244,7 +295,7 @@ Remove to bindings
  (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
  (setq file-name-coding-system  'utf-8)
  #+end_src
-*** French Calendar & Holydays
+** French Calendar & Holydays
  French Calendar & Holidays
  #+begin_src emacs-lisp
    (setq calendar-week-start-day 1
@@ -277,8 +328,7 @@ Remove to bindings
  #+end_src
 
 
-** System Preferences
-*** MacOS
+** MacOS
 Some custom preferences dedicated to MacOS
 - keys for apple keyboard
 - use the right ~⌥~ key to write symbols ={[]}=. The left ~⌥~ key can be used as the Meta
@@ -302,16 +352,162 @@ Some custom preferences dedicated to MacOS
      ;; Freench Locale
      (set-locale-environment "fr_FR.UTF-8"))
  #+end_src
-** Global Functionnalities
-*** No Littering
+** Uniquify
 
-Help keeping =~/.emacs.d= clean.
-[[https://github.com/emacscollective/no-littering][https://github.com/emacscollective/no-littering]]
+Uniquify file path to ensure buffer name uniqueness
 
 #+begin_src emacs-lisp
-(use-package no-littering)
+  (use-package uniquify
+    :straight nil
+    :custom
+    (uniquify-buffer-name-style 'forward)
+    (uniquify-separator "/")
+    (uniquify-after-kill-buffer-p t)
+    (uniquify-ignore-buffers-re "^\\*")
+  )
 #+end_src
-*** Emacs Bindings
+** Recent Files
+
+ #+BEGIN_QUOTE
+ Recentf is a minor mode that builds a list of recently opened
+ files. This list is is automatically saved across sessions on exiting
+ Emacs - you can then access this list through a command or the menu.
+
+ [[https://www.emacswiki.org/emacs/RecentFiles][https://www.emacswiki.org/emacs/RecentFiles]]
+ #+END_QUOTE
+
+ #+begin_src emacs-lisp
+   (use-package recentf
+     :straight nil
+     :custom
+     (recentf-auto-cleanup "09:00am")
+     (recentf-max-saved-items 300)
+     (recentf-exclude '((expand-file-name package-user-dir)
+                        ".cache"
+                        ".cask"
+                        ".elfeed"
+                        "bookmarks"
+                        "cache"
+                        "ido.*"
+                        "persp-confs"
+                        "recentf"
+                        "undo-tree-hist"
+                        "url"
+                        "COMMIT_EDITMSG\\'")))
+
+   ;; When buffer is closed, saves the cursor location
+   (save-place-mode 1)
+
+   (recentf-mode 1)
+
+   ;; Set history-length longer
+   (setq-default history-length 500)
+
+ #+end_src
+
+
+** Hippie Expand
+[[https://www.emacswiki.org/emacs/HippieExpand][Hippie Expand]] custom configuration 
+Fix Conflict with company-complete
+#+begin_src emacs-lisp
+  (setq hippie-expand-try-functions-list '(try-expand-dabbrev
+                                           try-expand-dabbrev-all-buffers
+                                           try-expand-dabbrev-from-kill
+                                           try-complete-file-name-partially
+                                           try-complete-file-name
+                                           try-expand-all-abbrevs
+                                           try-expand-list
+                                           try-expand-line
+                                           try-complete-lisp-symbol-partially
+                                           try-complete-lisp-symbol))
+  
+  (global-set-key (kbd "M-/") #'hippie-expand)
+#+end_src
+* UI
+:properties:
+:header-args+: :tangle "./lisp/setup-ui.el"
+:end:
+** Minimalistic UI
+*** No menu and toolbar
+
+#+begin_src emacs-lisp
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+#+end_src
+
+*** No welcome screen
+
+#+begin_src emacs-lisp
+(setq  inhibit-startup-message t)
+#+end_src
+
+*** Make fringe smaller
+
+#+begin_src emacs-lisp
+  (if (fboundp 'fringe-mode)
+      (fringe-mode 2))
+#+end_src
+** All The Icons
+#+begin_src emacs-lisp
+(use-package all-the-icons)
+#+end_src
+** Theme
+Using moe theme dark all the day
+#+begin_src emacs-lisp
+  (use-package doom-themes
+
+    :config
+
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+    ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+    ;; may have their own settings.
+    (load-theme 'doom-one t)
+
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+
+    ;; or for treemacs users
+    ;;(doom-themes-treemacs-config)
+
+    ;; Corrects (and improves) org-mode's native fontification.
+    (with-eval-after-load 'org-mode
+        (doom-themes-org-config))
+    )
+#+end_src
+** Mode line
+#+begin_src emacs-lisp
+  (use-package doom-modeline
+    :hook (after-init . doom-modeline-init))
+#+end_src
+
+** Font
+Use Input Font (http://input.fontbureau.com/)  on Linux, Monaco on MacOS
+
+#+begin_src emacs-lisp
+  (defun nc/setup-font ()
+    "Set up font height"
+    (interactive)
+    (when is-linux
+      (set-frame-font "Input Mono-12" nil t))
+    (when is-mac
+      (set-frame-font "Monaco 15" nil t))
+    (when is-windows
+      (set-frame-font "Consolas" nil t))
+    )
+
+  (when has-gui
+    (add-hook 'after-init-hook #'nc/setup-font))
+#+end_src
+
+* Key Bindings
+:properties:
+:header-args+: :tangle "./lisp/setup-keys.el"
+:end:
+** Global Key Bindings
 Emacs Global Bindings are redefined here.
 #+begin_src emacs-lisp
   ;; Unbind unneeded keys
@@ -341,7 +537,7 @@ Emacs Global Bindings are redefined here.
   (global-set-key (kbd "<f5>") #'revert-buffer)
 
 #+end_src
-*** My custom key bindings
+** Personal keyboard map
 
 #+begin_src emacs-lisp
   (bind-keys
@@ -349,10 +545,10 @@ Emacs Global Bindings are redefined here.
    :prefix-docstring "My own keyboard map"
    :prefix "C-<"
    ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
-   (";" . nc/goto-emacs-config))
-
+   (";" . nc/goto-emacs-config)
+   ("<tab>" . expand-abbrev))
 #+end_src
-*** Key Chords
+** Key Chords
 
 #+begin_src emacs-lisp
   (use-package key-chord
@@ -368,7 +564,111 @@ Emacs Global Bindings are redefined here.
 
 #+end_src
 
-*** Avy
+** Which Key
+
+[[https://github.com/justbur/emacs-which-key][Which Key]] is a minor mode for Emacs that displays the key bindings following
+your currently entered incomplete command (a prefix) in a popup.
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :diminish
+  :custom
+  (which-key-separator " ")
+  (which-key-prefix-prefix "+")
+  :config
+  (which-key-mode))
+#+end_src
+* Windows
+:properties:
+:header-args+: :tangle "./lisp/setup-windows.el"
+:end:
+** Ace Window
+[[https://github.com/abo-abo/ace-window][ace-window]] Quickly switch and move windows
+
+#+begin_src emacs-lisp
+  (use-package ace-window
+    :bind (([remap other-window] . ace-window))
+    :config
+    (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
+    ;; increase size face
+    (custom-set-faces
+     '(aw-leading-char-face
+       ((t (:inherit ace-jump-face-foreground :height 3.0))))))
+ #+end_src
+
+** Golden Ratio
+
+ Resize automatically the windows you are working
+
+ #+begin_src emacs-lisp
+   (use-package golden-ratio
+     :diminish t
+     :init
+     (golden-ratio-mode 1)
+     :config
+     (setq golden-ratio-extra-commands
+           (append golden-ratio-extra-commands
+                   '(ace-window))))
+ #+end_src
+
+
+** Toggle Window Split Horizontally
+
+Bound to =C-z w -=.
+#+begin_src emacs-lisp
+  (defun nc/toggle-split-window-horizontally ()
+    (interactive)
+    (if (= (count-windows) 2)
+        (let* ((this-win-buffer (window-buffer))
+               (next-win-buffer (window-buffer (next-window)))
+               (this-win-edges (window-edges (selected-window)))
+               (next-win-edges (window-edges (next-window)))
+               (this-win-2nd (not (and (<= (car this-win-edges)
+                                           (car next-win-edges))
+                                       (<= (cadr this-win-edges)
+                                           (cadr next-win-edges)))))
+               (splitter
+                (if (= (car this-win-edges)
+                       (car (window-edges (next-window))))
+                    'split-window-horizontally
+                  'split-window-vertically)))
+          (delete-other-windows)
+          (let ((first-win (selected-window)))
+            (funcall splitter)
+            (if this-win-2nd (other-window 1))
+            (set-window-buffer (selected-window) this-win-buffer)
+            (set-window-buffer (next-window) next-win-buffer)
+            (select-window first-win)
+            (if this-win-2nd (other-window 1))))))
+
+  (bind-key "wh" 'nc/toggle-split-window-horizontally nc-map)
+#+end_src
+
+
+** Toggle Window Split Vertically 
+Split window right with =C-< w v= and move there.
+If windows are splitted delete other windows.
+#+begin_src emacs-lisp
+  (defun nc--split-window-right-and-move-there-dammit ()
+    (split-window-right)
+    (windmove-right))
+
+  (defun nc/toggle-split-window-vertically ()
+    (interactive)
+    (if (> (count-windows) 1)
+        (delete-other-windows)
+      (nc--split-window-right-and-move-there-dammit)))
+
+  (bind-key "wv" 'nc/toggle-split-window-vertically nc-map)
+  (bind-key "C-w" 'nc/toggle-split-window-vertically nc-map)
+  #+end_src
+
+
+* Core Packages
+:properties:
+:header-args+: :tangle "./lisp/setup-core.el"
+:end:
+** Avy
 
 #+begin_src emacs-lisp
   (use-package avy
@@ -383,7 +683,7 @@ Emacs Global Bindings are redefined here.
     (avy-lead-face ((t (:background "#51afef" :foreground "#870000" :weight bold)))))
 #+end_src
 
-*** Crux
+** Crux
 [[https://github.com/bbatsov/crux][Crux]] A Collection Of Ridiculosy Useful eXtensions for Emacs
 #+begin_src emacs-lisp
   (use-package crux
@@ -402,27 +702,8 @@ Emacs Global Bindings are redefined here.
     (defalias 'rename-file-and-buffer #'crux-rename-file-and-buffer))
 #+end_src
 
-*** Exec Path From Shell
-
-[[https://github.com/purcell/exec-path-from-shell][Exec Path From Shell]] A GNU Emacs library to ensure environment variables inside Emacs look the same as in the user's shell.
-
-This happens a lot on OS X, where an Emacs instance started from the GUI inherits a default set of environment variables.
-
-#+begin_src emacs-lisp
-  (use-package exec-path-from-shell
-    :config
-    (when (memq window-system '(mac ns x))
-      (progn
-        (exec-path-from-shell-initialize)
-        ;; (exec-path-from-shell-copy-env "GOPATH")
-        ;;(exec-path-from-shell-copy-env "JAVA_HOME")
-        ;; (exec-path-from-shell-copy-env "PATH")
-        ;; (exec-path-from-shell-copy-env "RUST_SRC_PATH")
-        )))
-#+end_src
-
+** Dired
 *** Dired
-**** Dired
 #+begin_src emacs-lisp
   (use-package dired
     :straight nil
@@ -466,7 +747,7 @@ This happens a lot on OS X, where an Emacs instance started from the GUI inherit
                                    (lambda () (interactive) (find-alternate-file ".."))))))
 
 #+end_src
-**** Dired Narrow
+*** Dired Narrow
 
 [[https://github.com/Fuco1/dired-hacks/tree/7c0ef09d57a80068a11edc74c3568e5ead5cc15a#dired-narrow][Dired Narrow]] provides live filtering of files in dired buffers. In
 general, after calling the respective narrowing function you type a
@@ -480,7 +761,7 @@ filter string into the minibuffer.
                 ("/" . dired-narrow)))
 #+end_src
 
-**** Font Lock Dired
+*** Font Lock Dired
 
 [[https://github.com/purcell/diredfl][Diredfl]] Extra font lock rules for a  more colorful dired.
 
@@ -490,266 +771,253 @@ filter string into the minibuffer.
 #+end_src
 
 
-*** Uniquify
+** Projectile
 
-Uniquify file path to ensure buffer name uniqueness
+[[https://github.com/bbatsov/projectile][Projectile]] Project interaction library for emacs.
 
 #+begin_src emacs-lisp
-  (use-package uniquify
+  (use-package projectile
+    :custom
+    (projectile-sort-order 'recently-active)
+    :config
+    (projectile-global-mode)
+    :init
+      (setq projectile-enable-caching t)
+      ;; Custom mode line
+      (setq projectile-mode-line '(:eval (format " Ⓟ[%s]" (projectile-project-name))))
+    :bind-keymap ("C-c p" . projectile-command-map))
+#+end_src
+
+** Expand region
+#+BEGIN_QUOTE
+Expand region increases the selected region by semantic units. Just keep pressing the key until it selects what you want.
+
+[[https://github.com/magnars/expand-region.el]]
+#+END_QUOTE
+
+- expand selection with =C-==
+- contract with negative argument =M--= then =C-==
+
+ #+begin_src emacs-lisp
+ (use-package expand-region
+   :bind
+   ("C-=" . er/expand-region))
+ #+end_src
+
+** Multiple Cursors
+
+ [[https://github.com/magnars/multiple-cursors.el][multiple-cursors.el]] This package can create several cursors to all do the same things.
+
+ #+begin_src emacs-lisp
+   (use-package multiple-cursors
+     :bind
+     (("C-S-c C-S-c" .  mc/edit-lines)
+      ("C-$" .  mc/edit-ends-of-lines)
+      ("C-S-b" .  mc/edit-beginnings-of-lines)
+      ;; Conflict my own map
+      ;("C-<" .  mc/mark-previous-word-like-this) 
+      ;("C->" .  mc/mark-next-word-like-this)
+      ("C-S-n" .  mc/mark-next-like-this)
+      ("C-S-p" .  mc/mark-previous-like-this)
+      ("C-*" .  mc/mark-all-dwim)))
+ #+end_src
+
+** Undo Tree
+ This lets you use =C-x u= (=undo-tree-visualize=)
+ #+begin_src emacs-lisp
+   (use-package undo-tree
+     :diminish undo-tree-mode
+     :config
+     (progn
+       (global-undo-tree-mode)
+       (setq undo-tree-visualizer-timestamps t)
+       (setq undo-tree-visualizer-diff t)))
+ #+end_src
+
+** Ediff
+
+ From : [[https://www.emacswiki.org/emacs/EdiffMode]]
+
+ You can ignore whitespace or case sensitivity in two ways:
+- Interactively, on the fly:
+   - Whitespace sensitivity – Toggle with =##= (=ediff-toggle-skip-similar=).
+   - Case sensitivity – Toggle with =#c= (=ediff-toggle-ignore-case=). This assumes that you’ve loaded library Lisp:ediff+.el and that you are using `diff(1)’ as ‘ediff-diff-program’. (Toggling case-sensitivity is available in vanilla GNU Emacs 22, so Lisp:ediff+.el is mainly useful for older Emacs versions.)
+ - Persistently: Customize option =ediff-diff-options=. This assumes that you are using `diff(1)’ as ‘ediff-diff-program’.
+    - Whitespace insensitivity – Include ‘-w’ in =ediff-diff-options=.
+    - Case insensitivity – Include ‘-i’ in =ediff-diff-options=.
+
+#+begin_src emacs-lisp
+  (use-package ediff
     :straight nil
     :custom
-    (uniquify-buffer-name-style 'forward)
-    (uniquify-separator "/")
-    (uniquify-after-kill-buffer-p t)
-    (uniquify-ignore-buffers-re "^\\*")
-  )
+     ;; Ediff should be opened in selected frame and split window horizontally
+    (ediff-window-setup-function 'ediff-setup-windows-plain)
+    (ediff-split-window-function 'split-window-horizontally)
+    (ediff-diff-options "-w")
+    :config
+    ;; Pour éviter des ouvertures de frames intempestives
+    (advice-add 'ediff-window-display-p :override 'ignore))
 #+end_src
-*** Recent Files
-
- #+BEGIN_QUOTE
- Recentf is a minor mode that builds a list of recently opened
- files. This list is is automatically saved across sessions on exiting
- Emacs - you can then access this list through a command or the menu.
-
- [[https://www.emacswiki.org/emacs/RecentFiles][https://www.emacswiki.org/emacs/RecentFiles]]
- #+END_QUOTE
-
- #+begin_src emacs-lisp
-   (use-package recentf
-     :straight nil
-     :custom
-     (recentf-auto-cleanup "09:00am")
-     (recentf-max-saved-items 300)
-     (recentf-exclude '((expand-file-name package-user-dir)
-                        ".cache"
-                        ".cask"
-                        ".elfeed"
-                        "bookmarks"
-                        "cache"
-                        "ido.*"
-                        "persp-confs"
-                        "recentf"
-                        "undo-tree-hist"
-                        "url"
-                        "COMMIT_EDITMSG\\'")))
-
-   ;; When buffer is closed, saves the cursor location
-   (save-place-mode 1)
-
-   (recentf-mode 1)
-
-   ;; Set history-length longer
-   (setq-default history-length 500)
-
- #+end_src
 
 
-*** Which Key
+** Magit
 
-[[https://github.com/justbur/emacs-which-key][Which Key]] is a minor mode for Emacs that displays the key bindings following
-your currently entered incomplete command (a prefix) in a popup.
+#+BEGIN_QUOTE
+Magit a git porcelain inside Emacs !
+
+[[https://github.com/magit/magit]]
+#+END_QUOTE
 
 #+begin_src emacs-lisp
-(use-package which-key
-  :diminish
-  :custom
-  (which-key-separator " ")
-  (which-key-prefix-prefix "+")
+  (use-package magit
+
+    :init
+    (when (getenv "GIT_EXECUTABLE")
+      (setq magit-git-executable (getenv "GIT_EXECUTABLE")))
+
+    :bind (("C-x g" . magit-status)
+           ("<f6>" . magit-status )
+           ("C-<f6>" . magit-log-buffer-file)))
+#+end_src
+
+
+** Treemacs
+
+#+begin_quote
+Treemacs - A tree layout file explorer for Emacs
+
+https://github.com/Alexander-Miller/treemacs
+#+end_quote
+
+#+begin_src emacs-lisp
+  (use-package treemacs
+    :ensure t
+    :defer t
+    :init
+    (with-eval-after-load 'winum
+      (define-key winum-keymap (kbd "M-o") #'treemacs-select-window))
+    :config
+    (progn
+      (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
+            treemacs-deferred-git-apply-delay        0.5
+            treemacs-directory-name-transformer      #'identity
+            treemacs-display-in-side-window          t
+            treemacs-eldoc-display                   t
+            treemacs-file-event-delay                5000
+            treemacs-file-extension-regex            treemacs-last-period-regex-value
+            treemacs-file-follow-delay               0.2
+            treemacs-file-name-transformer           #'identity
+            treemacs-follow-after-init               t
+            treemacs-expand-after-init               t
+            treemacs-git-command-pipe                ""
+            treemacs-goto-tag-strategy               'refetch-index
+            treemacs-indentation                     2
+            treemacs-indentation-string              " "
+            treemacs-is-never-other-window           nil
+            treemacs-max-git-entries                 5000
+            treemacs-missing-project-action          'ask
+            treemacs-move-forward-on-expand          nil
+            treemacs-no-png-images                   nil
+            treemacs-no-delete-other-windows         t
+            treemacs-project-follow-cleanup          nil
+            treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+            treemacs-position                        'left
+            treemacs-read-string-input               'from-child-frame
+            treemacs-recenter-distance               0.1
+            treemacs-recenter-after-file-follow      nil
+            treemacs-recenter-after-tag-follow       nil
+            treemacs-recenter-after-project-jump     'always
+            treemacs-recenter-after-project-expand   'on-distance
+            treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
+            treemacs-show-cursor                     nil
+            treemacs-show-hidden-files               t
+            treemacs-silent-filewatch                nil
+            treemacs-silent-refresh                  nil
+            treemacs-sorting                         'alphabetic-asc
+            treemacs-select-when-already-in-treemacs 'move-back
+            treemacs-space-between-root-nodes        t
+            treemacs-tag-follow-cleanup              t
+            treemacs-tag-follow-delay                1.5
+            treemacs-text-scale                      nil
+            treemacs-user-mode-line-format           nil
+            treemacs-user-header-line-format         nil
+            treemacs-wide-toggle-width               70
+            treemacs-width                           35
+            treemacs-width-increment                 1
+            treemacs-width-is-initially-locked       t
+            treemacs-workspace-switch-cleanup        nil)
+
+      ;; The default width and height of the icons is 22 pixels. If you are
+      ;; using a Hi-DPI display, uncomment this to double the icon size.
+      ;;(treemacs-resize-icons 44)
+
+      (treemacs-follow-mode t)
+      (treemacs-filewatch-mode t)
+      (treemacs-fringe-indicator-mode 'always)
+
+      (pcase (cons (not (null (executable-find "git")))
+                   (not (null treemacs-python-executable)))
+        (`(t . t)
+         (treemacs-git-mode 'deferred))
+        (`(t . _)
+         (treemacs-git-mode 'simple)))
+
+      (treemacs-hide-gitignored-files-mode nil))
+    :bind
+    (:map nc-map ("t" . treemacs))
+    (:map global-map
+          ("M-o"       . treemacs-select-window)
+          ("C-x t 1"   . treemacs-delete-other-windows)
+          ("C-x t t"   . treemacs)
+          ("C-x t B"   . treemacs-bookmark)
+          ("C-x t C-t" . treemacs-find-file)
+          ("C-x t M-t" . treemacs-find-tag)))
+
+  (use-package treemacs-projectile
+    :after (treemacs projectile)
+    :ensure t)
+
+  (use-package treemacs-icons-dired
+    :hook (dired-mode . treemacs-icons-dired-enable-once)
+    :ensure t)
+#+end_src
+
+** Rainbow mode
+
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :ensure t
   :config
-  (which-key-mode))
-#+end_src
-*** Hippie Expand
-[[https://www.emacswiki.org/emacs/HippieExpand][Hippie Expand]] custom configuration 
-
-#+begin_src emacs-lisp
-  (setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                           try-expand-dabbrev-all-buffers
-                                           try-expand-dabbrev-from-kill
-                                           try-complete-file-name-partially
-                                           try-complete-file-name
-                                           try-expand-all-abbrevs
-                                           try-expand-list
-                                           try-expand-line
-                                           try-complete-lisp-symbol-partially
-                                           try-complete-lisp-symbol))
-  
-  (global-set-key (kbd "M-/") #'hippie-expand)
-#+end_src
-*** Abbrev
-
-#+begin_src emacs-lisp
-  (bind-key "," #'expand-abbrev nc-map)
-
+  (add-hook 'prog-mode-hook #'rainbow-mode)
+  (diminish 'rainbow-mode))
 #+end_src
 
-** UI
-*** All The Icons
-#+begin_src emacs-lisp
-(use-package all-the-icons)
-#+end_src
-*** Theme
-Using moe theme dark all the day
-#+begin_src emacs-lisp
-  (use-package doom-themes
-
-    :config
-
-    ;; Global settings (defaults)
-    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-          doom-themes-enable-italic t) ; if nil, italics is universally disabled
-
-    ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
-    ;; may have their own settings.
-    (load-theme 'doom-one t)
-
-    ;; Enable flashing mode-line on errors
-    (doom-themes-visual-bell-config)
-
-    ;; or for treemacs users
-    ;;(doom-themes-treemacs-config)
-
-    ;; Corrects (and improves) org-mode's native fontification.
-    ;; (with-eval-after-load 'org-mode
-    ;;     (doom-themes-org-config))
-    )
-#+end_src
-*** Mode line
-#+begin_src emacs-lisp
-  (use-package doom-modeline
-    :hook (after-init . doom-modeline-init))
-#+end_src
-
-*** Font
-Use Input Font (http://input.fontbureau.com/)  on Linux, Monaco on MacOS
-
-#+begin_src emacs-lisp
-  (defun nc/setup-font ()
-    "Set up font height"
-    (interactive)
-    (when is-linux
-      (set-frame-font "Input Mono-12" nil t))
-    (when is-mac
-      (set-frame-font "Monaco 15" nil t))
-    (when is-windows
-      (set-frame-font "Consolas" nil t))
-    )
-
-  (when has-gui
-    (add-hook 'after-init-hook #'nc/setup-font))
-#+end_src
-
-*** Minimalistric UI
-**** No menu and toolbar
-
-#+begin_src emacs-lisp
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-#+end_src
-
-**** No welcome screen
-
-#+begin_src emacs-lisp
-(setq  inhibit-startup-message t)
-#+end_src
-
-**** Make fringe smaller
-
-#+begin_src emacs-lisp
-  (if (fboundp 'fringe-mode)
-      (fringe-mode 2))
-#+end_src
-** Windows
-*** Ace Window
-[[https://github.com/abo-abo/ace-window][ace-window]] Quickly switch and move windows
-
-#+begin_src emacs-lisp
-  (use-package ace-window
-    :bind (([remap other-window] . ace-window))
-    :config
-    (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
-    ;; increase size face
-    (custom-set-faces
-     '(aw-leading-char-face
-       ((t (:inherit ace-jump-face-foreground :height 3.0))))))
- #+end_src
-
-*** Golden Ratio
-
- Resize automatically the windows you are working
+** Yasnippet
+Snippets for programming.
 
  #+begin_src emacs-lisp
-   (use-package golden-ratio
-     :diminish t
-     :init
-     (golden-ratio-mode 1)
+   (use-package yasnippet
+     :ensure t
+     :diminish yas-minor-mode
      :config
-     (setq golden-ratio-extra-commands
-           (append golden-ratio-extra-commands
-                   '(ace-window))))
+     (use-package yasnippet-snippets)
+     :hook
+     (after-init . yas-global-mode))
  #+end_src
 
-
-*** Toggle Window Split Horizontally
-
-Bound to =C-z w -=.
+Consult integration
 #+begin_src emacs-lisp
-  (defun nc/toggle-split-window-horizontally ()
-    (interactive)
-    (if (= (count-windows) 2)
-        (let* ((this-win-buffer (window-buffer))
-               (next-win-buffer (window-buffer (next-window)))
-               (this-win-edges (window-edges (selected-window)))
-               (next-win-edges (window-edges (next-window)))
-               (this-win-2nd (not (and (<= (car this-win-edges)
-                                           (car next-win-edges))
-                                       (<= (cadr this-win-edges)
-                                           (cadr next-win-edges)))))
-               (splitter
-                (if (= (car this-win-edges)
-                       (car (window-edges (next-window))))
-                    'split-window-horizontally
-                  'split-window-vertically)))
-          (delete-other-windows)
-          (let ((first-win (selected-window)))
-            (funcall splitter)
-            (if this-win-2nd (other-window 1))
-            (set-window-buffer (selected-window) this-win-buffer)
-            (set-window-buffer (next-window) next-win-buffer)
-            (select-window first-win)
-            (if this-win-2nd (other-window 1))))))
-
-  (bind-key "wh" 'nc/toggle-split-window-horizontally nc-map)
+  (use-package consult-yasnippet
+    :bind
+    (:map nc-map 
+          ("y" . consult-yasnippet)))
 #+end_src
 
-
-*** Toggle Window Split Vertically 
-Split window right with =C-< w v= and move there.
-If windows are splitted delete other windows.
-#+begin_src emacs-lisp
-  (defun nc--split-window-right-and-move-there-dammit ()
-    (split-window-right)
-    (windmove-right))
-
-  (defun nc/toggle-split-window-vertically ()
-    (interactive)
-    (if (> (count-windows) 1)
-        (delete-other-windows)
-      (nc--split-window-right-and-move-there-dammit)))
-
-  (bind-key "wv" 'nc/toggle-split-window-vertically nc-map)
-  (bind-key "C-w" 'nc/toggle-split-window-vertically nc-map)
-  #+end_src
-
-
-** Completion
-Try the new Hype completion System
-- Selectrum
-- Consult
-- Marginalia
-- Embark
-
-*** Selectrum
+* Completion
+:properties:
+:header-args+: :tangle "./lisp/setup-completion.el"
+:end:
+** Selectrum
 
 #+begin_src emacs-lisp
 
@@ -761,7 +1029,7 @@ Try the new Hype completion System
     :init (selectrum-prescient-mode +1) :after selectrum)
 
 #+end_src
-*** Marginalia
+** Marginalia
 
 #+begin_src emacs-lisp
   (use-package marginalia
@@ -777,7 +1045,7 @@ Try the new Hype completion System
 
 
 
-*** Consult
+** Consult
 
      [[https://github.com/minad/consult][Consult]] Consulting completion Read with some custom bindings :
      - =<C-< s f>= consult-ripgrep : find file in current project
@@ -913,7 +1181,7 @@ Try the new Hype completion System
            ("C-x C-d" . consult-dir)
            ("C-x C-j" . consult-dir-jump-file)))
 #+end_src
-*** Embark
+** Embark
 
 [[https://github.com/oantolin/embark][Embark]] Emacs Minibuffer Actions Rooted in Key Maps
 
@@ -956,309 +1224,7 @@ Try the new Hype completion System
 
 #+end_src
 
-** General Programming
-
-*** Magit
-
-#+BEGIN_QUOTE
-Magit a git porcelain inside Emacs !
-
-[[https://github.com/magit/magit]]
-#+END_QUOTE
-
-#+begin_src emacs-lisp
-  (use-package magit
-
-    :init
-    (when (getenv "GIT_EXECUTABLE")
-      (setq magit-git-executable (getenv "GIT_EXECUTABLE")))
-
-    :bind (("C-x g" . magit-status)
-           ("<f6>" . magit-status )
-           ("C-<f6>" . magit-log-buffer-file)))
-#+end_src
-
-
-*** Ediff
-
- From : [[https://www.emacswiki.org/emacs/EdiffMode]]
-
- You can ignore whitespace or case sensitivity in two ways:
-- Interactively, on the fly:
-   - Whitespace sensitivity – Toggle with =##= (=ediff-toggle-skip-similar=).
-   - Case sensitivity – Toggle with =#c= (=ediff-toggle-ignore-case=). This assumes that you’ve loaded library Lisp:ediff+.el and that you are using `diff(1)’ as ‘ediff-diff-program’. (Toggling case-sensitivity is available in vanilla GNU Emacs 22, so Lisp:ediff+.el is mainly useful for older Emacs versions.)
- - Persistently: Customize option =ediff-diff-options=. This assumes that you are using `diff(1)’ as ‘ediff-diff-program’.
-    - Whitespace insensitivity – Include ‘-w’ in =ediff-diff-options=.
-    - Case insensitivity – Include ‘-i’ in =ediff-diff-options=.
-
-#+begin_src emacs-lisp
-  (use-package ediff
-    :straight nil
-    :custom
-     ;; Ediff should be opened in selected frame and split window horizontally
-    (ediff-window-setup-function 'ediff-setup-windows-plain)
-    (ediff-split-window-function 'split-window-horizontally)
-    (ediff-diff-options "-w")
-    :config
-    ;; Pour éviter des ouvertures de frames intempestives
-    (advice-add 'ediff-window-display-p :override 'ignore))
-#+end_src
-
-
-*** Projectile
-
-[[https://github.com/bbatsov/projectile][Projectile]] Project interaction library for emacs.
-
-#+begin_src emacs-lisp
-  (use-package projectile
-    :custom
-    (projectile-sort-order 'recently-active)
-    :config
-    (projectile-global-mode)
-    :init
-      (setq projectile-enable-caching t)
-      ;; Custom mode line
-      (setq projectile-mode-line '(:eval (format " Ⓟ[%s]" (projectile-project-name))))
-    :bind-keymap ("C-c p" . projectile-command-map))
-#+end_src
-
-*** Expand region
-#+BEGIN_QUOTE
-Expand region increases the selected region by semantic units. Just keep pressing the key until it selects what you want.
-
-[[https://github.com/magnars/expand-region.el]]
-#+END_QUOTE
-
-- expand selection with =C-==
-- contract with negative argument =M--= then =C-==
-
- #+begin_src emacs-lisp
- (use-package expand-region
-   :bind
-   ("C-=" . er/expand-region))
- #+end_src
-
-*** Multiple Cursors
-
- [[https://github.com/magnars/multiple-cursors.el][multiple-cursors.el]] This package can create several cursors to all do the same things.
-
- #+begin_src emacs-lisp
-   (use-package multiple-cursors
-     :bind
-     (("C-S-c C-S-c" .  mc/edit-lines)
-      ("C-$" .  mc/edit-ends-of-lines)
-      ("C-S-b" .  mc/edit-beginnings-of-lines)
-      ;; Conflict my own map
-      ;("C-<" .  mc/mark-previous-word-like-this) 
-      ;("C->" .  mc/mark-next-word-like-this)
-      ("C-S-n" .  mc/mark-next-like-this)
-      ("C-S-p" .  mc/mark-previous-like-this)
-      ("C-*" .  mc/mark-all-dwim)))
- #+end_src
-
-*** Treemacs
-
-#+begin_quote
-Treemacs - A tree layout file explorer for Emacs
-
-https://github.com/Alexander-Miller/treemacs
-#+end_quote
-
-#+begin_src emacs-lisp
-  (use-package treemacs
-    :ensure t
-    :defer t
-    :init
-    (with-eval-after-load 'winum
-      (define-key winum-keymap (kbd "M-o") #'treemacs-select-window))
-    :config
-    (progn
-      (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
-            treemacs-deferred-git-apply-delay        0.5
-            treemacs-directory-name-transformer      #'identity
-            treemacs-display-in-side-window          t
-            treemacs-eldoc-display                   t
-            treemacs-file-event-delay                5000
-            treemacs-file-extension-regex            treemacs-last-period-regex-value
-            treemacs-file-follow-delay               0.2
-            treemacs-file-name-transformer           #'identity
-            treemacs-follow-after-init               t
-            treemacs-expand-after-init               t
-            treemacs-git-command-pipe                ""
-            treemacs-goto-tag-strategy               'refetch-index
-            treemacs-indentation                     2
-            treemacs-indentation-string              " "
-            treemacs-is-never-other-window           nil
-            treemacs-max-git-entries                 5000
-            treemacs-missing-project-action          'ask
-            treemacs-move-forward-on-expand          nil
-            treemacs-no-png-images                   nil
-            treemacs-no-delete-other-windows         t
-            treemacs-project-follow-cleanup          nil
-            treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-            treemacs-position                        'left
-            treemacs-read-string-input               'from-child-frame
-            treemacs-recenter-distance               0.1
-            treemacs-recenter-after-file-follow      nil
-            treemacs-recenter-after-tag-follow       nil
-            treemacs-recenter-after-project-jump     'always
-            treemacs-recenter-after-project-expand   'on-distance
-            treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
-            treemacs-show-cursor                     nil
-            treemacs-show-hidden-files               t
-            treemacs-silent-filewatch                nil
-            treemacs-silent-refresh                  nil
-            treemacs-sorting                         'alphabetic-asc
-            treemacs-select-when-already-in-treemacs 'move-back
-            treemacs-space-between-root-nodes        t
-            treemacs-tag-follow-cleanup              t
-            treemacs-tag-follow-delay                1.5
-            treemacs-text-scale                      nil
-            treemacs-user-mode-line-format           nil
-            treemacs-user-header-line-format         nil
-            treemacs-wide-toggle-width               70
-            treemacs-width                           35
-            treemacs-width-increment                 1
-            treemacs-width-is-initially-locked       t
-            treemacs-workspace-switch-cleanup        nil)
-
-      ;; The default width and height of the icons is 22 pixels. If you are
-      ;; using a Hi-DPI display, uncomment this to double the icon size.
-      ;;(treemacs-resize-icons 44)
-
-      (treemacs-follow-mode t)
-      (treemacs-filewatch-mode t)
-      (treemacs-fringe-indicator-mode 'always)
-
-      (pcase (cons (not (null (executable-find "git")))
-                   (not (null treemacs-python-executable)))
-        (`(t . t)
-         (treemacs-git-mode 'deferred))
-        (`(t . _)
-         (treemacs-git-mode 'simple)))
-
-      (treemacs-hide-gitignored-files-mode nil))
-    :bind
-    (:map nc-map ("t" . treemacs))
-    (:map global-map
-          ("M-o"       . treemacs-select-window)
-          ("C-x t 1"   . treemacs-delete-other-windows)
-          ("C-x t t"   . treemacs)
-          ("C-x t B"   . treemacs-bookmark)
-          ("C-x t C-t" . treemacs-find-file)
-          ("C-x t M-t" . treemacs-find-tag)))
-
-  (use-package treemacs-projectile
-    :after (treemacs projectile)
-    :ensure t)
-
-  (use-package treemacs-icons-dired
-    :hook (dired-mode . treemacs-icons-dired-enable-once)
-    :ensure t)
-#+end_src
-
-*** Undo Tree
- This lets you use =C-x u= (=undo-tree-visualize=)
- #+begin_src emacs-lisp
-   (use-package undo-tree
-     :diminish undo-tree-mode
-     :config
-     (progn
-       (global-undo-tree-mode)
-       (setq undo-tree-visualizer-timestamps t)
-       (setq undo-tree-visualizer-diff t)))
- #+end_src
-
-*** Parenthesis
-**** Smart Parens
-Smart parens for all programming modes with paredit bindings.
-
-#+begin_src emacs-lisp
-  (use-package smartparens
-    :defer t
-    :diminish ""
-    :hook (((clojure-mode
-             emacs-lisp-mode
-             common-lisp-mode
-             scheme-mode
-             lisp-mode
-             cider-repl-mode
-             inferior-lisp-mode
-             inferior-emacs-lisp-mode)
-            . smartparens-strict-mode)
-           (prog-mode . smartparens-mode))
-
-    :bind (:map smartparens-mode-map
-                ("C-M-q" . sp-indent-defun)
-                :map smartparens-strict-mode-map
-                (";" . sp-comment))
-
-    :config
-    (require 'smartparens-config)
-    (sp-use-paredit-bindings)
-    (define-key smartparens-mode-map (kbd "M-r") 'sp-rewrap-sexp) ; needs to be set manually, because :bind section runs before config
-    (setq smartparens-strict-mode t)
-    (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))
-
-    (defun nc--create-newline-and-enter-sexp (&rest _ignored)
-      "Open a new brace or bracket expression, with relevant newlines and indent. "
-      (newline)
-      (indent-according-to-mode)
-      (forward-line -1)
-      (indent-according-to-mode))
-
-    (sp-with-modes '(c-mode c++-mode js-mode js2-mode java-mode
-                            typescript-mode perl-mode)
-      (sp-local-pair "{" nil :post-handlers
-                     '((nc--create-newline-and-enter-sexp "RET")))))
-
-#+end_src
-
-**** Show Paren Mode
-Emacs builtin show paren mode.
-#+begin_src emacs-lisp
-  (use-package paren
-    :straight nil
-    :hook (prog-mode . show-paren-mode)
-    :custom
-    (show-paren-delay 0)
-    (show-paren-when-point-in-periphery t))
-#+end_src
-
-
-
-*** Rainbow mode
-
-#+begin_src emacs-lisp
-(use-package rainbow-mode
-  :ensure t
-  :config
-  (add-hook 'prog-mode-hook #'rainbow-mode)
-  (diminish 'rainbow-mode))
-#+end_src
-
-*** Yasnippet
-Snippets for programming.
-
- #+begin_src emacs-lisp
-   (use-package yasnippet
-     :ensure t
-     :diminish yas-minor-mode
-     :config
-     (use-package yasnippet-snippets)
-     :hook
-     (after-init . yas-global-mode))
- #+end_src
-
-Consult integration
-#+begin_src emacs-lisp
-  (use-package consult-yasnippet
-    :bind
-    (:map nc-map 
-          ("y" . consult-yasnippet)))
-#+end_src
-
-*** Company
+** Company
 
    #+begin_src emacs-lisp
      (use-package company
@@ -1296,253 +1262,9 @@ Consult integration
       (company-statistics-mode 1))
    #+end_src
 
-*** vterm 
-
-Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
-
-[[https://github.com/jixiuf/vterm-toggle][vterm-toggle]] toggles between the Vterm buffer and the current editing buffer 
-
-#+begin_src emacs-lisp
-  (use-package vterm
-    :commands vterm
-    :custom
-    (vterm-disable-bold-font t)
-    (vterm-disable-inverse-video nil)
-    (vterm-disable-underline nil)
-    (vterm-kill-buffer-on-exit t)
-    (vterm-max-scrollback 9999)
-    (vterm-shell "/bin/zsh")
-    (vterm-term-environment-variable "xterm-256color"))
-
-  (use-package vterm-toggle
-    :custom
-    ;; Show Vterm Buffer in bottom side
-    (vterm-toggle-fullscreen-p nil)
-    :init
-    (add-to-list 'display-buffer-alist
-                 '((lambda(bufname _) (with-current-buffer bufname (equal major-mode 'vterm-mode)))
-                   (display-buffer-reuse-window display-buffer-in-side-window)
-                   (side . bottom)
-                   (dedicated . t) ;dedicated is supported in emacs27
-                   (reusable-frames . visible)
-                   (window-height . 0.3)))
-    :bind
-    (:map nc-map
-          ("$" . vterm-toggle)
-          :map vterm-mode-map
-          ("C-<return>" . vterm-toggle-insert-cd)
-          ("C-S-n" . vterm-toggle-forward)
-          ("C-S-p" . vterm-toggle-backward)
-          ))
-#+end_src
-
-*** aweshell
-
-[[https://github.com/manateelazycat/aweshell][aweshell]] Awesome eshell (eshell extensions)
-
-#+begin_src emacs-lisp
-  (use-package aweshell
-    :straight (aweshell
-               :type git
-               :host github
-               :repo "manateelazycat/aweshell")
-    :custom
-    (eshell-highlight-prompt nil)
-    (eshell-prompt-function 'epe-theme-dakrone)
-
-    :bind
-    (:map nc-map
-          ("C-e" . aweshell-dedicated-toggle)))
-#+end_src
-*** LSP Mode
-
-#+begin_src emacs-lisp
-  (use-package lsp-mode
-    :commands lsp
-    :bind-keymap ("C-< l" . lsp-command-map)
-    :hook (lsp-mode . (lambda ()
-                        (let ((lsp-keymap-prefix "C-< l"))
-                          (lsp-enable-which-key-integration))))
-    :config
-    (setq ; recommended
-          gc-cons-threshold (* 100 1024 1024)
-          read-process-output-max (* 1024 1024))
-
-    (setq ; optional
-          ;; lsp-clojure-custom-server-command '("/Users/nchapon/_PIM/tmp/2del/clojure-lsp") 
-
-          ; Features
-          lsp-lens-enable t
-          lsp-semantic-tokens-enable t
-
-          ;; Conflicts with other Clojure emacs packages
-          cljr-add-ns-to-blank-clj-files nil ; disable clj-refactor adding ns to blank files
-          cider-eldoc-display-for-symbol-at-point nil ; disable cider eldoc integration
-          ; lsp-eldoc-enable-hover nil ; disable lsp-mode showing eldoc during symbol at point
-          ; lsp-enable-indentation nil ; uncomment to use cider indentation instead of lsp
-          ; lsp-enable-completion-at-point nil ; uncomment to use cider completion instead of lsp
-          ))
-
-  ;; optionally
-  (use-package lsp-ui
-    :commands lsp-ui-mode
-    :config
-    (setq lsp-ui-doc-position 'at-point
-          lsp-ui-doc-alignment 'window))
-
-  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-#+end_src
-
-This function adds the hooks that will enable LSP-powered formatting
-and import organizing when saving a file with code.
-
-#+begin_src elisp
-  (defun lsp-save-hooks () "Install save hooks for lsp."
-         (add-hook 'before-save-hook #'lsp-format-buffer t t)
-         (add-hook 'before-save-hook #'lsp-organize-imports t t))
-#+end_src
-
-** Programming
-*** Clojure
-**** clojure-mode
-#+begin_src emacs-lisp
-  (use-package clojure-mode
-    :hook
-    ((clojure-mode . lsp)
-     (clojurec-mode . lsp)
-     (clojurescript-mode . lsp)
-     (clojure-mode . lsp-save-hooks))
-    :init
-    (setq clojure-align-forms-automatically t))
-#+end_src
-**** Cider
-#+begin_src emacs-lisp
-  (use-package cider
-    :init
-    (setq org-babel-clojure-backend 'cider))
-#+end_src
-
-*** Docker
-#+begin_src emacs-lisp
-(use-package dockerfile-mode
-  :mode "Dockerfile.*\\'")
-#+end_src
-*** Lua
-#+begin_src emacs-lisp
-(use-package lua-mode
-  :mode "\\.lua\\'")
-#+end_src
-*** Markdown
-
-GitHub Flavored Markdown by default for README.md files.
-
-#+begin_src emacs-lisp
-  (use-package markdown-mode
-    :mode (("README\\.md\\'" . gfm-mode)
-           ("\\.md\\'"       . markdown-mode)
-           ("\\.markdown\\'" . markdown-mode))
-    :config
-
-    (setq markdown-fontify-code-blocks-natively t)
-  
-    ;; Process Markdown with Pandoc, using GitHub stylesheet for nice output
-    (let ((stylesheet (expand-file-name
-                       (locate-user-emacs-file "etc/pandoc.css"))))
-      (setq markdown-command
-            (mapconcat #'shell-quote-argument
-                       `("pandoc" "--toc" "--section-divs"
-                         "--css" ,(concat "file://" stylesheet)
-                         "--standalone" "-f" "markdown" "-t" "html5")
-                       " "))))
-
-
-  (use-package markdown-toc
-    :after markdown-mode)
-
-#+end_src
-*** Python
-#+begin_src emacs-lisp
-(use-package python-mode
-  :straight nil
-  :mode ("\\.py\\'")
-  :custom
-  (python-shell-interpreter "python3"))
-
-#+end_src
-*** Web
-**** Rest Client
-[[https://github.com/pashky/restclient.el][Restclient]] Emacs client for testing API
-
-#+begin_src emacs-lisp
-(use-package restclient
-  :mode (("\\.restclient\\'" . restclient-mode)
-         ("\\.http\\'" . restclient-mode)))
-#+end_src
-**** Web Mode
-[[https://web-mode.org/][Web Mode]] major mode for editing HTML pages
-
-#+begin_src emacs-lisp
-(use-package web-mode
-  :mode (("\\.html\\'" . web-mode)
-         ("\\.hbs\\'" . web-mode)
-         ("\\.tag$" . web-mode)
-         ("\\.ftl$" . web-mode)
-         ("\\.jsp$" . web-mode)
-         ("\\.php$" . web-mode))
-  :config
-  (add-hook 'web-mode-hook (lambda ()
-                             (setq web-mode-markup-indent-offset 4)
-                             (setq web-mode-code-indent-offset 4))))
-
-#+end_src
-
-**** Javascript
-[[https://github.com/mooz/js2-mode][JS2 mode]] improved javascript editing mode
-#+begin_src emacs-lisp
-(use-package js2-mode
-  :mode "\\.js\\'"
-  :init
-  (defalias 'javascript-generic-mode 'js2-mode)
-  :config
-  (js2-imenu-extras-setup)
-  (setq-default js-auto-indent-flag nil
-                js2-strict-missing-semi-warning nil
-                js-indent-level 2)
-
-  ;; Don't override global M-j keybinding (join lines)
-  (define-key js2-mode-map (kbd "M-j") nil))
-
-#+end_src
-
-
-*** YAML
-
-#+begin_src emacs-lisp
-  (use-package yaml-mode
-    :mode (("\\.yaml\\'" . yaml-mode)
-             ("\\.yml\\'" . yaml-mode))
-    :custom
-    (yaml-indent-offset 4))
-#+end_src
-
-** =(provide 'init)=
-
-This concludes the =init.el= file.
-
-#+begin_src emacs-lisp
-  (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
-  (require 'nc-org)
-  (require 'nc-functions)
-
-
-  (provide 'init)
-  ;;; init.el ends here
-#+end_src
-
 * Org
 :properties:
-:header-args+: :tangle "./lisp/nc-org.el"
+:header-args+: :tangle "./lisp/setup-org.el"
 :end:
 ** Org Base Configuration
 
@@ -1676,9 +1398,10 @@ Change priorities colors
 
  #+begin_src emacs-lisp
    (use-package org
-
+     :custom
+     (org-directory "~/notes")
      :config
-     (setq org-directory "~/notes")
+     
      (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
      (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
      (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
@@ -1754,11 +1477,11 @@ Insert daily heading in journal file =C-<-o-d=
            "Replace text in yasnippet template."
            (yas-expand-snippet (buffer-string) (point-min) (point-max)))
 
-         (custom-set-variables
-          '(auto-insert 'other)
-          '(auto-insert-directory (concat org-directory "/templates")))
+         (setq auto-insert 'other
+               auto-insert-directory (concat org-directory "/templates"))
 
          (define-auto-insert "\\.org\\'" ["week.org" nc--autoinsert-yas-expand])
+
 
        (defun nc/journal-file-insert ()
          "Insert's the journal heading based on the file's name."
@@ -2659,15 +2382,304 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
     (org-roam-setup))
 
 #+end_src
-** Provide =nc-org= module
+* Programming
+:properties:
+:header-args+: :tangle "./lisp/setup-programming.el"
+:end:
+** LSP Mode
+
 #+begin_src emacs-lisp
-  (provide 'nc-org)
-  ;;; nc-org.el ends here
+  (use-package lsp-mode
+    :commands lsp
+    :bind-keymap ("C-< l" . lsp-command-map)
+    :hook (lsp-mode . (lambda ()
+                        (let ((lsp-keymap-prefix "C-< l"))
+                          (lsp-enable-which-key-integration))))
+    :config
+    (setq ; recommended
+          gc-cons-threshold (* 100 1024 1024)
+          read-process-output-max (* 1024 1024))
+
+    (setq ; optional
+          ;; lsp-clojure-custom-server-command '("/Users/nchapon/_PIM/tmp/2del/clojure-lsp") 
+
+          ; Features
+          lsp-lens-enable t
+          lsp-semantic-tokens-enable t
+
+          ;; Conflicts with other Clojure emacs packages
+          cljr-add-ns-to-blank-clj-files nil ; disable clj-refactor adding ns to blank files
+          cider-eldoc-display-for-symbol-at-point nil ; disable cider eldoc integration
+          ; lsp-eldoc-enable-hover nil ; disable lsp-mode showing eldoc during symbol at point
+          ; lsp-enable-indentation nil ; uncomment to use cider indentation instead of lsp
+          ; lsp-enable-completion-at-point nil ; uncomment to use cider completion instead of lsp
+          ))
+
+  ;; optionally
+  (use-package lsp-ui
+    :commands lsp-ui-mode
+    :config
+    (setq lsp-ui-doc-position 'at-point
+          lsp-ui-doc-alignment 'window))
+
+  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 #+end_src
 
+This function adds the hooks that will enable LSP-powered formatting
+and import organizing when saving a file with code.
+
+#+begin_src elisp
+  (defun lsp-save-hooks () "Install save hooks for lsp."
+         (add-hook 'before-save-hook #'lsp-format-buffer t t)
+         (add-hook 'before-save-hook #'lsp-organize-imports t t))
+#+end_src
+
+** Parenthesis
+*** Smart Parens
+Smart parens for all programming modes with paredit bindings.
+
+#+begin_src emacs-lisp
+  (use-package smartparens
+    :defer t
+    :diminish ""
+    :hook (((clojure-mode
+             emacs-lisp-mode
+             common-lisp-mode
+             scheme-mode
+             lisp-mode
+             cider-repl-mode
+             inferior-lisp-mode
+             inferior-emacs-lisp-mode)
+            . smartparens-strict-mode)
+           (prog-mode . smartparens-mode))
+
+    :bind (:map smartparens-mode-map
+                ("C-M-q" . sp-indent-defun)
+                :map smartparens-strict-mode-map
+                (";" . sp-comment))
+
+    :config
+    (require 'smartparens-config)
+    (sp-use-paredit-bindings)
+    (define-key smartparens-mode-map (kbd "M-r") 'sp-rewrap-sexp) ; needs to be set manually, because :bind section runs before config
+    (setq smartparens-strict-mode t)
+    (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))
+
+    (defun nc--create-newline-and-enter-sexp (&rest _ignored)
+      "Open a new brace or bracket expression, with relevant newlines and indent. "
+      (newline)
+      (indent-according-to-mode)
+      (forward-line -1)
+      (indent-according-to-mode))
+
+    (sp-with-modes '(c-mode c++-mode js-mode js2-mode java-mode
+                            typescript-mode perl-mode)
+      (sp-local-pair "{" nil :post-handlers
+                     '((nc--create-newline-and-enter-sexp "RET")))))
+
+#+end_src
+
+*** Show Paren Mode
+Emacs builtin show paren mode.
+#+begin_src emacs-lisp
+  (use-package paren
+    :straight nil
+    :hook (prog-mode . show-paren-mode)
+    :custom
+    (show-paren-delay 0)
+    (show-paren-when-point-in-periphery t))
+#+end_src
+
+
+
+** Clojure
+*** clojure-mode
+#+begin_src emacs-lisp
+  (use-package clojure-mode
+    :hook
+    ((clojure-mode . lsp)
+     (clojurec-mode . lsp)
+     (clojurescript-mode . lsp)
+     (clojure-mode . lsp-save-hooks))
+    :init
+    (setq clojure-align-forms-automatically t))
+#+end_src
+*** Cider
+#+begin_src emacs-lisp
+  (use-package cider
+    :init
+    (setq org-babel-clojure-backend 'cider))
+#+end_src
+
+** Docker
+#+begin_src emacs-lisp
+(use-package dockerfile-mode
+  :mode "Dockerfile.*\\'")
+#+end_src
+** Lua
+#+begin_src emacs-lisp
+(use-package lua-mode
+  :mode "\\.lua\\'")
+#+end_src
+** Markdown
+
+GitHub Flavored Markdown by default for README.md files.
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'"       . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
+    :config
+
+    (setq markdown-fontify-code-blocks-natively t)
+  
+    ;; Process Markdown with Pandoc, using GitHub stylesheet for nice output
+    (let ((stylesheet (expand-file-name
+                       (locate-user-emacs-file "etc/pandoc.css"))))
+      (setq markdown-command
+            (mapconcat #'shell-quote-argument
+                       `("pandoc" "--toc" "--section-divs"
+                         "--css" ,(concat "file://" stylesheet)
+                         "--standalone" "-f" "markdown" "-t" "html5")
+                       " "))))
+
+
+  (use-package markdown-toc
+    :after markdown-mode)
+
+#+end_src
+** Python
+#+begin_src emacs-lisp
+(use-package python-mode
+  :straight nil
+  :mode ("\\.py\\'")
+  :custom
+  (python-shell-interpreter "python3"))
+
+#+end_src
+** Web
+*** Rest Client
+[[https://github.com/pashky/restclient.el][Restclient]] Emacs client for testing API
+
+#+begin_src emacs-lisp
+(use-package restclient
+  :mode (("\\.restclient\\'" . restclient-mode)
+         ("\\.http\\'" . restclient-mode)))
+#+end_src
+*** Web Mode
+[[https://web-mode.org/][Web Mode]] major mode for editing HTML pages
+
+#+begin_src emacs-lisp
+(use-package web-mode
+  :mode (("\\.html\\'" . web-mode)
+         ("\\.hbs\\'" . web-mode)
+         ("\\.tag$" . web-mode)
+         ("\\.ftl$" . web-mode)
+         ("\\.jsp$" . web-mode)
+         ("\\.php$" . web-mode))
+  :config
+  (add-hook 'web-mode-hook (lambda ()
+                             (setq web-mode-markup-indent-offset 4)
+                             (setq web-mode-code-indent-offset 4))))
+
+#+end_src
+
+*** Javascript
+[[https://github.com/mooz/js2-mode][JS2 mode]] improved javascript editing mode
+#+begin_src emacs-lisp
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :init
+  (defalias 'javascript-generic-mode 'js2-mode)
+  :config
+  (js2-imenu-extras-setup)
+  (setq-default js-auto-indent-flag nil
+                js2-strict-missing-semi-warning nil
+                js-indent-level 2)
+
+  ;; Don't override global M-j keybinding (join lines)
+  (define-key js2-mode-map (kbd "M-j") nil))
+
+#+end_src
+
+
+** YAML
+
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :mode (("\\.yaml\\'" . yaml-mode)
+             ("\\.yml\\'" . yaml-mode))
+    :custom
+    (yaml-indent-offset 4))
+#+end_src
+
+
+* Shell
+:properties:
+:header-args+: :tangle "./lisp/setup-shell.el"
+:end:
+** vterm 
+
+Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
+
+[[https://github.com/jixiuf/vterm-toggle][vterm-toggle]] toggles between the Vterm buffer and the current editing buffer 
+
+#+begin_src emacs-lisp
+  (use-package vterm
+    :commands vterm
+    :custom
+    (vterm-disable-bold-font t)
+    (vterm-disable-inverse-video nil)
+    (vterm-disable-underline nil)
+    (vterm-kill-buffer-on-exit t)
+    (vterm-max-scrollback 9999)
+    (vterm-shell "/bin/zsh")
+    (vterm-term-environment-variable "xterm-256color"))
+
+  (use-package vterm-toggle
+    :custom
+    ;; Show Vterm Buffer in bottom side
+    (vterm-toggle-fullscreen-p nil)
+    :init
+    (add-to-list 'display-buffer-alist
+                 '((lambda(bufname _) (with-current-buffer bufname (equal major-mode 'vterm-mode)))
+                   (display-buffer-reuse-window display-buffer-in-side-window)
+                   (side . bottom)
+                   (dedicated . t) ;dedicated is supported in emacs27
+                   (reusable-frames . visible)
+                   (window-height . 0.3)))
+    :bind
+    (:map nc-map
+          ("$" . vterm-toggle)
+          :map vterm-mode-map
+          ("C-<return>" . vterm-toggle-insert-cd)
+          ("C-S-n" . vterm-toggle-forward)
+          ("C-S-p" . vterm-toggle-backward)
+          ))
+#+end_src
+
+** aweshell
+
+[[https://github.com/manateelazycat/aweshell][aweshell]] Awesome eshell (eshell extensions)
+
+#+begin_src emacs-lisp
+  (use-package aweshell
+    :straight (aweshell
+               :type git
+               :host github
+               :repo "manateelazycat/aweshell")
+    :custom
+    (eshell-highlight-prompt nil)
+    (eshell-prompt-function 'epe-theme-dakrone)
+
+    :bind
+    (:map nc-map
+          ("C-e" . aweshell-dedicated-toggle)))
+#+end_src
 * Custom Functions
 :properties:
-:header-args+: :tangle "./lisp/nc-functions.el"
+:header-args+: :tangle "./lisp/setup-functions.el"
 :end:
 ** Emacs Config File
 
@@ -2803,17 +2815,74 @@ From : https://karthinks.com/software/fifteen-ways-to-use-embark/
                                (file-remote-p file 'host) ":" (file-remote-p file 'localname))
                      (concat "/sudo:root@localhost:" file))))
 #+end_src
-** Provide =nc-functions= module
-#+begin_src emacs-lisp
-  (provide 'nc-functions)
-  ;;; nc-functions.el ends here
+* Provide modules
+
+** =setup-prefs= module
+#+begin_src emacs-lisp :tangle ./lisp/setup-prefs.el
+  (provide 'setup-prefs)
+  ;;; setup-prefs.el ends here
 #+end_src
 
+
+** =setup-ui= module
+#+begin_src emacs-lisp :tangle ./lisp/setup-ui.el
+  (provide 'setup-ui)
+  ;;; setup-ui.el ends here
+#+end_src
+
+
+** =setup-keys= module
+#+begin_src emacs-lisp :tangle ./lisp/setup-keys.el
+  (provide 'setup-keys)
+  ;;; setup-keys.el ends here
+#+end_src
+
+** =setup-windows= module
+#+begin_src emacs-lisp :tangle ./lisp/setup-windows.el
+  (provide 'setup-windows)
+  ;;; setup-windows.el ends here
+#+end_src
+
+
+
+** =setup-core= module
+#+begin_src emacs-lisp :tangle ./lisp/setup-core.el
+  (provide 'setup-core)
+  ;;; setup-core.el ends here
+#+end_src
+** =setup-completion= module
+#+begin_src emacs-lisp :tangle ./lisp/setup-completion.el
+  (provide 'setup-completion)
+  ;;; setup-completion.el ends here
+#+end_src
+
+
+** =setup-org= module
+#+begin_src emacs-lisp :tangle ./lisp/setup-org.el
+  (provide 'setup-org)
+  ;;; setup-org.el ends here
+#+end_src
+
+** =nc-programming= module
+#+begin_src emacs-lisp :tangle ./lisp/setup-programming.el
+  (provide 'setup-programming)
+  ;;; setup-programming.el ends here
+#+end_src
+
+
+** =setup-shell= module
+#+begin_src emacs-lisp :tangle ./lisp/setup-shell.el
+  (provide 'setup-shell)
+  ;;; setup-shell.el ends here
+#+end_src
+
+** =setup-functions= module
+#+begin_src emacs-lisp :tangle ./lisp/setup-functions.el
+  (provide 'setup-functions)
+  ;;; setup-functions.el ends here
+#+end_src
 
 
 # Local Variables:
 # eval: (add-hook 'after-save-hook #'org-babel-tangle nil t)
 # End:
-* Key Bindings
-* Completion
-* Core Packages

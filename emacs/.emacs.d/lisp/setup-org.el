@@ -97,9 +97,10 @@
       org-fontify-quote-and-verse-blocks t)
 
 (use-package org
-
+  :custom
+  (org-directory "~/notes")
   :config
-  (setq org-directory "~/notes")
+
   (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
   (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
   (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
@@ -164,11 +165,11 @@
       "Replace text in yasnippet template."
       (yas-expand-snippet (buffer-string) (point-min) (point-max)))
 
-    (custom-set-variables
-     '(auto-insert 'other)
-     '(auto-insert-directory (concat org-directory "/templates")))
+    (setq auto-insert 'other
+          auto-insert-directory (concat org-directory "/templates"))
 
     (define-auto-insert "\\.org\\'" ["week.org" nc--autoinsert-yas-expand])
+
 
   (defun nc/journal-file-insert ()
     "Insert's the journal heading based on the file's name."
@@ -882,5 +883,5 @@ the result as a time value."
   ;; this sets up various file handling hooks so your DB remains up to date
   (org-roam-setup))
 
-(provide 'nc-org)
-;;; nc-org.el ends here
+(provide 'setup-org)
+;;; setup-org.el ends here
