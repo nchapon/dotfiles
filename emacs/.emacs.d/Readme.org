@@ -8,7 +8,7 @@
 This is a GNU Emacs configuration file, written as an Org document.
 As a result =init.el= and =early-init.el= files are created, located in the same directory as this file, as well as some other files across the system.
 You can review which files are created by searching for =:tangle= entries in this document.
-Both =init.el= and =early-init.el= and all created files in =./lisp! directory are in read only mode by default, and only this file is meant for editing, and the changes are automatically tangled on save.
+Both =init.el= and =early-init.el= and all created files in =./lisp= directory are in read only mode by default, and only this file is meant for editing, and the changes are automatically tangled on save.
 
 Code block below is included in each generatde file :
 
@@ -25,7 +25,11 @@ Code block below is included in each generatde file :
 
   ;;; Code:
 #+end_src
-
+** Inspirations
+Some parts at this configuration file are copied / adapted from some useful configuration :
+- https://www.lucacambiaghi.com/vanilla-emacs/readme.html
+- [[https://github.com/MatthewZMD/.emacs.d]]
+- https://gitlab.imt-atlantique.fr/jnbazin/emacs-config/-/blob/master/emacs-init.org (french)
 
 * Early Init
 
