@@ -535,7 +535,7 @@ of the start and end of the subtree."
            (props   (org-entry-properties)))
 
       (list :region     (list (plist-get attrs :begin) (plist-get attrs :end))
-            :header     (plist-get attrs :title)
+            :header     (plist-get attrs :raw-value) ; Use :raw-value because :title returns too more stuff
             :tags       (nc--org-get-subtree-tags props)
             :properties (nc--org-get-subtree-properties attrs)
             :body       (nc--org-get-subtree-content attrs)))))
