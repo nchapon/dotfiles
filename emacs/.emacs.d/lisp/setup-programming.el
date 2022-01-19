@@ -41,7 +41,7 @@
 (use-package lsp-ui
   :commands lsp-ui-mode
   :config
-  (setq lsp-ui-doc-position 'at-point
+  (setq lsp-ui-doc-position 'top
         lsp-ui-doc-alignment 'window))
 
 (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
