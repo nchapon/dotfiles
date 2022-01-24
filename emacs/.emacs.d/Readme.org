@@ -647,6 +647,13 @@ Windows configuration module automatically tangled in =./lisp/setup-windows.el=
      (setq golden-ratio-extra-commands
            (append golden-ratio-extra-commands
                    '(ace-window))))
+
+   (defun nc/toggle-wide-screen ()
+     "Toggle golden ratio for widescreen"
+     (interactive)
+     (setq golden-ratio-adjust-factor .8))
+
+   (bind-key "wt" 'nc/toggle-wide-screen nc-map)
  #+end_src
 
 

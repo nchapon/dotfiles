@@ -29,6 +29,13 @@
         (append golden-ratio-extra-commands
                 '(ace-window))))
 
+(defun nc/toggle-wide-screen ()
+  "Toggle golden ratio for widescreen"
+  (interactive)
+  (setq golden-ratio-adjust-factor .8))
+
+(bind-key "wt" 'nc/toggle-wide-screen nc-map)
+
 (defun nc/toggle-split-window-horizontally ()
   (interactive)
   (if (= (count-windows) 2)
