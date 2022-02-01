@@ -893,23 +893,23 @@ the result as a time value."
                                       :unnarrowed t
                                       :immediate-finish t))
         )
+
+  ;; Orgnaize org roam notes
+  ;; Adapted from https://jethrokuan.github.io/org-roam-guide/
+  (cl-defmethod org-roam-node-type ((node org-roam-node))
+    "Return the TYPE of NODE."
+    (condition-case nil
+        (file-name-nondirectory
+         (directory-file-name
+          (file-name-directory
+           (file-relative-name (org-roam-node-file node) org-roam-directory))))
+      (error "main")))
+
+  (setq org-roam-node-display-template
+        (concat "${type:15} ${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
+
   ;; this sets up various file handling hooks so your DB remains up to date
   (org-roam-setup))
-
-;; Orgnaize org roam notes
-;; Adapted from https://jethrokuan.github.io/org-roam-guide/
-
-(cl-defmethod org-roam-node-type ((node org-roam-node))
-  "Return the TYPE of NODE."
-  (condition-case nil
-      (file-name-nondirectory
-       (directory-file-name
-        (file-name-directory
-         (file-relative-name (org-roam-node-file node) org-roam-directory))))
-    (error "main")))
-
-(setq org-roam-node-display-template
-      (concat "${type:15} ${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
 
 (provide 'setup-org)
 ;;; setup-org.el ends here
