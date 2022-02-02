@@ -111,6 +111,8 @@
 (use-package dockerfile-mode
   :mode "Dockerfile.*\\'")
 
+(use-package go-mode)
+
 (use-package lua-mode
   :mode "\\.lua\\'")
 

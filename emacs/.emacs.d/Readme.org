@@ -2616,6 +2616,10 @@ Emacs builtin show paren mode.
 (use-package dockerfile-mode
   :mode "Dockerfile.*\\'")
 #+end_src
+** Go
+#+begin_src emacs-lisp
+  (use-package go-mode)
+#+end_src
 ** Lua
 #+begin_src emacs-lisp
 (use-package lua-mode

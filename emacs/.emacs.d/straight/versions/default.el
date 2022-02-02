@@ -30,6 +30,7 @@
  ("expand-region.el" . "95a773bd8f557cbd43d3b2dab2fa4417ec5927ab")
  ("f.el" . "50af874cd19042f17c8686813d52569b1025c76a")
  ("gnu-elpa-mirror" . "870aae430e9eb6afb9097492cbd4076e87a677f5")
+ ("go-mode.el" . "3273fcece5d9ab7edd4f15b2d6bce61f4e5a0666")
  ("golden-ratio.el" . "007911d8a431b72670f5fe5f0e5b4380c2777a31")
  ("ht.el" . "c4c1be487d6ecb353d07881526db05d7fc90ea87")
  ("hydra" . "2d553787aca1aceb3e6927e426200e9bb9f056f1")
