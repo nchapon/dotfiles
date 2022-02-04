@@ -21,7 +21,9 @@ Testé sur :
 
 > cd .dotfiles/
 
-> stow
+> stow git
+> stow zsh
+> stow emacs
 
 ## Local Settings ##
 
