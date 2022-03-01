@@ -568,15 +568,14 @@ Emacs Global Bindings are redefined here.
 
 #+end_src
 ** Personal keyboard map
-
+My map
 #+begin_src emacs-lisp
   (bind-keys
    :prefix-map nc-map
    :prefix-docstring "My own keyboard map"
    :prefix "C-<"
    ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
-   (";" . nc/goto-emacs-config)
-   ("<tab>" . expand-abbrev))
+   (";" . nc/goto-emacs-config))
 #+end_src
 ** Key Chords
 
@@ -1305,16 +1304,14 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
        :custom
        (company-idle-delay 0.1)
        (company-require-match 'never)
-       (company-minimum-prefix-length 2)
+       (company-minimum-prefix-length 1)
        (company-tooltip-align-annotations t)
        (company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
                             company-preview-frontend
                             company-echo-metadata-frontend))
-       (company-backends '(company-capf company-files company-dabbrev-code company-semantic))
+       (company-backends '(company-capf company-abbrev company-files company-dabbrev-code company-semantic))
        (company-tooltip-minimum-width 30)
        (company-tooltip-maximum-width 120))
-
-
   #+end_src
 
 [[https://github.com/company-mode/company-statistics/][company-statistics]] extension to show the top ranked candidates

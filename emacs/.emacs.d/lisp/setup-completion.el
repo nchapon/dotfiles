@@ -206,12 +206,12 @@
   :custom
   (company-idle-delay 0.1)
   (company-require-match 'never)
-  (company-minimum-prefix-length 2)
+  (company-minimum-prefix-length 1)
   (company-tooltip-align-annotations t)
   (company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
                        company-preview-frontend
                        company-echo-metadata-frontend))
-  (company-backends '(company-capf company-files company-dabbrev-code company-semantic))
+  (company-backends '(company-capf company-abbrev company-files company-dabbrev-code company-semantic))
   (company-tooltip-minimum-width 30)
   (company-tooltip-maximum-width 120))
 

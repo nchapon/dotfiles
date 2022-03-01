@@ -42,8 +42,7 @@
  :prefix-docstring "My own keyboard map"
  :prefix "C-<"
  ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
- (";" . nc/goto-emacs-config)
- ("<tab>" . expand-abbrev))
+ (";" . nc/goto-emacs-config))
 
 (use-package key-chord
   :init
