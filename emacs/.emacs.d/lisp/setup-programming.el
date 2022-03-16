@@ -29,6 +29,10 @@
         lsp-lens-enable t
         lsp-semantic-tokens-enable t
 
+
+        lsp-headerline-breadcrumb-enable nil ;; disable breadcrumb
+
+
         ;; Conflicts with other Clojure emacs packages
         cljr-add-ns-to-blank-clj-files nil ; disable clj-refactor adding ns to blank files
         cider-eldoc-display-for-symbol-at-point nil ; disable cider eldoc integration
@@ -40,11 +44,18 @@
 ;; optionally
 (use-package lsp-ui
   :commands lsp-ui-mode
+  :init
+  (setq lsp-ui-doc-alignment 'at-point
+        lsp-ui-doc-use-childframe nil)
   :config
-  (setq lsp-ui-doc-position 'top
-        lsp-ui-doc-alignment 'window))
+    ;; WORKAROUND Hide mode-line of the lsp-ui-imenu buffer
+    ;; @see https://github.com/emacs-lsp/lsp-ui/issues/243
+    (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
+      (setq mode-line-format nil))
+  )
 
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+(use-package lsp-treemacs
+  :commands lsp-treemacs-errors-list)
 
 (defun lsp-save-hooks () "Install save hooks for lsp."
        (add-hook 'before-save-hook #'lsp-format-buffer t t)
