@@ -365,7 +365,7 @@
   (progn
     (org-capture nil "d")
     (org-capture-finalize t)
-    (org-narrow-to-subtree)
+    ;;(org-narrow-to-subtree)
     (org-clock-in)))
 
 (bind-key "oD" 'nc/org-insert-daily-review nc-map)
