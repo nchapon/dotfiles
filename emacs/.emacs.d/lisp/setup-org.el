@@ -212,6 +212,7 @@
 
         ))
 
+
 (defun nc/insert-daily-heading ()
   "Insert Daily Heading in journal file"
   (interactive)
@@ -223,6 +224,8 @@
         (progn
           (org-insert-heading-after-current)
           (nc/journal-file-insert)
+          (if (search-backward (format-time-string "%A"))
+              (beginning-of-line))
           (org-shiftmetaright))
       (error "Insert failed"))))
 
@@ -365,7 +368,6 @@
   (progn
     (org-capture nil "d")
     (org-capture-finalize t)
-    ;;(org-narrow-to-subtree)
     (org-clock-in)))
 
 (bind-key "oD" 'nc/org-insert-daily-review nc-map)
