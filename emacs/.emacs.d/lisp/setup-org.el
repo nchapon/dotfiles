@@ -143,6 +143,11 @@
 
   (bind-key "gi" 'nc/goto-inbox nc-map)
 
+  (defun nc/goto-notes-dir ()
+    (interactive)
+    (dired org-directory))
+
+  (bind-key "gN" 'nc/goto-notes-dir nc-map)
 
   (defun nc/goto-resources-dir ()
     (interactive)

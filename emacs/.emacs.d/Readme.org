@@ -1471,7 +1471,7 @@ Change priorities colors
      :custom
      (org-directory "~/notes")
      :config
-     
+
      (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
      (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
      (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
@@ -1501,6 +1501,11 @@ Change priorities colors
 
      (bind-key "gi" 'nc/goto-inbox nc-map)
 
+     (defun nc/goto-notes-dir ()
+       (interactive)
+       (dired org-directory))
+
+     (bind-key "gN" 'nc/goto-notes-dir nc-map)
 
      (defun nc/goto-resources-dir ()
        (interactive)
