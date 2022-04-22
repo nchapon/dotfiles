@@ -43,6 +43,11 @@
         ("C-S-p" . vterm-toggle-backward)
         ))
 
+(use-package eshell
+  :bind
+  (:map eshell-mode-map 
+        ("C-r" . consult-history)))
+
 (use-package aweshell
   :straight (aweshell
              :type git

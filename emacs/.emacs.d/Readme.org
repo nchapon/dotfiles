@@ -2789,8 +2789,16 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
           ))
 #+end_src
 
-** aweshell
+** Eshell
+*** Eshell Configuration
+#+begin_src emacs-lisp
+  (use-package eshell
+    :bind
+    (:map eshell-mode-map 
+          ("C-r" . consult-history)))
 
+#+end_src
+*** aweshell
 [[https://github.com/manateelazycat/aweshell][aweshell]] Awesome eshell (eshell extensions)
 
 #+begin_src emacs-lisp
