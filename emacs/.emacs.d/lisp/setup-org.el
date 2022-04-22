@@ -733,6 +733,9 @@ if nil,the top of the file."
 
 (bind-key "C-< C-<" 'nc/org-go-speed org-mode-map)
 
+;; Useful bindinding to move next item in lists
+(bind-key "C-< C-n" 'org-next-item org-mode-map)
+
 ;; This is needed as of Org 9.2
 (require 'org-tempo)
 

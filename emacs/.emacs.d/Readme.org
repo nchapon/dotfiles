@@ -2234,7 +2234,9 @@ Customize speed-commands :
          (outline-previous-heading))))
 
    (bind-key "C-< C-<" 'nc/org-go-speed org-mode-map)
-   
+
+   ;; Useful bindinding to move next item in lists
+   (bind-key "C-< C-n" 'org-next-item org-mode-map)
  #+end_src
 
 ** Org Structure templates
