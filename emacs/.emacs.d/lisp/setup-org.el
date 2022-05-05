@@ -882,6 +882,12 @@ the result as a time value."
 ;; (when is-windows  
 ;;   (add-to-list 'exec-path "C:/ProgramJava/tools/sqlite-tools-win32-x86-3340100"))
 
+;; From https://baty.net/2022/searching-org-roam-files/
+(defun nc/search-roam ()
+  "Run consult-ripgrep on the org roam directory"
+  (interactive)
+  (consult-ripgrep (concat org-directory "/slipbox") nil))
+
 (use-package org-roam
   :after org
   :custom
@@ -892,6 +898,7 @@ the result as a time value."
   ("C-c n l" . org-roam-buffer-toggle)
   ("C-c n f" . org-roam-node-find)
   ("C-c n r" . org-roam-node-random)
+  ("C-c n s" . nc/search-roam)
   (:map org-mode-map
         (("C-c n i" . org-roam-node-insert)))
   :config
