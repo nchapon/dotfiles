@@ -1,0 +1,94 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Readme
+#+date: <2022-05-13 ven.>
+#+author: Nicolas Chapon
+#+email: nchapon@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.5)
+#+cite_export:
+* Dotfiles
+
+My personal dotfiles  when I setip a new environnement (Ubuntu)
+
+Tested on :
+- Ubuntu 20 LTS
+- Ubuntu 22 LTS
+
+
+
+
+
+** Pre Installl
+
+At first install =Git=
+
+#+begin_src shell
+  sudo add-apt-repository -y ppa:git-core/ppa
+  sudo apt-get update
+  sudo apt-get install -y git-all git-extras
+#+end_src
+** Installation
+
+*** Clone git repository
+
+#+begin_src shell
+git clone https://github.com/nchapon/dotfiles.git dotfiles
+#+end_src
+
+*** Install essentials
+
+#+begin_src shell
+  cd dotfiles
+  ./ubuntu-setup.sh 
+#+end_src
+
+*** Install OhMyZsh
+
+See instructions here : https://ohmyz.sh/#install
+
+*** Link my configuration files
+
+#+begin_src shell
+  cd ~/dotfiles
+  stow git
+  stow emacs
+  stow zsh
+#+end_src
+** Post Install
+*** Asdf
+I try to install all my tools with [[https://github.com/asdf-vm/asdf][Asdf]] 
+*** Docker
+// TODO
+*** Java
+#+begin_src shell
+  asdf plugin-add java
+  asdf plugin-add maven
+#+end_src
+*** Clojure
+
+#+begin_src shell
+  asdf plugin-add clojure
+  asdf plugin-add leiningen
+#+end_src
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
