@@ -138,6 +138,7 @@
   :init
   (when (getenv "GIT_EXECUTABLE")
     (setq magit-git-executable (getenv "GIT_EXECUTABLE")))
+  :commands (magit-status magit-get-current-branch)
 
   :bind (("C-x g" . magit-status)
          ("<f6>" . magit-status )
