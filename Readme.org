@@ -63,8 +63,6 @@ See instructions here : https://ohmyz.sh/#install
 ** Post Install
 *** Asdf
 I try to install all my tools with [[https://github.com/asdf-vm/asdf][Asdf]] 
-*** Docker
-// TODO
 *** Java
 #+begin_src shell
   asdf plugin-add java
@@ -78,17 +76,21 @@ I try to install all my tools with [[https://github.com/asdf-vm/asdf][Asdf]]
 #+end_src
 
 
+*** Docker 
+Docker is installed from this script :
 
+https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script
+*** Kubernetes
+**** Kind
+I use [[https://kind.sigs.k8s.io/][Kind]] when I need to run Kubernetes locally
 
+#+begin_src shell
+  asdf plugin-add kind
+  asdf install king 0.14.0
+#+end_src
+**** Kubectl
 
-
-
-
-
-
-
-
-
-
-
-
+#+begin_src shell
+asdf plugin-add kubectl
+asdf install kubectl 1.24.0
+#+end_src
