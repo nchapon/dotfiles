@@ -29,7 +29,7 @@
       ;; (exec-path-from-shell-copy-env "GOPATH")
       ;;(exec-path-from-shell-copy-env "JAVA_HOME")
       ;; (exec-path-from-shell-copy-env "PATH")
-      ;; (exec-path-from-shell-copy-env "RUST_SRC_PATH")
+      (exec-path-from-shell-copy-env "XDG_CONFIG_HOME")
       )))
 
 (use-package no-littering)
