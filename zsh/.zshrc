@@ -101,12 +101,17 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 alias cdp="cd ~/Projects"
+alias cdn="cd ~/notes"
 
 
 # Set JAVA_HOME
 if [ -f $HOME/.asdf/plugins/java/set-java-home.zsh ]; then
     source $HOME/.asdf/plugins/java/set-java-home.zsh
 fi
+
+#Set XDG_CONFIG
+export XDG_CONFIG_HOME=$HOME/.config
+
 
 
 
