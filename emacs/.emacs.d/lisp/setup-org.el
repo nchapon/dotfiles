@@ -53,7 +53,9 @@
 ;; Hiding leading bullets in headers
 (setq org-hide-leading-stars t)
 
-(let* ((variable-tuple (cond ((x-list-fonts "Input Sans") '(:font "Input Sans"))
+(let* ((variable-tuple (cond ((x-list-fonts "Jetbrains Mono") '(:font "Jetbrains Mono"))
+                             ((x-list-fonts "Monaco") '(:font "Monaco"))
+                             ((x-list-fonts "Input Sans") '(:font "Input Sans"))
                              ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
                              ((x-list-fonts "Verdana")         '(:font "Verdana"))
                              ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))

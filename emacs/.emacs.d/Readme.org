@@ -514,7 +514,7 @@ Use Input Font (http://input.fontbureau.com/)  on Linux, Monaco on MacOS
     "Set up font height"
     (interactive)
     (when is-linux
-      (set-frame-font "Input Mono-12" nil t))
+      (set-frame-font "Jetbrains Mono 13" nil t))
     (when is-mac
       (set-frame-font "Monaco 15" nil t))
     (when is-windows
@@ -1391,7 +1391,9 @@ Org mode configuration automatically tangled in =./lisp/setup-org.el=
 *** Org Heading Styles
 
 #+begin_src emacs-lisp
-  (let* ((variable-tuple (cond ((x-list-fonts "Input Sans") '(:font "Input Sans"))
+  (let* ((variable-tuple (cond ((x-list-fonts "Jetbrains Mono") '(:font "Jetbrains Mono"))
+                               ((x-list-fonts "Monaco") '(:font "Monaco"))
+                               ((x-list-fonts "Input Sans") '(:font "Input Sans"))
                                ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
                                ((x-list-fonts "Verdana")         '(:font "Verdana"))
                                ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))

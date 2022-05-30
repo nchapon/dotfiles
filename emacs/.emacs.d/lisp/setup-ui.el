@@ -54,7 +54,7 @@
   "Set up font height"
   (interactive)
   (when is-linux
-    (set-frame-font "Input Mono-12" nil t))
+    (set-frame-font "Jetbrains Mono 13" nil t))
   (when is-mac
     (set-frame-font "Monaco 15" nil t))
   (when is-windows
