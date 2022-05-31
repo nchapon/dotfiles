@@ -584,6 +584,7 @@ My map
     :init
     (key-chord-mode 1)
     (key-chord-define-global "FF" 'projectile-find-file)
+    (key-chord-define-global "::" 'avy-goto-char-timer)
     (key-chord-define-global "GG" 'consult-ripgrep)
     (key-chord-define-global "OO" 'consult-outline)
     (key-chord-define-global "DD" 'delete-region)
@@ -729,8 +730,8 @@ Core packages configuration module automatically tangled in =./lisp/setup-core.e
   (use-package avy
     :defer t
     :bind
-    (:map nc-map ((">" . avy-goto-char-timer)
-                 ("l" . avy-goto-line)))
+    (:map nc-map (("gc" . avy-goto-char-timer)
+                 ("c" . avy-goto-char-timer)))
     :custom
     (avy-timeout-seconds 0.3)
     (avy-style 'pre)

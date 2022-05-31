@@ -48,6 +48,7 @@
   :init
   (key-chord-mode 1)
   (key-chord-define-global "FF" 'projectile-find-file)
+  (key-chord-define-global "::" 'avy-goto-char-timer)
   (key-chord-define-global "GG" 'consult-ripgrep)
   (key-chord-define-global "OO" 'consult-outline)
   (key-chord-define-global "DD" 'delete-region)

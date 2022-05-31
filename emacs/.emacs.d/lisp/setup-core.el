@@ -14,8 +14,8 @@
 (use-package avy
   :defer t
   :bind
-  (:map nc-map ((">" . avy-goto-char-timer)
-               ("l" . avy-goto-line)))
+  (:map nc-map (("gc" . avy-goto-char-timer)
+               ("c" . avy-goto-char-timer)))
   :custom
   (avy-timeout-seconds 0.3)
   (avy-style 'pre)
