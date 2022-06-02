@@ -56,7 +56,7 @@
   (when is-linux
     (set-frame-font "Jetbrains Mono 13" nil t))
   (when is-mac
-    (set-frame-font "Monaco 15" nil t))
+    (set-frame-font "Jetbrains Mono 14" nil t))
   (when is-windows
     (set-frame-font "Consolas" nil t))
   )
