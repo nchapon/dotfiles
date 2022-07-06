@@ -1709,9 +1709,10 @@ will appear as projects.
  Should be moved in gcal.org
 
  #+begin_src emacs-lisp
- (add-to-list 'org-capture-templates
-                  `("m" "Meeting" entry (file+headline nc/calendar-file "Réunions")
-            "* MEETING %? :meeting:\n%U\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n"))
+   (add-to-list 'org-capture-templates
+                    `("m" "Meeting" entry  (file+headline nc/calendar-file "Réunions")
+           ,(concat "* MEETING %? :meeting:\n"
+                    "<%<%Y-%m-%d %a %H:00-%H:30>>")))
  #+end_src
 *** TODO RendezVous
  Should be moved in gcal.org

@@ -306,8 +306,9 @@
           ))
 
 (add-to-list 'org-capture-templates
-                 `("m" "Meeting" entry (file+headline nc/calendar-file "Réunions")
-           "* MEETING %? :meeting:\n%U\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n"))
+                 `("m" "Meeting" entry  (file+headline nc/calendar-file "Réunions")
+        ,(concat "* MEETING %? :meeting:\n"
+                 "<%<%Y-%m-%d %a %H:00-%H:30>>")))
 
 (add-to-list 'org-capture-templates
                  `("a" "RendezVous" entry (file+headline nc/calendar-file "RendezVous")
