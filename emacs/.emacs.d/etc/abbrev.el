@@ -1,6 +1,7 @@
 ;;-*-coding: utf-8;-*-
 (define-abbrev-table 'org-mode-abbrev-table
   '(
+    ("11" "One To One LN" (speedbar-mode-abbrev-table) :count 1)
     ("arch" "architecture" nil :count 1)
     ("cb" "[/]" nil :count 2)
     ("dm" "Daily Meeting" nil :count 0)

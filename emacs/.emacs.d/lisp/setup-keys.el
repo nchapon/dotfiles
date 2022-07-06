@@ -39,8 +39,8 @@
 
 (bind-keys
  :prefix-map nc-map
- :prefix-docstring "My own keyboard map"
- :prefix "C-<"
+ :prefix-docstring "Prefix for personal key bindings"
+ :prefix "C-c C-SPC"
  ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
  (";" . nc/goto-emacs-config))
 
