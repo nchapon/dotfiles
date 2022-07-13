@@ -638,7 +638,7 @@ Windows configuration module automatically tangled in =./lisp/setup-windows.el=
 
 ** Golden Ratio
 
- Resize automatically the windows you are working
+ [[https://github.com/roman/golden-ratio.el][Golden Ratio]] resize automatically the windows you are working
 
  #+begin_src emacs-lisp
    (use-package golden-ratio
@@ -650,18 +650,18 @@ Windows configuration module automatically tangled in =./lisp/setup-windows.el=
            (append golden-ratio-extra-commands
                    '(ace-window))))
 
-   (defun nc/toggle-wide-screen ()
+   (defun nc/toggle-golden-ratio ()
      "Toggle golden ratio for widescreen"
      (interactive)
      (setq golden-ratio-adjust-factor .8))
 
-   (bind-key "wt" 'nc/toggle-wide-screen nc-map)
+   (bind-key "wt" 'nc/toggle-golden-ratio nc-map)
  #+end_src
 
 
 ** Toggle Window Split Horizontally
 
-Bound to =C-z w -=.
+Bound to =<my-prefix-map> w -=.
 #+begin_src emacs-lisp
   (defun nc/toggle-split-window-horizontally ()
     (interactive)
@@ -693,7 +693,7 @@ Bound to =C-z w -=.
 
 
 ** Toggle Window Split Vertically 
-Split window right with =C-< w v= and move there.
+Split window right with =<my-prefix-map> w v= and move there.
 If windows are splitted delete other windows.
 #+begin_src emacs-lisp
   (defun nc--split-window-right-and-move-there-dammit ()
