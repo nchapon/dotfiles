@@ -1619,8 +1619,8 @@ My Todos tasks
 
  #+begin_src emacs-lisp
    (setq org-todo-keywords
-    '((sequence "TODO(t)" "NEXT(n)" "SOMEDAY(.)" "MAYBE(M)"  "|" "DONE(d)")
-      (sequence "STARTED(s)" "WAITING(w@/!)" "|" "CANCELLED(c@/!)" "INACTIVE(i@)")
+    '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+      (sequence "STARTED(s)" "HOLD(h/!)" "|" "CANCELLED(c@/!)")
       (sequence "MEETING(m)" "RDV(r)"  "|" "DONE(d)")))
  #+end_src
 
@@ -1636,13 +1636,10 @@ Keep track when the task is completed.
          (quote (("TODO" :foreground "#c0392b" :weight bold)
                  ("NEXT" :foreground "#d35400" :weight bold)
                  ("STARTED" :foreground "#f39c12" :weight bold)
-                 ("SOMEDAY" :foreground "#3498db" :weight bold)
+                 ("HOLD" :foreground "#3498db" :weight bold)
                  ("DONE" :foreground "#27ae60" :weight bold)
-                 ("WAITING" :foreground "#e74c3c" :weight bold)
-                 ("INACTIVE" :foreground "#bdc3c7" :weight bold)
                  ("MEETING" :foreground "#e6b68d" :weight bold)
                  ("RDV" :foreground "#e6b68d" :weight bold)
-                 ("MAYBE" :foreground "#3498db" :weight bold)
                  ("CANCELLED" :foreground "#7f8c8d" :weight bold))))
  #+end_src
 
@@ -1658,7 +1655,6 @@ In GTD tags are contexts
                                ("learning" . ?l)
                                ("emacs" . ?e)
                                (:newline)
-                               ("WAITING" . ?w)
                                ("HOLD" . ?H)
                                ("CANCELLED" . ?c))))
 
@@ -1864,48 +1860,30 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
 **** Agenda Commands
 
      #+begin_src emacs-lisp
-       (defun org-current-is-todo ()
-         (string= "NEXT" (org-get-todo-state)))
-
-       (defun org-agenda-skip-all-siblings-but-first ()
-         "Skip all but the first non-done entry."
-         (let (should-skip-entry)
-           (unless (org-current-is-todo)
-             (setq should-skip-entry t))
-           (save-excursion
-             (while (and (not should-skip-entry) (org-goto-sibling t))
-               (when (org-current-is-todo)
-                 (setq should-skip-entry t))))
-           (when should-skip-entry
-             (or (outline-next-heading)
-                 (goto-char (point-max))))))
-
        (require 'org-agenda)
 
        (setq org-agenda-custom-commands
              '(("," "Agenda"
                       ((agenda "" ((org-agenda-sorting-strategy '(timestamp-up time-up priority-down category-keep))))
 
-                       (tags-todo "TODO=\"STARTED\"+|TODO=\"WAITING\""
-                                  ((org-agenda-overriding-header "Started / waiting tasks")
-                                   (org-agenda-prefix-format " %i %-25:c")
+                       (tags-todo "TODO=\"STARTED\""
+                                  ((org-agenda-overriding-header "\nStarted Tasks")
+                                   (org-agenda-prefix-format " %i %-14:c [%e] ")
                                    ;;(org-agenda-prefix-format "%-27:(nc--org-agenda-format-parent 25)")
                                    (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
-                       ;; (tags-todo "TODO=\"NEXT\"+@office-HOLD"
-                       ;;            ((org-agenda-overriding-header "Next tasks @office")
-                       ;;             (org-tags-exclude-from-inheritance '("project"))
-                       ;;             (org-agenda-prefix-format "%-27:(nc--org-agenda-format-parent 25)")
-                       ;;             ;; (org-agenda-skip-function
-                       ;;             ;;  (quote
-                       ;;             ;;   (org-agenda-skip-all-siblings-but-first)))
-                       ;;             (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))
-                       ;;             (org-agenda-todo-keyword-format "%-4s")))
                        (tags-todo "TODO=\"NEXT\""
-                                  ((org-agenda-overriding-header "Next tasks")
-                                   (org-agenda-prefix-format " %i %-25:c")
+                                  ((org-agenda-overriding-header "\nNext Tasks")
+                                   (org-agenda-prefix-format " %i %-14:c [%e] ")
                                    (org-agenda-skip
-                                    '(org-agenda-skip-if 'scheduled 'deadline))
+                                    '(org-agenda-skip-if 'deadline))
                                    ;;(org-agenda-files '("~/_PIM/notes/gtd.org"))
+                                   (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
+                       (tags-todo "inbox"
+                            ((org-agenda-prefix-format "  %?-12t% s")
+                             (org-agenda-overriding-header "\nInbox")))
+                       (tags-todo "TODO=\"HOLD\""
+                                  ((org-agenda-overriding-header "\nHold / Waiting Tasks")
+                                   (org-agenda-prefix-format " %i %-14:c")                            
                                    (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
                        )
                       nil)
