@@ -17,13 +17,11 @@
     (find-file "~/.emacs.d/Readme.org"))
 
 (defun nc/goto-my-credentials ()
-    "Goto my credentials"
-    (interactive)
-    ;; before disable super-save-mode
-    ;;(super-save-stop)
-    (find-file (concat nc/org-default-personal-dir "/password.gpg")))
-
-(bind-key "gp" 'nc/goto-my-credentials nc-map)
+  "Goto my credentials"
+  (interactive)
+  ;; before disable super-save-mode
+  ;;(super-save-stop)
+  (find-file (concat nc/org-default-personal-dir "/password.gpg")))
 
 (defun nc--random-alnum ()
   (let* ((alnum "abcdef0123456789")

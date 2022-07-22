@@ -118,8 +118,8 @@
 
   (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
   (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
-  (defconst nc/org-default-resources-dir (concat org-directory "/resources"))
   (defconst nc/org-default-archives-dir (concat org-directory "/archives"))
+  (defconst nc/org-default-templates-dir (concat org-directory "/templates"))
   (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
   (defconst nc/org-default-completed-dir (concat org-directory "/projects/_completed"))
   (defconst nc/org-journal-dir (concat org-directory "/journal"))
@@ -143,26 +143,17 @@
     (re-search-forward "* Inbox")
     (beginning-of-line))
 
-  (bind-key "gi" 'nc/goto-inbox nc-map)
-
   (defun nc/goto-notes-dir ()
     (interactive)
     (dired org-directory))
-
-  (bind-key "gN" 'nc/goto-notes-dir nc-map)
-
-  (defun nc/goto-resources-dir ()
-    (interactive)
-    (dired nc/org-default-resources-dir))
-
-  (bind-key "gR" 'nc/goto-resources-dir nc-map)
 
   (defun nc/goto-archives-dir ()
     (interactive)
     (dired nc/org-default-archives-dir))
 
-  (bind-key "gA" 'nc/goto-archives-dir nc-map)
-
+  (defun nc/goto-templates-dir ()
+    (interactive)
+    (dired nc/org-default-templates-dir))
 )
 
 (defun nc/goto-journal-file ()
@@ -178,15 +169,12 @@
 
 (setq org-default-notes-file (nc--get-journal-file-today))
 
-(bind-key "gj" 'nc/goto-journal-file nc-map)
-(bind-key "j" 'nc/goto-journal-file nc-map)
-
 (defun nc--autoinsert-yas-expand ()
       "Replace text in yasnippet template."
       (yas-expand-snippet (buffer-string) (point-min) (point-max)))
 
     (setq auto-insert 'other
-          auto-insert-directory (concat org-directory "/templates"))
+          auto-insert-directory nc/org-default-templates-dir)
 
     (define-auto-insert "\\.org\\'" ["week.org" nc--autoinsert-yas-expand])
 
@@ -207,7 +195,7 @@
 
         ;; Insert dailies that only happen once a week:
         (let ((weekday-template (downcase
-                                 (format-time-string "templates/journal-%A.org"))))
+                                 (concat nc/org-default-templates-dir (format-time-string "/journal/%A.org")))))
           (when (file-exists-p weekday-template)
             (insert-file-contents weekday-template)))
 

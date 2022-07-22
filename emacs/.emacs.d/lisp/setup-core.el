@@ -218,7 +218,6 @@
 
     (treemacs-hide-gitignored-files-mode nil))
   :bind
-  (:map nc-map ("t" . treemacs))
   (:map global-map
         ("M-o"       . treemacs-select-window)
         ("C-x t 1"   . treemacs-delete-other-windows)
