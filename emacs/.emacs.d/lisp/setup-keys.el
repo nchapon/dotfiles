@@ -37,42 +37,51 @@
 ;; Functions
 (global-set-key (kbd "<f5>") #'revert-buffer)
 
-;; deprecated
-(bind-keys
-   :prefix-map nc-map
-   :prefix-docstring "Prefix for personal key bindings"
-   :prefix "C-c C-SPC"
-   ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
-   (";" . nc/goto-emacs-config))
-
 (defcustom nc-prefix "C-c C-SPC"
   "Prefix for all personal keybinds."
   :type 'string
   :group 'nc-emacs)
 
+(bind-keys
+   :prefix-map nc-map
+   :prefix-docstring "Prefix for personal key bindings"
+   :prefix nc-prefix
+   ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
+   ("C-;" . nc/goto-emacs-config)
+   ("M-j" . crux-top-join-line))
+
+(bind-keys :prefix-map nc--insert-keys
+             :prefix (concat nc-prefix " i")
+             ("d" . nc/insert-date-stamp)             
+             ("D" . nc/insert-date-stamp-inactive)             
+             ("p" . nc/generate-password)
+             ("s" . consult-yasnippet)
+             ("t" . nc/insert-time-slot)
+             ("u" . nc/uuid)
+             ("y" . yankpad-isnert))
+
 (bind-keys :prefix-map nc--notes-keys
              :prefix (concat nc-prefix " n")
+             ("d" . nc/org-insert-daily-review)
+             ("h" . nc/insert-daily-heading)
              ("i" . nc/goto-inbox)
              ("j" . nc/goto-journal-file)
              ("p" . nc/goto-my-credentials)
+             ("r" . nc/org-refile-subtree-to-file)
              ("N" . nc/goto-notes-dir)
              ("A" . nc/goto-archives-dir)
              ("T" . nc/goto-templates-dir)             
              ("t" . org-roam-buffer-toggle))
+
+(bind-keys :prefix-map nc--search-keys
+           :prefix (concat nc-prefix " s")
+           ("n" . nc/search-notes))
 
 (bind-keys :prefix-map nc--toggle-keys
              :prefix (concat nc-prefix " t")
              ("e" . eshell-toggle)
              ("v" . vterm-toggle)             
              ("t" . treemacs))
-
-(bind-keys :prefix-map nc--insert-keys
-           :prefix (concat nc-prefix " i")
-           ("d" . nc/insert-date-stamp)             
-           ("D" . nc/insert-date-stamp-inactive)             
-           ("p" . nc/generate-password)
-           ("t" . nc/insert-time-slot)
-           ("u" . nc/uuid))
 
 (use-package key-chord
   :init

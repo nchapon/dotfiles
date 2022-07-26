@@ -76,8 +76,6 @@
   (interactive)
   (consult-ripgrep org-directory ""))
 
-(bind-key "sn" 'nc/search-notes nc-map)
-
 (defun nc/sudo-find-file (file)
   "Open FILE as root."
   (interactive "FOpen file as root: ")

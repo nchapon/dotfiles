@@ -570,33 +570,56 @@ Some Emacs Global Bindings are redefined here.
 ** My Personal Key Bindings
 My map
 #+begin_src emacs-lisp
-  ;; deprecated
-  (bind-keys
-     :prefix-map nc-map
-     :prefix-docstring "Prefix for personal key bindings"
-     :prefix "C-c C-SPC"
-     ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
-     (";" . nc/goto-emacs-config))
-
   (defcustom nc-prefix "C-c C-SPC"
     "Prefix for all personal keybinds."
     :type 'string
     :group 'nc-emacs)
 
+  (bind-keys
+     :prefix-map nc-map
+     :prefix-docstring "Prefix for personal key bindings"
+     :prefix nc-prefix
+     ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
+     ("C-;" . nc/goto-emacs-config)
+     ("M-j" . crux-top-join-line))
 #+end_src
+*** Insert Keys
+#+begin_src emacs-lisp
+  (bind-keys :prefix-map nc--insert-keys
+               :prefix (concat nc-prefix " i")
+               ("d" . nc/insert-date-stamp)             
+               ("D" . nc/insert-date-stamp-inactive)             
+               ("p" . nc/generate-password)
+               ("s" . consult-yasnippet)
+               ("t" . nc/insert-time-slot)
+               ("u" . nc/uuid)
+               ("y" . yankpad-isnert))
+#+end_src
+
 *** Notes Keys
 
 #+begin_src emacs-lisp
   (bind-keys :prefix-map nc--notes-keys
                :prefix (concat nc-prefix " n")
+               ("d" . nc/org-insert-daily-review)
+               ("h" . nc/insert-daily-heading)
                ("i" . nc/goto-inbox)
                ("j" . nc/goto-journal-file)
                ("p" . nc/goto-my-credentials)
+               ("r" . nc/org-refile-subtree-to-file)
                ("N" . nc/goto-notes-dir)
                ("A" . nc/goto-archives-dir)
                ("T" . nc/goto-templates-dir)             
                ("t" . org-roam-buffer-toggle))
 #+end_src
+
+*** Search Keys
+#+begin_src emacs-lisp
+  (bind-keys :prefix-map nc--search-keys
+             :prefix (concat nc-prefix " s")
+             ("n" . nc/search-notes))
+#+end_src
+
 *** Toggle Keys
 
 #+begin_src emacs-lisp
@@ -606,17 +629,6 @@ My map
                ("v" . vterm-toggle)             
                ("t" . treemacs))
 #+end_src
-*** Insert Keys
-#+begin_src emacs-lisp
-  (bind-keys :prefix-map nc--insert-keys
-             :prefix (concat nc-prefix " i")
-             ("d" . nc/insert-date-stamp)             
-             ("D" . nc/insert-date-stamp-inactive)             
-             ("p" . nc/generate-password)
-             ("t" . nc/insert-time-slot)
-             ("u" . nc/uuid))
-#+end_src
-
 ** Key Chords
 
 #+begin_src emacs-lisp
@@ -790,7 +802,6 @@ Core packages configuration module automatically tangled in =./lisp/setup-core.e
      ("C-x K" . crux-kill-other-buffers)
      ("C-k" . crux-smart-kill-line)
      ("M-j" . crux-top-join-line))
-    (:map nc-map ("C-j" . crux-top-join-line))
     :config
     (crux-with-region-or-buffer indent-region)
     (crux-with-region-or-buffer untabify)
@@ -1103,10 +1114,7 @@ Snippets for programming.
 
 Consult integration
 #+begin_src emacs-lisp
-  (use-package consult-yasnippet
-    :bind
-    (:map nc-map 
-          ("y" . consult-yasnippet)))
+  (use-package consult-yasnippet)
 #+end_src
 
 * Completion
@@ -1633,9 +1641,6 @@ Insert daily heading in journal file =C-<-o-d=
                    (beginning-of-line))
                (org-shiftmetaright))
            (error "Insert failed"))))
-
-     ;; bind-key
-      (bind-key "od" 'nc/insert-daily-heading nc-map)
    #+end_src
 
 ** Tasks
@@ -1832,8 +1837,6 @@ I have my own template for creating new projects
        (org-capture nil "d")
        (org-capture-finalize t)
        (org-clock-in)))
-
-   (bind-key "oD" 'nc/org-insert-daily-review nc-map)
  #+end_src
 *** WeeklyReview
  #+begin_src emacs-lisp
@@ -2178,9 +2181,6 @@ Documentation : http://www.howardism.org/Technical/Emacs/getting-more-boxes-done
            (t (goto-char (point-min))))
 
           (insert (format "#+%s: %s\n" (upcase key) value))))))
-
-
-  (bind-key "or" 'nc/org-refile-subtree-to-file nc-map)
 #+end_src
 
 ** Speed commands
@@ -2426,18 +2426,14 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
 [[https://github.com/Kungsgeten/yankpad][Yankpad]] paste snippets from an org-mode file.
 
 #+begin_src emacs-lisp
-  (use-package yankpad    
-    :init
-    (setq yankpad-file (concat org-directory "/templates/yankpad.org"))
-    :config
-    ;; If you want to complete snippets using company-mode
-    ;; (add-to-list 'company-backends 'company-yankpad)
-    ;; If you want to expand snippets with hippie-expand
-    (add-to-list 'hippie-expand-try-functions-list #'yankpad-expand)
-
-    :bind
-    (:map nc-map ("C-y". yankpad-insert)))
-
+    (use-package yankpad    
+      :init
+      (setq yankpad-file (concat org-directory "/templates/yankpad.org"))
+      :config
+      ;; If you want to complete snippets using company-mode
+      ;; (add-to-list 'company-backends 'company-yankpad)
+      ;; If you want to expand snippets with hippie-expand
+      (add-to-list 'hippie-expand-try-functions-list #'yankpad-expand))
 #+end_src
 ** Org Roam
 
@@ -3045,8 +3041,6 @@ Insert time slot mainly used when I schedule meeting or appointment.
     "Search in all my org notes"
     (interactive)
     (consult-ripgrep org-directory ""))
-
-  (bind-key "sn" 'nc/search-notes nc-map)
 #+end_src
 
 ** Sudo Edit File

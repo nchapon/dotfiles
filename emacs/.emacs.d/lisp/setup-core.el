@@ -30,7 +30,6 @@
    ("C-x K" . crux-kill-other-buffers)
    ("C-k" . crux-smart-kill-line)
    ("M-j" . crux-top-join-line))
-  (:map nc-map ("C-j" . crux-top-join-line))
   :config
   (crux-with-region-or-buffer indent-region)
   (crux-with-region-or-buffer untabify)
@@ -248,10 +247,7 @@
   :hook
   (after-init . yas-global-mode))
 
-(use-package consult-yasnippet
-  :bind
-  (:map nc-map 
-        ("y" . consult-yasnippet)))
+(use-package consult-yasnippet)
 
 (provide 'setup-core)
 ;;; setup-core.el ends here

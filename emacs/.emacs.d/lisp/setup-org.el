@@ -224,9 +224,6 @@
           (org-shiftmetaright))
       (error "Insert failed"))))
 
-;; bind-key
- (bind-key "od" 'nc/insert-daily-heading nc-map)
-
 (setq org-todo-keywords
  '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
    (sequence "STARTED(s)" "HOLD(h/!)" "|" "CANCELLED(c@/!)")
@@ -361,8 +358,6 @@
     (org-capture nil "d")
     (org-capture-finalize t)
     (org-clock-in)))
-
-(bind-key "oD" 'nc/org-insert-daily-review nc-map)
 
 (add-to-list 'org-capture-templates
                  `("w" "WeeklyReview" entry (file+datetree+prompt nc/weekly-review-file)
@@ -646,9 +641,6 @@ if nil,the top of the file."
 
         (insert (format "#+%s: %s\n" (upcase key) value))))))
 
-
-(bind-key "or" 'nc/org-refile-subtree-to-file nc-map)
-
 (defun nc/org-show-next-heading-tidily ()
   "Show next entry, keeping other entries closed."
   (if (save-excursion (end-of-line) (outline-invisible-p))
@@ -843,10 +835,7 @@ the result as a time value."
   ;; If you want to complete snippets using company-mode
   ;; (add-to-list 'company-backends 'company-yankpad)
   ;; If you want to expand snippets with hippie-expand
-  (add-to-list 'hippie-expand-try-functions-list #'yankpad-expand)
-
-  :bind
-  (:map nc-map ("C-y". yankpad-insert)))
+  (add-to-list 'hippie-expand-try-functions-list #'yankpad-expand))
 
 ;; (when is-windows  
 ;;   (add-to-list 'exec-path "C:/ProgramJava/tools/sqlite-tools-win32-x86-3340100"))
