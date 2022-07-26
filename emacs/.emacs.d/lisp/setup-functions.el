@@ -33,8 +33,6 @@
   (interactive)
   (dotimes (i 32) (insert (nc--random-alnum))))
 
-(bind-key "iu" 'nc/uuid nc-map)
-
 (defun nc--random-char ()
     (let* ((alnum "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-/%+*?&#[]()={}_<>!$,;:^µ0123456789")
            (i (% (abs (random)) (length alnum))))
@@ -46,8 +44,6 @@
     (interactive)
     (dotimes (i 12) (insert (nc--random-char))))
 
-(bind-key "ip" 'nc/generate-password nc-map)
-
 (defvar current-hour-format "%H:00")
 
 (defun nc/insert-time-slot ()
@@ -56,8 +52,6 @@
   (let ((begin (format-time-string current-hour-format (current-time)))
         (end (format-time-string current-hour-format (time-add (current-time) (seconds-to-time 3600)))))
     (insert (concat begin "-" end))))
-
-(bind-key "it" 'nc/insert-time-slot nc-map)
 
 (defun nc/insert-datestamp()
   "Insert the current date in yyyy-mm-dd format."
@@ -68,8 +62,6 @@
         (insert " "))
       (insert (format-time-string "%Y-%m-%d" (current-time)))))
 
-(bind-key "id" 'nc/insert-datestamp nc-map)
-
 (defun nc/insert-datestamp-inactive()
   "Insert the current date in yyyy-mm-dd format."
   (interactive "*")
@@ -78,8 +70,6 @@
     (org-insert-time-stamp nil nil t)
     (insert " "))
     (insert (format-time-string "%Y-%m-%d" (current-time)))))
-
-(bind-key "iD" 'nc/insert-datestamp-inactive nc-map)
 
 (defun nc/search-notes ()
   "Search in all my org notes"

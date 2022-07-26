@@ -606,6 +606,16 @@ My map
                ("v" . vterm-toggle)             
                ("t" . treemacs))
 #+end_src
+*** Insert Keys
+#+begin_src emacs-lisp
+  (bind-keys :prefix-map nc--insert-keys
+             :prefix (concat nc-prefix " i")
+             ("d" . nc/insert-date-stamp)             
+             ("D" . nc/insert-date-stamp-inactive)             
+             ("p" . nc/generate-password)
+             ("t" . nc/insert-time-slot)
+             ("u" . nc/uuid))
+#+end_src
 
 ** Key Chords
 
@@ -2970,8 +2980,6 @@ Generate a 32 random pseudo uuid
     "Generate a pseudo UUID"
     (interactive)
     (dotimes (i 32) (insert (nc--random-alnum))))
-
-  (bind-key "iu" 'nc/uuid nc-map)
 #+end_src
 
 
@@ -2989,8 +2997,6 @@ Generates a strong password
        "Generates a strong password"
        (interactive)
        (dotimes (i 12) (insert (nc--random-char))))
-
-   (bind-key "ip" 'nc/generate-password nc-map)
  #+end_src
 
 ** TimeSlot
@@ -3004,9 +3010,6 @@ Insert time slot mainly used when I schedule meeting or appointment.
     (let ((begin (format-time-string current-hour-format (current-time)))
           (end (format-time-string current-hour-format (time-add (current-time) (seconds-to-time 3600)))))
       (insert (concat begin "-" end))))
-
-  (bind-key "it" 'nc/insert-time-slot nc-map)
-
 #+end_src
 
 ** Inserting time stamps
@@ -3021,8 +3024,6 @@ Insert time slot mainly used when I schedule meeting or appointment.
           (org-insert-time-stamp nil nil nil)
           (insert " "))
         (insert (format-time-string "%Y-%m-%d" (current-time)))))
-
-  (bind-key "id" 'nc/insert-datestamp nc-map)
  #+end_src
 
 
@@ -3035,8 +3036,6 @@ Insert time slot mainly used when I schedule meeting or appointment.
        (org-insert-time-stamp nil nil t)
        (insert " "))
        (insert (format-time-string "%Y-%m-%d" (current-time)))))
-
-   (bind-key "iD" 'nc/insert-datestamp-inactive nc-map)
  #+end_src
 
 ** Searching in my notes

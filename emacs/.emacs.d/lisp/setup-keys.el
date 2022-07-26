@@ -66,6 +66,14 @@
              ("v" . vterm-toggle)             
              ("t" . treemacs))
 
+(bind-keys :prefix-map nc--insert-keys
+           :prefix (concat nc-prefix " i")
+           ("d" . nc/insert-date-stamp)             
+           ("D" . nc/insert-date-stamp-inactive)             
+           ("p" . nc/generate-password)
+           ("t" . nc/insert-time-slot)
+           ("u" . nc/uuid))
+
 (use-package key-chord
   :init
   (key-chord-mode 1)
