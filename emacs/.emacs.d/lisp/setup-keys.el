@@ -46,19 +46,22 @@
    :prefix-map nc-map
    :prefix-docstring "Prefix for personal key bindings"
    :prefix nc-prefix
-   ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
+ ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
+   ("C-e" . eshell-toggle)
+   ("C-j" . nc/goto-journal-file)
+   ("C-y" . consult-yasnippet)
    ("C-;" . nc/goto-emacs-config)
    ("M-j" . crux-top-join-line))
 
 (bind-keys :prefix-map nc--insert-keys
-             :prefix (concat nc-prefix " i")
-             ("d" . nc/insert-date-stamp)             
-             ("D" . nc/insert-date-stamp-inactive)             
-             ("p" . nc/generate-password)
-             ("s" . consult-yasnippet)
-             ("t" . nc/insert-time-slot)
-             ("u" . nc/uuid)
-             ("y" . yankpad-isnert))
+           :prefix (concat nc-prefix " i")
+           ("d" . nc/insert-date-stamp)
+           ("p" . nc/generate-password)
+           ("t" . nc/insert-time-slot)
+           ("u" . nc/uuid)
+           ("y" . consult-yasnippet)
+           ("D" . nc/insert-date-stamp-inactive)             
+           ("Y" . yankpad-insert))
 
 (bind-keys :prefix-map nc--notes-keys
              :prefix (concat nc-prefix " n")
