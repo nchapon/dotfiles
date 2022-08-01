@@ -580,13 +580,14 @@ My map
      :prefix-docstring "Prefix for personal key bindings"
      :prefix nc-prefix
    ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
+     ("j" . nc/goto-journal-file)
+     (";" . nc/goto-emacs-config)
+     (":"  . avy-goto-char-timer)
      ("C-e" . eshell-toggle)
-     ("C-j" . nc/goto-journal-file)
+     ("C-t" . treemacs)
+     ("C-w" . nc/toggle-split-window-vertically)
      ("C-y" . consult-yasnippet)
-     ("C-;" . nc/goto-emacs-config)
      ("M-j" . crux-top-join-line))
-
-
 #+end_src
 *** Insert Keys
 #+begin_src emacs-lisp
@@ -614,8 +615,7 @@ My map
                ("r" . nc/org-refile-subtree-to-file)
                ("N" . nc/goto-notes-dir)
                ("A" . nc/goto-archives-dir)
-               ("T" . nc/goto-templates-dir)             
-               ("t" . org-roam-buffer-toggle))
+               ("T" . nc/goto-templates-dir))
 #+end_src
 
 *** Search Keys
@@ -634,6 +634,16 @@ My map
                ("v" . vterm-toggle)             
                ("t" . treemacs))
 #+end_src
+*** Windows keys
+#+begin_src emacs-lisp
+  (bind-keys :prefix-map nc--windows-keys
+             :prefix (concat nc-prefix " w")
+             ("h" . nc/toggle-split-window-horizontally)
+             ("t" . nc/toggle-golden-ratio)
+             ("v" . nc/toggle-split-window-vertically))
+#+end_src
+
+
 ** Key Chords
 
 #+begin_src emacs-lisp
@@ -711,8 +721,6 @@ Windows configuration module automatically tangled in =./lisp/setup-windows.el=
      "Toggle golden ratio for widescreen"
      (interactive)
      (setq golden-ratio-adjust-factor .8))
-
-   (bind-key "wt" 'nc/toggle-golden-ratio nc-map)
  #+end_src
 
 
@@ -744,8 +752,6 @@ Bound to =<my-prefix-map> w -=.
             (set-window-buffer (next-window) next-win-buffer)
             (select-window first-win)
             (if this-win-2nd (other-window 1))))))
-
-  (bind-key "wh" 'nc/toggle-split-window-horizontally nc-map)
 #+end_src
 
 
@@ -762,9 +768,6 @@ If windows are splitted delete other windows.
     (if (> (count-windows) 1)
         (delete-other-windows)
       (nc--split-window-right-and-move-there-dammit)))
-
-  (bind-key "wv" 'nc/toggle-split-window-vertically nc-map)
-  (bind-key "C-w" 'nc/toggle-split-window-vertically nc-map)
   #+end_src
 
 
@@ -786,9 +789,6 @@ Core packages configuration module automatically tangled in =./lisp/setup-core.e
 #+begin_src emacs-lisp
   (use-package avy
     :defer t
-    :bind
-    (:map nc-map (("gc" . avy-goto-char-timer)
-                 ("c" . avy-goto-char-timer)))
     :custom
     (avy-timeout-seconds 0.3)
     (avy-style 'pre)

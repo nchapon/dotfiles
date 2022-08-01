@@ -34,8 +34,6 @@
   (interactive)
   (setq golden-ratio-adjust-factor .8))
 
-(bind-key "wt" 'nc/toggle-golden-ratio nc-map)
-
 (defun nc/toggle-split-window-horizontally ()
   (interactive)
   (if (= (count-windows) 2)
@@ -61,8 +59,6 @@
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
 
-(bind-key "wh" 'nc/toggle-split-window-horizontally nc-map)
-
 (defun nc--split-window-right-and-move-there-dammit ()
   (split-window-right)
   (windmove-right))
@@ -72,9 +68,6 @@
   (if (> (count-windows) 1)
       (delete-other-windows)
     (nc--split-window-right-and-move-there-dammit)))
-
-(bind-key "wv" 'nc/toggle-split-window-vertically nc-map)
-(bind-key "C-w" 'nc/toggle-split-window-vertically nc-map)
 
 (provide 'setup-windows)
 ;;; setup-windows.el ends here

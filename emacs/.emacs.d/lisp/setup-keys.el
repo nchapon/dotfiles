@@ -47,10 +47,13 @@
    :prefix-docstring "Prefix for personal key bindings"
    :prefix nc-prefix
  ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
+   ("j" . nc/goto-journal-file)
+   (";" . nc/goto-emacs-config)
+   (":"  . avy-goto-char-timer)
    ("C-e" . eshell-toggle)
-   ("C-j" . nc/goto-journal-file)
+   ("C-t" . treemacs)
+   ("C-w" . nc/toggle-split-window-vertically)
    ("C-y" . consult-yasnippet)
-   ("C-;" . nc/goto-emacs-config)
    ("M-j" . crux-top-join-line))
 
 (bind-keys :prefix-map nc--insert-keys
@@ -73,8 +76,7 @@
              ("r" . nc/org-refile-subtree-to-file)
              ("N" . nc/goto-notes-dir)
              ("A" . nc/goto-archives-dir)
-             ("T" . nc/goto-templates-dir)             
-             ("t" . org-roam-buffer-toggle))
+             ("T" . nc/goto-templates-dir))
 
 (bind-keys :prefix-map nc--search-keys
            :prefix (concat nc-prefix " s")
@@ -85,6 +87,12 @@
              ("e" . eshell-toggle)
              ("v" . vterm-toggle)             
              ("t" . treemacs))
+
+(bind-keys :prefix-map nc--windows-keys
+           :prefix (concat nc-prefix " w")
+           ("h" . nc/toggle-split-window-horizontally)
+           ("t" . nc/toggle-golden-ratio)
+           ("v" . nc/toggle-split-window-vertically))
 
 (use-package key-chord
   :init
