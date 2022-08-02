@@ -2692,6 +2692,10 @@ GitHub Flavored Markdown by default for README.md files.
   (python-shell-interpreter "python3"))
 
 #+end_src
+** Terraform
+#+begin_src emacs-lisp
+  (use-package terraform-mode)
+#+end_src
 ** Web
 *** Rest Client
 [[https://github.com/pashky/restclient.el][Restclient]] Emacs client for testing API

@@ -155,6 +155,8 @@
   :custom
   (python-shell-interpreter "python3"))
 
+(use-package terraform-mode)
+
 (use-package restclient
   :mode (("\\.restclient\\'" . restclient-mode)
          ("\\.http\\'" . restclient-mode)))
