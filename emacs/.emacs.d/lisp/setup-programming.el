@@ -14,6 +14,10 @@
 (use-package lsp-mode
   :commands lsp
   :bind-keymap ("C-< l" . lsp-command-map)
+  :bind
+    (:map lsp-mode-map
+          ( ;;("C-\M-b" . lsp-find-implementation)
+           ("M-RET" . lsp-execute-code-action)))
   :hook (lsp-mode . (lambda ()
                       (let ((lsp-keymap-prefix "C-< l"))
                         (lsp-enable-which-key-integration))))

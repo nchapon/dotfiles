@@ -195,6 +195,8 @@
 (use-package company
   :diminish ""
   :bind (("M-/" . company-complete)
+         ("C-c C-/" . company-other-backend)
+         ("C-c y" . company-yasnippet)
          :map company-active-map
          ("C-p" . company-select-previous)
          ("C-n" . company-select-next)
@@ -204,7 +206,7 @@
   :hook (after-init . global-company-mode)
 
   :custom
-  (company-idle-delay 0.1)
+  (company-idle-delay 0.0)
   (company-require-match 'never)
   (company-minimum-prefix-length 1)
   (company-tooltip-align-annotations t)

@@ -1347,6 +1347,8 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
      (use-package company
        :diminish ""
        :bind (("M-/" . company-complete)
+              ("C-c C-/" . company-other-backend)
+              ("C-c y" . company-yasnippet)
               :map company-active-map
               ("C-p" . company-select-previous)
               ("C-n" . company-select-next)
@@ -1356,7 +1358,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
        :hook (after-init . global-company-mode)
 
        :custom
-       (company-idle-delay 0.1)
+       (company-idle-delay 0.0)
        (company-require-match 'never)
        (company-minimum-prefix-length 1)
        (company-tooltip-align-annotations t)
@@ -1366,6 +1368,11 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
        (company-backends '(company-capf company-abbrev company-files company-dabbrev-code company-semantic))
        (company-tooltip-minimum-width 30)
        (company-tooltip-maximum-width 120))
+
+
+
+
+
   #+end_src
 
 [[https://github.com/company-mode/company-statistics/][company-statistics]] extension to show the top ranked candidates
@@ -2511,6 +2518,10 @@ Programming configuration module automatically tangled in =./lisp/setup-programm
   (use-package lsp-mode
     :commands lsp
     :bind-keymap ("C-< l" . lsp-command-map)
+    :bind
+      (:map lsp-mode-map
+            ( ;;("C-\M-b" . lsp-find-implementation)
+             ("M-RET" . lsp-execute-code-action)))
     :hook (lsp-mode . (lambda ()
                         (let ((lsp-keymap-prefix "C-< l"))
                           (lsp-enable-which-key-integration))))
