@@ -13,13 +13,13 @@
 
 (use-package lsp-mode
   :commands lsp
-  :bind-keymap ("C-< l" . lsp-command-map)
+  :bind-keymap ("C-c C-SPC c" . lsp-command-map)
   :bind
     (:map lsp-mode-map
           ( ;;("C-\M-b" . lsp-find-implementation)
            ("M-RET" . lsp-execute-code-action)))
   :hook (lsp-mode . (lambda ()
-                      (let ((lsp-keymap-prefix "C-< l"))
+                      (let ((lsp-keymap-prefix "C-c C-SPC c"))
                         (lsp-enable-which-key-integration))))
   :config
   (setq ; recommended
