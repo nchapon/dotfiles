@@ -2517,13 +2517,13 @@ Programming configuration module automatically tangled in =./lisp/setup-programm
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :commands lsp
-    :bind-keymap ("C-c C-SPC c" . lsp-command-map)
+    :bind-keymap ("C-c l" . lsp-command-map)
     :bind
       (:map lsp-mode-map
             ( ;;("C-\M-b" . lsp-find-implementation)
              ("M-RET" . lsp-execute-code-action)))
     :hook (lsp-mode . (lambda ()
-                        (let ((lsp-keymap-prefix "C-c C-SPC c"))
+                        (let ((lsp-keymap-prefix "C-c l"))
                           (lsp-enable-which-key-integration))))
     :config
     (setq ; recommended
