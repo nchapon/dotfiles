@@ -566,6 +566,14 @@ Some Emacs Global Bindings are redefined here.
   ;; Functions
   (global-set-key (kbd "<f5>") #'revert-buffer)
 
+  ;; Tools alt-[0-9]
+  (global-set-key (kbd "M-0") #'nc/toggle-split-window-vertically)
+  (global-set-key (kbd "M-1") #'vterm-toggle)
+  (global-set-key (kbd "M-2") #'eshell-toggle)
+  (global-set-key (kbd "M-3") #'treemacs)
+  (global-set-key (kbd "M-5") #'magit-status)
+  (global-set-key (kbd "M-6") #'magit-log-buffer-file)
+  
 #+end_src
 ** My Personal Key Bindings
 My map
@@ -580,25 +588,20 @@ My map
      :prefix-docstring "Prefix for personal key bindings"
      :prefix nc-prefix
    ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
-     ("j" . nc/goto-journal-file)
      (";" . nc/goto-emacs-config)
-     (":"  . avy-goto-char-timer)
-     ("C-e" . eshell-toggle)
-     ("C-t" . treemacs)
-     ("C-w" . nc/toggle-split-window-vertically)
-     ("C-y" . consult-yasnippet)
-     ("M-j" . crux-top-join-line))
+     (":"  . avy-goto-char-timer))
 #+end_src
-*** Insert Keys
+
+*** Insert Keys 
 #+begin_src emacs-lisp
-  (bind-keys :prefix-map nc--insert-keys
-             :prefix (concat nc-prefix " i")
-             ("d" . nc/insert-date-stamp)
+  (bind-keys :prefix-map nc--insert
+             :prefix "<f6>"
+             ("d" . nc/insert-datestamp)
              ("p" . nc/generate-password)
              ("t" . nc/insert-time-slot)
              ("u" . nc/uuid)
              ("y" . consult-yasnippet)
-             ("D" . nc/insert-date-stamp-inactive)             
+             ("D" . nc/insert-datestamp-inactive)             
              ("Y" . yankpad-insert))
 #+end_src
 
@@ -610,7 +613,6 @@ My map
                ("d" . nc/org-insert-daily-review)
                ("h" . nc/insert-daily-heading)
                ("i" . nc/goto-inbox)
-               ("j" . nc/goto-journal-file)
                ("p" . nc/goto-my-credentials)
                ("r" . nc/org-refile-subtree-to-file)
                ("N" . nc/goto-notes-dir)
@@ -625,15 +627,6 @@ My map
              ("n" . nc/search-notes))
 #+end_src
 
-*** Toggle Keys
-
-#+begin_src emacs-lisp
-  (bind-keys :prefix-map nc--toggle-keys
-               :prefix (concat nc-prefix " t")
-               ("e" . eshell-toggle)
-               ("v" . vterm-toggle)             
-               ("t" . treemacs))
-#+end_src
 *** Windows keys
 #+begin_src emacs-lisp
   (bind-keys :prefix-map nc--windows-keys
@@ -652,13 +645,13 @@ My map
     (key-chord-mode 1)
     (key-chord-define-global "FF" 'projectile-find-file)
     (key-chord-define-global "::" 'avy-goto-char-timer)
-    (key-chord-define-global "GG" 'consult-ripgrep)
+    (key-chord-define-global "GG" 'consult-ripgrep)  
     (key-chord-define-global "OO" 'consult-outline)
     (key-chord-define-global "DD" 'delete-region)
-    (key-chord-define-global "??" 'nc/search-notes)
+    (key-chord-define-global "??" 'nc/search-notes) 
     (key-chord-define-global "BB" 'beginning-of-buffer)
+    (key-chord-define-global "JJ" 'crux-top-join-line)
     (key-chord-define-global "$$" 'end-of-buffer))
-
 #+end_src
 
 ** Which Key
@@ -988,9 +981,7 @@ Magit a git porcelain inside Emacs !
       (setq magit-git-executable (getenv "GIT_EXECUTABLE")))
     :commands (magit-status magit-get-current-branch)
 
-    :bind (("C-x g" . magit-status)
-           ("<f6>" . magit-status )
-           ("C-<f6>" . magit-log-buffer-file)))
+    :bind ("C-x g" . magit-status))
 #+end_src
 
 
@@ -1593,10 +1584,10 @@ Change priorities colors
            (expand-file-name (concat nc/org-journal-dir "/" daily-name ".org"))))
 
    (setq org-default-notes-file (nc--get-journal-file-today))
+
+   (bind-key "C-c n j" 'nc/goto-journal-file)
  #+end_src
 
-
-Insert daily heading in journal file =C-<-o-d=
 
    #+begin_src emacs-lisp
      (defun nc--autoinsert-yas-expand ()
@@ -2808,6 +2799,7 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
                    (reusable-frames . visible)
                    (window-height . 0.3)))
     :bind
+    ("C-c t" . vterm-toggle)
     (:map vterm-mode-map
           ("C-<return>" . vterm-toggle-insert-cd)
           ("C-S-n" . vterm-toggle-forward)
@@ -3032,7 +3024,7 @@ Insert time slot mainly used when I schedule meeting or appointment.
    From : https://github.com/novoid/dot-emacs/blob/master/config.org#inserting-time-stamps--my-map-ddtt
 
 #+begin_src emacs-lisp
-  (defun nc/insert-datestamp()
+  (defun nc/insert-datestamp ()
     "Insert the current date in yyyy-mm-dd format."
     (interactive "*")
     (if (eq major-mode 'org-mode)
@@ -3044,7 +3036,7 @@ Insert time slot mainly used when I schedule meeting or appointment.
 
 
  #+begin_src emacs-lisp
-   (defun nc/insert-datestamp-inactive()
+   (defun nc/insert-datestamp-inactive ()
      "Insert the current date in yyyy-mm-dd format."
      (interactive "*")
      (if (eq major-mode 'org-mode)

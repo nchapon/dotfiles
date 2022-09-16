@@ -37,6 +37,14 @@
 ;; Functions
 (global-set-key (kbd "<f5>") #'revert-buffer)
 
+;; Tools alt-[0-9]
+(global-set-key (kbd "M-0") #'nc/toggle-split-window-vertically)
+(global-set-key (kbd "M-1") #'vterm-toggle)
+(global-set-key (kbd "M-2") #'eshell-toggle)
+(global-set-key (kbd "M-3") #'treemacs)
+(global-set-key (kbd "M-5") #'magit-status)
+(global-set-key (kbd "M-6") #'magit-log-buffer-file)
+
 (defcustom nc-prefix "C-c C-SPC"
   "Prefix for all personal keybinds."
   :type 'string
@@ -47,23 +55,17 @@
    :prefix-docstring "Prefix for personal key bindings"
    :prefix nc-prefix
  ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
-   ("j" . nc/goto-journal-file)
    (";" . nc/goto-emacs-config)
-   (":"  . avy-goto-char-timer)
-   ("C-e" . eshell-toggle)
-   ("C-t" . treemacs)
-   ("C-w" . nc/toggle-split-window-vertically)
-   ("C-y" . consult-yasnippet)
-   ("M-j" . crux-top-join-line))
+   (":"  . avy-goto-char-timer))
 
-(bind-keys :prefix-map nc--insert-keys
-           :prefix (concat nc-prefix " i")
-           ("d" . nc/insert-date-stamp)
+(bind-keys :prefix-map nc--insert
+           :prefix "<f6>"
+           ("d" . nc/insert-datestamp)
            ("p" . nc/generate-password)
            ("t" . nc/insert-time-slot)
            ("u" . nc/uuid)
            ("y" . consult-yasnippet)
-           ("D" . nc/insert-date-stamp-inactive)             
+           ("D" . nc/insert-datestamp-inactive)             
            ("Y" . yankpad-insert))
 
 (bind-keys :prefix-map nc--notes-keys
@@ -71,7 +73,6 @@
              ("d" . nc/org-insert-daily-review)
              ("h" . nc/insert-daily-heading)
              ("i" . nc/goto-inbox)
-             ("j" . nc/goto-journal-file)
              ("p" . nc/goto-my-credentials)
              ("r" . nc/org-refile-subtree-to-file)
              ("N" . nc/goto-notes-dir)
@@ -81,12 +82,6 @@
 (bind-keys :prefix-map nc--search-keys
            :prefix (concat nc-prefix " s")
            ("n" . nc/search-notes))
-
-(bind-keys :prefix-map nc--toggle-keys
-             :prefix (concat nc-prefix " t")
-             ("e" . eshell-toggle)
-             ("v" . vterm-toggle)             
-             ("t" . treemacs))
 
 (bind-keys :prefix-map nc--windows-keys
            :prefix (concat nc-prefix " w")
@@ -99,11 +94,12 @@
   (key-chord-mode 1)
   (key-chord-define-global "FF" 'projectile-find-file)
   (key-chord-define-global "::" 'avy-goto-char-timer)
-  (key-chord-define-global "GG" 'consult-ripgrep)
+  (key-chord-define-global "GG" 'consult-ripgrep)  
   (key-chord-define-global "OO" 'consult-outline)
   (key-chord-define-global "DD" 'delete-region)
-  (key-chord-define-global "??" 'nc/search-notes)
+  (key-chord-define-global "??" 'nc/search-notes) 
   (key-chord-define-global "BB" 'beginning-of-buffer)
+  (key-chord-define-global "JJ" 'crux-top-join-line)
   (key-chord-define-global "$$" 'end-of-buffer))
 
 (use-package which-key

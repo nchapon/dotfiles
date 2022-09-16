@@ -169,6 +169,8 @@
 
 (setq org-default-notes-file (nc--get-journal-file-today))
 
+(bind-key "C-c n j" 'nc/goto-journal-file)
+
 (defun nc--autoinsert-yas-expand ()
       "Replace text in yasnippet template."
       (yas-expand-snippet (buffer-string) (point-min) (point-max)))

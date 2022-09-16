@@ -136,9 +136,7 @@
     (setq magit-git-executable (getenv "GIT_EXECUTABLE")))
   :commands (magit-status magit-get-current-branch)
 
-  :bind (("C-x g" . magit-status)
-         ("<f6>" . magit-status )
-         ("C-<f6>" . magit-log-buffer-file)))
+  :bind ("C-x g" . magit-status))
 
 (use-package treemacs
   :ensure t

@@ -35,6 +35,7 @@
                  (reusable-frames . visible)
                  (window-height . 0.3)))
   :bind
+  ("C-c t" . vterm-toggle)
   (:map vterm-mode-map
         ("C-<return>" . vterm-toggle-insert-cd)
         ("C-S-n" . vterm-toggle-forward)

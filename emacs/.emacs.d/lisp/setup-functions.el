@@ -53,7 +53,7 @@
         (end (format-time-string current-hour-format (time-add (current-time) (seconds-to-time 3600)))))
     (insert (concat begin "-" end))))
 
-(defun nc/insert-datestamp()
+(defun nc/insert-datestamp ()
   "Insert the current date in yyyy-mm-dd format."
   (interactive "*")
   (if (eq major-mode 'org-mode)
@@ -62,7 +62,7 @@
         (insert " "))
       (insert (format-time-string "%Y-%m-%d" (current-time)))))
 
-(defun nc/insert-datestamp-inactive()
+(defun nc/insert-datestamp-inactive ()
   "Insert the current date in yyyy-mm-dd format."
   (interactive "*")
   (if (eq major-mode 'org-mode)
