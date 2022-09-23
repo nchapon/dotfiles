@@ -75,6 +75,7 @@ plugins=(
     asdf
     terraform
     docker
+    mvn
 )
 
 source $ZSH/oh-my-zsh.sh
