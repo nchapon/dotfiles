@@ -59,6 +59,9 @@
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
 
+
+(bind-key "C-<f11>" 'nc/toggle-split-window-horizontally)
+
 (defun nc--split-window-right-and-move-there-dammit ()
   (split-window-right)
   (windmove-right))
@@ -68,6 +71,8 @@
   (if (> (count-windows) 1)
       (delete-other-windows)
     (nc--split-window-right-and-move-there-dammit)))
+
+(bind-key "<f11>" 'nc/toggle-split-window-vertically)
 
 (provide 'setup-windows)
 ;;; setup-windows.el ends here

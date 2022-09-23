@@ -424,7 +424,7 @@
            ("gr" "Reading" tags-todo "@reading")
             ;; exports block to this file with C-c a e
           ;; ..other commands here
-        ("p" "Projects" tags "project")
+        ("p" "Projects" tags "poroject")
            ))
 
 (defun nc/org-agenda-recent-open-loops ()
@@ -436,8 +436,7 @@
 
 (use-package org
   :bind (("C-c C-x C-i" . nc/org-clock-in)
-         ("C-c C-x C-o" . org-clock-out)
-         ("<f11>" . org-clock-goto))
+         ("C-c C-x C-o" . org-clock-out))
   :config
   (progn
     ;; Insinuate it everywhere

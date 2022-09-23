@@ -719,7 +719,7 @@ Windows configuration module automatically tangled in =./lisp/setup-windows.el=
 
 ** Toggle Window Split Horizontally
 
-Bound to =<my-prefix-map> w -=.
+Bound to =<my-prefix-map> w h=.
 #+begin_src emacs-lisp
   (defun nc/toggle-split-window-horizontally ()
     (interactive)
@@ -745,6 +745,9 @@ Bound to =<my-prefix-map> w -=.
             (set-window-buffer (next-window) next-win-buffer)
             (select-window first-win)
             (if this-win-2nd (other-window 1))))))
+
+
+  (bind-key "C-<f11>" 'nc/toggle-split-window-horizontally)
 #+end_src
 
 
@@ -761,6 +764,8 @@ If windows are splitted delete other windows.
     (if (> (count-windows) 1)
         (delete-other-windows)
       (nc--split-window-right-and-move-there-dammit)))
+
+  (bind-key "<f11>" 'nc/toggle-split-window-vertically)
   #+end_src
 
 
@@ -1928,7 +1933,7 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
                   ("gr" "Reading" tags-todo "@reading")
                    ;; exports block to this file with C-c a e
                  ;; ..other commands here
-               ("p" "Projects" tags "project")
+               ("p" "Projects" tags "poroject")
                   ))
      #+end_src
 *** Recent open loops
@@ -1949,8 +1954,7 @@ Too many clock entries clutter up a heading.
 #+begin_src emacs-lisp
   (use-package org
     :bind (("C-c C-x C-i" . nc/org-clock-in)
-           ("C-c C-x C-o" . org-clock-out)
-           ("<f11>" . org-clock-goto))
+           ("C-c C-x C-o" . org-clock-out))
     :config
     (progn
       ;; Insinuate it everywhere
