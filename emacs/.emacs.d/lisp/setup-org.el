@@ -424,7 +424,7 @@
            ("gr" "Reading" tags-todo "@reading")
             ;; exports block to this file with C-c a e
           ;; ..other commands here
-        ("p" "Projects" tags "poroject")
+        ("p" "Projects" tags "project")
            ))
 
 (defun nc/org-agenda-recent-open-loops ()

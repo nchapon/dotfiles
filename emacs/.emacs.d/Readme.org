@@ -1933,7 +1933,7 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
                   ("gr" "Reading" tags-todo "@reading")
                    ;; exports block to this file with C-c a e
                  ;; ..other commands here
-               ("p" "Projects" tags "poroject")
+               ("p" "Projects" tags "project")
                   ))
      #+end_src
 *** Recent open loops
