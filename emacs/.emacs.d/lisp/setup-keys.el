@@ -45,6 +45,16 @@
 (global-set-key (kbd "M-5") #'magit-status)
 (global-set-key (kbd "M-6") #'magit-log-buffer-file)
 
+(use-package hydra
+  :ensure t
+  :custom
+  (hydra-default-hint nil))
+
+
+;; Pretty Hydra
+(use-package pretty-hydra
+  :ensure t)
+
 (defcustom nc-prefix "C-c C-SPC"
   "Prefix for all personal keybinds."
   :type 'string

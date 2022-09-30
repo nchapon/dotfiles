@@ -575,6 +575,21 @@ Some Emacs Global Bindings are redefined here.
   (global-set-key (kbd "M-6") #'magit-log-buffer-file)
   
 #+end_src
+** Hydra
+
+#+begin_src emacs-lisp
+  (use-package hydra
+    :ensure t
+    :custom
+    (hydra-default-hint nil))
+
+
+  ;; Pretty Hydra
+  (use-package pretty-hydra
+    :ensure t)
+#+end_src
+
+
 ** My Personal Key Bindings
 My map
 #+begin_src emacs-lisp
@@ -1162,7 +1177,6 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 
      [[https://github.com/minad/consult][Consult]] Consulting completion Read with some custom bindings :
      - =<C-< s f>= consult-ripgrep : find file in current project
-     - =<F2>= consult-ripgrep : search in project files with =rg=  
 
 #+begin_src emacs-lisp
   ;; Example configuration for Consult
@@ -1203,7 +1217,6 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
            ("M-s g" . consult-grep)
            ("M-s G" . consult-git-grep)
            ("M-s r" . consult-ripgrep)
-           ("<f2>" . consult-ripgrep)
            ("M-s l" . consult-line)
            ("C-s" . consult-line)
            ("M-s L" . consult-line-multi)

@@ -66,7 +66,6 @@
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)
          ("M-s r" . consult-ripgrep)
-         ("<f2>" . consult-ripgrep)
          ("M-s l" . consult-line)
          ("C-s" . consult-line)
          ("M-s L" . consult-line-multi)
