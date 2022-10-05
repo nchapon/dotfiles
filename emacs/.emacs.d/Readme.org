@@ -507,7 +507,6 @@ Using moe theme dark all the day
 #+end_src
 
 ** Font
-Use Input Font (http://input.fontbureau.com/)  on Linux, Monaco on MacOS
 
 #+begin_src emacs-lisp
   (defun nc/setup-font ()
@@ -516,7 +515,9 @@ Use Input Font (http://input.fontbureau.com/)  on Linux, Monaco on MacOS
     (when is-linux
       (set-frame-font "Jetbrains Mono 13" nil t))
     (when is-mac
-      (set-frame-font "Jetbrains Mono 14" nil t))
+      (if (> (display-pixel-width) 2500)
+          (set-frame-font "Jetbrains Mono 16" nil t)
+          (set-frame-font "Jetbrains Mono 14" nil t)))
     (when is-windows
       (set-frame-font "Consolas" nil t))
     )
@@ -573,7 +574,7 @@ Some Emacs Global Bindings are redefined here.
   (global-set-key (kbd "M-3") #'treemacs)
   (global-set-key (kbd "M-5") #'magit-status)
   (global-set-key (kbd "M-6") #'magit-log-buffer-file)
-  
+
 #+end_src
 ** Hydra
 
