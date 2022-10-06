@@ -424,7 +424,20 @@
            ("gr" "Reading" tags-todo "@reading")
             ;; exports block to this file with C-c a e
           ;; ..other commands here
-        ("p" "Projects" tags "project")
+           ("p" . "Projects")
+           ("po" "Office Projects"
+            ((tags "project+@office|@office+LEVEL=3+TODO=\"TODO\""
+                   ((org-agenda-files (list nc/org-default-projects-file))
+                    (org-agenda-prefix-format " %-12c %l%e%l")
+                    (org-agenda-sorting-strategy '(priority-down))
+                    (org-agenda-overriding-header "Office Projects Tasks")))))
+           ("pp" "Personal Projects"
+            ((tags "project+@computer|@computer+LEVEL=3+TODO=\"TODO\""
+                   ((org-agenda-files (list nc/org-default-projects-file))
+                    (org-agenda-prefix-format " %-12c %l%e%l")
+                    (org-agenda-sorting-strategy '(priority-down))
+                    (org-agenda-overriding-header "Office Projects Tasks")
+                    ))))
            ))
 
 (defun nc/org-agenda-recent-open-loops ()
