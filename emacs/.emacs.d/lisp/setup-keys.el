@@ -111,8 +111,9 @@
   ("GTD"
    (("d" nc/org-insert-daily-review "Start Daily Review")
     ("h" nc/insert-daily-heading "Insert Daily Heading"))
-   "Refile"
-   (("r" nc/org-refile-subtree-to-file "Refile subtree to file"))
+   "Actions"
+   (("r" nc/org-refile-subtree-to-file "Refile subtree to file")
+    ("A" nc/create-buffer-attachment-directory "Create attachment directory"))
    "Search"
    (("sn" nc/search-notes "Search Notes"))))
 

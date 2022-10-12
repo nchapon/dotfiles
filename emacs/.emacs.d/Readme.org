@@ -607,6 +607,7 @@ Some Emacs Global Bindings are redefined here.
       ("Y" yankpad-insert "Yankpad"))))
 #+end_src
 
+
 *** nc-hydra-goto 
 #+begin_src emacs-lisp
   (pretty-hydra-define nc-hydra-goto (:foreign-keys warn :title "Goto" :quit-key "q" :exit t)
@@ -658,8 +659,9 @@ Some Emacs Global Bindings are redefined here.
     ("GTD"
      (("d" nc/org-insert-daily-review "Start Daily Review")
       ("h" nc/insert-daily-heading "Insert Daily Heading"))
-     "Refile"
-     (("r" nc/org-refile-subtree-to-file "Refile subtree to file"))
+     "Actions"
+     (("r" nc/org-refile-subtree-to-file "Refile subtree to file")
+      ("A" nc/create-buffer-attachment-directory "Create attachment directory"))
      "Search"
      (("sn" nc/search-notes "Search Notes"))))
 #+end_src
