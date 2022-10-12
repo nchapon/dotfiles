@@ -41,7 +41,7 @@
 (global-set-key (kbd "M-0") #'nc/toggle-split-window-vertically)
 (global-set-key (kbd "M-1") #'vterm-toggle)
 (global-set-key (kbd "M-2") #'eshell-toggle)
-(global-set-key (kbd "M-3") #'treemacs)
+
 (global-set-key (kbd "M-5") #'magit-status)
 (global-set-key (kbd "M-6") #'magit-log-buffer-file)
 
@@ -50,12 +50,73 @@
   :custom
   (hydra-default-hint nil))
 
+(use-package major-mode-hydra
+  :ensure t
+  :bind
+  ("C-c C-SPC" . major-mode-hydra))
 
 ;; Pretty Hydra
 (use-package pretty-hydra
   :ensure t)
 
-(defcustom nc-prefix "C-c C-SPC"
+(pretty-hydra-define nc-hydra-insert (:foreign-keys warn :title "Insert" :quit-key "q" :exit t)
+  ("Insert"
+   (("d" nc/insert-datestamp-inactive "Date InActive")
+    ("D" nc/insert-datestamp "Date Active")
+    ("p" nc/generate-password "Password")
+    ("u" nc/uuid "UUID"))
+
+   "Snippet"
+   (("y" consult-yasnippet "Yasnippet")
+    ("Y" yankpad-insert "Yankpad"))))
+
+(pretty-hydra-define nc-hydra-goto (:foreign-keys warn :title "Goto" :quit-key "q" :exit t)
+  ("Configuration"
+   ((";" nc/goto-emacs-config "Emacs Config"))
+
+    "Personal Files"
+    (("i" nc/goto-inbox "Inbox")
+     ("p" nc/goto-my-credentials "Passwords"))
+
+   "Personal Dirs"
+   (("A" nc/goto-archives-dir "Archives")
+    ("N" nc/goto-notes-dir "Notes")
+    ("T" nc/goto-templates-dir "Templates"))))
+
+(pretty-hydra-define nc-hydra-toggle
+  (:color amaranth :quit-key "q" :title "Toggles")
+  ("Basic"
+   (("n" linum-mode "line number" :toggle t)
+    ("w" whitespace-mode "whitespace" :toggle t)
+    ;;("W" whitespace-cleanup-mode "whitespace cleanup" :toggle t)
+    ("r" rainbow-mode "rainbow" :toggle t))
+   "Highlight"
+   (("l" hl-line-mode "line" :toggle t))
+   "Coding"
+   (("p" smartparens-mode "smartparens" :toggle t)
+    ("P" smartparens-strict-mode "smartparens strict" :toggle t)
+    ("S" show-smartparens-mode "show smartparens" :toggle t)
+    ("e" eldoc-mode "eldoc" :toggle t))
+   "Emacs"
+   (("D" toggle-debug-on-error "debug on error" :toggle (default-value 'debug-on-error))
+    ("X" toggle-debug-on-quit "debug on quit" :toggle (default-value 'debug-on-quit)))))
+
+(pretty-hydra-define nc-hydra-windows
+    (:color amaranth :quit-key "q" :title "Windows" :exit t)
+    ("Move"
+     (("v" nc/toggle-split-window-vertically "Split Window Right")
+      ("h" nc/toggle-split-window-horizontally "Split Window Horizontally"))))
+
+(major-mode-hydra-define org-mode nil
+  ("GTD"
+   (("d" nc/org-insert-daily-review "Start Daily Review")
+    ("h" nc/insert-daily-heading "Insert Daily Heading"))
+   "Refile"
+   (("r" nc/org-refile-subtree-to-file "Refile subtree to file"))
+   "Search"
+   (("sn" nc/search-notes "Search Notes"))))
+
+(defcustom nc-prefix "C-<"
   "Prefix for all personal keybinds."
   :type 'string
   :group 'nc-emacs)
@@ -66,38 +127,11 @@
    :prefix nc-prefix
  ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
    (";" . nc/goto-emacs-config)
-   (":"  . avy-goto-char-timer))
-
-(bind-keys :prefix-map nc--insert
-           :prefix "<f6>"
-           ("d" . nc/insert-datestamp)
-           ("p" . nc/generate-password)
-           ("t" . nc/insert-time-slot)
-           ("u" . nc/uuid)
-           ("y" . consult-yasnippet)
-           ("D" . nc/insert-datestamp-inactive)             
-           ("Y" . yankpad-insert))
-
-(bind-keys :prefix-map nc--notes-keys
-             :prefix (concat nc-prefix " n")
-             ("d" . nc/org-insert-daily-review)
-             ("h" . nc/insert-daily-heading)
-             ("i" . nc/goto-inbox)
-             ("p" . nc/goto-my-credentials)
-             ("r" . nc/org-refile-subtree-to-file)
-             ("N" . nc/goto-notes-dir)
-             ("A" . nc/goto-archives-dir)
-             ("T" . nc/goto-templates-dir))
-
-(bind-keys :prefix-map nc--search-keys
-           :prefix (concat nc-prefix " s")
-           ("n" . nc/search-notes))
-
-(bind-keys :prefix-map nc--windows-keys
-           :prefix (concat nc-prefix " w")
-           ("h" . nc/toggle-split-window-horizontally)
-           ("t" . nc/toggle-golden-ratio)
-           ("v" . nc/toggle-split-window-vertically))
+   (":"  . avy-goto-char-timer)
+   ("i" . nc-hydra-insert/body)
+   ("g" . nc-hydra-goto/body)
+   ("t" . nc-hydra-toggle/body)
+   ("w" . nc-hydra-windows/body))
 
 (use-package key-chord
   :init
