@@ -38,10 +38,9 @@
 (global-set-key (kbd "<f5>") #'revert-buffer)
 
 ;; Tools alt-[0-9]
-(global-set-key (kbd "M-0") #'nc/toggle-split-window-vertically)
+(global-set-key (kbd "M-0") #'treemacs-select-window)
 (global-set-key (kbd "M-1") #'vterm-toggle)
 (global-set-key (kbd "M-2") #'eshell-toggle)
-
 (global-set-key (kbd "M-5") #'magit-status)
 (global-set-key (kbd "M-6") #'magit-log-buffer-file)
 
