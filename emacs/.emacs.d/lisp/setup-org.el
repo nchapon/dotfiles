@@ -16,7 +16,6 @@
   :bind (("C-c l" . org-store-link)
          ("C-c c" . org-capture)
          ("C-c a" . org-agenda)
-         ("<f12>" . org-agenda)
          ("C-c C-b" . org-iswitchb))
 
   :config
@@ -331,9 +330,6 @@
     "Interrupted Task"
     (interactive)
     (org-capture 4 "i"))
-
-;; Override the key definition
-(global-set-key (kbd "<f9>") 'my/capture-interruption-task)
 
 (add-to-list 'org-capture-templates
                    `("p" "New Project" entry (file nc/org-default-projects-file)
