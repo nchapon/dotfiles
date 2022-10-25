@@ -171,56 +171,52 @@
 (bind-key "C-c n j" 'nc/goto-journal-file)
 
 (defun nc--autoinsert-yas-expand ()
-      "Replace text in yasnippet template."
-      (yas-expand-snippet (buffer-string) (point-min) (point-max)))
+  "Replace text in yasnippet template."
+  (yas-expand-snippet (buffer-string) (point-min) (point-max)))
 
-    (setq auto-insert 'other
-          auto-insert-directory nc/org-default-templates-dir)
+(setq auto-insert 'other
+      auto-insert-directory nc/org-default-templates-dir)
 
-    (define-auto-insert "\\.org\\'" ["week.org" nc--autoinsert-yas-expand])
+(define-auto-insert "\\.org\\'" ["week.org" nc--autoinsert-yas-expand])
+
+(defun nc--get-current-day ()
+  "Returns current day name"
+  (s-upper-camel-case (format-time-string "%A")))
+
+(defun nc/journal-file-insert (current-day)
+  "Insert's the journal heading based on the file's name."
+
+  (insert (concat current-day " " (format-time-string "%d %B %Y")))
 
 
-  (defun nc/journal-file-insert ()
-    "Insert's the journal heading based on the file's name."
-    (interactive)
-    (let* ((datim (current-time)))
+  ;; Note: The `insert-file-contents' leaves the cursor at the
+  ;; beginning, so the easiest approach is to insert these files
+  ;; in reverse order:
 
-      (insert (format-time-string (concat "%A %d %B %Y") datim))
+  ;; If the journal entry I'm creating matches today's date:
 
+  ;; Insert dailies that only happen once a week:
+  (let ((weekday-template (downcase
+                           (concat nc/org-default-templates-dir (format "/journal/%s.org" current-day)))))
+    (when (file-exists-p weekday-template)
+      (insert-file-contents weekday-template)))
 
-      ;; Note: The `insert-file-contents' leaves the cursor at the
-      ;; beginning, so the easiest approach is to insert these files
-      ;; in reverse order:
-
-      ;; If the journal entry I'm creating matches today's date:
-
-        ;; Insert dailies that only happen once a week:
-        (let ((weekday-template (downcase
-                                 (concat nc/org-default-templates-dir (format-time-string "/journal/%A.org")))))
-          (when (file-exists-p weekday-template)
-            (insert-file-contents weekday-template)))
-
-        (insert "\n")
-
-        ;; (let ((contents (buffer-string)))
-        ;;   (delete-region (point-min) (point-max))
-        ;;   (yas-expand-snippet contents (point-min) (point-max)))
-
-        ))
+  (insert "\n"))
 
 
 (defun nc/insert-daily-heading ()
   "Insert Daily Heading in journal file"
   (interactive)
-  (let ( (header-title (format-time-string "%Y-W%W" )))
+  (let ( (header-title (format-time-string "%Y-W%W" ))
+         (current-day (nc--get-current-day)))
     ;; Don't change location of point.
     (goto-char (point-min)) ;; From the beginning...
     (if (search-forward header-title)
         ;;(end-of-line)
         (progn
           (org-insert-heading-after-current)
-          (nc/journal-file-insert)
-          (if (search-backward (format-time-string "%A"))
+          (nc/journal-file-insert current-day)
+          (if (search-backward current-day)
               (beginning-of-line))
           (org-shiftmetaright))
       (error "Insert failed"))))
