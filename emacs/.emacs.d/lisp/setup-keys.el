@@ -38,12 +38,12 @@
 (global-set-key (kbd "<f5>") #'revert-buffer)
 (global-set-key (kbd "<f6>") #'treemacs)
 (global-set-key (kbd "<f9>") #'my/capture-interruption-task)
-(global-set-key (kbd "<f11>") #' nc/toggle-split-window-vertically)
-(global-set-key (kbd "C-<f11>") #'nc/toggle-split-window-horizontally)
+(global-set-key (kbd "<f11>") #' nc/maximize-or-split-window-vertically)
+(global-set-key (kbd "C-<f11>") #'nc/split-window-horizontally)
 (global-set-key (kbd "<f12>") #'org-agenda)
 
 ;; Tools alt-[0-9]
-(global-set-key (kbd "M-0") #'nc/toggle-split-window-vertically)
+(global-set-key (kbd "M-0") #'nc/maximize-or-split-window-vertically)
 (global-set-key (kbd "M-1") #'vterm-toggle)
 (global-set-key (kbd "M-2") #'eshell-toggle)
 (global-set-key (kbd "M-5") #'magit-log-buffer-file)
@@ -106,8 +106,8 @@
 (pretty-hydra-define nc-hydra-windows
     (:color amaranth :quit-key "q" :title "Windows" :exit t)
     ("Move"
-     (("v" nc/toggle-split-window-vertically "Split Window Right")
-      ("h" nc/toggle-split-window-horizontally "Split Window Horizontally"))))
+     (("v" nc/maximize-or-split-window-vertically "Maximize or Split Window V")
+      ("h" nc/split-window-horizontally "Split Window H"))))
 
 (major-mode-hydra-define org-mode nil
   ("GTD"

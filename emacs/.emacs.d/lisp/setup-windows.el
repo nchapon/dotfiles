@@ -34,7 +34,7 @@
   (interactive)
   (setq golden-ratio-adjust-factor .8))
 
-(defun nc/toggle-split-window-horizontally ()
+(defun nc/split-window-horizontally ()
   (interactive)
   (if (= (count-windows) 2)
       (let* ((this-win-buffer (window-buffer))
@@ -63,7 +63,7 @@
   (split-window-right)
   (windmove-right))
 
-(defun nc/toggle-split-window-vertically ()
+(defun nc/maximize-or-split-window-vertically ()
   (interactive)
   (if (> (count-windows) 1)
       (delete-other-windows)
