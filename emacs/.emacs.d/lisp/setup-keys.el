@@ -55,9 +55,7 @@
   (hydra-default-hint nil))
 
 (use-package major-mode-hydra
-  :ensure t
-  :bind
-  ("C-< SPC" . major-mode-hydra))
+  :ensure t)
 
 ;; Pretty Hydra
 (use-package pretty-hydra
@@ -132,6 +130,7 @@
    :prefix nc-prefix
  ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
    (";" . nc/goto-emacs-config)
+   ("SPC" . major-mode-hydra)
    (":"  . avy-goto-char-timer)
    ("i" . nc-hydra-insert/body)
    ("g" . nc-hydra-goto/body)

@@ -241,7 +241,10 @@
   :hook
   (after-init . yas-global-mode))
 
-(use-package consult-yasnippet)
+(use-package consult-yasnippet
+  :bind
+  (:map global-map
+   ("C-c y" . consult-yasnippet)))
 
 (provide 'setup-core)
 ;;; setup-core.el ends here
