@@ -118,10 +118,13 @@ fi
 #Set XDG_CONFIG
 export XDG_CONFIG_HOME=$HOME/.config
 
-# Export PATH
+# Export dotfiles/bin 
 if [ -d $HOME/dotfiles/bin ]; then
     export PATH=$PATH:$HOME/dotfiles/bin 
 fi
 
+if [ -d $HOME/.dotfiles/bin ]; then
+    export PATH=$PATH:$HOME/.dotfiles/bin 
+fi
 
 
