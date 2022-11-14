@@ -92,6 +92,8 @@
   (setq mac-control-modifier 'control) ; make Control key do Control
   (setq ns-function-modifier 'hyper)   ; make Fn key do Hyper
 
+  (setq trash-directory "~/.Trash")    ; Trash Directory
+
   ;; Write Symbols [{}]
   (setq-default mac-right-option-modifier nil)
 
