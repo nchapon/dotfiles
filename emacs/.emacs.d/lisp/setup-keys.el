@@ -37,6 +37,7 @@
 ;; Functions
 (global-set-key (kbd "<f5>") #'revert-buffer)
 (global-set-key (kbd "<f6>") #'treemacs)
+(global-set-key (kbd "C-<f6>") #'treemacs-select-window)
 (global-set-key (kbd "<f9>") #'my/capture-interruption-task)
 (global-set-key (kbd "<f11>") #' nc/maximize-or-split-window-vertically)
 (global-set-key (kbd "C-<f11>") #'nc/split-window-horizontally)
@@ -47,7 +48,6 @@
 (global-set-key (kbd "M-1") #'vterm-toggle)
 (global-set-key (kbd "M-2") #'eshell-toggle)
 (global-set-key (kbd "M-5") #'magit-log-buffer-file)
-(global-set-key (kbd "M-6") #'treemacs-select-window)
 
 (use-package hydra
   :ensure t
