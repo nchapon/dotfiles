@@ -33,7 +33,6 @@
         lsp-lens-enable t
         lsp-semantic-tokens-enable t
 
-
         lsp-headerline-breadcrumb-enable nil ;; disable breadcrumb
 
 
@@ -49,7 +48,8 @@
 (use-package lsp-ui
   :commands lsp-ui-mode
   :init
-  (setq lsp-ui-doc-alignment 'at-point
+  (setq lsp-ui-doc-alignment 'frame
+        lsp-ui-doc-position  'bottom
         lsp-ui-doc-use-childframe nil)
   :config
     ;; WORKAROUND Hide mode-line of the lsp-ui-imenu buffer
