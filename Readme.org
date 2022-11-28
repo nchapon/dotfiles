@@ -78,6 +78,12 @@ My configuration comes from [[https://github.com/practicalli/clojure-deps-edn]]
 #+begin_src shell
 git clone git@github.com:practicalli/clojure-deps-edn.git $XDG_CONFIG_HOME/clojure
 #+end_src
+**** Babashka
+#+begin_src shell
+  asdf plugin add babaska latest
+asdf install babashka latest
+#+end_src
+
 
 *** Docker 
 Docker is installed from this script :
