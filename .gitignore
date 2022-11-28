@@ -6,3 +6,5 @@ emacs/.emacs.d/var/
 emacs/.emacs.d/straight/*
 !emacs/.emacs.d/straight/versions/
 /emacs/.emacs.d/.cache/
+/.clj-kondo/
+/.lsp/
