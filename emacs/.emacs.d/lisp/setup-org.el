@@ -710,6 +710,8 @@ if nil,the top of the file."
 (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
 (add-to-list 'org-structure-template-alist '("py" . "src python"))
 
+(require 'ox-md)
+
 (use-package ob-restclient)
 
 (setq org-plantuml-jar-path

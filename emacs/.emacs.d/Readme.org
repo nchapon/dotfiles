@@ -2320,7 +2320,11 @@ Customize speed-commands :
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
 #+end_src
-
+** Export
+*** Markdown
+#+begin_src emacs-lisp
+  (require 'ox-md)
+#+end_src
 ** Babel
 *** Babel languages
 
