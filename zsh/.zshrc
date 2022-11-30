@@ -76,6 +76,9 @@ plugins=(
     terraform
     docker
     mvn
+    kubectl
+    kubectx
+    kube-ps1
 )
 
 source $ZSH/oh-my-zsh.sh
