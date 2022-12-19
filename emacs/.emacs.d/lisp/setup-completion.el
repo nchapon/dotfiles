@@ -11,12 +11,34 @@
 
 ;;; Code:
 
-(use-package selectrum
-  :init (selectrum-mode +1))
-(use-package prescient
-  :config (prescient-persist-mode +1))
-(use-package selectrum-prescient
-  :init (selectrum-prescient-mode +1) :after selectrum)
+;; Enable vertico
+  (use-package vertico
+    :straight (:files (:defaults "extensions/*"))
+    :init
+    (vertico-mode)
+
+    ;; Different scroll margin
+    (setq vertico-scroll-margin 0)
+
+    ;; Show more candidates
+    (setq vertico-count 10)
+
+    ;; Grow and shrink the Vertico minibuffer
+   (setq vertico-resize t)
+
+    ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+    ;; (setq vertico-cycle t)
+    )
+
+    ;; Optionally use the `orderless' completion style.
+(use-package orderless
+  :init
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
+  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package marginalia
   :ensure t
@@ -116,13 +138,16 @@
   ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
-  (consult-customize
-   consult-theme
-   :preview-key '(:debounce 0.2 any)
+(consult-customize
+   consult-theme :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
-   consult--source-file consult--source-project-file consult--source-bookmark
-   :preview-key (kbd "M-."))
+   consult--source-bookmark consult--source-file-register
+   consult--source-recent-file consult--source-project-recent-file
+   ;; :preview-key (kbd "M-.")
+   :preview-key '(:debounce 0.4 any))
+
+
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.

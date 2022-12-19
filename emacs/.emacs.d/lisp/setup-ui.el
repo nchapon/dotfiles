@@ -48,7 +48,7 @@
   )
 
 (use-package doom-modeline
-  :hook (after-init . doom-modeline-init))
+  :hook (after-init . doom-modeline-mode))
 
 (defun nc/setup-font ()
   "Set up font height"
