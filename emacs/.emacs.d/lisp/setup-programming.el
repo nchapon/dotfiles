@@ -121,7 +121,8 @@
 
 (use-package cider
   :init
-  (setq org-babel-clojure-backend 'cider))
+  (setq org-babel-clojure-backend 'cider)
+  :bind ([remap cider-pprint-eval-last-sexp] . cider-pprint-eval-last-sexp-to-comment))
 
 (use-package dockerfile-mode
   :mode "Dockerfile.*\\'")

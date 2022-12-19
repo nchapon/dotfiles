@@ -423,7 +423,7 @@
                     (org-agenda-prefix-format " %-12c %l%e%l")
                     (org-agenda-sorting-strategy '(priority-down))
                     (org-agenda-overriding-header "Office Projects Tasks")))))
-           ("pp" "Personal Projects"
+           ("pp" "My Personal Projects"
             ((tags "project+@computer|@computer+LEVEL=3+TODO=\"TODO\""
                    ((org-agenda-files (list nc/org-default-projects-file))
                     (org-agenda-prefix-format " %-12c %l%e%l")

@@ -1981,7 +1981,7 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
                            (org-agenda-prefix-format " %-12c %l%e%l")
                            (org-agenda-sorting-strategy '(priority-down))
                            (org-agenda-overriding-header "Office Projects Tasks")))))
-                  ("pp" "Personal Projects"
+                  ("pp" "My Personal Projects"
                    ((tags "project+@computer|@computer+LEVEL=3+TODO=\"TODO\""
                           ((org-agenda-files (list nc/org-default-projects-file))
                            (org-agenda-prefix-format " %-12c %l%e%l")
@@ -2699,10 +2699,12 @@ Emacs builtin show paren mode.
     (setq clojure-align-forms-automatically t))
 #+end_src
 *** Cider
+My custom rebinding =C-c C-p= to =cider-pprint-eval-last-sexp-to-comment=
 #+begin_src emacs-lisp
   (use-package cider
     :init
-    (setq org-babel-clojure-backend 'cider))
+    (setq org-babel-clojure-backend 'cider)
+    :bind ([remap cider-pprint-eval-last-sexp] . cider-pprint-eval-last-sexp-to-comment))
 #+end_src
 
 ** Docker
