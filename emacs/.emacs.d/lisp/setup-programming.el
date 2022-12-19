@@ -31,7 +31,7 @@
 
         ; Features
         lsp-lens-enable t
-        lsp-semantic-tokens-enable t
+        ;lsp-semantic-tokens-enable t
 
         lsp-headerline-breadcrumb-enable nil ;; disable breadcrumb
 
@@ -42,6 +42,10 @@
         ; lsp-eldoc-enable-hover nil ; disable lsp-mode showing eldoc during symbol at point
         ; lsp-enable-indentation nil ; uncomment to use cider indentation instead of lsp
         ; lsp-enable-completion-at-point nil ; uncomment to use cider completion instead of lsp
+
+        ;; Terraform
+        lsp-disabled-clients '(tfls)
+
         ))
 
 ;; optionally
@@ -160,7 +164,8 @@
   :custom
   (python-shell-interpreter "python3"))
 
-(use-package terraform-mode)
+(use-package terraform-mode
+  :hook ((terraform-mode . lsp)))
 
 (use-package restclient
   :mode (("\\.restclient\\'" . restclient-mode)

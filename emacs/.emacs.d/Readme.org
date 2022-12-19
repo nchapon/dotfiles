@@ -2588,7 +2588,7 @@ Programming configuration module automatically tangled in =./lisp/setup-programm
 
           ; Features
           lsp-lens-enable t
-          lsp-semantic-tokens-enable t
+          ;lsp-semantic-tokens-enable t
 
           lsp-headerline-breadcrumb-enable nil ;; disable breadcrumb
 
@@ -2599,6 +2599,10 @@ Programming configuration module automatically tangled in =./lisp/setup-programm
           ; lsp-eldoc-enable-hover nil ; disable lsp-mode showing eldoc during symbol at point
           ; lsp-enable-indentation nil ; uncomment to use cider indentation instead of lsp
           ; lsp-enable-completion-at-point nil ; uncomment to use cider completion instead of lsp
+
+          ;; Terraform
+          lsp-disabled-clients '(tfls)
+
           ))
 
   ;; optionally
@@ -2759,8 +2763,18 @@ GitHub Flavored Markdown by default for README.md files.
 
 #+end_src
 ** Terraform
+
+Needs Terraform LSP Server, not the latest version, works fine with =0.28.1=
+
+#+begin_src shell :tangle no
+    asdf plugin add terraform-ls
+  asdf install terraform-ls 0.28.1
+  asdf global terraform-ls 0.28.1
+#+end_src
+
 #+begin_src emacs-lisp
-  (use-package terraform-mode)
+  (use-package terraform-mode
+    :hook ((terraform-mode . lsp)))
 #+end_src
 ** Web
 *** Rest Client
