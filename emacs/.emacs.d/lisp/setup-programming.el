@@ -50,16 +50,19 @@
 
 ;; optionally
 (use-package lsp-ui
-  :commands lsp-ui-mode
+  :hook lsp-mode
   :init
-  (setq lsp-ui-doc-alignment 'frame
-        lsp-ui-doc-position  'bottom
-        lsp-ui-doc-use-childframe nil)
+  ;; (setq lsp-ui-doc-alignment 'frame
+  ;;       lsp-ui-doc-position  'bottom
+  ;;       lsp-ui-doc-use-childframe nil)
   :config
-    ;; WORKAROUND Hide mode-line of the lsp-ui-imenu buffer
-    ;; @see https://github.com/emacs-lsp/lsp-ui/issues/243
-    (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
-      (setq mode-line-format nil))
+  ;; WORKAROUND Hide mode-line of the lsp-ui-imenu buffer
+  ;; @see https://github.com/emacs-lsp/lsp-ui/issues/243
+  (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
+    (setq mode-line-format nil))
+  :bind (:map lsp-ui-mode-map
+              (([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+               ([remap xref-find-references] . lsp-ui-peek-find-references)))
   )
 
 (use-package lsp-treemacs

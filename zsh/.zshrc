@@ -78,7 +78,7 @@ plugins=(
     mvn
     kubectl
     kubectx
-    kube-ps1
+    # kube-ps1                    
 )
 
 source $ZSH/oh-my-zsh.sh
