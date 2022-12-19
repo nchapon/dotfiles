@@ -1,4 +1,5 @@
 alias cdp cd ~/Projects
+alias cdn cd ~/notes
 alias d dired $1
 alias ff find-file $1
 alias e find-file $1
