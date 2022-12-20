@@ -422,20 +422,20 @@ Uniquify file path to ensure buffer name uniqueness
 
 ** Hippie Expand
 [[https://www.emacswiki.org/emacs/HippieExpand][Hippie Expand]] custom configuration 
-Fix Conflict with company-complete
+
 #+begin_src emacs-lisp
-  (setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                           try-expand-dabbrev-all-buffers
-                                           try-expand-dabbrev-from-kill
-                                           try-complete-file-name-partially
-                                           try-complete-file-name
-                                           try-expand-all-abbrevs
-                                           try-expand-list
-                                           try-expand-line
-                                           try-complete-lisp-symbol-partially
-                                           try-complete-lisp-symbol))
-  
-  (global-set-key (kbd "M-/") #'hippie-expand)
+  ;; (setq hippie-expand-try-functions-list '(try-expand-dabbrev
+  ;;                                          try-expand-dabbrev-all-buffers
+  ;;                                          try-expand-dabbrev-from-kill
+  ;;                                          try-complete-file-name-partially
+  ;;                                          try-complete-file-name
+  ;;                                          try-expand-all-abbrevs
+  ;;                                          try-expand-list
+  ;;                                          try-expand-line
+  ;;                                          try-complete-lisp-symbol-partially
+  ;;                                          try-complete-lisp-symbol))
+
+  (global-set-key [remap dabbrev-expand] #'hippie-expand)
 #+end_src
 * UI
 :properties:
@@ -538,7 +538,6 @@ Key bindings configuration module automatically tangled in =./lisp/setup-keys.el
 
   <<nc-header>>
 #+end_src
-
 
 ** Global Key Bindings
 Some Emacs Global Bindings are redefined here.
@@ -1408,14 +1407,23 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 
 
 #+end_src
+** dabbrev
 
+#+begin_src elisp
+  (use-package dabbrev
+  ;; Swap M-/ and C-M-/
+  :bind (("M-/" . dabbrev-completion)
+         ("C-M-/" . dabbrev-expand))
+  ;; Other useful Dabbrev configurations.
+  :custom
+  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
+#+end_src
 ** Company
 
    #+begin_src emacs-lisp
      (use-package company
        :diminish ""
-       :bind (("M-/" . company-complete)
-              ("C-c C-/" . company-other-backend)
+       :bind (("C-c C-/" . company-other-backend)
               ("C-c y" . company-yasnippet)
               :map company-active-map
               ("C-p" . company-select-previous)
@@ -1436,13 +1444,8 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
        (company-backends '(company-capf company-abbrev company-files company-dabbrev-code company-semantic))
        (company-tooltip-minimum-width 30)
        (company-tooltip-maximum-width 120))
-
-
-
-
-
   #+end_src
-
+  
 [[https://github.com/company-mode/company-statistics/][company-statistics]] extension to show the top ranked candidates
 
   #+begin_src emacs-lisp
@@ -2891,14 +2894,15 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
     :custom
     ;; Show Vterm Buffer in bottom side
     (vterm-toggle-fullscreen-p nil)
-    :init
+  
+    :config
     (add-to-list 'display-buffer-alist
-                 '((lambda(bufname _) (with-current-buffer bufname (equal major-mode 'vterm-mode)))
-                   (display-buffer-reuse-window display-buffer-in-side-window)
-                   (side . bottom)
-                   (dedicated . t) ;dedicated is supported in emacs27
-                   (reusable-frames . visible)
-                   (window-height . 0.3)))
+       '("\*vterm\*"
+         (display-buffer-in-side-window)
+         (window-height . 0.3)
+         (side . bottom)
+         (slot . 0)))
+
     :bind
     ("C-c t" . vterm-toggle)
     (:map vterm-mode-map

@@ -26,14 +26,15 @@
   :custom
   ;; Show Vterm Buffer in bottom side
   (vterm-toggle-fullscreen-p nil)
-  :init
+
+  :config
   (add-to-list 'display-buffer-alist
-               '((lambda(bufname _) (with-current-buffer bufname (equal major-mode 'vterm-mode)))
-                 (display-buffer-reuse-window display-buffer-in-side-window)
-                 (side . bottom)
-                 (dedicated . t) ;dedicated is supported in emacs27
-                 (reusable-frames . visible)
-                 (window-height . 0.3)))
+     '("\*vterm\*"
+       (display-buffer-in-side-window)
+       (window-height . 0.3)
+       (side . bottom)
+       (slot . 0)))
+
   :bind
   ("C-c t" . vterm-toggle)
   (:map vterm-mode-map
