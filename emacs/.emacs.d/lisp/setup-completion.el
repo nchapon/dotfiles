@@ -204,7 +204,9 @@
   :bind (("C-x C-d" . consult-dir)
        :map vertico-map
        ("C-x C-d" . consult-dir)
-       ("C-x C-j" . consult-dir-jump-file)))
+       ("C-x C-j" . consult-dir-jump-file))
+  :config
+  (setq consult-dir-project-list-function #'consult-dir-projectile-dirs))
 
 (use-package embark
   :bind
