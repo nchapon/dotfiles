@@ -421,21 +421,10 @@ Uniquify file path to ensure buffer name uniqueness
 
 
 ** Hippie Expand
-[[https://www.emacswiki.org/emacs/HippieExpand][Hippie Expand]] custom configuration 
-
+[[https://www.emacswiki.org/emacs/HippieExpand][Hippie Expand]] custom configuration
+Text expansion with Hippie Expand
 #+begin_src emacs-lisp
-  ;; (setq hippie-expand-try-functions-list '(try-expand-dabbrev
-  ;;                                          try-expand-dabbrev-all-buffers
-  ;;                                          try-expand-dabbrev-from-kill
-  ;;                                          try-complete-file-name-partially
-  ;;                                          try-complete-file-name
-  ;;                                          try-expand-all-abbrevs
-  ;;                                          try-expand-list
-  ;;                                          try-expand-line
-  ;;                                          try-complete-lisp-symbol-partially
-  ;;                                          try-complete-lisp-symbol))
-
-  (global-set-key [remap dabbrev-expand] #'hippie-expand)
+  (bind-key "M-/" 'hippie-expand)
 #+end_src
 * UI
 :properties:
@@ -1433,17 +1422,6 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
     (embark-collect-mode . consult-preview-at-point-mode))
 
 
-#+end_src
-** dabbrev
-
-#+begin_src elisp
-  (use-package dabbrev
-  ;; Swap M-/ and C-M-/
-  :bind (("M-/" . dabbrev-completion)
-         ("C-M-/" . dabbrev-expand))
-  ;; Other useful Dabbrev configurations.
-  :custom
-  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
 #+end_src
 ** Company
 

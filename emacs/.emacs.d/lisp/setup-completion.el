@@ -243,14 +243,6 @@
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
-(use-package dabbrev
-;; Swap M-/ and C-M-/
-:bind (("M-/" . dabbrev-completion)
-       ("C-M-/" . dabbrev-expand))
-;; Other useful Dabbrev configurations.
-:custom
-(dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
-
 (use-package company
   :diminish ""
   :bind (("C-c C-/" . company-other-backend)
