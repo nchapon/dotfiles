@@ -46,7 +46,6 @@
 ;; Tools alt-[0-9]
 (global-set-key (kbd "M-0") #'nc/maximize-or-split-window-vertically)
 (global-set-key (kbd "M-1") #'vterm-toggle)
-(global-set-key (kbd "M-2") #'eshell-toggle)
 (global-set-key (kbd "M-5") #'magit-log-buffer-file)
 
 (use-package hydra

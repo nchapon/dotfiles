@@ -566,7 +566,6 @@ Some Emacs Global Bindings are redefined here.
   ;; Tools alt-[0-9]
   (global-set-key (kbd "M-0") #'nc/maximize-or-split-window-vertically)
   (global-set-key (kbd "M-1") #'vterm-toggle)
-  (global-set-key (kbd "M-2") #'eshell-toggle)
   (global-set-key (kbd "M-5") #'magit-log-buffer-file)
 
 #+end_src
@@ -3052,7 +3051,8 @@ Adapted from https://config.daviwil.com/emacs#eshell
     :custom
     (eshell-toggle-size-fraction 3)
     (eshell-toggle-use-projectile-root t)
-    (eshell-toggle-run-command nil))
+    (eshell-toggle-run-command nil)
+    :bind ("C-c e" . eshell-toggle))
 #+end_src
 * Custom Functions
 :properties:
