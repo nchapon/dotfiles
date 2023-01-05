@@ -263,8 +263,8 @@
               :empty-lines 1)
           ("s" "Someday" entry (file+headline nc/inbox-file "Inbox")
             "* SOMEDAY %? :idea:\n%u" :clock-in t :clock-resume t)
-          ("f" "FishLog" plain (file+datetree+prompt nc/fishing-file)
-           "%[~/notes/templates/fishlog.org]")
+          ("f" "FishLog" plain (file+olp+datetree nc/fishing-file)
+           "%[~/notes/templates/fishlog.org]" :time-prompt t)
           ("F" "Film" entry (file+headline nc/watching-file "Films à voir")
                "* NEXT %^{Titre}
        %i
@@ -354,8 +354,8 @@
     (org-clock-in)))
 
 (add-to-list 'org-capture-templates
-                 `("w" "WeeklyReview" entry (file+datetree+prompt nc/weekly-review-file)
-           "* Summary of the week :REVIEW:\n%[~/notes/templates/review.org]"))
+                 `("w" "WeeklyReview" entry (file+olp+datetree nc/weekly-review-file)
+           "* Summary of the week :REVIEW:\n%[~/notes/templates/review.org]" :time-prompt t))
 
 (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'\\|[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$"
         org-agenda-files (list "~/notes/gtd.org" "~/notes/projects.org" "~/notes/someday.org" "~/notes/personal/calendar.org" "~/notes/journal/")
