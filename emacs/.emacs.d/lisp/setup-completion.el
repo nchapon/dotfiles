@@ -30,7 +30,13 @@
     ;; (setq vertico-cycle t)
     )
 
-    ;; Optionally use the `orderless' completion style.
+;; Persist history over Emacs restarts. Vertico sorts by history position.
+(use-package savehist
+  :init
+  (savehist-mode))
+
+
+;; Optionally use the `orderless' completion style.
 (use-package orderless
   :init
   ;; Configure a custom style dispatcher (see the Consult wiki)
