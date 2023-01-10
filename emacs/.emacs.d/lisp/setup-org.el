@@ -357,8 +357,11 @@
                  `("w" "WeeklyReview" entry (file+olp+datetree nc/weekly-review-file)
            "* Summary of the week :REVIEW:\n%[~/notes/templates/review.org]" :time-prompt t))
 
+;; My Org agenda-files
+(defvar nc/org-agenda-files (list "~/notes/gtd.org" "~/notes/projects.org" "~/notes/someday.org" "~/notes/personal/calendar.org" "~/notes/journal/"))
+
 (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'\\|[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$"
-        org-agenda-files (list "~/notes/gtd.org" "~/notes/projects.org" "~/notes/someday.org" "~/notes/personal/calendar.org" "~/notes/journal/")
+        org-agenda-files nc/org-agenda-files
         org-agenda-span 'day
         org-agenda-start-on-weekday nil
         org-agenda-skip-deadline-if-done t
@@ -479,7 +482,7 @@
 
 (advice-add 'org-clocktable-indent-string :override #'nc--org-clocktable-indent-string)
 
-(setq org-refile-targets (append '((org-default-notes-file :level . 2))
+(setq org-refile-targets (append '((org-default-notes-file :maxlevel . 2))
                                  '((nc/org-default-tasks-file :level . 1)
                                    (nc/org-default-projects-file :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")
                                    (nc/org-default-someday-file :level . 0)

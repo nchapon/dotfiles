@@ -1,7 +1,5 @@
 ;;; setup-prefs.el --- Global Preferences module -*- lexical-binding: t; no-byte-compile: t -*-
 
-
-
 (use-package org-roam
   :ensure t
   :demand t  ;; Ensure org-roam is loaded by default
@@ -16,7 +14,7 @@
          ("C-c n I" . org-roam-node-insert-immediate)
          ("C-c n p" . my/org-roam-find-project)
          ("C-c n t" . my/org-roam-capture-task)
-         ("C-c n b" . my/org-roam-capture-inbox)
+         ;;("C-c n b" . my/org-roam-capture-inbox)
          :map org-mode-map
          ("C-M-i" . completion-at-point)
          :map org-roam-dailies-map
@@ -44,12 +42,11 @@
           (seq-filter
            (my/org-roam-filter-by-tag tag-name)
            (org-roam-node-list))))
-;; My Org agenda-files
-(defvar my/org-agenda-files (list "~/notes/gtd.org" "~/notes/projects.org" "~/notes/someday.org" "~/notes/personal/calendar.org" "~/notes/journal/"))
+
 
 (defun my/org-roam-refresh-agenda-list ()
   (interactive)
-  (setq org-agenda-files (append my/org-agenda-files
+  (setq org-agenda-files (append nc/org-agenda-files
         (my/org-roam-list-notes-by-tag "project"))))
 
 ;; Build the agenda list the first time for the session
@@ -78,15 +75,9 @@ capture was not aborted."
    (my/org-roam-filter-by-tag "project")
    nil
    :templates
-   '(("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-      :if-new (file+head "projects/%<%Y-%m-%d>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: project")
+   '(("p" "project" plain (file "~/notes/templates/newproject.org")
+      :if-new (file+head "projects/%<%Y-%m-%d>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: :project:")
       :unnarrowed t))))
-
-(defun my/org-roam-capture-inbox ()
-  (interactive)
-  (org-roam-capture- :node (org-roam-node-create)
-                     :templates '(("i" "inbox" plain "* %?"
-                                  :if-new (file+head "Inbox.org" "#+title: Inbox\n")))))
 
 (defun my/org-roam-capture-task ()
   (interactive)
@@ -99,30 +90,10 @@ capture was not aborted."
                             (my/org-roam-filter-by-tag "project"))
                      :templates '(("p" "project" plain "** TODO %?"
                                    :if-new (file+head+olp "projects/%<%Y-%m-%d>-${slug}.org"
-                                                          "#+title: ${title}\n#+category: ${title}\n#+filetags: project"
+                                                          "#+title: ${title}\n#+category: ${title}\n#+filetags: :project:"
                                                           ("Tasks"))))))
 
-(defun my/org-roam-copy-todo-to-today ()
-  (interactive)
-  (let ((org-refile-keep t) ;; Set this to nil to delete the original!
-        (org-roam-dailies-capture-templates
-          '(("t" "tasks" entry "%?"
-             :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n" ("Tasks")))))
-        (org-after-refile-insert-hook #'save-buffer)
-        today-file
-        pos)
-    (save-window-excursion
-      (org-roam-dailies--capture (current-time) t)
-      (setq today-file (buffer-file-name))
-      (setq pos (point)))
 
-    ;; Only refile if the target file is different than the current file
-    (unless (equal (file-truename today-file)
-                   (file-truename (buffer-file-name)))
-      (org-refile nil nil (list "Tasks" today-file nil pos)))))
 
-(add-to-list 'org-after-todo-state-change-hook
-             (lambda ()
-               (when (equal org-state "DONE")
-                 (my/org-roam-copy-todo-to-today))))
+
 

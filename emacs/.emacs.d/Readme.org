@@ -1934,11 +1934,17 @@ I have my own template for creating new projects
 *** Agenda configuration
 By default all files in GTD and journal folder will be in my agenda, to be searchable
 
+#+begin_src emacs-lisp
+;; My Org agenda-files
+(defvar nc/org-agenda-files (list "~/notes/gtd.org" "~/notes/projects.org" "~/notes/someday.org" "~/notes/personal/calendar.org" "~/notes/journal/"))
+#+end_src
+
+
 Setting =org-agenda-file-regexp= to include all numeric files (journal files)
 
 #+begin_src emacs-lisp
   (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'\\|[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$"
-          org-agenda-files (list "~/notes/gtd.org" "~/notes/projects.org" "~/notes/someday.org" "~/notes/personal/calendar.org" "~/notes/journal/")
+          org-agenda-files nc/org-agenda-files
           org-agenda-span 'day
           org-agenda-start-on-weekday nil
           org-agenda-skip-deadline-if-done t
@@ -2091,7 +2097,7 @@ Fix timereport indentation
 ** Refiling
 Targets include this file and any file contributing to the agenda - up to 2 levels deep
  #+begin_src emacs-lisp
-   (setq org-refile-targets (append '((org-default-notes-file :level . 2))
+   (setq org-refile-targets (append '((org-default-notes-file :maxlevel . 2))
                                     '((nc/org-default-tasks-file :level . 1)
                                       (nc/org-default-projects-file :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")
                                       (nc/org-default-someday-file :level . 0)
