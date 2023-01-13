@@ -421,14 +421,14 @@
           ;; ..other commands here
            ("p" . "Projects")
            ("po" "Office Projects"
-            ((tags "project+@office|@office+LEVEL=3+TODO=\"TODO\""
-                   ((org-agenda-files (list nc/org-default-projects-file))
+            ((tags "project+@office|@office+LEVEL=2+TODO=\"TODO\""
+                   (;; (org-agenda-files (nc/org-default-projects-file))
                     (org-agenda-prefix-format " %-12c %l%e%l")
                     (org-agenda-sorting-strategy '(priority-down))
                     (org-agenda-overriding-header "Office Projects Tasks")))))
            ("pp" "My Personal Projects"
-            ((tags "project+@computer|@computer+LEVEL=3+TODO=\"TODO\""
-                   ((org-agenda-files (list nc/org-default-projects-file))
+            ((tags "project+@computer|@computer+LEVEL=2+TODO=\"TODO\""
+                   (;; (org-agenda-files (list nc/org-default-projects-file))
                     (org-agenda-prefix-format " %-12c %l%e%l")
                     (org-agenda-sorting-strategy '(priority-down))
                     (org-agenda-overriding-header "Office Projects Tasks")
@@ -868,6 +868,8 @@ the result as a time value."
   ("C-c n f" . org-roam-node-find)
   ("C-c n r" . org-roam-node-random)
   ("C-c n s" . nc/search-roam)
+  ("C-c n p" . nc/org-roam-find-project)
+  ("C-c n t" . nc/org-roam-capture-task)
   (:map org-mode-map
         (("C-c n i" . org-roam-node-insert)))
   :config
@@ -894,6 +896,66 @@ the result as a time value."
   (setq org-roam-node-display-template
         (concat "${type:15} ${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
 
+  ;; Managing Projects from org-roam
+(defun nc/org-roam-filter-by-tag (tag-name)
+  (lambda (node)
+    (member tag-name (org-roam-node-tags node))))
+
+(defun nc/org-roam-list-notes-by-tag (tag-name)
+  (mapcar #'org-roam-node-file
+          (seq-filter
+           (nc/org-roam-filter-by-tag tag-name)
+           (org-roam-node-list))))
+
+(defun nc/org-roam-refresh-agenda-list ()
+  (interactive)
+  (setq org-agenda-files (append nc/org-agenda-files
+        (nc/org-roam-list-notes-by-tag "project"))))
+
+;; Build the agenda list the first time for the session
+(nc/org-roam-refresh-agenda-list)
+
+(defun nc/org-roam-project-finalize-hook ()
+  "Adds the captured project file to `org-agenda-files' if the
+capture was not aborted."
+  ;; Remove the hook since it was added temporarily
+  (remove-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
+
+  ;; Add project file to the agenda list if the capture was confirmed
+  (unless org-note-abort
+    (with-current-buffer (org-capture-get :buffer)
+      (add-to-list 'org-agenda-files (buffer-file-name)))))
+
+(defun nc/org-roam-find-project ()
+  (interactive)
+  ;; Add the project file to the agenda after capture is finished
+  (add-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
+
+  ;; Select a project file to open, creating it if necessary
+  (org-roam-node-find
+   nil
+   nil
+   (nc/org-roam-filter-by-tag "project")
+   nil
+   :templates
+   '(("p" "project" plain (file "~/notes/templates/newproject.org")
+      :if-new (file+head "projects/%<%Y-%m-%d>-${slug}.org"
+                         "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:")
+      :unnarrowed t))))
+
+(defun nc/org-roam-capture-task ()
+  (interactive)
+  ;; Add the project file to the agenda after capture is finished
+  (add-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
+
+  ;; Capture the new task, creating the project file if necessary
+  (org-roam-capture- :node (org-roam-node-read
+                            nil
+                            (nc/org-roam-filter-by-tag "project"))
+                     :templates '(("p" "project" plain "** TODO %?"
+                                   :if-new (file+head+olp "projects/%<%Y-%m-%d>-${slug}.org"
+                                                          "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:"
+                                                          ("Project ::" "Tasks"))))))
   ;; this sets up various file handling hooks so your DB remains up to date
   (org-roam-setup))
 
