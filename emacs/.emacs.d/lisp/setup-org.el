@@ -327,10 +327,6 @@
     (interactive)
     (org-capture 4 "i"))
 
-(add-to-list 'org-capture-templates
-                   `("p" "New Project" entry (file nc/org-default-projects-file)
-             (file "~/notes/templates/newproject.org")))
-
 (defun org-journal-find-location ()
  ;; Open today's journal, but specify a non-nil prefix argument in order to
  ;; inhibit inserting the heading; org-capture will insert the heading.
@@ -955,7 +951,7 @@ capture was not aborted."
                      :templates '(("p" "project" plain "** TODO %?"
                                    :if-new (file+head+olp "projects/%<%Y-%m-%d>-${slug}.org"
                                                           "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:"
-                                                          ("Project ::" "Tasks"))))))
+                                                          ("Tasks"))))))
   ;; this sets up various file handling hooks so your DB remains up to date
   (org-roam-setup))
 

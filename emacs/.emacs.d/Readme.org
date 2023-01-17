@@ -1886,15 +1886,6 @@ will appear as projects.
        (interactive)
        (org-capture 4 "i"))
  #+end_src
-*** New project
-I have my own template for creating new projects
-
-#+begin_src emacs-lisp
-  (add-to-list 'org-capture-templates
-                     `("p" "New Project" entry (file nc/org-default-projects-file)
-               (file "~/notes/templates/newproject.org")))
-#+end_src
-
 *** Daily Review
 
  #+begin_src emacs-lisp
@@ -2546,116 +2537,116 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
 
 #+begin_src emacs-lisp
 
-    ;; (when is-windows  
-    ;;   (add-to-list 'exec-path "C:/ProgramJava/tools/sqlite-tools-win32-x86-3340100"))
+  ;; (when is-windows  
+  ;;   (add-to-list 'exec-path "C:/ProgramJava/tools/sqlite-tools-win32-x86-3340100"))
 
-    ;; From https://baty.net/2022/searching-org-roam-files/
-    (defun nc/search-roam ()
-      "Run consult-ripgrep on the org roam directory"
-      (interactive)
-      (consult-ripgrep (concat org-directory "/slipbox") nil))
+  ;; From https://baty.net/2022/searching-org-roam-files/
+  (defun nc/search-roam ()
+    "Run consult-ripgrep on the org roam directory"
+    (interactive)
+    (consult-ripgrep (concat org-directory "/slipbox") nil))
 
-    (use-package org-roam
-      :after org
-      :custom
-      (org-roam-directory (concat org-directory "/slipbox"))
-      :init
-      (setq org-roam-v2-ack t)
-      :bind
-      ("C-c n l" . org-roam-buffer-toggle)
-      ("C-c n f" . org-roam-node-find)
-      ("C-c n r" . org-roam-node-random)
-      ("C-c n s" . nc/search-roam)
-      ("C-c n p" . nc/org-roam-find-project)
-      ("C-c n t" . nc/org-roam-capture-task)
-      (:map org-mode-map
-            (("C-c n i" . org-roam-node-insert)))
-      :config
+  (use-package org-roam
+    :after org
+    :custom
+    (org-roam-directory (concat org-directory "/slipbox"))
+    :init
+    (setq org-roam-v2-ack t)
+    :bind
+    ("C-c n l" . org-roam-buffer-toggle)
+    ("C-c n f" . org-roam-node-find)
+    ("C-c n r" . org-roam-node-random)
+    ("C-c n s" . nc/search-roam)
+    ("C-c n p" . nc/org-roam-find-project)
+    ("C-c n t" . nc/org-roam-capture-task)
+    (:map org-mode-map
+          (("C-c n i" . org-roam-node-insert)))
+    :config
 
-      (setq org-roam-capture-templates '(("d" "default" plain "%?"
-                                          :if-new
-                                          (file+head "%<%Y-%m-%d--%H-%M>--${slug}.org"
-                                                     "#+title: ${title}\n#+date: %u\n\n")
-                                          :unnarrowed t
-                                          :immediate-finish t))
-            )
+    (setq org-roam-capture-templates '(("d" "default" plain "%?"
+                                        :if-new
+                                        (file+head "%<%Y-%m-%d--%H-%M>--${slug}.org"
+                                                   "#+title: ${title}\n#+date: %u\n\n")
+                                        :unnarrowed t
+                                        :immediate-finish t))
+          )
 
-      ;; Orgnaize org roam notes
-      ;; Adapted from https://jethrokuan.github.io/org-roam-guide/
-      (cl-defmethod org-roam-node-type ((node org-roam-node))
-        "Return the TYPE of NODE."
-        (condition-case nil
-            (file-name-nondirectory
-             (directory-file-name
-              (file-name-directory
-               (file-relative-name (org-roam-node-file node) org-roam-directory))))
-          (error "main")))
+    ;; Orgnaize org roam notes
+    ;; Adapted from https://jethrokuan.github.io/org-roam-guide/
+    (cl-defmethod org-roam-node-type ((node org-roam-node))
+      "Return the TYPE of NODE."
+      (condition-case nil
+          (file-name-nondirectory
+           (directory-file-name
+            (file-name-directory
+             (file-relative-name (org-roam-node-file node) org-roam-directory))))
+        (error "main")))
 
-      (setq org-roam-node-display-template
-            (concat "${type:15} ${title:*} " (propertize "${tags:20}" 'face 'org-tag)))
+    (setq org-roam-node-display-template
+          (concat "${type:15} ${title:*} " (propertize "${tags:20}" 'face 'org-tag)))
 
-      ;; Managing Projects from org-roam
-    (defun nc/org-roam-filter-by-tag (tag-name)
-      (lambda (node)
-        (member tag-name (org-roam-node-tags node))))
+    ;; Managing Projects from org-roam
+  (defun nc/org-roam-filter-by-tag (tag-name)
+    (lambda (node)
+      (member tag-name (org-roam-node-tags node))))
 
-    (defun nc/org-roam-list-notes-by-tag (tag-name)
-      (mapcar #'org-roam-node-file
-              (seq-filter
-               (nc/org-roam-filter-by-tag tag-name)
-               (org-roam-node-list))))
+  (defun nc/org-roam-list-notes-by-tag (tag-name)
+    (mapcar #'org-roam-node-file
+            (seq-filter
+             (nc/org-roam-filter-by-tag tag-name)
+             (org-roam-node-list))))
 
-    (defun nc/org-roam-refresh-agenda-list ()
-      (interactive)
-      (setq org-agenda-files (append nc/org-agenda-files
-            (nc/org-roam-list-notes-by-tag "project"))))
+  (defun nc/org-roam-refresh-agenda-list ()
+    (interactive)
+    (setq org-agenda-files (append nc/org-agenda-files
+          (nc/org-roam-list-notes-by-tag "project"))))
 
-    ;; Build the agenda list the first time for the session
-    (nc/org-roam-refresh-agenda-list)
+  ;; Build the agenda list the first time for the session
+  (nc/org-roam-refresh-agenda-list)
 
-    (defun nc/org-roam-project-finalize-hook ()
-      "Adds the captured project file to `org-agenda-files' if the
-    capture was not aborted."
-      ;; Remove the hook since it was added temporarily
-      (remove-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
+  (defun nc/org-roam-project-finalize-hook ()
+    "Adds the captured project file to `org-agenda-files' if the
+  capture was not aborted."
+    ;; Remove the hook since it was added temporarily
+    (remove-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
 
-      ;; Add project file to the agenda list if the capture was confirmed
-      (unless org-note-abort
-        (with-current-buffer (org-capture-get :buffer)
-          (add-to-list 'org-agenda-files (buffer-file-name)))))
+    ;; Add project file to the agenda list if the capture was confirmed
+    (unless org-note-abort
+      (with-current-buffer (org-capture-get :buffer)
+        (add-to-list 'org-agenda-files (buffer-file-name)))))
 
-    (defun nc/org-roam-find-project ()
-      (interactive)
-      ;; Add the project file to the agenda after capture is finished
-      (add-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
+  (defun nc/org-roam-find-project ()
+    (interactive)
+    ;; Add the project file to the agenda after capture is finished
+    (add-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
 
-      ;; Select a project file to open, creating it if necessary
-      (org-roam-node-find
-       nil
-       nil
-       (nc/org-roam-filter-by-tag "project")
-       nil
-       :templates
-       '(("p" "project" plain (file "~/notes/templates/newproject.org")
-          :if-new (file+head "projects/%<%Y-%m-%d>-${slug}.org"
-                             "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:")
-          :unnarrowed t))))
+    ;; Select a project file to open, creating it if necessary
+    (org-roam-node-find
+     nil
+     nil
+     (nc/org-roam-filter-by-tag "project")
+     nil
+     :templates
+     '(("p" "project" plain (file "~/notes/templates/newproject.org")
+        :if-new (file+head "projects/%<%Y-%m-%d>-${slug}.org"
+                           "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:")
+        :unnarrowed t))))
 
-    (defun nc/org-roam-capture-task ()
-      (interactive)
-      ;; Add the project file to the agenda after capture is finished
-      (add-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
+  (defun nc/org-roam-capture-task ()
+    (interactive)
+    ;; Add the project file to the agenda after capture is finished
+    (add-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
 
-      ;; Capture the new task, creating the project file if necessary
-      (org-roam-capture- :node (org-roam-node-read
-                                nil
-                                (nc/org-roam-filter-by-tag "project"))
-                         :templates '(("p" "project" plain "** TODO %?"
-                                       :if-new (file+head+olp "projects/%<%Y-%m-%d>-${slug}.org"
-                                                              "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:"
-                                                              ("Project ::" "Tasks"))))))
-      ;; this sets up various file handling hooks so your DB remains up to date
-      (org-roam-setup))
+    ;; Capture the new task, creating the project file if necessary
+    (org-roam-capture- :node (org-roam-node-read
+                              nil
+                              (nc/org-roam-filter-by-tag "project"))
+                       :templates '(("p" "project" plain "** TODO %?"
+                                     :if-new (file+head+olp "projects/%<%Y-%m-%d>-${slug}.org"
+                                                            "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:"
+                                                            ("Tasks"))))))
+    ;; this sets up various file handling hooks so your DB remains up to date
+    (org-roam-setup))
 #+end_src
 * Programming
 :properties:
