@@ -242,7 +242,7 @@
                             ("@office" . ?o)
                             ("@home" . ?h)
                             (:endgroup)
-                            ("@computer" . ?c)
+                            ("personal" . ?p)
                             ("@reading" . ?r)
                             ("learning" . ?l)
                             ("emacs" . ?e)
@@ -409,7 +409,7 @@
                nil)
         ("g" . "GTD contexts")
            ("go" "Office" tags-todo "@office")
-           ("gc" "Computer" tags-todo "@computer")
+           ("gp" "Personal" tags-todo "personal")
            ("ge" "Emacs" tags-todo "emacs")
            ("gl" "Learning" tags-todo "learning")
            ("gr" "Reading" tags-todo "@reading")
@@ -423,7 +423,7 @@
                     (org-agenda-sorting-strategy '(priority-down))
                     (org-agenda-overriding-header "Office Projects Tasks")))))
            ("pp" "My Personal Projects"
-            ((tags "project+@computer|@computer+LEVEL=2+TODO=\"TODO\""
+            ((tags "project+personal|personal+LEVEL=2+TODO=\"TODO\""
                    (;; (org-agenda-files (list nc/org-default-projects-file))
                     (org-agenda-prefix-format " %-12c %l%e%l")
                     (org-agenda-sorting-strategy '(priority-down))
