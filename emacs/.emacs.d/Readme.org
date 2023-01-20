@@ -1615,12 +1615,10 @@ Change priorities colors
      (org-directory "~/notes")
      :config
 
-     (defconst nc/org-default-projects-dir (concat org-directory "/projects"))
      (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
      (defconst nc/org-default-archives-dir (concat org-directory "/archives"))
      (defconst nc/org-default-templates-dir (concat org-directory "/templates"))
      (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
-     (defconst nc/org-default-completed-dir (concat org-directory "/projects/_completed"))
      (defconst nc/org-journal-dir (concat org-directory "/journal"))
      (defconst nc/inbox-file (concat org-directory "/gtd.org"))
      (defconst nc/org-default-inbox-file (concat org-directory "/gtd.org"))
@@ -2090,7 +2088,7 @@ Targets include this file and any file contributing to the agenda - up to 2 leve
  #+begin_src emacs-lisp
    (setq org-refile-targets (append '((org-default-notes-file :maxlevel . 2))
                                     '((nc/org-default-tasks-file :level . 1)
-                                      (nc/org-default-projects-file :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")
+                                      (nc/project-files :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")
                                       (nc/org-default-someday-file :level . 0)
                                       (nil :maxlevel . 3)))) ;; current file
 
@@ -2613,7 +2611,9 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
     ;; Add project file to the agenda list if the capture was confirmed
     (unless org-note-abort
       (with-current-buffer (org-capture-get :buffer)
-        (add-to-list 'org-agenda-files (buffer-file-name)))))
+        (prog  
+         (add-to-list 'org-agenda-files (buffer-file-name))
+         (add-to-list 'nc/project-files (buffer-file-name))))))
 
   (defun nc/org-roam-find-project ()
     (interactive)
