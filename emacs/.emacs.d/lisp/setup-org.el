@@ -352,7 +352,7 @@
            "* Summary of the week :REVIEW:\n%[~/notes/templates/review.org]" :time-prompt t))
 
 ;; My Org agenda-files
-(defvar nc/org-agenda-files (list "~/notes/gtd.org" "~/notes/projects.org" "~/notes/someday.org" "~/notes/personal/calendar.org" "~/notes/journal/"))
+(defvar nc/org-agenda-files (list "~/notes/gtd.org" "~/notes/someday.org" "~/notes/personal/calendar.org" "~/notes/journal/"))
 
 (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'\\|[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$"
         org-agenda-files nc/org-agenda-files
@@ -478,7 +478,7 @@
 
 (setq org-refile-targets (append '((org-default-notes-file :maxlevel . 2))
                                  '((nc/org-default-tasks-file :level . 1)
-                                   (nc/project-files :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")
+                                   ;;(nc/org-default-projects-file :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")
                                    (nc/org-default-someday-file :level . 0)
                                    (nil :maxlevel . 3)))) ;; current file
 
@@ -845,6 +845,7 @@ the result as a time value."
 ;; (when is-windows  
 ;;   (add-to-list 'exec-path "C:/ProgramJava/tools/sqlite-tools-win32-x86-3340100"))
 
+
 ;; From https://baty.net/2022/searching-org-roam-files/
 (defun nc/search-roam ()
   "Run consult-ripgrep on the org roam directory"
@@ -903,11 +904,20 @@ the result as a time value."
 
 (defun nc/org-roam-refresh-agenda-list ()
   (interactive)
-  (setq org-agenda-files (append nc/org-agenda-files
-        (nc/org-roam-list-notes-by-tag "project"))))
+  (setq org-agenda-files
+        (append nc/org-agenda-files
+                (nc/org-roam-list-notes-by-tag "project"))))
 
 ;; Build the agenda list the first time for the session
 (nc/org-roam-refresh-agenda-list)
+
+(defun nc/update-refile-targets (filename)
+  "Update refile targets"
+  (add-to-list 'org-refile-targets `(,filename :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")))
+
+;; Refresh org-refile-targets 
+(dolist (project-file (nc/org-roam-list-notes-by-tag "project"))
+  (nc/update-refile-targets project-file))
 
 (defun nc/org-roam-project-finalize-hook ()
   "Adds the captured project file to `org-agenda-files' if the
@@ -920,7 +930,7 @@ capture was not aborted."
     (with-current-buffer (org-capture-get :buffer)
       (prog  
        (add-to-list 'org-agenda-files (buffer-file-name))
-       (add-to-list 'nc/project-files (buffer-file-name))))))
+       (nc/update-refile-targets (buffer-file-name))))))
 
 (defun nc/org-roam-find-project ()
   (interactive)
