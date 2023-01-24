@@ -1949,23 +1949,18 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
          org-agenda-include-diary t)
  #+end_src
 *** Custom Agenda commands
-**** Function to skip headline tagged with =:project:=
-
- #+begin_src emacs-lisp
- (defun nc--org-agenda-skip-project ()
-     (org-agenda-skip-entry-if 'regexp ":project:"))
- #+end_src
-
 **** Display Header parent
 
  #+begin_src emacs-lisp
- (defun nc--org-agenda-format-parent (n)
-   ;; (s-truncate n (org-format-outline-path (org-get-outline-path)))
-   (save-excursion
-     (save-restriction
-       (widen)
-       (org-up-heading-safe)
-       (s-truncate n (org-get-heading t t)))))
+   (defun nc--org-agenda-display-title ()
+     "Display org title if necessary"
+     (save-excursion
+       (save-restriction
+        (widen) 
+        (let* ((heading (org-get-heading t t)))
+          (if (s-starts-with? "Tasks" heading)
+              (s-concat "\n" (org-get-title) " - ")
+            "")))))
  #+end_src
 **** Agenda Commands
 
@@ -1974,16 +1969,17 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
 
        (setq org-agenda-custom-commands
              '(("," "Agenda"
-                      ((agenda "" ((org-agenda-sorting-strategy '(timestamp-up time-up priority-down category-keep))))
+                ((agenda "" ((org-agenda-sorting-strategy '(timestamp-up time-up priority-down category-keep))
+                             (org-agenda-prefix-format " %i %-20:c%?-12t% s")))
 
                        (tags-todo "TODO=\"STARTED\""
                                   ((org-agenda-overriding-header "\nStarted Tasks")
-                                   (org-agenda-prefix-format " %i %-14:c [%e] ")
+                                   (org-agenda-prefix-format " %i %-20:c [%e] ")
                                    ;;(org-agenda-prefix-format "%-27:(nc--org-agenda-format-parent 25)")
                                    (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
                        (tags-todo "TODO=\"NEXT\""
                                   ((org-agenda-overriding-header "\nNext Tasks")
-                                   (org-agenda-prefix-format " %i %-14:c [%e] ")
+                                   (org-agenda-prefix-format " %i %-20:c [%e] ")
                                    (org-agenda-skip
                                     '(org-agenda-skip-if 'deadline))
                                    ;;(org-agenda-files '("~/_PIM/notes/gtd.org"))
@@ -1993,7 +1989,7 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
                              (org-agenda-overriding-header "\nInbox")))
                        (tags-todo "TODO=\"HOLD\""
                                   ((org-agenda-overriding-header "\nHold / Waiting Tasks")
-                                   (org-agenda-prefix-format " %i %-14:c")                            
+                                   (org-agenda-prefix-format " %i %-20:c")                            
                                    (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
                        )
                       nil)
@@ -2009,13 +2005,16 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
                   ("po" "Office Projects"
                    ((tags "project+@office|@office+LEVEL=2+TODO=\"TODO\""
                           (;; (org-agenda-files (nc/org-default-projects-file))
-                           (org-agenda-prefix-format " %-12c %l%e%l")
+                           ;; (org-agenda-prefix-format " %-20c %l%e%l %27:(nc--org-agenda-display-title)")
+
+                           (org-agenda-prefix-format "%l%l %:(nc--org-agenda-display-title)")
                            (org-agenda-sorting-strategy '(priority-down))
                            (org-agenda-overriding-header "Office Projects Tasks")))))
                   ("pp" "My Personal Projects"
                    ((tags "project+personal|personal+LEVEL=2+TODO=\"TODO\""
                           (;; (org-agenda-files (list nc/org-default-projects-file))
-                           (org-agenda-prefix-format " %-12c %l%e%l")
+                           ;;(org-agenda-prefix-format " %-20c %l%e%l")
+                           (org-agenda-prefix-format "%l%l %:(nc--org-agenda-display-title)")
                            (org-agenda-sorting-strategy '(priority-down))
                            (org-agenda-overriding-header "Office Projects Tasks")
                            ))))
@@ -2606,7 +2605,7 @@ From : https://github.com/tecosaur/emacs-config/blob/master/config.org#translate
 
   (defun nc/update-refile-targets (filename)
     "Update refile targets"
-    (add-to-list 'org-refile-targets `(,filename :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")))
+    (add-to-list 'org-refile-targets `(,filename :regexp . "\\(?:\\(?:Meeting\\|Task\\)s\\)")))
 
   ;; Refresh org-refile-targets 
   (dolist (project-file (nc/org-roam-list-notes-by-tag "project"))

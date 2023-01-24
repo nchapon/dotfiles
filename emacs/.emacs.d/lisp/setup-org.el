@@ -367,31 +367,31 @@
 (setq diary-file "~/notes/diary"
       org-agenda-include-diary t)
 
-(defun nc--org-agenda-skip-project ()
-    (org-agenda-skip-entry-if 'regexp ":project:"))
-
-(defun nc--org-agenda-format-parent (n)
-  ;; (s-truncate n (org-format-outline-path (org-get-outline-path)))
+(defun nc--org-agenda-display-title ()
+  "Display org title if necessary"
   (save-excursion
     (save-restriction
-      (widen)
-      (org-up-heading-safe)
-      (s-truncate n (org-get-heading t t)))))
+     (widen) 
+     (let* ((heading (org-get-heading t t)))
+       (if (s-starts-with? "Tasks" heading)
+           (s-concat "\n" (org-get-title) " - ")
+         "")))))
 
 (require 'org-agenda)
 
 (setq org-agenda-custom-commands
       '(("," "Agenda"
-               ((agenda "" ((org-agenda-sorting-strategy '(timestamp-up time-up priority-down category-keep))))
+         ((agenda "" ((org-agenda-sorting-strategy '(timestamp-up time-up priority-down category-keep))
+                      (org-agenda-prefix-format " %i %-20:c%?-12t% s")))
 
                 (tags-todo "TODO=\"STARTED\""
                            ((org-agenda-overriding-header "\nStarted Tasks")
-                            (org-agenda-prefix-format " %i %-14:c [%e] ")
+                            (org-agenda-prefix-format " %i %-20:c [%e] ")
                             ;;(org-agenda-prefix-format "%-27:(nc--org-agenda-format-parent 25)")
                             (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
                 (tags-todo "TODO=\"NEXT\""
                            ((org-agenda-overriding-header "\nNext Tasks")
-                            (org-agenda-prefix-format " %i %-14:c [%e] ")
+                            (org-agenda-prefix-format " %i %-20:c [%e] ")
                             (org-agenda-skip
                              '(org-agenda-skip-if 'deadline))
                             ;;(org-agenda-files '("~/_PIM/notes/gtd.org"))
@@ -401,7 +401,7 @@
                       (org-agenda-overriding-header "\nInbox")))
                 (tags-todo "TODO=\"HOLD\""
                            ((org-agenda-overriding-header "\nHold / Waiting Tasks")
-                            (org-agenda-prefix-format " %i %-14:c")                            
+                            (org-agenda-prefix-format " %i %-20:c")                            
                             (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
                 )
                nil)
@@ -417,13 +417,16 @@
            ("po" "Office Projects"
             ((tags "project+@office|@office+LEVEL=2+TODO=\"TODO\""
                    (;; (org-agenda-files (nc/org-default-projects-file))
-                    (org-agenda-prefix-format " %-12c %l%e%l")
+                    ;; (org-agenda-prefix-format " %-20c %l%e%l %27:(nc--org-agenda-display-title)")
+
+                    (org-agenda-prefix-format "%l%l %:(nc--org-agenda-display-title)")
                     (org-agenda-sorting-strategy '(priority-down))
                     (org-agenda-overriding-header "Office Projects Tasks")))))
            ("pp" "My Personal Projects"
             ((tags "project+personal|personal+LEVEL=2+TODO=\"TODO\""
                    (;; (org-agenda-files (list nc/org-default-projects-file))
-                    (org-agenda-prefix-format " %-12c %l%e%l")
+                    ;;(org-agenda-prefix-format " %-20c %l%e%l")
+                    (org-agenda-prefix-format "%l%l %:(nc--org-agenda-display-title)")
                     (org-agenda-sorting-strategy '(priority-down))
                     (org-agenda-overriding-header "Office Projects Tasks")
                     ))))
@@ -913,7 +916,7 @@ the result as a time value."
 
 (defun nc/update-refile-targets (filename)
   "Update refile targets"
-  (add-to-list 'org-refile-targets `(,filename :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")))
+  (add-to-list 'org-refile-targets `(,filename :regexp . "\\(?:\\(?:Meeting\\|Task\\)s\\)")))
 
 ;; Refresh org-refile-targets 
 (dolist (project-file (nc/org-roam-list-notes-by-tag "project"))
