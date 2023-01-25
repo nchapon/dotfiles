@@ -252,7 +252,6 @@
 (use-package company
   :diminish ""
   :bind (("C-c C-/" . company-other-backend)
-         ("C-c y" . company-yasnippet)
          :map company-active-map
          ("C-p" . company-select-previous)
          ("C-n" . company-select-next)
