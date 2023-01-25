@@ -213,6 +213,7 @@
     (treemacs-hide-gitignored-files-mode nil))
   :bind
   (:map global-map
+        ("C-t"   . treemacs)
         ("C-x t 1"   . treemacs-delete-other-windows)
         ("C-x t t"   . treemacs)
         ("C-x t B"   . treemacs-bookmark)
