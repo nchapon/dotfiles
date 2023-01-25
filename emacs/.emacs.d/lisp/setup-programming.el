@@ -13,40 +13,38 @@
 
 (use-package lsp-mode
   :commands lsp
-  :bind-keymap ("C-c l" . lsp-command-map)
+  :bind-keymap ("C-l" . lsp-command-map)
   :bind
-    (:map lsp-mode-map
-          ( ;;("C-\M-b" . lsp-find-implementation)
-           ("M-RET" . lsp-execute-code-action)))
-  :hook (lsp-mode . (lambda ()
-                      (let ((lsp-keymap-prefix "C-c l"))
-                        (lsp-enable-which-key-integration))))
+  (:map lsp-mode-map
+        ( ;;("C-\M-b" . lsp-find-implementation)
+         ("M-RET" . lsp-execute-code-action)))
+  :hook (lsp-mode . lsp-enable-which-key-integration)
   :config
   (setq ; recommended
-        gc-cons-threshold (* 100 1024 1024)
-        read-process-output-max (* 1024 1024))
+   gc-cons-threshold (* 100 1024 1024)
+   read-process-output-max (* 1024 1024))
 
   (setq ; optional
-        ;; lsp-clojure-custom-server-command '("/Users/nchapon/_PIM/tmp/2del/clojure-lsp") 
+   ;; lsp-clojure-custom-server-command '("/Users/nchapon/_PIM/tmp/2del/clojure-lsp") 
 
-        ; Features
-        lsp-lens-enable t
-        ;lsp-semantic-tokens-enable t
+                                        ; Features
+   lsp-lens-enable t
+                                        ;lsp-semantic-tokens-enable t
 
-        lsp-headerline-breadcrumb-enable nil ;; disable breadcrumb
+   lsp-headerline-breadcrumb-enable nil ;; disable breadcrumb
 
 
-        ;; Conflicts with other Clojure emacs packages
-        cljr-add-ns-to-blank-clj-files nil ; disable clj-refactor adding ns to blank files
-        cider-eldoc-display-for-symbol-at-point nil ; disable cider eldoc integration
-        ; lsp-eldoc-enable-hover nil ; disable lsp-mode showing eldoc during symbol at point
-        ; lsp-enable-indentation nil ; uncomment to use cider indentation instead of lsp
-        ; lsp-enable-completion-at-point nil ; uncomment to use cider completion instead of lsp
+   ;; Conflicts with other Clojure emacs packages
+   cljr-add-ns-to-blank-clj-files nil ; disable clj-refactor adding ns to blank files
+   cider-eldoc-display-for-symbol-at-point nil ; disable cider eldoc integration
+                                        ; lsp-eldoc-enable-hover nil ; disable lsp-mode showing eldoc during symbol at point
+                                        ; lsp-enable-indentation nil ; uncomment to use cider indentation instead of lsp
+                                        ; lsp-enable-completion-at-point nil ; uncomment to use cider completion instead of lsp
 
-        ;; Terraform
-        lsp-disabled-clients '(tfls)
+   ;; Terraform
+   lsp-disabled-clients '(tfls)
 
-        ))
+   ))
 
 ;; optionally
 (use-package lsp-ui
@@ -62,8 +60,7 @@
     (setq mode-line-format nil))
   :bind (:map lsp-ui-mode-map
               (([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
-               ([remap xref-find-references] . lsp-ui-peek-find-references)))
-  )
+               ([remap xref-find-references] . lsp-ui-peek-find-references))))
 
 (use-package lsp-treemacs
   :commands lsp-treemacs-errors-list)
