@@ -931,7 +931,7 @@ capture was not aborted."
   ;; Add project file to the agenda list if the capture was confirmed
   (unless org-note-abort
     (with-current-buffer (org-capture-get :buffer)
-      (prog  
+      (progn  
        (add-to-list 'org-agenda-files (buffer-file-name))
        (nc/update-refile-targets (buffer-file-name))))))
 
@@ -949,7 +949,7 @@ capture was not aborted."
    :templates
    '(("p" "project" plain (file "~/notes/templates/newproject.org")
       :if-new (file+head "projects/%<%Y-%m-%d>-${slug}.org"
-                         "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:")
+                         "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:%^{context|@office|personal}:")
       :unnarrowed t))))
 
 (defun nc/org-roam-capture-task ()
