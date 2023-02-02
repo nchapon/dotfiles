@@ -848,7 +848,6 @@ the result as a time value."
 ;; (when is-windows  
 ;;   (add-to-list 'exec-path "C:/ProgramJava/tools/sqlite-tools-win32-x86-3340100"))
 
-
 ;; From https://baty.net/2022/searching-org-roam-files/
 (defun nc/search-roam ()
   "Run consult-ripgrep on the org roam directory"
@@ -966,7 +965,48 @@ capture was not aborted."
                                                           "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:"
                                                           ("Tasks"))))))
   ;; this sets up various file handling hooks so your DB remains up to date
-  (org-roam-setup))
+(org-roam-setup))
+
+
+;; Close project
+
+(defun nc/set-project-end-date ()
+  "Set Project Closing Date"
+  (goto-char (point-min))
+  (or (re-search-forward "^\s*$" nil t) (point-max))
+  (insert (format "#+property: ENDDATE %s\n" (format-time-string "[%Y-%m-%d]"))))
+
+(defun nc/get-project-tags ()
+  "Returns project tags"
+  (car (alist-get "FILETAGS"
+                 (org-collect-keywords '("filetags"))
+                 nil
+                 nil
+                 'string-equal)))
+
+(defun nc/is-org-roam-project? ()
+  "Checks if buffer is an org-roam project buffer"
+  (let* ((tags (nc/get-project-tags)))
+    (cond
+     ((and (s-present? tags)
+           (s-contains? ":project:" tags)) t)
+     (t nil))))
+
+(defun nc/complete-project-tags ()
+  "Set project to completed tag"
+  (let* ((project-tags (nc/get-project-tags))
+               (project-completed-tags (s-replace "project" "completed" project-tags))
+              (year (format-time-string "%Y")))
+          (org-roam-set-keyword "filetags" (format"%s%s:" project-completed-tags year))))
+
+(defun nc/close-org-roam-project ()
+  "Update tags and date for project buffer"
+  (interactive)
+  (if (nc/is-org-roam-project?)
+      (progn
+        (nc/set-project-end-date)
+        (nc/complete-project-tags))
+    (error "Not an org roam project")))
 
 (provide 'setup-org)
 ;;; setup-org.el ends here
