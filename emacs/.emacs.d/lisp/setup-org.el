@@ -876,8 +876,13 @@ the result as a time value."
                                       (file+head "%<%Y-%m-%d--%H-%M>--${slug}.org"
                                                  "#+title: ${title}\n#+date: %u\n\n")
                                       :unnarrowed t
-                                      :immediate-finish t))
-        )
+                                      :immediate-finish t)
+                                     ("p" "Project Note" plain
+                                      "%?"
+                                      :if-new (file+head
+                                               "projects/%<%Y-%m-%d--%H-%M>--project-${slug}.org"
+                                               "#+TITLE: ${title}\n#+DATE: %<%Y-%m-%d>\n#+FILETAGS: project_note\n\n")
+                                      :unnarrowed t)))
 
   ;; Orgnaize org roam notes
   ;; Adapted from https://jethrokuan.github.io/org-roam-guide/
