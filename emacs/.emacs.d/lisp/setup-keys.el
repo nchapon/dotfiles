@@ -46,7 +46,6 @@
 
 ;; Tools alt-[0-9]
 (global-set-key (kbd "M-0") #'nc/maximize-or-split-window-vertically)
-(global-set-key (kbd "M-1") #'vterm-toggle)
 (global-set-key (kbd "M-5") #'magit-log-buffer-file)
 
 (use-package hydra
@@ -111,31 +110,22 @@
 
 (major-mode-hydra-define org-mode nil
   ("GTD"
-   (("d" nc/org-insert-daily-review "Start Daily Review")
-    ("h" nc/insert-daily-heading "Insert Daily Heading"))
+   (("s" nc/org-insert-daily-review "Start Daily Review")
+    ("d" nc/insert-daily-heading "Insert Daily Heading"))
    "Actions"
    (("r" nc/org-refile-subtree-to-file "Refile subtree to file")
     ("A" nc/create-buffer-attachment-directory "Create attachment directory"))
    "Search"
-   (("sn" nc/search-notes "Search Notes"))))
-
-(defcustom nc-prefix "C-<"
-  "Prefix for all personal keybinds."
-  :type 'string
-  :group 'nc-emacs)
+   (("?" nc/search-notes "Search Notes"))))
 
 (bind-keys
-   :prefix-map nc-map
-   :prefix-docstring "Prefix for personal key bindings"
-   :prefix nc-prefix
  ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
-   (";" . nc/goto-emacs-config)
-   ("SPC" . major-mode-hydra)
-   (":"  . avy-goto-char-timer)
-   ("i" . nc-hydra-insert/body)
-   ("g" . nc-hydra-goto/body)
-   ("t" . nc-hydra-toggle/body)
-   ("w" . nc-hydra-windows/body))
+   ("C-c C-;" . nc/goto-emacs-config)
+   ("C-c C-h" . major-mode-hydra) 
+   ("C-c i" . nc-hydra-insert/body)
+   ("C-c g" . nc-hydra-goto/body)
+   ("C-c t" . nc-hydra-toggle/body)
+   ("C-c w" . nc-hydra-windows/body))
 
 (use-package key-chord
   :init
@@ -148,6 +138,7 @@
   (key-chord-define-global "??" 'nc/search-notes) 
   (key-chord-define-global "BB" 'beginning-of-buffer)
   (key-chord-define-global "JJ" 'crux-top-join-line)
+  (key-chord-define-global "MM" 'nc/maximize-or-split-window-vertically)
   (key-chord-define-global "$$" 'end-of-buffer))
 
 (use-package which-key

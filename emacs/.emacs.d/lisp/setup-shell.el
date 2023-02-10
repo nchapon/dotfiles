@@ -36,7 +36,7 @@
        (slot . 0)))
 
   :bind
-  ("C-c t" . vterm-toggle)
+  ("C-c s" . vterm-toggle)
   (:map vterm-mode-map
         ("C-<return>" . vterm-toggle-insert-cd)
         ("C-S-n" . vterm-toggle-forward)

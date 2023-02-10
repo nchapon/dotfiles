@@ -1,15 +1,14 @@
-#! /usr/bin/env bb
+#!/usr/bin/env bb
+;; -*- mode: clojure -*-
 
-(require '[babashka.deps :as deps])
 
-(deps/add-deps
- '{:deps {hickory/hickory   {:mvn/version "0.7.1"}}})
+(require '[babashka.curl :as curl])
 
-(require '[hickory.core :as h])
+(curl/get "https://www.mediatheque-bruz.fr/mon-compte-personnel/mes-informations/mes-prets-simple?layout=light&mod_id=91")
 
-(def parsed-doc (h/parse "<a href=\"foo\">foo</a>"))
 
-(h/has-hickory parsed-doc)
+
+
 
 
 
