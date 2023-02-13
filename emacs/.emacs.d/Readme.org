@@ -662,7 +662,6 @@ My map
 
   (bind-keys
    ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
-     ("C-c C-;" . nc/goto-emacs-config)
      ("C-c C-h" . major-mode-hydra) 
      ("C-c i" . nc-hydra-insert/body)
      ("C-c g" . nc-hydra-goto/body)
