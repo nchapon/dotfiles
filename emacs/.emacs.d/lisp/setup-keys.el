@@ -32,21 +32,21 @@
 (global-set-key (kbd "M-n") #'forward-paragraph)
 (global-set-key (kbd "M-p") #'backward-paragraph)
 
-;; Goto Line
-;;(global-set-key (kbd "M-g") #'goto-line)
+
 
 ;; Functions
-(global-set-key (kbd "<f5>") #'revert-buffer)
-(global-set-key (kbd "<f6>") #'treemacs)
-(global-set-key (kbd "C-<f6>") #'treemacs-select-window)
-(global-set-key (kbd "<f9>") #'my/capture-interruption-task)
-(global-set-key (kbd "<f11>") #' nc/maximize-or-split-window-vertically)
-(global-set-key (kbd "C-<f11>") #'nc/split-window-horizontally)
-(global-set-key (kbd "<f12>") #'org-agenda)
+(bind-keys
+ ("<f5>" . revert-buffer)
+ ("C-<f5>" . magit-log-buffer-file)
+ ("<f6>" . treemacs)
+ ("<f9>" . my/capture-interruption-task)
+ ("<f11>" . nc/maximize-or-split-window-vertically)
+ ("C-<f11>" . nc/split-window-horizontally)
+ ("<f12>" . org-agenda))
 
 ;; Tools alt-[0-9]
-(global-set-key (kbd "M-0") #'nc/maximize-or-split-window-vertically)
-(global-set-key (kbd "M-5") #'magit-log-buffer-file)
+(bind-keys
+ ("M-0" . nc/maximize-or-split-window-vertically))
 
 (use-package hydra
   :ensure t
