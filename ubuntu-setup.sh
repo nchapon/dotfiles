@@ -19,7 +19,7 @@ install_essential_packages() {
         software-properties-common \
         cmake cmake-data universal-ctags autoconf pkg-config \
         htop iotop iftop \
-        stow \
+        stow libtool-bin \
         ripgrep rlwrap \         
         )
 
