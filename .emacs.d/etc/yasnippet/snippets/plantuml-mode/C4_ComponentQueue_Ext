@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_ComponentQueue_Ext - Add External Queue Component to C4 diagram
+# key: C4_ComponentQueue_Ext
+# -- 
+ComponentQueue_Ext(${1:alias}, "${2:label}", "${3:technology}")

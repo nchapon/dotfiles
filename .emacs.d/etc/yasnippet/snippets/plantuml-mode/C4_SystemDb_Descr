@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_SystemDb_Descr - Add Database System with Description to C4 diagram
+# key: C4_SystemDb_Descr
+# -- 
+SystemDb(${1:alias}, "${2:label}", "${3:description}")

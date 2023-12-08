@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Container_Ext_Descr - Add External Container with Description to C4 diagram
+# key: C4_Container_Ext_Descr
+# -- 
+Container_Ext(${1:alias}, "${2:label}", "${3:technology}", "${4:description}")

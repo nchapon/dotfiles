@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_ComponentDb_Descr - Add Database Component with Description to C4 diagram
+# key: C4_ComponentDb_Descr
+# -- 
+ComponentDb(${1:alias}, "${2:label}", "${3:technology}", "${4:description}")

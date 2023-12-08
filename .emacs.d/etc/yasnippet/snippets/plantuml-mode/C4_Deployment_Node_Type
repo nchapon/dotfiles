@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Deployment_Node_Type - Add a deployment node to C4 diagram.
+# key: C4_Deployment_Node_Type
+# -- 
+Deployment_Node(${1:alias}, "${2:label}", "${3:type}"){	$0}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: tag file
+# key: t
+# --
+#+SETUPFILE: `(concat org-directory "tags.org")`

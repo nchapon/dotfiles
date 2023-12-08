@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Layout_With_Legend - Add legend to C4 diagram.
+# key: C4_Layout_With_Legend
+# -- 
+LAYOUT_WITH_LEGEND()

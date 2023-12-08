@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_ContainerDb_Descr - Add Database Container with Description to C4 diagram
+# key: C4_ContainerDb_Descr
+# -- 
+ContainerDb(${1:alias}, "${2:label}", "${3:technology}", "${4:description}")

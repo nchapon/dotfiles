@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Include_Dynamic - Include C4 Dynamic Diagram
+# key: C4_Include_Dynamic
+# -- 
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Dynamic.puml

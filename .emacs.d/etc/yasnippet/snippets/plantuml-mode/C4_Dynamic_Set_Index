@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Dynamic_Set_Index - Set index of C4 Dynamic Diagram
+# key: C4_Dynamic_Set_Index
+# -- 
+setIndex(${1:value})

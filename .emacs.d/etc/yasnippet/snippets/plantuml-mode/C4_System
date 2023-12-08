@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_System - Add System to C4 diagram
+# key: C4_System
+# -- 
+System(${1:alias}, "${2:label}")

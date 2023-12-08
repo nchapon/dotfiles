@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_ComponentQueue - Add Queue Component to C4 diagram
+# key: C4_ComponentQueue
+# -- 
+ComponentQueue(${1:alias}, "${2:label}", "${3:technology}")

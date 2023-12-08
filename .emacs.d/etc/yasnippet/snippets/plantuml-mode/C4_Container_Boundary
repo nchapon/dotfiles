@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Container_Boundary - Add a Container Boundary to C4 diagram
+# key: C4_Container_Boundary
+# -- 
+Container_Boundary(${1:alias}, "${2:label}"){	$0}

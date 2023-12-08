@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_System_Ext - Add External System to C4 diagram
+# key: C4_System_Ext
+# -- 
+System_Ext(${1:alias}, "${2:label}")

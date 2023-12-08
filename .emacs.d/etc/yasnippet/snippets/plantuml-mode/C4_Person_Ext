@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Person_Ext - Add External Person to C4 diagram
+# key: C4_Person_Ext
+# -- 
+Person_Ext(${1:alias}, "${2:label}")

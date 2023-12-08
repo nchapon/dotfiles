@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_SystemQueue_Descr - Add Queue System with Description to C4 diagram
+# key: C4_SystemQueue_Descr
+# -- 
+SystemQueue(${1:alias}, "${2:label}", "${3:description}")

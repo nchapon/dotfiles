@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_ContainerQueue - Add Queue Container to C4 diagram
+# key: C4_ContainerQueue
+# -- 
+ContainerQueue(${1:alias}, "${2:label}", "${3:technology}")

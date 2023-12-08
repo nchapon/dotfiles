@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Relationship - Add unidirectional Relationship to C4 diagram
+# key: C4_Relationship
+# -- 
+Rel(${1:from_alias}, ${2:to_alias}, "${3:label}")

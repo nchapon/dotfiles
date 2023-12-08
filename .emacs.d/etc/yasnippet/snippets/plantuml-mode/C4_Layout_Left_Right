@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Layout_Left_Right - Left to right layout for C4 diagram.
+# key: C4_Layout_Left_Right
+# -- 
+LAYOUT_LEFT_RIGHT()

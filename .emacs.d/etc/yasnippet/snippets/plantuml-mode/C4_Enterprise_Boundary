@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Enterprise_Boundary - Add an Enterprise Boundary to C4 diagram
+# key: C4_Enterprise_Boundary
+# -- 
+Enterprise_Boundary(${1:alias}, "${2:label}"){	$0}

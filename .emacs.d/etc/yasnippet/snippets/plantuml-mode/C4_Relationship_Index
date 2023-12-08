@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Relationship_Index - Add unidirectional Relationship to C4 Dynamic Diagram
+# key: C4_Relationship_Index
+# -- 
+RelIndex(${1:index}, ${2:from_alias}, ${3:to_alias}, "${4:label}")

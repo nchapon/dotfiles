@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Person_Descr - Add Person with Description to C4 diagram
+# key: C4_Person_Descr
+# -- 
+Person(${1:alias}, "${2:label}", "${3:description}")

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Component - Add Component to C4 diagram
+# key: C4_Component
+# -- 
+Component(${1:alias}, "${2:label}", "${3:technology}")

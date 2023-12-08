@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Include_Container - Include C4 Container Diagram
+# key: C4_Include_Container
+# -- 
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml

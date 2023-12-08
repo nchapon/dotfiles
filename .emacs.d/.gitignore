@@ -1,0 +1,10 @@
+/var/
+/%backup%~
+/custom.el
+/var/
+/straight/*
+!/straight/versions/
+/.cache/
+/eln-cache/
+/server/
+/#Readme.org#

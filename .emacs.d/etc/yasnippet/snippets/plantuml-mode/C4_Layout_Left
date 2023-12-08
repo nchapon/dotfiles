@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Layout_Left - Add hidden layout line to put {to} to the left of {from}
+# key: C4_Layout_Left
+# -- 
+Lay_L(${1:from_alias}, ${2:to_alias})

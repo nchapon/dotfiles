@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Relationship_Bi - Add bidirectional Relationship to C4 diagram
+# key: C4_Relationship_Bi
+# -- 
+BiRel(${1:from_alias}, ${2:to_alias}, "${3:label}")

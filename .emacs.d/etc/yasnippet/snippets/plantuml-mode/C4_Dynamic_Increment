@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Dynamic_Increment - Increment index of C4 Dynamic Diagram.
+# key: C4_Dynamic_Increment
+# -- 
+increment(${1:count})

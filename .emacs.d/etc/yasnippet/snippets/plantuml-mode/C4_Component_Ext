@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Component_Ext - Add External Component to C4 diagram
+# key: C4_Component_Ext
+# -- 
+Component_Ext(${1:alias}, "${2:label}", "${3:technology}")

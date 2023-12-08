@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_ComponentDb_Ext - Add External Database Component to C4 diagram
+# key: C4_ComponentDb_Ext
+# -- 
+ComponentDb_Ext(${1:alias}, "${2:label}", "${3:technology}")

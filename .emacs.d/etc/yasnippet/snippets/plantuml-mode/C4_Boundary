@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Boundary - Add a generic boundary to C4 diagram.
+# key: C4_Boundary
+# -- 
+Boundary(${1:alias}, "${2:label}"){	$0}

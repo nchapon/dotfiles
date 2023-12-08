@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Hide_Stereotype - Hide stereotypes from C4 diagram..
+# key: C4_Hide_Stereotype
+# -- 
+HIDE_STEREOTYPE()

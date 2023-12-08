@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_SystemQueue_Ext - Add External Queue System to C4 diagram
+# key: C4_SystemQueue_Ext
+# -- 
+SystemQueue_Ext(${1:alias}, "${2:label}")

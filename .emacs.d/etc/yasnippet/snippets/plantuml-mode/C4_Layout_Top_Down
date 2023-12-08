@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_Layout_Top_Down - Top down layout for C4 diagram.
+# key: C4_Layout_Top_Down
+# -- 
+LAYOUT_TOP_DOWN()

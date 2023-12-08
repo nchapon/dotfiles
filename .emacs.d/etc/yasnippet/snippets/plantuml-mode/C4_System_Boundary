@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_System_Boundary - Add a System Boundary to C4 diagram
+# key: C4_System_Boundary
+# -- 
+System_Boundary(${1:alias}, "${2:label}"){	$0}
