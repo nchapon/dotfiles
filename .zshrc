@@ -111,7 +111,7 @@ source $ZSH/oh-my-zsh.sh
 
 alias cdp="cd ~/Projects"
 alias cdn="cd ~/notes"
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 # Set JAVA_HOME
 if [ -f $HOME/.asdf/plugins/java/set-java-home.zsh ]; then
