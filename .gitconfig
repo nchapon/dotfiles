@@ -1,5 +1,7 @@
-[include]
-    path = ~/.gitconfig.local
+[user]
+	name = nchapon
+	email = nchapon@gmail.com
+
 
 [core]
     editor=vi
@@ -27,3 +29,7 @@
     br = branch
     co = checkout
     cp = cherry-pick
+
+[includeIf "gitdir:C:/Projects/"]
+    path = C:/Projects/.gitconfig.local
+

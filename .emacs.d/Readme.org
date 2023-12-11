@@ -172,6 +172,9 @@ This happens a lot on OS X, where an Emacs instance started from the GUI inherit
 #+end_src
 
 ** No Littering
+:PROPERTIES:
+:ID:       3f627579-3efc-4c40-9dbe-558de5359f8e
+:END:
 
 Help keeping =~/.emacs.d= clean.
 [[https://github.com/emacscollective/no-littering][https://github.com/emacscollective/no-littering]]
@@ -284,6 +287,11 @@ Remove to bindings
 #+begin_src emacs-lisp
  (define-key global-map (kbd "RET") 'newline-and-indent)
  #+end_src
+*** Backup Files
+Backup files in  [[id:3f627579-3efc-4c40-9dbe-558de5359f8e][no Littering]] folder
+#+begin_src emacs-lisp
+(setq backup-directory-alist '(("." . "~/.emacs.d/var/backups/")))
+#+end_src
 ** UTF-8 Encoding
 
  Set all coding systems to utf-8
@@ -983,6 +991,7 @@ Expand region increases the selected region by semantic units. Just keep pressin
      (progn
        (global-undo-tree-mode)
        (setq undo-tree-visualizer-timestamps t)
+       (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/var/undo")))
        (setq undo-tree-visualizer-diff t)))
  #+end_src
 

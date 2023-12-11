@@ -49,6 +49,8 @@
 
 (define-key global-map (kbd "RET") 'newline-and-indent)
 
+(setq backup-directory-alist '(("." . "~/.emacs.d/var/backups/")))
+
 (prefer-coding-system 'utf-8-unix)
 (set-clipboard-coding-system 'utf-8-unix)
 (set-default-coding-systems 'utf-8-unix)

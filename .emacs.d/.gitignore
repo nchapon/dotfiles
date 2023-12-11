@@ -1,4 +1,5 @@
 /var/
+/backup/
 /%backup%~
 /custom.el
 /var/
