@@ -726,21 +726,6 @@ if nil,the top of the file."
 (use-package ob-restclient)
 (use-package ob-mermaid)
 
-(use-package plantuml-mode
-  :init
-    (setq plantuml-default-exec-mode 'jar)
-    (setq plantuml-jar-path "~/opt/plantuml.jar")
-    (setq org-plantuml-jar-path (expand-file-name "~/opt/plantuml.jar"))
-    ;; (setq org-startup-with-inline-images t)
-    ;; (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-    ;; (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
-    :config
-    (setq plantuml-output-type "png")
-    :mode "\\.puml\\'"
-    )
-
-;; (setq org-plantuml-jar-path             
-;;       (expand-file-name "~/opt/lib/plantuml.jar"))
 
 (org-babel-do-load-languages
  'org-babel-load-languages
