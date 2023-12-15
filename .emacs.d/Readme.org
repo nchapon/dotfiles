@@ -2920,16 +2920,31 @@ I try to do a lot of things with =org-roam= :
           (denote-update-dired-buffers))
       (user-error "No front matter for title and/or keywords")))
 
-  (use-package consult-denote
-    :straight (consult-denote :type git :host codeberg :repo "whhone/consult-denote")
-    :after denote
-    :bind
-    ("M-SPC n i" . 'consult-denote-link-insert-link)
-    ("M-SPC n f" . 'consult-denote-open-or-create)
-    ("M-SPC n F" . 'consult-denote-ripgrep))
-
 #+end_src
+** Consult Notes
 
+#+begin_src emacs-lisp
+  (use-package consult-notes
+    :straight (:type git :host github :repo "mclear-tools/consult-notes")
+    :commands (consult-notes
+               consult-notes-search-in-all-notes
+               ;; if using org-roam 
+               ;;consult-notes-org-roam-find-node
+               ;;consult-notes-org-roam-find-node-relation
+               )
+    :config
+    ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
+    
+    ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
+    (setq consult-notes-org-headings-files '("~/notes/journal/"
+                                             "~/notes/gtd.org"))
+    (consult-notes-org-headings-mode)
+    (when (locate-library "denote")
+      (consult-notes-denote-mode)
+      (setq consult-notes-denote-display-id nil))
+    ;; search only for text files in denote dir
+    (setq consult-notes-denote-files-function (function denote-directory-text-only-files)))
+#+end_src
 
 * Programming
 :properties:
