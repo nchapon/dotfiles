@@ -3273,14 +3273,14 @@ Needs Java and plantuml.jar installed in =~/opt=
 #+end_src
 *** TODO Conda
 
-TODO:  Fix conda error
-
 #+begin_src emacs-lisp
   (use-package conda
+    :when (executable-find "conda")
     :config
     (conda-env-initialize-interactive-shells)
     (conda-env-initialize-eshell))
 #+end_src
+
 *** Pyvenv
 
 #+begin_src emacs-lisp

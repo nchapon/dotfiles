@@ -245,6 +245,7 @@
                          (lsp-deferred))))
 
 (use-package conda
+  :when (executable-find "conda")
   :config
   (conda-env-initialize-interactive-shells)
   (conda-env-initialize-eshell))
