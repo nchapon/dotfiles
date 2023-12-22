@@ -250,6 +250,11 @@
   (conda-env-initialize-interactive-shells)
   (conda-env-initialize-eshell))
 
+(use-package virtualenvwrapper
+  :ensure t
+  :init
+  (venv-initialize-eshell))
+
 (use-package pyvenv
   :config
   (pyvenv-mode))

@@ -3199,6 +3199,14 @@ Needs Java and plantuml.jar installed in =~/opt=
     (conda-env-initialize-interactive-shells)
     (conda-env-initialize-eshell))
 #+end_src
+*** Virtualenvwrapper
+
+#+begin_src emacs-lisp
+(use-package virtualenvwrapper
+  :ensure t
+  :init
+  (venv-initialize-eshell))
+#+end_src
 
 *** Pyvenv
 
