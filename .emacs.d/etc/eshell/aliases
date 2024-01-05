@@ -1,5 +1,6 @@
-alias cdp (eshell/cd (nc/projects-dir))
-alias cdn cd ~/notes
-alias d dired $1
-alias ff find-file $1
+alias gg git log --color --graph --oneline --abbrev-commit --decorate --all --date=short --pretty=format:%C(cyan)%h %C(yellow)%ad %C(bold green)%d %C(reset)%s
 alias e find-file $1
+alias ff find-file $1
+alias d dired $1
+alias cdn cd ~/notes
+alias cdp (eshell/cd (nc/projects-dir))

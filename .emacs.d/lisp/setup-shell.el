@@ -161,6 +161,8 @@
 
   )
 
+(add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
+
 (use-package eshell-toggle
   :custom
   (eshell-toggle-size-fraction 3)
@@ -193,6 +195,20 @@
                (kill-buffer buffer)
              )))))
     )
+   (defun nc/dwim-run-pytest ()
+    "Run pytest on marked file"
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Run pytest"
+     "pytest --color=yes -k <<f>>"
+     :extensions "py"
+     :utils "pytest"
+     :error-autofocus t
+     :silent-success t
+     )
+    )
+   (bind-key "C-c C-t f" #'nc/dwim-run-pytest 'python-mode-map)
+   
   )
 
 (provide 'setup-shell)

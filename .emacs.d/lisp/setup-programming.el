@@ -265,6 +265,8 @@
 ;;   :hook (python-mode . blacken-mode)
 ;;   :config (setq blacken-skip-string-normalization t))
 
+(use-package python-pytest)
+
 (use-package terraform-mode
   :hook ((terraform-mode . lsp)))
 

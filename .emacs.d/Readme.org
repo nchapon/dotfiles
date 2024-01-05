@@ -929,8 +929,6 @@ filter string into the minibuffer.
   (use-package diredfl
     :init (diredfl-global-mode 1))
 #+end_src
-
-
 ** Projectile
 
 [[https://github.com/bbatsov/projectile][Projectile]] Project interaction library for emacs.
@@ -3190,7 +3188,7 @@ Needs Java and plantuml.jar installed in =~/opt=
                          (require 'lsp-pyright)
                          (lsp-deferred))))
 #+end_src
-*** TODO Conda
+*** Conda
 
 #+begin_src emacs-lisp
   (use-package conda
@@ -3224,6 +3222,11 @@ Needs Java and plantuml.jar installed in =~/opt=
   ;;   :after python
   ;;   :hook (python-mode . blacken-mode)
   ;;   :config (setq blacken-skip-string-normalization t))
+#+end_src
+*** Python pytest
+
+#+begin_src emacs-lisp
+(use-package python-pytest)
 #+end_src
 
 ** Terraform
@@ -3473,6 +3476,8 @@ Adapted from https://config.daviwil.com/emacs#eshell
           ("C-l" . nc/eshell-clear-buffer))
 
     )
+
+  (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
 #+end_src
 
 
@@ -3517,6 +3522,20 @@ FIX : Path to plantuml ??
                  (kill-buffer buffer)
                )))))
       )
+     (defun nc/dwim-run-pytest ()
+      "Run pytest on marked file"
+      (interactive)
+      (dwim-shell-command-on-marked-files
+       "Run pytest"
+       "pytest --color=yes -k <<f>>"
+       :extensions "py"
+       :utils "pytest"
+       :error-autofocus t
+       :silent-success t
+       )
+      )
+     (bind-key "C-c C-t f" #'nc/dwim-run-pytest 'python-mode-map)
+     
     )
 #+end_src
 
