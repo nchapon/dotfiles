@@ -161,6 +161,8 @@
 (use-package treemacs
   :ensure t
   :bind (:map global-map
+              ("M-à" . treemacs-select-window)
+              ("M-0" . treemacs-select-window)
               ("C-x t t" . treemacs)
               ("C-x t 1" . treemacs-delete-other-windows))
   :custom
