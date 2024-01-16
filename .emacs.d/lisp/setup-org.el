@@ -274,7 +274,7 @@
             "* SOMEDAY %? :idea:\n%u" :clock-in t :clock-resume t)
           ("f" "FishLog" plain (file+olp+datetree nc/fishing-file)
            "%[~/notes/templates/fishlog.org]" :time-prompt t)
-          ("F" "Film" entry (file+headline nc/watching-file "Films à voir")
+          ("F" "Film" entry (file+headline nc/watching-file "Films")
                "* NEXT %^{Titre}
        %i
        - *Réalisateur:* %^{Auteur}
@@ -986,24 +986,8 @@ capture was not aborted."
         (nc/complete-project-tags))
     (error "Not an org roam project")))
 
-(defun my/denote-random-note (&optional directory)
-  "Open a random denote."
-  (interactive)
-  (let* ((denote-directory (or directory denote-directory))
-         (files (denote-directory-files)))
-    (find-file (nth (random (length files)) files))))
-
-(defun my/denote-random-personal-note ()
-  "Open a random personal denote."
-  (interactive)
-  (my/denote-random-note (expand-file-name "personal" (denote-directory))))
-
-(defun my/denote-random-work-note ()
-  "Open a random work denote."
-  (interactive)
-  (my/denote-random-note (expand-file-name "work" (denote-directory))))
-
 (use-package denote
+  :when (getenv "PIM_HOME")
   :bind
   ("M-SPC n n" . 'denote)
   ("M-SPC n f" . 'denote-open-or-create)
@@ -1014,10 +998,12 @@ capture was not aborted."
   ("M-SPC n r" . 'my/denote-random-personal-note)
   ("M-SPC n R" . 'my/denote-random-work-note)
   :init
-  (setq denote-directory (expand-file-name "C:/Users/nchapon/Nextcloud/Perso/_PIM"))
+  (setq denote-directory (expand-file-name "notes" (getenv "PIM_HOME")))
   :config
-  (setq denote-known-keywords '("emacs"))
-  (setq denote-prompts '(subdirectory title))
+  
+  (setq denote-prompts '(subdirectory title keyword))
+  (setq denote-infer-keywords t)
+  (setq denote-sort-keywords t)
   (setq denote-excluded-directories-regexp "attachments")
 
   ;; Makes the denote links different from usual link.
@@ -1029,29 +1015,6 @@ capture was not aborted."
   ;;(setq denote-org-front-matter "#+title: %1$s\n#+filetags: %3$s\n")
 
   (add-hook 'dired-mode-hook #'denote-dired-mode))
-
-;; allow empty keyword
-(defun denote-rename-file-using-front-matter (file &optional auto-confirm)
-  (interactive (list (buffer-file-name) current-prefix-arg))
-  (when (buffer-modified-p)
-    (if (or auto-confirm
-            (y-or-n-p "Would you like to save the buffer?"))
-        (save-buffer)
-      (user-error "Save buffer before proceeding")))
-  (unless (denote-file-is-writable-and-supported-p file)
-    (user-error "The file is not writable or does not have a supported file extension"))
-  (if-let* ((file-type (denote-filetype-heuristics file))
-            (title (denote-retrieve-title-value file file-type))
-            (extension (file-name-extension file t))
-            (id (denote-retrieve-or-create-file-identifier file))
-            (dir (file-name-directory file))
-            (new-name (denote-format-file-name
-                       dir id (denote-retrieve-keywords-value file file-type) (denote-sluggify title) extension)))
-      (when (or auto-confirm
-                (denote-rename-file-prompt file new-name))
-        (denote-rename-file-and-buffer file new-name)
-        (denote-update-dired-buffers))
-    (user-error "No front matter for title and/or keywords")))
 
 (use-package consult-notes
   :straight (:type git :host github :repo "mclear-tools/consult-notes")
@@ -1072,7 +1035,10 @@ capture was not aborted."
     (consult-notes-denote-mode)
     (setq consult-notes-denote-display-id nil))
   ;; search only for text files in denote dir
-  (setq consult-notes-denote-files-function (function denote-directory-text-only-files)))
+  (setq consult-notes-denote-files-function (function denote-directory-text-only-files))
+  :bind
+    (("C-c n F" . consult-notes)
+     ("C-c n S" . consult-notes-search-in-all-notes)))
 
 (provide 'setup-org)
 ;;; setup-org.el ends here
