@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Pytest Raises Assert
+# key: wpa
+# -- 
+with pytest.raises(${1:exception},match=r".*text"):
+    ${2:code}

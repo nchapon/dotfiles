@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+#name : Create @property function
+#key : @p
+# --
+@property
+def $1(self):
+  return self._$1
+$0

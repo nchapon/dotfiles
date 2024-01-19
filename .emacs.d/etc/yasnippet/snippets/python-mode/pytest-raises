@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Pytest Raises
+# key: wp
+# -- 
+with pytest.raises(${1:exception}):
+    ${2:code}
