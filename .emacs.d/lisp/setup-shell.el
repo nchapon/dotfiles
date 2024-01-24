@@ -195,6 +195,7 @@
                (kill-buffer buffer)
              )))))
     )
+   (bind-key "C-c C-! e" #'nc/dwim-shell-command-plantuml-to-png)
    (defun nc/dwim-run-pytest ()
     "Run pytest on marked file"
     (interactive)
@@ -207,7 +208,7 @@
      :silent-success t
      )
     )
-   (bind-key "C-c C-t f" #'nc/dwim-run-pytest 'python-mode-map)
+   (bind-key "C-c C-! t" #'nc/dwim-run-pytest 'python-mode-map)
    
   )
 
