@@ -834,14 +834,13 @@ the result as a time value."
   :init
   (setq org-roam-v2-ack t)
   :bind
-  ("C-c n l" . org-roam-buffer-toggle)
-  ("C-c n f" . org-roam-node-find)
-  ("C-c n r" . org-roam-node-random)
-  ("C-c n s" . nc/search-roam)
-  ("C-c n p" . nc/org-roam-find-project)
-  ("C-c n t" . nc/org-roam-capture-task)
+  ("C-c o f" . org-roam-node-find)
+  ("C-c o r" . org-roam-node-random)
+  ("C-c o s" . nc/search-roam)
+  ("C-c o p" . nc/org-roam-find-project)
+  ("C-c o t" . nc/org-roam-capture-task)
   (:map org-mode-map
-        (("C-c n i" . org-roam-node-insert)))
+        (("C-c o i" . org-roam-node-insert)))
   :config
 
   (setq org-roam-capture-templates '(("d" "default" plain "%?"
@@ -989,14 +988,13 @@ capture was not aborted."
 (use-package denote
   :when (getenv "PIM_HOME")
   :bind
-  ("M-SPC n n" . 'denote)
-  ("M-SPC n f" . 'denote-open-or-create)
-  ("M-SPC n k" . 'denote-keywords-add)    ;; update file name automatically
-  ("M-SPC n K" . 'denote-keywords-remove) ;; update file name automatically
-  ("M-SPC n u" . 'denote-rename-file-using-front-matter)
-  ("M-SPC n l" . 'denote-link-find-backlink)
-  ("M-SPC n r" . 'my/denote-random-personal-note)
-  ("M-SPC n R" . 'my/denote-random-work-note)
+  ("C-c n n" . 'denote)
+  ("C-c n f" . 'denote-open-or-create)
+  ("C-c n k" . 'denote-keywords-add)    ;; update file name automatically
+  ("C-c n K" . 'denote-keywords-remove) ;; update file name automatically
+  ("C-c n u" . 'denote-rename-file-using-front-matter)
+  ("C-c n l" . 'denote-link-find-backlink)
+  
   :init
   (setq denote-directory (expand-file-name "notes" (getenv "PIM_HOME")))
   :config
@@ -1028,8 +1026,7 @@ capture was not aborted."
   ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
   
   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
-  (setq consult-notes-org-headings-files '("~/notes/journal/"
-                                           "~/notes/gtd.org"))
+  (setq consult-notes-org-headings-files '("~/notes/"))
   (consult-notes-org-headings-mode)
   (when (locate-library "denote")
     (consult-notes-denote-mode)
@@ -1038,7 +1035,7 @@ capture was not aborted."
   (setq consult-notes-denote-files-function (function denote-directory-text-only-files))
   :bind
     (("C-c n F" . consult-notes)
-     ("C-c n S" . consult-notes-search-in-all-notes)))
+     ("C-c n s" . consult-notes-search-in-all-notes)))
 
 (provide 'setup-org)
 ;;; setup-org.el ends here
