@@ -3188,6 +3188,19 @@ Needs Java and plantuml.jar installed in =~/opt=
   ;;   :hook (python-mode . blacken-mode)
   ;;   :config (setq blacken-skip-string-normalization t))
 #+end_src
+*** Ruff
+
+#+begin_src emacs-lisp
+  (use-package reformatter
+    :hook 
+    (python-mode . ruff-format-on-save-mode)
+    ;; (python-ts-mode . ruff-format-on-save-mode)
+    :config
+    (reformatter-define ruff-format
+      :program "ruff"
+      :args (list "format" "--stdin-filename" (or (buffer-file-name) input-file))))
+#+end_src
+
 *** Python pytest
 
 #+begin_src emacs-lisp

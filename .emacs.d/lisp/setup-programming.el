@@ -265,6 +265,15 @@
 ;;   :hook (python-mode . blacken-mode)
 ;;   :config (setq blacken-skip-string-normalization t))
 
+(use-package reformatter
+  :hook 
+  (python-mode . ruff-format-on-save-mode)
+  ;; (python-ts-mode . ruff-format-on-save-mode)
+  :config
+  (reformatter-define ruff-format
+    :program "ruff"
+    :args (list "format" "--stdin-filename" (or (buffer-file-name) input-file))))
+
 (use-package python-pytest)
 
 (use-package terraform-mode
