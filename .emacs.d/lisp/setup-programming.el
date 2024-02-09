@@ -259,20 +259,20 @@
   :config
   (pyvenv-mode))
 
-;; Too many open processes on Windows
-;; (use-package blacken
-;;   :after python
-;;   :hook (python-mode . blacken-mode)
-;;   :config (setq blacken-skip-string-normalization t))
+;; (use-package reformatter
+;;   :hook
+;;   (python-mode . black-format-on-save-mode)
+;;   :config
+;;   (reformatter-define black-format :program "black" :args '("-")))
 
-(use-package reformatter
-  :hook 
-  (python-mode . ruff-format-on-save-mode)
-  ;; (python-ts-mode . ruff-format-on-save-mode)
-  :config
-  (reformatter-define ruff-format
-    :program "ruff"
-    :args (list "format" "--stdin-filename" (or (buffer-file-name) input-file))))
+;; (use-package reformatter
+;;   :hook 
+;;   (python-mode . ruff-format-on-save-mode)
+;;   ;; (python-ts-mode . ruff-format-on-save-mode)
+;;   :config
+;;   (reformatter-define ruff-format
+;;     :program "ruff"
+;;     :args (list "format" "--stdin-filename" (or (buffer-file-name) input-file))))
 
 (use-package python-pytest)
 
