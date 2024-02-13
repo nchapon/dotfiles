@@ -235,7 +235,7 @@
    (sequence "STARTED(s)" "HOLD(h/!)" "|" "CANCELLED(c@/!)")
    (sequence "MEETING(m)" "RDV(r)"  "|" "DONE(d)")))
 
-(setq org-log-done 'time)
+(setq org-log-done nil)
 
 (setq org-todo-keyword-faces
       (quote (("TODO" :foreground "#c0392b" :weight bold)

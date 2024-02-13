@@ -1848,7 +1848,7 @@ My Todos tasks
 
 Keep track when the task is completed.
  #+begin_src emacs-lisp
- (setq org-log-done 'time)
+ (setq org-log-done nil)
  #+end_src
 
  Tasks faces : colors from https://flatuicolors.com/
