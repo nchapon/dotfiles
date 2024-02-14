@@ -248,7 +248,21 @@
   :when (executable-find "conda")
   :config
   (conda-env-initialize-interactive-shells)
-  (conda-env-initialize-eshell))
+  (conda-env-initialize-eshell)
+  (add-to-list
+     'global-mode-string
+     '(:eval
+       (list
+        (if conda-env-current-name
+            (propertize (concat "(py: " conda-env-current-name ") ")
+                        'face 'font-lock-builtin-face
+                        'help-echo "Conda environment"
+                        'mouse-face '(:box 1)
+                        'local-map (make-mode-line-mouse-map
+                                    'mouse-1
+                                    (lambda () (interactive)
+                                      (conda-env-activate))))
+          "")))))
 
 (use-package virtualenvwrapper
   :ensure t
