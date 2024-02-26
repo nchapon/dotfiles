@@ -3239,28 +3239,16 @@ Needs Java and plantuml.jar installed in =~/opt=
   (pyvenv-mode))
 #+end_src
 
-*** Black
+*** Apheleia
+
+Automatic formatting with ruff when saving 
 
 #+begin_src emacs-lisp
-  ;; (use-package reformatter
-  ;;   :hook
-  ;;   (python-mode . black-format-on-save-mode)
-  ;;   :config
-  ;;   (reformatter-define black-format :program "black" :args '("-")))
-#+end_src
-*** Ruff
+  (use-package apheleia
 
-#+begin_src emacs-lisp
-  ;; (use-package reformatter
-  ;;   :hook 
-  ;;   (python-mode . ruff-format-on-save-mode)
-  ;;   ;; (python-ts-mode . ruff-format-on-save-mode)
-  ;;   :config
-  ;;   (reformatter-define ruff-format
-  ;;     :program "ruff"
-  ;;     :args (list "format" "--stdin-filename" (or (buffer-file-name) input-file))))
+    :config
+    (add-to-list 'apheleia-mode-alist '(python-mode . ruff)))
 #+end_src
-
 *** Python pytest
 
 #+begin_src emacs-lisp

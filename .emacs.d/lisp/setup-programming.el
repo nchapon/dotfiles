@@ -273,20 +273,10 @@
   :config
   (pyvenv-mode))
 
-;; (use-package reformatter
-;;   :hook
-;;   (python-mode . black-format-on-save-mode)
-;;   :config
-;;   (reformatter-define black-format :program "black" :args '("-")))
+(use-package apheleia
 
-;; (use-package reformatter
-;;   :hook 
-;;   (python-mode . ruff-format-on-save-mode)
-;;   ;; (python-ts-mode . ruff-format-on-save-mode)
-;;   :config
-;;   (reformatter-define ruff-format
-;;     :program "ruff"
-;;     :args (list "format" "--stdin-filename" (or (buffer-file-name) input-file))))
+  :config
+  (add-to-list 'apheleia-mode-alist '(python-mode . ruff)))
 
 (use-package python-pytest)
 
