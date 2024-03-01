@@ -274,11 +274,13 @@
   (pyvenv-mode))
 
 (use-package apheleia
-
   :config
   (add-to-list 'apheleia-mode-alist '(python-mode . ruff)))
 
-(use-package python-pytest)
+(use-package python-pytest
+  :straight '(python-pytest :host github :repo "nchapon/emacs-python-pytest")
+  :config
+  (setq python-pytest-executable "python -m pytest"))
 
 (use-package terraform-mode
   :hook ((terraform-mode . lsp)))
