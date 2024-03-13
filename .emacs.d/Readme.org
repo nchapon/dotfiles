@@ -3118,7 +3118,8 @@ Mode for justfiles used by [[https://github.com/casey/just][Just]]
 
 GitHub Flavored Markdown by default for README.md files.
 
-Use Pandoc to export to HTML.
+- Using Pandoc to export to HTML
+- Rendering Markdown with GitHub API
 
 #+begin_src emacs-lisp
   (use-package markdown-mode
@@ -3142,6 +3143,14 @@ Use Pandoc to export to HTML.
 
   (use-package markdown-toc
     :after markdown-mode)
+
+  ;; Render Markdwon with GitHub API
+  (use-package gh-md
+    :after markdown-mode
+    :bind 
+    (:map markdown-mode-map
+          ([remap markdown-preview] . gh-md-render-buffer)))
+
 #+end_src
 ** Plant UML
 

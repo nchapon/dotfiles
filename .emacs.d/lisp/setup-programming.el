@@ -210,6 +210,13 @@
 (use-package markdown-toc
   :after markdown-mode)
 
+;; Render Markdwon with GitHub API
+(use-package gh-md
+  :after markdown-mode
+  :bind 
+  (:map markdown-mode-map
+        ([remap markdown-preview] . gh-md-render-buffer)))
+
 (use-package plantuml-mode
   :init
     (setq plantuml-default-exec-mode 'jar)
