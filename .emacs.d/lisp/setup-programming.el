@@ -287,7 +287,17 @@
 (use-package python-pytest
   :straight '(python-pytest :host github :repo "nchapon/emacs-python-pytest")
   :config
-  (setq python-pytest-executable "python -m pytest"))
+  (setq python-pytest-executable "python -m pytest")
+  :bind
+  (:map python-mode-map
+          ("C-c C-t a" . python-pytest)
+          ([remap python-skeleton-try] . python-pytest-function-dwim)
+          ("C-c C-t T" . python-pytest-function)
+          ([remap python-skeleton-for] . python-pytest-file-dwim)
+          ("C-c C-t F" . python-pytest-file)
+          ([remap python-skeleton-def] . python-pytest-dispatch)
+          ("C-c C-t r" . python-pytest-repeat)
+          ("C-c C-t x" . python-pytest-last-failed)))
 
 (use-package terraform-mode
   :hook ((terraform-mode . lsp)))

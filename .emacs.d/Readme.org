@@ -3263,7 +3263,17 @@ Automatic formatting with ruff when saving
   (use-package python-pytest
     :straight '(python-pytest :host github :repo "nchapon/emacs-python-pytest")
     :config
-    (setq python-pytest-executable "python -m pytest"))
+    (setq python-pytest-executable "python -m pytest")
+    :bind
+    (:map python-mode-map
+            ("C-c C-t a" . python-pytest)
+            ([remap python-skeleton-try] . python-pytest-function-dwim)
+            ("C-c C-t T" . python-pytest-function)
+            ([remap python-skeleton-for] . python-pytest-file-dwim)
+            ("C-c C-t F" . python-pytest-file)
+            ([remap python-skeleton-def] . python-pytest-dispatch)
+            ("C-c C-t r" . python-pytest-repeat)
+            ("C-c C-t x" . python-pytest-last-failed)))
 #+end_src
 
 ** Terraform
@@ -3535,6 +3545,7 @@ FIX : Path to plantuml ??
 
 #+begin_src emacs-lisp
   (use-package dwim-shell-command
+    :demand t ;; forces package loading
     :bind (([remap shell-command] . dwim-shell-command)
            :map dired-mode-map
            ([remap dired-do-async-shell-command] . dwim-shell-command)

@@ -171,6 +171,7 @@
   :bind ("C-c e" . eshell-toggle))
 
 (use-package dwim-shell-command
+  :demand t ;; forces package loading
   :bind (([remap shell-command] . dwim-shell-command)
          :map dired-mode-map
          ([remap dired-do-async-shell-command] . dwim-shell-command)
