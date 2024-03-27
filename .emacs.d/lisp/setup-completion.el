@@ -294,7 +294,7 @@
               ("S-TAB"      . corfu-previous)
               ([backtab]    . corfu-previous)
               ("<return>" . corfu-insert)
-              ("<escape>"        . corfu-quit))
+              ("C-q"        . corfu-quit))
 
   :init
   (global-corfu-mode)

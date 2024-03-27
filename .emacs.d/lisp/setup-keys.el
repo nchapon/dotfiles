@@ -43,7 +43,8 @@
  ("<f9>" . my/capture-interruption-task)
  ("<f11>" . nc/maximize-or-split-window-vertically)
  ("C-<f11>" . nc/split-window-horizontally)
- ("<f12>" . org-agenda))
+ ("<f12>" . org-agenda)
+ ("C-<f12>" . org-agenda))
 
 ;; Tools alt-[0-9]
 (bind-keys
@@ -149,6 +150,29 @@
   (which-key-prefix-prefix "+")
   :config
   (which-key-mode))
+
+(use-package god-mode
+  :bind (("<escape>" . god-mode-all)
+         ("C-x C-1" . delete-other-windows)
+         ("C-x C-2" . split-window-below)
+         ("C-x C-3" . split-window-right)
+         ("C-x C-0" . delete-window))
+
+  :init
+  ;; Disable function translations
+  (setq god-mode-enable-function-key-translation nil)
+  :config
+  ;; Let the exempt default major modes
+  ;;(setq god-exempt-major-modes nil)
+  (setq god-exempt-predicates nil))
+
+(defun my-update-cursor ()
+  (setq cursor-type (if (or god-local-mode buffer-read-only)
+                          'box
+                        'bar)))
+
+(add-hook 'god-mode-enabled-hook 'my-update-cursor)
+(add-hook 'god-mode-disabled-hook 'my-update-cursor)
 
 (provide 'setup-keys)
 ;;; setup-keys.el ends here
