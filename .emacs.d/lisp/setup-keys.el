@@ -149,7 +149,8 @@
   (which-key-separator " ")
   (which-key-prefix-prefix "+")
   :config
-  (which-key-mode))
+  (which-key-mode)
+  (which-key-enable-god-mode-support))
 
 (use-package god-mode
   :bind (("<escape>" . god-mode-all)
@@ -161,7 +162,6 @@
   :init
   ;; Disable function translations
   (setq god-mode-enable-function-key-translation nil)
-  :config
   ;; Let the exempt default major modes
   ;;(setq god-exempt-major-modes nil)
   (setq god-exempt-predicates nil))

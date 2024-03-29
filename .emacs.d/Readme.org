@@ -697,13 +697,14 @@ My map
 your currently entered incomplete command (a prefix) in a popup.
 
 #+begin_src emacs-lisp
-(use-package which-key
-  :diminish
-  :custom
-  (which-key-separator " ")
-  (which-key-prefix-prefix "+")
-  :config
-  (which-key-mode))
+  (use-package which-key
+    :diminish
+    :custom
+    (which-key-separator " ")
+    (which-key-prefix-prefix "+")
+    :config
+    (which-key-mode)
+    (which-key-enable-god-mode-support))
 #+end_src
 ** God Mode
 Testing an emacs command mode
@@ -720,7 +721,6 @@ Testing an emacs command mode
     :init
     ;; Disable function translations
     (setq god-mode-enable-function-key-translation nil)
-    :config
     ;; Let the exempt default major modes
     ;;(setq god-exempt-major-modes nil)
     (setq god-exempt-predicates nil))
@@ -755,7 +755,8 @@ Windows configuration module automatically tangled in =./lisp/setup-windows.el=
 
 #+begin_src emacs-lisp
   (use-package ace-window
-    :bind (([remap other-window] . ace-window))
+    :bind (([remap other-window] . ace-window)
+           ("M-o" . ace-window))
     :config
     (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
     ;; increase size face

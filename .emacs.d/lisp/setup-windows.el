@@ -12,7 +12,8 @@
 ;;; Code:
 
 (use-package ace-window
-  :bind (([remap other-window] . ace-window))
+  :bind (([remap other-window] . ace-window)
+         ("M-o" . ace-window))
   :config
   (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
   ;; increase size face
