@@ -219,16 +219,37 @@
 
 (use-package plantuml-mode
   :init
-    (setq plantuml-default-exec-mode 'jar)
-    (setq plantuml-jar-path "~/opt/plantuml.jar")
-    (setq org-plantuml-jar-path (expand-file-name "~/opt/plantuml.jar"))
-    ;; (setq org-startup-with-inline-images t)
-    ;; (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-    ;; (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
-    :config
-    (setq plantuml-output-type "png")
-    :mode "\\.puml\\'"
-    )
+  (setq plantuml-default-exec-mode 'jar)
+  (setq plantuml-jar-path (expand-file-name "~/opt/plantuml.jar"))
+  (setq org-plantuml-jar-path (expand-file-name "~/opt/plantuml.jar"))
+  ;; (setq org-startup-with-inline-images t)
+  ;; (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  ;; (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+  :mode "\\.puml\\'"
+  :bind
+  (:map plantuml-mode-map
+        ("C-c C-p" . nc/plantuml-generate-png))
+  :config
+  (setq plantuml-output-type "png")
+  (defun nc/plantuml-generate-png ()
+    (interactive)
+    (when (buffer-modified-p)
+      (error "There are unsaved changes!!!"))
+    (let* ((input (expand-file-name (buffer-file-name)))
+           (output (concat (file-name-sans-extension input) ".png"))
+           (output-buffer (get-file-buffer output)))
+      (call-process "java" nil t nil
+                    ;; the jar file...
+                    "-jar"
+                    (expand-file-name plantuml-jar-path)
+                    "-charset" "UTF-8"
+                    input
+                    "-tpng")
+      (if output-buffer
+          (with-current-buffer output-buffer
+            (revert-buffer-quick)
+            (pop-to-buffer output-buffer))
+        (find-file-other-window output)))))
 
 (use-package python-mode
   :straight nil
@@ -304,7 +325,40 @@
 
 (use-package restclient
   :mode (("\\.restclient\\'" . restclient-mode)
-         ("\\.http\\'" . restclient-mode)))
+         ("\\.http\\'" . restclient-mode))
+
+  :bind
+  ("<f4>" . nc/restclient-open-collection)
+  (:map restclient-mode-map
+        ("C-c r" . rename-buffer)
+        ("C-c h" . nc/restclient-toggle-headers))
+  :hook
+  (restclient-mode-hook . nc/restclient-imenu-index)
+  :config
+  (defun nc/restclient-toggle-headers ()
+    (interactive)
+    (message "restclient-response-body-only=%s"
+             (setf restclient-response-body-only
+                   (not restclient-response-body-only))))
+  (defun nc/restclient-open-collection (&optional arg)
+    "Open a file from the restclient \"collection\".
+Use prefix ARG to open the file in another window."
+    (interactive "P")
+    (let ((restclient-file (read-file-name "Open restclient file:"
+                                           (concat (getenv "PIM_HOME") "/notes/restclient/")
+                                           nil
+                                           nil
+                                           nil
+                                           (lambda (name)
+                                             (string-equal
+                                              (file-name-extension name)
+                                              "http")))))
+      (if arg
+          (find-file-other-window restclient-file)
+        (find-file restclient-file))))
+  (defun nc/restclient-imenu-index ()
+    "Configure imenu on the convention \"### Title\"."
+    (setq-local imenu-generic-expression '((nil "^### \\(.*\\)$" 1)))))
 
 (use-package web-mode
   :mode (("\\.html\\'" . web-mode)
