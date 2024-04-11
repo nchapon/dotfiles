@@ -238,6 +238,7 @@
     (let* ((input (expand-file-name (buffer-file-name)))
            (output (concat (file-name-sans-extension input) ".png"))
            (output-buffer (get-file-buffer output)))
+      (message (format "Rendering %s" input))
       (call-process "java" nil t nil
                     ;; the jar file...
                     "-jar"

@@ -852,10 +852,14 @@ Core packages configuration module automatically tangled in =./lisp/setup-core.e
   (use-package avy
     :defer t
     :custom
-    (avy-timeout-seconds 0.3)
+    (avy-timeout-seconds 0.5)
     (avy-style 'pre)
+    (avy-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l ?m))
+    :bind
+    (("C-:" . avy-goto-subword-1))
     :custom-face
     (avy-lead-face ((t (:background "#51afef" :foreground "#870000" :weight bold)))))
+    
 #+end_src
 
 ** Crux
@@ -3218,6 +3222,7 @@ Needs Java and plantuml.jar installed in =~/opt=
       (let* ((input (expand-file-name (buffer-file-name)))
              (output (concat (file-name-sans-extension input) ".png"))
              (output-buffer (get-file-buffer output)))
+        (message (format "Rendering %s" input))
         (call-process "java" nil t nil
                       ;; the jar file...
                       "-jar"
