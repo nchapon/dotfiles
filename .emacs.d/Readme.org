@@ -3314,7 +3314,11 @@ Automatic formatting with ruff when saving
 #+begin_src emacs-lisp
   (use-package apheleia
     :config
-    (add-to-list 'apheleia-mode-alist '(python-mode . ruff)))
+    (add-to-list 'apheleia-mode-alist '(python-mode . ruff))
+    :bind
+    (("C-c f" . apheleia-format-buffer)))
+
+
 #+end_src
 *** Python pytest
 

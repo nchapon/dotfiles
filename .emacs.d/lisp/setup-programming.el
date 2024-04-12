@@ -304,7 +304,9 @@
 
 (use-package apheleia
   :config
-  (add-to-list 'apheleia-mode-alist '(python-mode . ruff)))
+  (add-to-list 'apheleia-mode-alist '(python-mode . ruff))
+  :bind
+  (("C-c f" . apheleia-format-buffer)))
 
 (use-package python-pytest
   :straight '(python-pytest :host github :repo "nchapon/emacs-python-pytest")
