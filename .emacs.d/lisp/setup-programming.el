@@ -164,6 +164,9 @@
   (show-paren-delay 0)
   (show-paren-when-point-in-periphery t))
 
+(use-package devdocs
+  :bind ("C-h D" . devdocs-lookup))
+
 (use-package clojure-mode
   :hook
   ((clojure-mode . lsp)

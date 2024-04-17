@@ -1294,7 +1294,6 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 ** Consult
 
      [[https://github.com/minad/consult][Consult]] Consulting completion Read with some custom bindings :
-     - =<C-< s f>= consult-ripgrep : find file in current project
 
 #+begin_src emacs-lisp
   ;; Example configuration for Consult
@@ -1329,8 +1328,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
            ("M-g i" . consult-imenu)
            ("M-g I" . consult-imenu-multi)
            ;; M-s bindings (search-map)
-           ("M-s f" . consult-find)
-           ("C-< s f" . consult-find)
+           ("M-s f" . consult-fd)
            ("M-s F" . consult-locate)
            ("M-s g" . consult-grep)
            ("M-s G" . consult-git-grep)
@@ -1427,6 +1425,10 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
          ("C-x C-j" . consult-dir-jump-file))
     :config
     (setq consult-dir-project-list-function #'consult-dir-projectile-dirs))
+
+
+
+
 #+end_src
 ** Embark
 
@@ -3078,7 +3080,7 @@ Smart parens for all programming modes with paredit bindings.
     (sp-use-paredit-bindings)
     ;; Unbind sp-convolute-xexp (conflict with xref-find-references / lsp-ui-peek-find-references)
     (unbind-key "M-?" smartparens-mode-map)
-  
+
     (define-key smartparens-mode-map (kbd "M-r") 'sp-rewrap-sexp) ; needs to be set manually, because :bind section runs before config
     (setq smartparens-strict-mode t)
     (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))
@@ -3108,8 +3110,12 @@ Emacs builtin show paren mode.
     (show-paren-delay 0)
     (show-paren-when-point-in-periphery t))
 #+end_src
+** DevDocs
 
-
+#+begin_src emacs-lisp
+  (use-package devdocs
+    :bind ("C-h D" . devdocs-lookup))
+#+end_src
 
 ** Clojure
 *** clojure-mode
