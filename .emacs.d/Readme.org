@@ -420,14 +420,12 @@ Uniquify file path to ensure buffer name uniqueness
    (setq-default history-length 500)
 
  #+end_src
-
-
-** Hippie Expand
-[[https://www.emacswiki.org/emacs/HippieExpand][Hippie Expand]] custom configuration
-Text expansion with Hippie Expand
+** Repeat Mode
+Toggle Repeat Mode
 #+begin_src emacs-lisp
-  (bind-key "M-/" 'hippie-expand)
+  (repeat-mode)
 #+end_src
+ 
 * UI
 :properties:
 :header-args+: :tangle "./lisp/setup-ui.el"

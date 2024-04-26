@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: POST
+# key: POST
+# --
+
+`(yas-trimmed-comment-start)` ${1:comment}`(unless (eq (length comment-end) 0) (concat " " (yas-trimmed-comment-end)))`$0
+POST https://${2:host}/${3:basepath}
+Content-Type: application/json
+Authorization: Bearer ${4:token}
+{
+$0
+}

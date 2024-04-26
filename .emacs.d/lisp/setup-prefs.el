@@ -142,7 +142,7 @@
 ;; Set history-length longer
 (setq-default history-length 500)
 
-(bind-key "M-/" 'hippie-expand)
+(repeat-mode)
 
 (provide 'setup-prefs)
 ;;; setup-prefs.el ends here
