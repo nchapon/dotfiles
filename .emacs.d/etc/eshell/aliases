@@ -1,4 +1,5 @@
 alias gg git log --color --graph --oneline --abbrev-commit --decorate --all --date=short --pretty=format:%C(cyan)%h %C(yellow)%ad %C(bold green)%d %C(reset)%s
+alias gpr git pull --rebase
 alias e find-file $1
 alias ff find-file $1
 alias d dired $1
