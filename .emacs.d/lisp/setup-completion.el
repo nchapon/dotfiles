@@ -356,8 +356,8 @@
 ;; Configure Tempel
 (use-package tempel
   ;; Require trigger prefix before template name when completing.
-  ;; :custom
-  ;; (tempel-trigger-prefix "<")
+  :custom
+  (tempel-trigger-prefix "<")
 
   :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
          ("M-*" . tempel-insert))
