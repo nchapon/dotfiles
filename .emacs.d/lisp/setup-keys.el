@@ -32,7 +32,7 @@
 ;; Move up/down paragraph
 (global-set-key (kbd "M-n") #'forward-paragraph)
 (global-set-key (kbd "M-p") #'backward-paragraph)
-
+(global-set-key (kbd "C-x c") #'compile)
 
 
 ;; Functions
