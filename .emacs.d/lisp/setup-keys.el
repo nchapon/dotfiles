@@ -11,6 +11,9 @@
 
 ;;; Code:
 
+(setq w32-lwindow-modifier 'super)
+(w32-register-hot-key [s-])
+
 ;; Unbind unneeded keys
 (global-set-key (kbd "C-z") nil)
 (global-set-key (kbd "C-l") nil)

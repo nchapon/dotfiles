@@ -18,7 +18,8 @@
   (avy-style 'pre)
   (avy-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l ?m))
   :bind
-  (("C-:" . avy-goto-subword-1))
+  (("C-:" . avy-goto-subword-1)
+   ("s-j"   . avy-goto-char-timer))     ; start / opt 
   :custom-face
   (avy-lead-face ((t (:background "#51afef" :foreground "#870000" :weight bold)))))
 

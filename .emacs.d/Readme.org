@@ -527,6 +527,13 @@ Key bindings configuration module automatically tangled in =./lisp/setup-keys.el
 
   <<nc-header>>
 #+end_src
+** MS Window Keyboard
+Cf https://www.gnu.org/software/emacs/manual/html_node/emacs/Windows-Keyboard.html
+Disable windows left key when I am in emacs
+#+begin_src emacs-lisp
+(setq w32-lwindow-modifier 'super)
+(w32-register-hot-key [s-])
+#+end_src
 
 ** Global Key Bindings
 Some Emacs Global Bindings are redefined here.
@@ -824,7 +831,8 @@ Core packages configuration module automatically tangled in =./lisp/setup-core.e
     (avy-style 'pre)
     (avy-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l ?m))
     :bind
-    (("C-:" . avy-goto-subword-1))
+    (("C-:" . avy-goto-subword-1)
+     ("s-j"   . avy-goto-char-timer))     ; start / opt 
     :custom-face
     (avy-lead-face ((t (:background "#51afef" :foreground "#870000" :weight bold)))))
     
