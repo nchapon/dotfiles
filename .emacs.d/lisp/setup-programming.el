@@ -305,6 +305,16 @@
   :config
   (pyvenv-mode))
 
+
+(defun pyvenv-activate-poetry ()
+  "Activate the venv created by Poetry."
+  (interactive)
+  (let ((default-directory (project-root (project-current)))
+        (path (string-trim
+               (shell-command-to-string "env -u VIRTUAL_ENV poetry env info --path"))))
+    (pyvenv-activate path)
+    (message "project: %s\nactivated: %s" default-directory path)))
+
 (use-package apheleia
   :config
   (add-to-list 'apheleia-mode-alist '(python-mode . ruff))

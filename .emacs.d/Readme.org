@@ -3286,9 +3286,19 @@ Needs Java and plantuml.jar installed in =~/opt=
 *** Pyvenv
 
 #+begin_src emacs-lisp
-(use-package pyvenv
-  :config
-  (pyvenv-mode))
+  (use-package pyvenv
+    :config
+    (pyvenv-mode))
+
+
+  (defun pyvenv-activate-poetry ()
+    "Activate the venv created by Poetry."
+    (interactive)
+    (let ((default-directory (project-root (project-current)))
+          (path (string-trim
+                 (shell-command-to-string "env -u VIRTUAL_ENV poetry env info --path"))))
+      (pyvenv-activate path)
+      (message "project: %s\nactivated: %s" default-directory path)))
 #+end_src
 
 *** Apheleia
