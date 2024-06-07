@@ -366,6 +366,15 @@ Use prefix ARG to open the file in another window."
     "Configure imenu on the convention \"### Title\"."
     (setq-local imenu-generic-expression '((nil "^### \\(.*\\)$" 1)))))
 
+(use-package verb
+  :config
+  (setq verb-auto-kill-response-buffers 2) ; Two mots recent buffers for response
+
+  )
+
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+
 (use-package web-mode
   :mode (("\\.html\\'" . web-mode)
          ("\\.hbs\\'" . web-mode)

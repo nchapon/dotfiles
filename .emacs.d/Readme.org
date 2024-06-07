@@ -3379,6 +3379,22 @@ Needs Terraform LSP Server, not the latest version, works fine with =0.28.1=
       "Configure imenu on the convention \"### Title\"."
       (setq-local imenu-generic-expression '((nil "^### \\(.*\\)$" 1)))))
 #+end_src
+*** Verb mode
+
+Verb is a package for Emacs which allows you to organize and send HTTP requests
+
+#+begin_src emacs-lisp
+  (use-package verb
+    :config
+    (setq verb-auto-kill-response-buffers 2) ; Two mots recent buffers for response
+
+    )
+
+  (with-eval-after-load 'org
+    (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+
+#+end_src
+
 *** Web Mode
 [[https://web-mode.org/][Web Mode]] major mode for editing HTML pages
 
