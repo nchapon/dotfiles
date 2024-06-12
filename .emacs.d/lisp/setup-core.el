@@ -252,5 +252,27 @@ or no selection is made: nil is returned."
 (use-package emojify
   :hook (after-init . global-emojify-mode))
 
+(use-package wgrep
+  ;; Edit a grep buffer and apply those changes to the file buffer.
+  ;; In other words, after searching for something, sending the
+  ;; results to a buffer (via `embark-export' or such thing), you can
+  ;; edit that search results buffer and propogate the changes to the
+  ;; locations of the elements that matched the search.
+  ;;
+  ;;   1.  Call `consult-ripgrep' (via ~C-c f~) to search for something.
+  ;;   2.  Call `embark-export' (via ~C-s-e~) to export to a grep
+  ;;       buffer.
+  ;;   3.  Call `wgrep-change-to-wgrep-mode' (via ~e~ or ~C-c C-p~)
+  ;;   4.  Edit the grep buffer as you would anywhere else.
+  ;;   5.  Save (via ~C-x C-s~) or Cancel (via ~C-c C-k~).
+  :after (embark-consult ripgrep)
+  :config (setq wgrep-auto-save-buffer t)
+  (setq wgrep-change-readonly-file t)
+  :straight t
+  :bind (:map grep-mode-map
+          ("e" . wgrep-change-to-wgrep-mode)
+          :map ripgrep-search-mode-map
+          ("e" . wgrep-change-to-wgrep-mode)))
+
 (provide 'setup-core)
 ;;; setup-core.el ends here

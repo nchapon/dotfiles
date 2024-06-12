@@ -74,7 +74,8 @@
 (defun nc/search-notes ()
   "Search in all my org notes"
   (interactive)
-  (consult-ripgrep org-directory ""))
+  (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
+    (consult-ripgrep org-directory)))
 
 (defun nc/sudo-find-file (file)
   "Open FILE as root."
