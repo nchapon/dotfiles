@@ -531,8 +531,10 @@ Key bindings configuration module automatically tangled in =./lisp/setup-keys.el
 Cf https://www.gnu.org/software/emacs/manual/html_node/emacs/Windows-Keyboard.html
 Disable windows left key when I am in emacs
 #+begin_src emacs-lisp
-(setq w32-lwindow-modifier 'super)
-(w32-register-hot-key [s-])
+  (when is-windows
+    (progn
+      (setq w32-lwindow-modifier 'super)
+      (w32-register-hot-key [s-])))
 #+end_src
 
 ** Global Key Bindings
