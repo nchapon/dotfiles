@@ -1120,6 +1120,18 @@ Consult integration
     (:map global-map
      ("C-c y" . consult-yasnippet)))
 #+end_src
+
+
+#+begin_src emacs-lisp
+  (use-package yasnippet-capf
+    :after cape
+    :config
+    (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+
+
+
+#+end_src
+
 *** src block snippets helpers
 Header Arg snippet Helpers from : https://github.com/tecosaur/emacs-config/blob/master/config.org#snippet-helpers
 
@@ -1567,6 +1579,7 @@ Bound to =M-SPC=
     (add-to-list 'completion-at-point-functions #'cape-file)
     (add-to-list 'completion-at-point-functions #'cape-history)
     (add-to-list 'completion-at-point-functions #'cape-abbrev)
+    (add-to-list 'completion-at-point-functions #'yasnippet-capf)
     (cl-pushnew #'cape-file completion-at-point-functions)
     :config
     ;; Silence then pcomplete capf, no errors or messages!

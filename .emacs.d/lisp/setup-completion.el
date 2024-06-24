@@ -325,6 +325,7 @@
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-history)
   (add-to-list 'completion-at-point-functions #'cape-abbrev)
+  (add-to-list 'completion-at-point-functions #'yasnippet-capf)
   (cl-pushnew #'cape-file completion-at-point-functions)
   :config
   ;; Silence then pcomplete capf, no errors or messages!
