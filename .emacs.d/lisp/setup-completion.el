@@ -364,7 +364,7 @@
          ("M-*" . tempel-insert))
 
   :config
-  (setq tempel-path "~/.config/emacs/templates")
+  (setq tempel-path (expand-file-name "templates" (concat (getenv "PIM_HOME") "/config/emacs")))
 
   :init
 

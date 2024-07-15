@@ -943,7 +943,7 @@ filter string into the minibuffer.
 [[https://github.com/purcell/diredfl][Diredfl]] Extra font lock rules for a  more colorful dired.
 
 #+begin_src emacs-lisp
-  (use-package diredfl
+   (use-package diredfl
     :init (diredfl-global-mode 1))
 #+end_src
 ** Projectile
@@ -1066,6 +1066,7 @@ https://github.com/Alexander-Miller/treemacs
 
 I have a very simple use of treemacs
 Cf https://github.com/Alexander-Miller/treemacs#navigation-without-projects-and-workspaces 
+
 
 #+begin_src emacs-lisp
   (use-package treemacs
@@ -1628,7 +1629,7 @@ Cf https://github.com/minad/tempel
            ("M-*" . tempel-insert))
 
     :config
-    (setq tempel-path "~/.config/emacs/templates")
+    (setq tempel-path (expand-file-name "templates" (concat (getenv "PIM_HOME") "/config/emacs")))
 
     :init
 
@@ -1658,6 +1659,8 @@ Cf https://github.com/minad/tempel
   ;; Optional: Add tempel-collection.
   ;; The package is young and doesn't have comprehensive coverage.
   ;;(use-package tempel-collection)
+
+
 #+end_src
 
 
@@ -1856,7 +1859,7 @@ Change priorities colors
        "Return projects dir"
        (interactive "P")
        (cond
-        (is-windows "C:/Projects/")
+        (is-windows "~/Projects/")
         (t "~/Projects")))
    )
  #+end_src
@@ -3220,7 +3223,7 @@ Needs Java and plantuml.jar installed in =~/opt=
 #+begin_src shell :tangle no  
   mkdir -P ~/opt
   cd ~/opt
-  curl -O -J -L https://github.com/plantuml/plantuml/releases/latest/plantuml.jar
+  curl -O -J -L https://github.com/plantuml/plantuml/releases/download/v1.2024.6/plantuml-1.2024.6.jar
   chmod 755 plantuml.jar
 #+end_src
 

@@ -106,7 +106,7 @@
               ("/" . dired-narrow)))
 
 (use-package diredfl
-  :init (diredfl-global-mode 1))
+ :init (diredfl-global-mode 1))
 
 (use-package projectile
   :custom

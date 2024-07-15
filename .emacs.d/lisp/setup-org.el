@@ -160,7 +160,7 @@
     "Return projects dir"
     (interactive "P")
     (cond
-     (is-windows "C:/Projects/")
+     (is-windows "~/Projects/")
      (t "~/Projects")))
 )
 

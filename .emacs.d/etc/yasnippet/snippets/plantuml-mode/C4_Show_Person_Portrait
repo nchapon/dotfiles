@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: C4_SHOW_PERSON_PORTRAIT
+# key: C4_SPP
+# --
+SHOW_PERSON_PORTRAIT()
