@@ -1032,7 +1032,7 @@ capture was not aborted."
     (consult-notes-denote-mode)
     (setq consult-notes-denote-display-id nil))
   ;; search only for text files in denote dir
-  (setq consult-notes-denote-files-function (function denote-directory-text-only-files))
+  (setq consult-notes-denote-files-function (lambda () (denote-directory-files nil t t)))
   :bind
     (("C-c n F" . consult-notes)
      ("C-c n s" . consult-notes-search-in-all-notes)))
