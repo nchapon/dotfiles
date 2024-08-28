@@ -22,7 +22,7 @@
   ;; New template exapnsion
   (require 'org-tempo)
 
-  (setq org-ellipsis " ↵"
+  (setq org-ellipsis " ⬇"
         org-cycle-separator-lines 0                 ;; Hide empty lines between subtrees
         org-catch-invisible-edits 'show-and-error   ;; Avoid inadvertent text edit in invisible area
         )
