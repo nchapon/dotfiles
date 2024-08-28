@@ -44,8 +44,7 @@
 (bind-keys
  ("<f5>" . revert-buffer)
  ("C-<f5>" . magit-log-buffer-file)
- ("<f6>" . treemacs)
- ("<f9>" . my/capture-interruption-task)
+ ("<f9>" . treemacs)
  ("<f11>" . nc/maximize-or-split-window-vertically)
  ("C-<f11>" . nc/split-window-horizontally)
  ("<f12>" . org-agenda)
