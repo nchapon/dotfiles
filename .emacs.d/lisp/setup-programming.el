@@ -339,43 +339,6 @@
 (use-package terraform-mode
   :hook ((terraform-mode . lsp)))
 
-(use-package restclient
-  :mode (("\\.restclient\\'" . restclient-mode)
-         ("\\.http\\'" . restclient-mode))
-
-  :bind
-  ("<f4>" . nc/restclient-open-collection)
-  (:map restclient-mode-map
-        ("C-c r" . rename-buffer)
-        ("C-c h" . nc/restclient-toggle-headers))
-  :hook
-  (restclient-mode-hook . nc/restclient-imenu-index)
-  :config
-  (defun nc/restclient-toggle-headers ()
-    (interactive)
-    (message "restclient-response-body-only=%s"
-             (setf restclient-response-body-only
-                   (not restclient-response-body-only))))
-  (defun nc/restclient-open-collection (&optional arg)
-    "Open a file from the restclient \"collection\".
-Use prefix ARG to open the file in another window."
-    (interactive "P")
-    (let ((restclient-file (read-file-name "Open restclient file:"
-                                           (concat (getenv "PIM_HOME") "/notes/restclient/")
-                                           nil
-                                           nil
-                                           nil
-                                           (lambda (name)
-                                             (string-equal
-                                              (file-name-extension name)
-                                              "http")))))
-      (if arg
-          (find-file-other-window restclient-file)
-        (find-file restclient-file))))
-  (defun nc/restclient-imenu-index ()
-    "Configure imenu on the convention \"### Title\"."
-    (setq-local imenu-generic-expression '((nil "^### \\(.*\\)$" 1)))))
-
 (use-package verb
   :config
   (setq verb-auto-kill-response-buffers 2) ; Two mots recent buffers for response

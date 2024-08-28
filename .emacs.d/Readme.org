@@ -3409,51 +3409,12 @@ Needs Terraform LSP Server, not the latest version, works fine with =0.28.1=
   (use-package terraform-mode
     :hook ((terraform-mode . lsp)))
 #+end_src
-** Web
-*** Rest Client
-[[https://github.com/pashky/restclient.el][Restclient]] Emacs client for testing API
 
-#+begin_src emacs-lisp
-  (use-package restclient
-    :mode (("\\.restclient\\'" . restclient-mode)
-           ("\\.http\\'" . restclient-mode))
-
-    :bind
-    ("<f4>" . nc/restclient-open-collection)
-    (:map restclient-mode-map
-          ("C-c r" . rename-buffer)
-          ("C-c h" . nc/restclient-toggle-headers))
-    :hook
-    (restclient-mode-hook . nc/restclient-imenu-index)
-    :config
-    (defun nc/restclient-toggle-headers ()
-      (interactive)
-      (message "restclient-response-body-only=%s"
-               (setf restclient-response-body-only
-                     (not restclient-response-body-only))))
-    (defun nc/restclient-open-collection (&optional arg)
-      "Open a file from the restclient \"collection\".
-  Use prefix ARG to open the file in another window."
-      (interactive "P")
-      (let ((restclient-file (read-file-name "Open restclient file:"
-                                             (concat (getenv "PIM_HOME") "/notes/restclient/")
-                                             nil
-                                             nil
-                                             nil
-                                             (lambda (name)
-                                               (string-equal
-                                                (file-name-extension name)
-                                                "http")))))
-        (if arg
-            (find-file-other-window restclient-file)
-          (find-file restclient-file))))
-    (defun nc/restclient-imenu-index ()
-      "Configure imenu on the convention \"### Title\"."
-      (setq-local imenu-generic-expression '((nil "^### \\(.*\\)$" 1)))))
-#+end_src
-*** Verb mode
+** Rest Client
 
 Verb is a package for Emacs which allows you to organize and send HTTP requests
+
+ℹ️ To replace =restlient= wich is no longer maintained
 
 #+begin_src emacs-lisp
   (use-package verb
@@ -3466,7 +3427,7 @@ Verb is a package for Emacs which allows you to organize and send HTTP requests
     (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 
 #+end_src
-
+** Web
 *** Web Mode
 [[https://web-mode.org/][Web Mode]] major mode for editing HTML pages
 
