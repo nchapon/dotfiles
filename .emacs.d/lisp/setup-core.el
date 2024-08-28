@@ -254,9 +254,6 @@ or no selection is made: nil is returned."
                   (string= "" selection))
         selection))))
 
-(use-package emojify
-  :hook (after-init . global-emojify-mode))
-
 (use-package wgrep
   ;; Edit a grep buffer and apply those changes to the file buffer.
   ;; In other words, after searching for something, sending the
