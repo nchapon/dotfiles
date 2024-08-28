@@ -30,6 +30,6 @@
     co = checkout
     cp = cherry-pick
 
-[includeIf "gitdir:C:/Projects/"]
-    path = C:/Projects/.gitconfig.local
+[includeIf "gitdir:C:/msys64/home/nchapon/Projects/"]
+    path = C:/msys64/home/nchapon/Projects/.gitconfig.local
 
