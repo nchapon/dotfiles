@@ -1375,6 +1375,9 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
            ("M-s m" . consult-multi-occur)
            ("M-s k" . consult-keep-lines)
            ("M-s u" . consult-focus-lines)
+           ;; Custom searching
+           ("C-c sf" . nc/consult-fd-my-projects)
+           ("C-c sr" . nc/consult-rg-my-projects)
            ;; Isearch integration
            ("M-s e" . consult-isearch)
            :map isearch-mode-map
@@ -1410,6 +1413,14 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
     ;; after lazily loading the package.
     :config
 
+    (defun nc/consult-rg-my-projects ()
+      (interactive)
+      (consult-ripgrep "~/Projects"))
+    (defun nc/consult-fd-my-projects ()
+      (interactive)
+      (consult-fd "~/Projects"))
+
+    
     ;; Optionally configure preview. The default value
     ;; is 'any, such that any key triggers the preview.
     ;; (setq consult-preview-key 'any)
