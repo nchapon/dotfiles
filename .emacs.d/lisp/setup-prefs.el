@@ -35,6 +35,8 @@
       delete-by-moving-to-trash t
       confirm-nonexistent-file-or-buffer nil
       query-replace-highlight t
+      ;; do not create lock files
+      create-lockfiles nil
       ring-bell-function 'ignore
       sentence-end-double-space nil)
 
