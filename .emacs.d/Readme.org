@@ -543,6 +543,18 @@ Using moe theme dark all the day
 
       (require 'font-lock))
 #+end_src
+** Casual
+Contextual User Interfaces based on Transient (aka magit interface)
+*** casual-editkit
+User interface library for Emacs editing commands.
+#+begin_src emacs-lisp
+  (use-package casual-editkit
+    :ensure nil
+    :bind (("C-o" . casual-editkit-main-tmenu)))
+#+end_src
+
+
+
 
 * Key Bindings
 :properties:
