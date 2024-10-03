@@ -2988,7 +2988,18 @@ Programming configuration module automatically tangled in =./lisp/setup-programm
 
   <<nc-header>>
 #+end_src
+** Compile
+Better defaults
 
+#+begin_src emacs-lisp
+(use-package compile
+  :defer t
+  :hook ((compilation-filter . ansi-color-compilation-filter))
+  :config
+  (setopt compilation-scroll-output t)
+  (setopt compilation-ask-about-save nil)
+  (require 'ansi-color))
+#+end_src
 ** LSP Mode
 
 #+begin_src emacs-lisp
