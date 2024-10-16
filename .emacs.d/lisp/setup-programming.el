@@ -221,6 +221,42 @@
 (use-package markdown-toc
   :after markdown-mode)
 
+;; From https://www.jamescherti.com/emacs-markdown-table-of-contents-update-before-save/
+;; The following functions and hooks guarantee that any existing table of
+;; contents remains current whenever changes are made to the markdown file,
+;; while also ensuring that both the window start and cursor position remain
+;; unchanged.
+(defun nc/markdown-toc-gen-if-present ()
+  "Generate a table of contents if it is already present."
+  (let ((marker (point-marker))
+        (current-visual-line
+         (save-excursion
+           (beginning-of-visual-line)
+           (count-screen-lines (window-start) (point)))))
+    (unwind-protect
+        (when (markdown-toc--toc-already-present-p)
+          (markdown-toc-generate-toc))
+      (progn
+        (goto-char (marker-position marker))
+        (when (> current-visual-line 0)
+          (let ((window-start (save-excursion
+                                (beginning-of-visual-line)
+                                (let ((line-move-visual t)
+                                      (line-move-ignore-invisible nil))
+                                  (line-move (* -1 current-visual-line)))
+                                (beginning-of-visual-line)
+                                (point))))
+            (set-window-start (selected-window) window-start)))))))
+
+(defun nc/setup-markdown-toc ()
+  "Setup the markdown-toc package."
+  (add-hook 'before-save-hook #'nc/markdown-toc-gen-if-present nil t))
+
+(add-hook 'markdown-mode-hook #'nc/setup-markdown-toc)
+;; (add-hook 'markdown-ts-mode-hook #'my-setup-markdown-toc)
+;; (add-hook 'gfm-mode-hook #'my-setup-markdown-toc)
+
+
 ;; Render Markdwon with GitHub API
 (use-package gh-md
   :after markdown-mode

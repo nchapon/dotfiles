@@ -305,7 +305,7 @@
               ([backtab]    . corfu-previous)
               ("<return>" . corfu-insert)
               ("C-q"        . corfu-quit))
-
+  
   :init
   (global-corfu-mode)
   (corfu-history-mode)
