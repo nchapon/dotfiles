@@ -325,6 +325,7 @@
          ("C-c p f" . cape-file)
          ("C-c p k" . cape-keyword)
          ("C-c p a" . cape-abbrev)
+         ("C-c p e" . cape-emoji)
          ("C-c p l" . cape-line)
          ("C-c p w" . cape-dict)
          ("C-c p &" . cape-sgml)

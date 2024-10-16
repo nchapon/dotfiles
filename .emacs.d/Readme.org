@@ -1603,7 +1603,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 #+end_src
 
 *** Cape
-Bound to =M-SPC=
+Bound to =C-c p=
 #+begin_src emacs-lisp
   (use-package cape
     :defer 10
@@ -1613,6 +1613,7 @@ Bound to =M-SPC=
            ("C-c p f" . cape-file)
            ("C-c p k" . cape-keyword)
            ("C-c p a" . cape-abbrev)
+           ("C-c p e" . cape-emoji)
            ("C-c p l" . cape-line)
            ("C-c p w" . cape-dict)
            ("C-c p &" . cape-sgml)
@@ -1633,7 +1634,6 @@ Bound to =M-SPC=
     ;; Ensure that pcomplete does not write to the buffer
     ;; and behaves as a pure `completion-at-point-function'.
     (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
-
 #+end_src
 *** kind-icon
 
