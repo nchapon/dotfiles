@@ -124,6 +124,120 @@
 
   )
 
+;; -*- lexical-binding: t; -*-
+(use-package treesit
+  :straight (:type built-in)
+  :mode ("\\.tsx\\'" . tsx-ts-mode)
+  :config
+  (setq treesit-language-source-alist
+        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+          (cmake "https://github.com/uyha/tree-sitter-cmake")
+          (css "https://github.com/tree-sitter/tree-sitter-css")
+          (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+          (go "https://github.com/tree-sitter/tree-sitter-go")
+          (html "https://github.com/tree-sitter/tree-sitter-html")
+          (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+          (json "https://github.com/tree-sitter/tree-sitter-json")
+          (make "https://github.com/alemuller/tree-sitter-make")
+          (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+          (python "https://github.com/tree-sitter/tree-sitter-python")
+          (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
+          (rust "https://github.com/tree-sitter/tree-sitter-rust")
+          (toml "https://github.com/tree-sitter/tree-sitter-toml")
+          (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src")
+          (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src")
+          (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+          (astro "https://github.com/virchau13/tree-sitter-astro")
+          (sql "https://github.com/DerekStride/tree-sitter-sql" "gh-pages" "src")
+          (hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")))
+
+  (defun treesit-install-all-grammars ()
+    (interactive)
+    (dolist (lang (mapcar #'car treesit-language-source-alist))
+      (treesit-install-language-grammar lang)))
+
+  (defvar treesit-langs-mode-overrides '((sh-mode . bash)
+                                         (sh-ts-mode . bash)
+                                         (css-mode . css)
+                                         (emacs-lisp-mode . elisp)
+                                         (emacs-lisp-ts-mode . elisp)
+                                         (js-mode . javascript)
+                                         (js-ts-mode . javascript)
+                                         (json-mode . json)
+                                         (makefile-mode . make)
+                                         (makefile-ts-mode . make)))
+
+  (defun treesit-parse-lang-from-mode (mode)
+    (let* ((mode (if (symbolp mode) (symbol-name mode) mode))
+           (lang (save-match-data
+                   (string-match "\\(.*?\\)\\(-ts\\)?-mode" mode)
+                   (match-string 1 mode))))
+      (intern lang)))
+
+  (defun treesit-lang-for-mode (mode)
+    (or (cdr (assoc mode treesit-langs-mode-overrides))
+        (treesit-parse-lang-from-mode mode)
+        (error "Unable to determine tree-sitter parser for %s" mode)))
+
+  (defun treesit-parser ()
+    (if-let ((lang (treesit-lang-for-mode major-mode)))
+        (treesit-parser-create lang (current-buffer))
+      (user-error "No tree-sitter parser for %s" major-mode)))
+
+  (defun treesit-node-start-line-number (node)
+    (when-let ((start (treesit-node-start node)))
+      (line-number-at-pos start)))
+
+  (defun treesit-surrounding-method-call-named (name)
+    (treesit-parent-until
+     (treesit-node-at (point) (treesit-parser))
+     (lambda (n)
+       (and
+        (equal (treesit-node-type n) "call")
+        (equal
+         (treesit-node-text
+          (treesit-node-child-by-field-name n "method"))
+         name)))
+     t))
+
+  (defun treesit-rspec-all-calls-named (type)
+    (let* ((parser (treesit-parser))
+           (root (treesit-parser-root-node parser)))
+      (->> (treesit-query-capture
+            root
+            `((call
+               method: (identifier) @id
+               (:equal @id ,type)
+               arguments: (argument_list (string (string_content)))
+               block: (_)) @node))
+           (-filter (lambda (n) (eq (car n) 'node)))
+           (-map #'cdr))))
+
+  (defun treesit-rspec-all-examples ()
+    (treesit-rspec-all-calls-named "it"))
+
+  (defun treesit-rspec-all-example-groups ()
+    (treesit-rspec-all-calls-named "describe"))
+
+  (defun treesit-rspec-all-contexts ()
+    (treesit-rspec-all-calls-named "context"))
+
+  (defun treesit-rspec-example-at-point ()
+    (treesit-surrounding-method-call-named "it"))
+
+  (defun treesit-rspec-context-at-point ()
+    (treesit-surrounding-method-call-named "context"))
+
+  (defun treesit-rspec-example-group-at-point ()
+    (treesit-surrounding-method-call-named "describe"))
+
+  (defun treesit-rspec-method-name (node)
+    (when-let ((args (treesit-node-child-by-field-name node "arguments")))
+      (->> (treesit-query-capture args '((string (string_content) @name)))
+           (-filter (lambda (n) (eq (car n) 'name)))
+           (-map #'cdr)
+           (-mapcat (lambda (n) (treesit-node-text n t)))))))
+
 (use-package smartparens
   :defer t
   :diminish ""
@@ -418,11 +532,30 @@
   ;; Don't override global M-j keybinding (join lines)
   (define-key js2-mode-map (kbd "M-j") nil))
 
-(use-package yaml-mode
-  :mode (("\\.yaml\\'" . yaml-mode)
-           ("\\.yml\\'" . yaml-mode))
-  :custom
-  (yaml-indent-offset 4))
+(use-package yaml-ts-mode
+  :mode ("\\.yaml\\'" "\\.yml\\'")
+  :config
+  (add-hook 'yaml-ts-mode-hook #'highlight-indent-guides-mode))
+
+(use-package yaml-pro
+  :hook (yaml-ts-mode . yaml-pro-ts-mode)
+  :config
+  (defun yaml-pro-edit-initialize-buffer-filter-args-advice (args)
+    (if-let ((mode (language-detection-detect-mode (buffer-string))))
+        (cl-destructuring-bind (parent-buffer buffer initial-text type initialize path) args
+          (let ((init-func (lambda ()
+                             (funcall mode)
+                             (when initialize
+                               (call-interactively initialize)))))
+            (list parent-buffer buffer initial-text type init-func path)))
+      args))
+  (advice-add 'yaml-pro-edit-initialize-buffer :filter-args #'yaml-pro-edit-initialize-buffer-filter-args-advice)
+
+  :bind
+    (:map yaml-pro-ts-mode-map
+          ("C-c j" . yaml-pro-ts-move-subtree-down)
+          ("C-c k" . yaml-pro-ts-move-subtree-up)
+          ("C-c f" . yaml-pro-format)))
 
 (provide 'setup-programming)
 ;;; setup-programming.el ends here
