@@ -87,8 +87,7 @@
     (require 'font-lock))
 
 (use-package casual-editkit
-  :ensure nil
-  :bind (("C-o" . casual-editkit-main-tmenu)))
+  :ensure nil)
 
 (provide 'setup-ui)
 ;;; setup-ui.el ends here
