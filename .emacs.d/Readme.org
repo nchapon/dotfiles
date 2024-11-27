@@ -3605,7 +3605,7 @@ Verb is a package for Emacs which allows you to organize and send HTTP requests
 #+begin_src emacs-lisp
   (use-package verb
     :config
-    (setq verb-auto-kill-response-buffers 2) ; Two mots recent buffers for response
+    (setq verb-auto-kill-response-buffers nil) ; Response buffers killed before sending a request.
 
     )
 

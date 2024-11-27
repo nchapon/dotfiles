@@ -499,7 +499,7 @@
 
 (use-package verb
   :config
-  (setq verb-auto-kill-response-buffers 2) ; Two mots recent buffers for response
+  (setq verb-auto-kill-response-buffers nil) ; Response buffers killed before sending a request.
 
   )
 
