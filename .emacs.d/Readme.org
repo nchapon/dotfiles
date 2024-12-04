@@ -1721,38 +1721,44 @@ Org mode configuration automatically tangled in =./lisp/setup-org.el=
 ** Org Base Configuration
 
 #+begin_src emacs-lisp
-  (use-package org
+(use-package org
 
-    :bind (("C-c l" . org-store-link)
-           ("C-c c" . org-capture)
-           ("C-c a" . org-agenda)
-           ("C-c C-b" . org-iswitchb))
+  :bind (("C-c l" . org-store-link)
+         ("C-c c" . org-capture)
+         ("C-c a" . org-agenda)
+         ("C-c C-b" . org-iswitchb))
 
-    :config
-    ;; New template exapnsion
-    (require 'org-tempo)
+  :config
+  ;; New template exapnsion
+  (require 'org-tempo)
 
-    (setq org-ellipsis " ⬇"
-          org-cycle-separator-lines 0                 ;; Hide empty lines between subtrees
-          org-catch-invisible-edits 'show-and-error   ;; Avoid inadvertent text edit in invisible area
-          )
+  (setq org-ellipsis " ⬇"
+        org-cycle-separator-lines 0                 ;; Hide empty lines between subtrees
+        org-catch-invisible-edits 'show-and-error   ;; Avoid inadvertent text edit in invisible area
+        )
 
-    (set-face-attribute 'org-ellipsis nil :underline nil)
+  (set-face-attribute 'org-ellipsis nil :underline nil)
 
-    ;; Autamatically add =ID= (unique identifier) in heading drawers to keep links unique
-    (require 'org-id)
-    (setq org-id-method 'uuidgen)
-    (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+  ;; Autamatically add =ID= (unique identifier) in heading drawers to keep links unique
+  (require 'org-id)
+  (setq org-id-method 'uuidgen)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
-    (require 'org-crypt)
-    (org-crypt-use-before-save-magic)
+  (require 'org-crypt)
+  (org-crypt-use-before-save-magic)
 
-    (add-to-list 'org-tags-exclude-from-inheritance "crypt")
-    ;; GPG key to use for encryption
-    ;; Either the Key ID or set to nil to use symmetric encryption.
-    (setq org-crypt-key "0DF2D6C6E8443FE7"))
+  (add-to-list 'org-tags-exclude-from-inheritance "crypt")
+  ;; GPG key to use for encryption
+  ;; Either the Key ID or set to nil to use symmetric encryption.
+  (setq org-crypt-key "0DF2D6C6E8443FE7")
 
-    (use-package org-contrib)
+
+  :hook
+  ;; Redisplau inline images
+  (org-babel-after-execute . org-redisplay-inline-images)
+  )
+
+ (use-package org-contrib)
 #+end_src
 
 ** Org UI
@@ -2627,6 +2633,8 @@ Customize speed-commands :
      (dot . t)
      (java .t)
      (restclient . t)))
+
+  (setq org-edit-src-content-indentation 0)
 
   (require 'ob-clojure)
 #+end_src

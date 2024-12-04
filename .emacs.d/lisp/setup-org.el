@@ -40,9 +40,15 @@
   (add-to-list 'org-tags-exclude-from-inheritance "crypt")
   ;; GPG key to use for encryption
   ;; Either the Key ID or set to nil to use symmetric encryption.
-  (setq org-crypt-key "0DF2D6C6E8443FE7"))
+  (setq org-crypt-key "0DF2D6C6E8443FE7")
 
-  (use-package org-contrib)
+
+  :hook
+  ;; Redisplau inline images
+  (org-babel-after-execute . org-redisplay-inline-images)
+  )
+
+ (use-package org-contrib)
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode)
@@ -739,6 +745,8 @@ if nil,the top of the file."
    (dot . t)
    (java .t)
    (restclient . t)))
+
+(setq org-edit-src-content-indentation 0)
 
 (require 'ob-clojure)
 
