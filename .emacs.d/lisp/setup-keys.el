@@ -11,11 +11,6 @@
 
 ;;; Code:
 
-(when is-windows
-  (progn
-    (setq w32-lwindow-modifier 'super)
-    (w32-register-hot-key [s-])))
-
 ;; Unbind unneeded keys
 (global-set-key (kbd "C-z") nil)
 (global-set-key (kbd "C-l") nil)
@@ -209,6 +204,7 @@
 
 (defvar-keymap prefix-command-q
   :doc "Prefix Map for C-q:"
+  ";" #'nc/goto-emacs-config
   "a" #'embark-act
   "d" prefix-buffer-map-d
   "e" #'casual-editkit-main-tmenu

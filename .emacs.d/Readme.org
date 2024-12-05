@@ -563,16 +563,6 @@ Key bindings configuration module automatically tangled in =./lisp/setup-keys.el
 
   <<nc-header>>
 #+end_src
-** MS Window Keyboard
-Cf https://www.gnu.org/software/emacs/manual/html_node/emacs/Windows-Keyboard.html
-Disable windows left key when I am in emacs
-#+begin_src emacs-lisp
-  (when is-windows
-    (progn
-      (setq w32-lwindow-modifier 'super)
-      (w32-register-hot-key [s-])))
-#+end_src
-
 ** Global Key Bindings
 Some Emacs Global Bindings are redefined here.
 #+begin_src emacs-lisp
@@ -741,6 +731,8 @@ your currently entered incomplete command (a prefix) in a popup.
 
 🚧 Experimental : inspired by https://summeremacs.github.io/posts/universal-keybind/ 
 
+See also : https://github.com/pivaldi/pimacs/tree/master/doc
+
 #+begin_src emacs-lisp
 
 (global-set-key (kbd "C-q") nil)
@@ -804,6 +796,7 @@ your currently entered incomplete command (a prefix) in a popup.
 
 (defvar-keymap prefix-command-q
   :doc "Prefix Map for C-q:"
+  ";" #'nc/goto-emacs-config
   "a" #'embark-act
   "d" prefix-buffer-map-d
   "e" #'casual-editkit-main-tmenu
@@ -1806,8 +1799,7 @@ Org mode configuration automatically tangled in =./lisp/setup-org.el=
 #+begin_src emacs-lisp
 (use-package org
 
-  :bind (("C-c l" . org-store-link)
-         ("C-c c" . org-capture)
+  :bind (("C-c c" . org-capture)
          ("C-c a" . org-agenda)
          ("C-c C-b" . org-iswitchb))
 
@@ -3090,60 +3082,86 @@ Better defaults
   (require 'ansi-color))
 #+end_src
 ** LSP Mode
+:PROPERTIES:
+:ID:       96b7778d-9937-4f70-a66a-55d249061c3f
+:END:
 
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-    :commands lsp
-    :bind
-    (:map lsp-mode-map
-          ( ;;("C-\M-b" . lsp-find-implementation)
-           ("M-RET" . lsp-execute-code-action)))
-    :hook (lsp-mode . lsp-enable-which-key-integration)
-    :config
-    (setq ; recommended
-     gc-cons-threshold (* 100 1024 1024)
-     read-process-output-max (* 1024 1024))
+(use-package lsp-mode
+  :commands lsp
+  :bind
+  (:map lsp-mode-map
+        ( ;;("C-\M-b" . lsp-find-implementation)
+         ("M-RET" . lsp-execute-code-action)))
+  :bind-keymap ("C-c l" . lsp-command-map)
+  :hook (lsp-mode . lsp-enable-which-key-integration)
+  :config
+  (setq ; recommended
+   gc-cons-threshold (* 100 1024 1024)
+   read-process-output-max (* 1024 1024))
+  
+  (setq ; optional
+   ;; lsp-clojure-custom-server-command '("/Users/nchapon/_PIM/tmp/2del/clojure-lsp") 
 
-    (setq ; optional
-     ;; lsp-clojure-custom-server-command '("/Users/nchapon/_PIM/tmp/2del/clojure-lsp") 
+                                        ; Features
+   lsp-lens-enable t
+                                        ;lsp-semantic-tokens-enable t
 
-                                          ; Features
-     lsp-lens-enable t
-                                          ;lsp-semantic-tokens-enable t
+   lsp-headerline-breadcrumb-enable nil ;; disable breadcrumb
 
-     lsp-headerline-breadcrumb-enable nil ;; disable breadcrumb
+   lsp-completion-provider :none
+
+   ;; Conflicts with other Clojure emacs packages
+   cljr-add-ns-to-blank-clj-files nil ; disable clj-refactor adding ns to blank files
+   cider-eldoc-display-for-symbol-at-point nil ; disable cider eldoc integration
+                                        ; lsp-eldoc-enable-hover nil ; disable lsp-mode showing eldoc during symbol at point
+                                        ; lsp-enable-indentation nil ; uncomment to use cider indentation instead of lsp
+                                        ; lsp-enable-completion-at-point nil ; uncomment to use cider completion instead of lsp
+
+   ;; Terraform
+   lsp-disabled-clients '(tfls)
+
+   ))
 
 
-     ;; Conflicts with other Clojure emacs packages
-     cljr-add-ns-to-blank-clj-files nil ; disable clj-refactor adding ns to blank files
-     cider-eldoc-display-for-symbol-at-point nil ; disable cider eldoc integration
-                                          ; lsp-eldoc-enable-hover nil ; disable lsp-mode showing eldoc during symbol at point
-                                          ; lsp-enable-indentation nil ; uncomment to use cider indentation instead of lsp
-                                          ; lsp-enable-completion-at-point nil ; uncomment to use cider completion instead of lsp
 
-     ;; Terraform
-     lsp-disabled-clients '(tfls)
+;; optionally
+(use-package lsp-ui
+  :hook lsp-mode
+  :init
+  ;; (setq lsp-ui-doc-alignment 'frame
+  ;;       lsp-ui-doc-position  'bottom
+  ;;       lsp-ui-doc-use-childframe nil)
+  :config
 
-     ))
+  (setq lsp-ui-imenu-window-fix-width 40)
+  ;; WORKAROUND Hide mode-line of the lsp-ui-imenu buffer
+  ;; @see https://github.com/emacs-lsp/lsp-ui/issues/243
+  (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
+    (setq mode-line-format nil))
+  :bind (:map lsp-ui-mode-map
+              (([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+               ([remap xref-find-references] . lsp-ui-peek-find-references))))
 
-  ;; optionally
-  (use-package lsp-ui
-    :hook lsp-mode
-    :init
-    ;; (setq lsp-ui-doc-alignment 'frame
-    ;;       lsp-ui-doc-position  'bottom
-    ;;       lsp-ui-doc-use-childframe nil)
-    :config
-    ;; WORKAROUND Hide mode-line of the lsp-ui-imenu buffer
-    ;; @see https://github.com/emacs-lsp/lsp-ui/issues/243
-    (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
-      (setq mode-line-format nil))
-    :bind (:map lsp-ui-mode-map
-                (([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
-                 ([remap xref-find-references] . lsp-ui-peek-find-references))))
+(use-package lsp-treemacs
+  :commands lsp-treemacs-errors-list)
 
-  (use-package lsp-treemacs
-    :commands lsp-treemacs-errors-list)
+
+;; Integration with consult
+(use-package consult-lsp)
+
+(with-eval-after-load 'lsp-mode
+  ;; Remap `lsp-treemacs-errors-list' (bound to C-c l g e).
+  (define-key lsp-mode-map
+              [remap lsp-treemacs-errors-list]
+              #'consult-lsp-diagnostics)
+
+  ;; Remap `xref-find-apropos' (bound to C-c l g a).
+  (define-key lsp-mode-map
+              [remap xref-find-apropos]
+              #'consult-lsp-symbols))
+
+
 #+end_src
 
 This function adds the hooks that will enable LSP-powered formatting
@@ -3182,6 +3200,7 @@ Hydra
     ("M-r" lsp-restart-workspace)
     ("S" lsp-shutdown-workspace))
 (global-set-key (kbd "C-l") 'hydra-lsp/body)
+
 #+end_src
 
 *** Flycheck

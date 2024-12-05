@@ -25,12 +25,13 @@
   (:map lsp-mode-map
         ( ;;("C-\M-b" . lsp-find-implementation)
          ("M-RET" . lsp-execute-code-action)))
+  :bind-keymap ("C-c l" . lsp-command-map)
   :hook (lsp-mode . lsp-enable-which-key-integration)
   :config
   (setq ; recommended
    gc-cons-threshold (* 100 1024 1024)
    read-process-output-max (* 1024 1024))
-
+  
   (setq ; optional
    ;; lsp-clojure-custom-server-command '("/Users/nchapon/_PIM/tmp/2del/clojure-lsp") 
 
@@ -40,6 +41,7 @@
 
    lsp-headerline-breadcrumb-enable nil ;; disable breadcrumb
 
+   lsp-completion-provider :none
 
    ;; Conflicts with other Clojure emacs packages
    cljr-add-ns-to-blank-clj-files nil ; disable clj-refactor adding ns to blank files
@@ -53,6 +55,8 @@
 
    ))
 
+
+
 ;; optionally
 (use-package lsp-ui
   :hook lsp-mode
@@ -61,6 +65,8 @@
   ;;       lsp-ui-doc-position  'bottom
   ;;       lsp-ui-doc-use-childframe nil)
   :config
+
+  (setq lsp-ui-imenu-window-fix-width 40)
   ;; WORKAROUND Hide mode-line of the lsp-ui-imenu buffer
   ;; @see https://github.com/emacs-lsp/lsp-ui/issues/243
   (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
@@ -71,6 +77,21 @@
 
 (use-package lsp-treemacs
   :commands lsp-treemacs-errors-list)
+
+
+;; Integration with consult
+(use-package consult-lsp)
+
+(with-eval-after-load 'lsp-mode
+  ;; Remap `lsp-treemacs-errors-list' (bound to C-c l g e).
+  (define-key lsp-mode-map
+              [remap lsp-treemacs-errors-list]
+              #'consult-lsp-diagnostics)
+
+  ;; Remap `xref-find-apropos' (bound to C-c l g a).
+  (define-key lsp-mode-map
+              [remap xref-find-apropos]
+              #'consult-lsp-symbols))
 
 (defun lsp-save-hooks () "Install save hooks for lsp."
        (add-hook 'before-save-hook #'lsp-format-buffer t t)

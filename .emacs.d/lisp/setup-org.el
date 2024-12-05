@@ -13,8 +13,7 @@
 
 (use-package org
 
-  :bind (("C-c l" . org-store-link)
-         ("C-c c" . org-capture)
+  :bind (("C-c c" . org-capture)
          ("C-c a" . org-agenda)
          ("C-c C-b" . org-iswitchb))
 
