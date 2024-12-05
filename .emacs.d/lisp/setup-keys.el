@@ -125,14 +125,6 @@
    "Search"
    (("?" nc/search-notes "Search Notes"))))
 
-(bind-keys
- ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
-   ("C-c C-h" . major-mode-hydra) 
-   ("C-c i" . nc-hydra-insert/body)
-   ("C-c g" . nc-hydra-goto/body)
-   ("C-c t" . nc-hydra-toggle/body)
-   ("C-c w" . nc-hydra-windows/body))
-
 (use-package key-chord
   :init
   (key-chord-mode 1)
@@ -155,6 +147,91 @@
   :config
   (which-key-mode)
   (which-key-enable-god-mode-support))
+
+(global-set-key (kbd "C-q") nil)
+
+(defvar-keymap prefix-buffer-map-d
+  :doc "Prefix map for C-q for dired/Denote"
+  "j" #'dired
+  "s" #'denote-sort-dired
+  ;; "d" prefix-buffer-map-denote
+  )
+
+
+(defvar-keymap prefix-buffer-map-i
+    :doc "Prefix map for C-q for Insert"
+    "d" #'nc/insert-datestamp-inactive
+    "D" #'nc/insert-datestamp
+    "p" #'nc/generate-password
+    "t" #'tempel-insert
+    "u" #'nc/uuid
+    "y" #'consult-yasnippet
+    "Y" #'yankpad-insert)
+
+(defvar-keymap prefix-buffer-map-g
+  :doc "Prefix map for C-q for goto my files or folders"
+  ";" #'nc/goto-emacs-config
+  "i" #'nc/goto-inbox
+  "p" #'nc/goto-my-credentials
+  "A" #'nc/goto-archives-dir
+  "N" #'nc/goto-notes-dir
+  "P" #'nc/goto-projects-dir
+  "T" #'nc/goto-templates-dir
+  )
+
+(defvar-keymap prefix-buffer-map-j
+  :doc "Prefix map for C-q for jump"
+  "j" #'avy-goto-char-timer
+  "i" #'imenu
+  "o" #'occur
+  "d" #'dired-jump)
+
+(defvar-keymap prefix-buffer-map-s
+  :doc "Prefix map for C-q for Search"
+  "f" #'nc/consult-fd-my-projects
+  "n" #'nc/search-notes
+  "r" #'nc/consult-rg-my-projects)
+
+
+(defvar-keymap prefix-buffer-map-t
+  :doc "Prefix map for C-q for GTD/org mode"
+  "D" #'toggle-debug-on-error
+  "P" #'smartparens-strict-mode
+  "S" #'show-smartparens-mode
+  "X" #'toggle-debug-on-quit
+  "e" #'eldoc-mode
+  "l" #'hl-line-mode
+  "n" #'linum-mode
+  "p" #'smartparens-mode
+  "r" #'rainbow-mode
+  "t" #'treemacs
+  "w" #'whitespace-mode)
+
+(defvar-keymap prefix-command-q
+  :doc "Prefix Map for C-q:"
+  "a" #'embark-act
+  "d" prefix-buffer-map-d
+  "e" #'casual-editkit-main-tmenu
+  "g" prefix-buffer-map-g
+  "h" #'major-mode-hydra
+  "i" prefix-buffer-map-i
+  "j" prefix-buffer-map-j
+  "s" prefix-buffer-map-s
+  "t" prefix-buffer-map-t)
+
+
+(which-key-add-keymap-based-replacements prefix-command-q
+  "d" `("Dired/Denote" . ,prefix-buffer-map-d)
+  ;; "d d" `("Denote" . ,prefix-buffer-map-denote)
+  "g" `("Goto My Files" . ,prefix-buffer-map-g)
+  "i" `("Insert" . ,prefix-buffer-map-i)
+  "j" `("Jump" . ,prefix-buffer-map-j)
+  "t" `("Toggles" . ,prefix-buffer-map-t)
+  ;; "m m" `("Mark" . ,prefix-buffer-map-mark)
+  ;;"c" `("Casual" . ,prefix-buffer-map-casual)
+  "s" `("Search" . ,prefix-buffer-map-s))
+
+(keymap-set global-map "C-q" prefix-command-q)
 
 (provide 'setup-keys)
 ;;; setup-keys.el ends here
