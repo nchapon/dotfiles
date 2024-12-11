@@ -3000,34 +3000,39 @@ I try to do a lot of things with =org-roam= :
 
 #+begin_src elisp
 
-  (use-package denote
-    :when (getenv "PIM_HOME")
-    :bind
-    ("C-c n n" . 'denote)
-    ("C-c n f" . 'denote-open-or-create)
-    ("C-c n k" . 'denote-keywords-add)    ;; update file name automatically
-    ("C-c n K" . 'denote-keywords-remove) ;; update file name automatically
-    ("C-c n u" . 'denote-rename-file-using-front-matter)
-    ("C-c n l" . 'denote-link-find-backlink)
-    
-    :init
-    (setq denote-directory (expand-file-name "notes" (getenv "PIM_HOME")))
-    :config
-    
-    (setq denote-prompts '(subdirectory title keyword))
-    (setq denote-infer-keywords t)
-    (setq denote-sort-keywords t)
-    (setq denote-excluded-directories-regexp "attachments")
+(use-package denote
+  :when (getenv "PIM_HOME")
+  :bind
+  ("C-c n n" . 'denote)
+  ("C-c n f" . 'denote-open-or-create)
+  ("C-c n k" . 'denote-rename-file-keywords )    ;; update file name automatically
+  ("C-c n u" . 'denote-rename-file-using-front-matter)
+  ("C-c n l" . 'denote-link-find-backlink)
 
-    ;; Makes the denote links different from usual link.
-    (set-face-attribute 'denote-faces-link
-                        nil :foreground "magenta" :inherit 'link)
+  (:map dired-mode-map
+        ("C-c C-d C-i" . 'denote-link-dired-marked-notes)                        
+        ("C-c C-d C-r" . 'denote-dired-rename-files)                           
+        ("C-c C-d C-k" . 'denote-dired-rename-marked-files-with-keywords)      
+        ("C-c C-d C-R" . 'denote-dired-rename-marked-files-using-front-matter))
+  
+  :init
+  (setq denote-directory (expand-file-name "notes" (getenv "PIM_HOME")))
+  :config
+  
+  (setq denote-prompts '(subdirectory title keyword))
+  (setq denote-infer-keywords t)
+  (setq denote-sort-keywords t)
+  (setq denote-excluded-directories-regexp "attachments")
 
-    ;; Remove the date and the identifier. They are duplicated with the file name.
-    ;; I want to remove filetags too but denote-keyword-* need that.
-    ;;(setq denote-org-front-matter "#+title: %1$s\n#+filetags: %3$s\n")
+  ;; Makes the denote links different from usual link.
+  (set-face-attribute 'denote-faces-link
+                      nil :foreground "magenta" :inherit 'link)
 
-    (add-hook 'dired-mode-hook #'denote-dired-mode))
+  ;; Remove the date and the identifier. They are duplicated with the file name.
+  ;; I want to remove filetags too but denote-keyword-* need that.
+  ;;(setq denote-org-front-matter "#+title: %1$s\n#+filetags: %3$s\n")
+
+  (add-hook 'dired-mode-hook #'denote-dired-mode))
 
 
 #+end_src

@@ -997,10 +997,15 @@ capture was not aborted."
   :bind
   ("C-c n n" . 'denote)
   ("C-c n f" . 'denote-open-or-create)
-  ("C-c n k" . 'denote-keywords-add)    ;; update file name automatically
-  ("C-c n K" . 'denote-keywords-remove) ;; update file name automatically
+  ("C-c n k" . 'denote-rename-file-keywords )    ;; update file name automatically
   ("C-c n u" . 'denote-rename-file-using-front-matter)
   ("C-c n l" . 'denote-link-find-backlink)
+
+  (:map dired-mode-map
+        ("C-c C-d C-i" . 'denote-link-dired-marked-notes)                        
+        ("C-c C-d C-r" . 'denote-dired-rename-files)                           
+        ("C-c C-d C-k" . 'denote-dired-rename-marked-files-with-keywords)      
+        ("C-c C-d C-R" . 'denote-dired-rename-marked-files-using-front-matter))
   
   :init
   (setq denote-directory (expand-file-name "notes" (getenv "PIM_HOME")))
