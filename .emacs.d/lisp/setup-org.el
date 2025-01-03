@@ -368,7 +368,7 @@
            "* Summary of the week :REVIEW:\n%[~/notes/templates/review.org]" :time-prompt t))
 
 ;; My Org agenda-files
-(defvar nc/org-agenda-files (list "~/notes/gtd.org" "~/notes/someday.org" "~/notes/personal/calendar.org" "~/notes/journal/"))
+(defvar nc/org-agenda-files (list "~/notes/gtd.org" "~/notes/projects.org" "~/notes/someday.org" "~/notes/personal/calendar.org" "~/notes/journal/"))
 
 (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'\\|[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$"
         org-agenda-files nc/org-agenda-files
