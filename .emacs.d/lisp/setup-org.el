@@ -120,7 +120,8 @@
   (org-directory "~/notes")
   :config
 
-  (defconst nc/org-default-projects-file (concat org-directory "/projects.org"))
+  (defconst nc/org-projects-file (concat org-directory "/projects.org"))
+  (defconst nc/org-office-file (concat org-directory "/office.org"))
   (defconst nc/org-default-archives-dir (concat org-directory "/archives"))
   (defconst nc/org-default-templates-dir (concat org-directory "/templates"))
   (defconst nc/org-default-personal-dir (concat org-directory "/personal"))
@@ -271,16 +272,32 @@
                            ("TODO" "NEXT") ()))
 
 (setq org-capture-templates
-        '(("t" "Task Entry"        entry
-              (file+headline nc/inbox-file "Inbox")
-              "* TODO %?\n:PROPERTIES:\n:CREATED:%U\n:END:\n\n%i\n\nFrom: %a"
-              :empty-lines 1)
-          ("s" "Someday" entry (file+headline nc/inbox-file "Inbox")
-            "* SOMEDAY %? :idea:\n%u" :clock-in t :clock-resume t)
-          ("f" "FishLog" plain (file+olp+datetree nc/fishing-file)
-           "%[~/notes/templates/fishlog.org]" :time-prompt t)
-          ("F" "Film" entry (file+headline nc/watching-file "Films")
-               "* NEXT %^{Titre}
+      '(("p" "Personal")
+        ("pp" "Project" entry
+         (file nc/org-projects-file)
+         "* %^{ProjectName}\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:END:\n %?")
+        ("pt" "Todo" entry
+         (file nc/org-projects-file)
+         "* TODO %?" :refile-targets ((nil :maxlevel . 1))
+         :prepend t)
+        ("o" "@office")
+        ("op" "Project" entry
+         (file nc/org-office-file)
+         "* %^{ProjectName}\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:END:\n %?")
+        ("ot" "Todo" entry
+         (file nc/org-office-file)
+         "* TODO %?" :refile-targets ((nil :maxlevel . 1))
+         :prepend t)
+        ("t" "Task Entry"        entry
+         (file+headline nc/inbox-file "Inbox")
+         "* TODO %?\n:PROPERTIES:\n:CREATED:%U\n:END:\n\n%i\n\nFrom: %a"
+         :empty-lines 1)
+        ("s" "Someday" entry (file+headline nc/inbox-file "Inbox")
+         "* SOMEDAY %? :idea:\n%u" :clock-in t :clock-resume t)
+        ("f" "FishLog" plain (file+olp+datetree nc/fishing-file)
+         "%[~/notes/templates/fishlog.org]" :time-prompt t)
+        ("F" "Film" entry (file+headline nc/watching-file "Films")
+         "* NEXT %^{Titre}
        %i
        - *Réalisateur:* %^{Auteur}
        - *Année:* %^{année}
@@ -291,11 +308,11 @@
       %U" :prepend t)
 
 
-           ("D" "Done Business Task" entry
-             (file+headline nc/inbox-file "Tasks")
-             "* DONE %^{Task} :@office:"
-             :clock-in t :clock-resume t)
-          ))
+        ("D" "Done Business Task" entry
+         (file+headline nc/inbox-file "Tasks")
+         "* DONE %^{Task} :@office:"
+         :clock-in t :clock-resume t)
+        ))
 
 (add-to-list 'org-capture-templates
                  `("m" "Meeting" entry  (file+headline nc/calendar-file "Réunions")
@@ -368,7 +385,7 @@
            "* Summary of the week :REVIEW:\n%[~/notes/templates/review.org]" :time-prompt t))
 
 ;; My Org agenda-files
-(defvar nc/org-agenda-files (list "~/notes/gtd.org" "~/notes/projects.org" "~/notes/someday.org" "~/notes/personal/calendar.org" "~/notes/journal/"))
+(defvar nc/org-agenda-files (list "~/notes/gtd.org" "~/notes/projects.org" "~/notes/office.org" "~/notes/personal/calendar.org" "~/notes/journal/"))
 
 (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'\\|[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$"
         org-agenda-files nc/org-agenda-files
@@ -432,7 +449,7 @@
            ("p" . "Projects")
            ("po" "Office Projects"
             ((tags "project+@office|@office+LEVEL=2+TODO=\"TODO\""
-                   (;; (org-agenda-files (nc/org-default-projects-file))
+                   (;; (org-agenda-files (nc/org-projects-file))
                     ;; (org-agenda-prefix-format " %-20c %l%e%l %27:(nc--org-agenda-display-title)")
 
                     (org-agenda-prefix-format "%l%l %:(nc--org-agenda-display-title)")
@@ -440,7 +457,7 @@
                     (org-agenda-overriding-header "Office Projects")))))
            ("pp" "My Personal Projects"
             ((tags "project+personal|personal+LEVEL=2+TODO=\"TODO\""
-                   (;; (org-agenda-files (list nc/org-default-projects-file))
+                   (;; (org-agenda-files (list nc/org-projects-file))
                     ;;(org-agenda-prefix-format " %-20c %l%e%l")
                     (org-agenda-prefix-format "%l%l %:(nc--org-agenda-display-title)")
                     (org-agenda-sorting-strategy '(priority-down))
@@ -497,7 +514,8 @@
 
 (setq org-refile-targets (append '((org-default-notes-file :maxlevel . 2))
                                  '((nc/org-default-tasks-file :level . 1)
-                                   ;;(nc/org-default-projects-file :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")
+                                   (nc/org-projects-file :level . 1)
+                                   (nc/org-office-file :level . 1)
                                    (nc/org-default-someday-file :level . 0)
                                    (nil :maxlevel . 3)))) ;; current file
 
