@@ -275,7 +275,7 @@
       '(("p" "Personal")
         ("pp" "Project" entry
          (file nc/org-projects-file)
-         "* %^{ProjectName}\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:END:\n %?")
+         "* %^{ProjectName} :project:\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:END:\n %?")
         ("pt" "Todo" entry
          (file nc/org-projects-file)
          "* TODO %?" :refile-targets ((nil :maxlevel . 1))
@@ -283,7 +283,7 @@
         ("o" "@office")
         ("op" "Project" entry
          (file nc/org-office-file)
-         "* %^{ProjectName}\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:END:\n %?")
+         "* %^{ProjectName}:project:\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:END:\n %?")
         ("ot" "Todo" entry
          (file nc/org-office-file)
          "* TODO %?" :refile-targets ((nil :maxlevel . 1))
@@ -316,7 +316,7 @@
 
 (add-to-list 'org-capture-templates
                  `("m" "Meeting" entry  (file+headline nc/calendar-file "Réunions")
-        ,(concat "* MEETING %? :meeting:\n"
+        ,(concat "* MEETING 📆 %? :meeting:\n"
                  "<%<%Y-%m-%d %a %H:00-%H:30>>")))
 
 (add-to-list 'org-capture-templates
@@ -405,9 +405,9 @@
   (save-excursion
     (save-restriction
      (widen) 
-     (let* ((heading (org-get-heading t t)))
-       (if (s-starts-with? "Tasks" heading)
-           (s-concat "\n" (org-get-title) " - ")
+     (let* ((heading-tags (org-get-tags)))
+       (if (seq-contains-p heading-tags "project")
+           (s-concat "\n"  " 🏗️ ")
          "")))))
 
 (require 'org-agenda)
@@ -417,13 +417,13 @@
          ((agenda "" ((org-agenda-sorting-strategy '(timestamp-up time-up priority-down category-keep))
                       (org-agenda-prefix-format " %i %-20:c%?-12t% s")))
 
-                (tags-todo "TODO=\"STARTED\""
-                           ((org-agenda-overriding-header "\nStarted Tasks")
+                (tags "@office+TODO=\"STARTED\""
+                           ((org-agenda-overriding-header "\n:office: Started Tasks @office")
                             (org-agenda-prefix-format " %i %-20:c [%e] ")
                             ;;(org-agenda-prefix-format "%-27:(nc--org-agenda-format-parent 25)")
                             (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
-                (tags-todo "TODO=\"NEXT\""
-                           ((org-agenda-overriding-header "\nNext Tasks")
+                (tags "@office+TODO=\"NEXT\""
+                           ((org-agenda-overriding-header "\n:office: Next Tasks @office")
                             (org-agenda-prefix-format " %i %-20:c [%e] ")
                             (org-agenda-skip
                              '(org-agenda-skip-if 'deadline))
@@ -431,9 +431,16 @@
                             (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
                 (tags-todo "inbox"
                      ((org-agenda-prefix-format "  %?-12t% s")
-                      (org-agenda-overriding-header "\nInbox")))
+                      (org-agenda-overriding-header "\n▶️ Inbox")))
+                (tags "personal+TODO=\"STARTED\"|personal+TODO=\"NEXT\""
+                           ((org-agenda-overriding-header "\n:house: My current tasks")
+                            (org-agenda-prefix-format " %i %-20:c [%e] ")
+                            (org-agenda-skip
+                             '(org-agenda-skip-if 'deadline))
+                            ;;(org-agenda-files '("~/_PIM/notes/gtd.org"))
+                            (org-agenda-sorting-strategy '(priority-down todo-state-down category-keep))))
                 (tags-todo "TODO=\"HOLD\""
-                           ((org-agenda-overriding-header "\nHold / Waiting Tasks")
+                           ((org-agenda-overriding-header "\n⌛ Hold / Waiting Tasks")
                             (org-agenda-prefix-format " %i %-20:c")                            
                             (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
                 )
