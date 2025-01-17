@@ -431,7 +431,7 @@
                             (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
                 (tags-todo "inbox"
                      ((org-agenda-prefix-format "  %?-12t% s")
-                      (org-agenda-overriding-header "\n▶️ Inbox")))
+                      (org-agenda-overriding-header "\n🚀 Inbox")))
                 (tags "personal+TODO=\"STARTED\"|personal+TODO=\"NEXT\""
                            ((org-agenda-overriding-header "\n:house: My current tasks")
                             (org-agenda-prefix-format " %i %-20:c [%e] ")
@@ -753,6 +753,9 @@ if nil,the top of the file."
 
 (require 'ox-md)
 
+(use-package ox-gfm
+  :after (ox org))
+
 (use-package ob-restclient)
 (use-package ob-mermaid)
 
@@ -1048,8 +1051,22 @@ capture was not aborted."
   ;; Remove the date and the identifier. They are duplicated with the file name.
   ;; I want to remove filetags too but denote-keyword-* need that.
   ;;(setq denote-org-front-matter "#+title: %1$s\n#+filetags: %3$s\n")
+  (setq denote-dired-directories
+        (list denote-directory
+              (thread-last denote-directory (expand-file-name "data"))
+              ))
 
-  (add-hook 'dired-mode-hook #'denote-dired-mode))
+  (defun nc--denote-dired-mode-hook()
+    (denote-dired-mode-in-directories)
+    (if denote-dired-mode
+        (dired-hide-details-mode +1)
+      (diredfl-mode +1)))
+
+  (add-hook 'dired-mode-hook #'nc--denote-dired-mode-hook)
+  
+  ;; (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+  ;; (add-hook 'dired-mode-hook #'denote-dired-mode)
+  )
 
 (use-package consult-notes
   :straight (:type git :host github :repo "mclear-tools/consult-notes")

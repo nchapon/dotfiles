@@ -434,6 +434,13 @@
             (pop-to-buffer output-buffer))
         (find-file-other-window output)))))
 
+
+;; (use-package image
+;;   :straight nil
+;;   :custom
+;;   ;; Enable converting external formats (ie. webp) to internal ones.
+;;   (image-use-external-converter t))
+
 (use-package python-mode
   :straight nil
   :mode ("\\.py\\'")

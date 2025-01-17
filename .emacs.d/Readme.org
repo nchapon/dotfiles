@@ -2338,7 +2338,7 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
                                  (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
                      (tags-todo "inbox"
                           ((org-agenda-prefix-format "  %?-12t% s")
-                           (org-agenda-overriding-header "\n▶️ Inbox")))
+                           (org-agenda-overriding-header "\n🚀 Inbox")))
                      (tags "personal+TODO=\"STARTED\"|personal+TODO=\"NEXT\""
                                 ((org-agenda-overriding-header "\n:house: My current tasks")
                                  (org-agenda-prefix-format " %i %-20:c [%e] ")
@@ -2713,7 +2713,10 @@ Customize speed-commands :
 ** Export
 *** Markdown
 #+begin_src emacs-lisp
-  (require 'ox-md)
+(require 'ox-md)
+
+(use-package ox-gfm
+  :after (ox org))
 #+end_src
 ** Babel
 *** Babel languages
@@ -3059,10 +3062,22 @@ I try to do a lot of things with =org-roam= :
   ;; Remove the date and the identifier. They are duplicated with the file name.
   ;; I want to remove filetags too but denote-keyword-* need that.
   ;;(setq denote-org-front-matter "#+title: %1$s\n#+filetags: %3$s\n")
+  (setq denote-dired-directories
+        (list denote-directory
+              (thread-last denote-directory (expand-file-name "data"))
+              ))
 
-  (add-hook 'dired-mode-hook #'denote-dired-mode))
+  (defun nc--denote-dired-mode-hook()
+    (denote-dired-mode-in-directories)
+    (if denote-dired-mode
+        (dired-hide-details-mode +1)
+      (diredfl-mode +1)))
 
-
+  (add-hook 'dired-mode-hook #'nc--denote-dired-mode-hook)
+  
+  ;; (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+  ;; (add-hook 'dired-mode-hook #'denote-dired-mode)
+  ) 
 #+end_src
 ** Consult Notes
 
@@ -3576,40 +3591,47 @@ Needs Java and plantuml.jar installed in =~/opt=
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package plantuml-mode
-    :init
-    (setq plantuml-default-exec-mode 'jar)
-    (setq plantuml-jar-path (expand-file-name "~/opt/plantuml.jar"))
-    (setq org-plantuml-jar-path (expand-file-name "~/opt/plantuml.jar"))
-    ;; (setq org-startup-with-inline-images t)
-    ;; (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-    ;; (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
-    :mode "\\.puml\\'"
-    :bind
-    (:map plantuml-mode-map
-          ("C-c C-p" . nc/plantuml-generate-png))
-    :config
-    (setq plantuml-output-type "png")
-    (defun nc/plantuml-generate-png ()
-      (interactive)
-      (when (buffer-modified-p)
-        (error "There are unsaved changes!!!"))
-      (let* ((input (expand-file-name (buffer-file-name)))
-             (output (concat (file-name-sans-extension input) ".png"))
-             (output-buffer (get-file-buffer output)))
-        (message (format "Rendering %s" input))
-        (call-process "java" nil t nil
-                      ;; the jar file...
-                      "-jar"
-                      (expand-file-name plantuml-jar-path)
-                      "-charset" "UTF-8"
-                      input
-                      "-tpng")
-        (if output-buffer
-            (with-current-buffer output-buffer
-              (revert-buffer-quick)
-              (pop-to-buffer output-buffer))
-          (find-file-other-window output)))))
+(use-package plantuml-mode
+  :init
+  (setq plantuml-default-exec-mode 'jar)
+  (setq plantuml-jar-path (expand-file-name "~/opt/plantuml.jar"))
+  (setq org-plantuml-jar-path (expand-file-name "~/opt/plantuml.jar"))
+  ;; (setq org-startup-with-inline-images t)
+  ;; (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  ;; (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+  :mode "\\.puml\\'"
+  :bind
+  (:map plantuml-mode-map
+        ("C-c C-p" . nc/plantuml-generate-png))
+  :config
+  (setq plantuml-output-type "png")
+  (defun nc/plantuml-generate-png ()
+    (interactive)
+    (when (buffer-modified-p)
+      (error "There are unsaved changes!!!"))
+    (let* ((input (expand-file-name (buffer-file-name)))
+           (output (concat (file-name-sans-extension input) ".png"))
+           (output-buffer (get-file-buffer output)))
+      (message (format "Rendering %s" input))
+      (call-process "java" nil t nil
+                    ;; the jar file...
+                    "-jar"
+                    (expand-file-name plantuml-jar-path)
+                    "-charset" "UTF-8"
+                    input
+                    "-tpng")
+      (if output-buffer
+          (with-current-buffer output-buffer
+            (revert-buffer-quick)
+            (pop-to-buffer output-buffer))
+        (find-file-other-window output)))))
+
+
+;; (use-package image
+;;   :straight nil
+;;   :custom
+;;   ;; Enable converting external formats (ie. webp) to internal ones.
+;;   (image-use-external-converter t))
 #+end_src
 ** Python
 *** python-mode
