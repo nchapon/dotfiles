@@ -522,6 +522,11 @@
           ("C-c C-t r" . python-pytest-repeat)
           ("C-c C-t x" . python-pytest-last-failed)))
 
+(use-package python-insert-docstring
+  :bind
+  (:map python-mode-map
+        ("C-c i" . python-insert-docstring-with-google-style-at-point)))
+
 (use-package terraform-mode
   :hook ((terraform-mode . lsp)))
 

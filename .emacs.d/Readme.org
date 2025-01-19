@@ -3745,6 +3745,16 @@ Automatic formatting with ruff when saving
             ("C-c C-t r" . python-pytest-repeat)
             ("C-c C-t x" . python-pytest-last-failed)))
 #+end_src
+*** Python Docstring
+Automatic generation of function docstrings according to the [[https://google.github.io/styleguide/pyguide.html#383-functions-and-methods][Google style guide]]
+
+#+begin_src emacs-lisp
+(use-package python-insert-docstring
+  :bind
+  (:map python-mode-map
+        ("C-c i" . python-insert-docstring-with-google-style-at-point)))
+#+end_src
+
 
 ** Terraform
 
