@@ -694,6 +694,14 @@ Some Emacs Global Bindings are redefined here.
      (("?" nc/search-notes "Search Notes"))))
 #+end_src
 
+*** hydra org-mode
+#+begin_src emacs-lisp
+(major-mode-hydra-define markdown-mode nil
+  ("Actions"
+   (("p" nc/plantuml-preview-current-block "Plantuml Preview"))))
+#+end_src
+
+
 ** Key Chords
 
 #+begin_src emacs-lisp
@@ -801,7 +809,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "d" prefix-buffer-map-d
   "e" #'casual-editkit-main-tmenu
   "g" prefix-buffer-map-g
-  "h" #'major-mode-hydra
+  "C-q" #'major-mode-hydra
   "i" prefix-buffer-map-i
   "j" prefix-buffer-map-j
   "s" prefix-buffer-map-s
@@ -3513,70 +3521,69 @@ GitHub Flavored Markdown by default for README.md files.
 - Rendering Markdown with GitHub API
 
 #+begin_src emacs-lisp
-  (use-package markdown-mode
-    :mode (("README\\.md\\'" . gfm-mode)
-           ("\\.md\\'"       . markdown-mode)
-           ("\\.markdown\\'" . markdown-mode))
-    :config
+(use-package markdown-mode
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'"       . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :config
+  (setq markdown-live-preview-delete-export 'delete-on-destroy)
+  (setq markdown-fontify-code-blocks-natively t)
+  (setq markdown-split-window-direction 'right)
+  ;; Process Markdown with Pandoc, using GitHub stylesheet for nice output
+  (let ((stylesheet (expand-file-name
+                     (locate-user-emacs-file "etc/pandoc.css"))))
+    (setq markdown-command
+          (concat "pandoc --toc --section-divs"
+                  " --css   file://" stylesheet
+                  " --standalone -f markdown -t html5"
+                     )))
+  )
 
-    (setq markdown-live-preview-delete-export 'delete-on-destroy)
-    (setq markdown-fontify-code-blocks-natively t)
-    (setq markdown-split-window-direction 'right)
-    ;; Process Markdown with Pandoc, using GitHub stylesheet for nice output
-    (let ((stylesheet (expand-file-name
-                       (locate-user-emacs-file "etc/pandoc.css"))))
-      (setq markdown-command
-            (concat "pandoc --toc --section-divs"
-                    " --css   file://" stylesheet
-                    " --standalone -f markdown -t html5"
-                       )))
-    )
+(use-package markdown-toc
+  :after markdown-mode)
 
-  (use-package markdown-toc
-    :after markdown-mode)
+;; From https://www.jamescherti.com/emacs-markdown-table-of-contents-update-before-save/
+;; The following functions and hooks guarantee that any existing table of
+;; contents remains current whenever changes are made to the markdown file,
+;; while also ensuring that both the window start and cursor position remain
+;; unchanged.
+(defun nc/markdown-toc-gen-if-present ()
+  "Generate a table of contents if it is already present."
+  (let ((marker (point-marker))
+        (current-visual-line
+         (save-excursion
+           (beginning-of-visual-line)
+           (count-screen-lines (window-start) (point)))))
+    (unwind-protect
+        (when (markdown-toc--toc-already-present-p)
+          (markdown-toc-generate-toc))
+      (progn
+        (goto-char (marker-position marker))
+        (when (> current-visual-line 0)
+          (let ((window-start (save-excursion
+                                (beginning-of-visual-line)
+                                (let ((line-move-visual t)
+                                      (line-move-ignore-invisible nil))
+                                  (line-move (* -1 current-visual-line)))
+                                (beginning-of-visual-line)
+                                (point))))
+            (set-window-start (selected-window) window-start)))))))
 
-  ;; From https://www.jamescherti.com/emacs-markdown-table-of-contents-update-before-save/
-  ;; The following functions and hooks guarantee that any existing table of
-  ;; contents remains current whenever changes are made to the markdown file,
-  ;; while also ensuring that both the window start and cursor position remain
-  ;; unchanged.
-  (defun nc/markdown-toc-gen-if-present ()
-    "Generate a table of contents if it is already present."
-    (let ((marker (point-marker))
-          (current-visual-line
-           (save-excursion
-             (beginning-of-visual-line)
-             (count-screen-lines (window-start) (point)))))
-      (unwind-protect
-          (when (markdown-toc--toc-already-present-p)
-            (markdown-toc-generate-toc))
-        (progn
-          (goto-char (marker-position marker))
-          (when (> current-visual-line 0)
-            (let ((window-start (save-excursion
-                                  (beginning-of-visual-line)
-                                  (let ((line-move-visual t)
-                                        (line-move-ignore-invisible nil))
-                                    (line-move (* -1 current-visual-line)))
-                                  (beginning-of-visual-line)
-                                  (point))))
-              (set-window-start (selected-window) window-start)))))))
+(defun nc/setup-markdown-toc ()
+  "Setup the markdown-toc package."
+  (add-hook 'before-save-hook #'nc/markdown-toc-gen-if-present nil t))
 
-  (defun nc/setup-markdown-toc ()
-    "Setup the markdown-toc package."
-    (add-hook 'before-save-hook #'nc/markdown-toc-gen-if-present nil t))
-
-  (add-hook 'markdown-mode-hook #'nc/setup-markdown-toc)
-  ;; (add-hook 'markdown-ts-mode-hook #'my-setup-markdown-toc)
-  ;; (add-hook 'gfm-mode-hook #'my-setup-markdown-toc)
+(add-hook 'markdown-mode-hook #'nc/setup-markdown-toc)
+;; (add-hook 'markdown-ts-mode-hook #'my-setup-markdown-toc)
+;; (add-hook 'gfm-mode-hook #'my-setup-markdown-toc)
 
 
-  ;; Render Markdwon with GitHub API
-  (use-package gh-md
-    :after markdown-mode
-    :bind 
-    (:map markdown-mode-map
-          ([remap markdown-preview] . gh-md-render-buffer)))
+;; Render Markdwon with GitHub API
+(use-package gh-md
+  :after markdown-mode
+  :bind 
+  (:map markdown-mode-map
+        ([remap markdown-preview] . gh-md-render-buffer)))
 
 #+end_src
 ** Plant UML
@@ -3627,11 +3634,24 @@ Needs Java and plantuml.jar installed in =~/opt=
         (find-file-other-window output)))))
 
 
-;; (use-package image
-;;   :straight nil
-;;   :custom
-;;   ;; Enable converting external formats (ie. webp) to internal ones.
-;;   (image-use-external-converter t))
+(defun nc/plantuml-preview-current-block (prefix)
+  "PlantUML preview current block (hack windows to byPass the pb preview)"
+  (interactive "P")
+  (when is-windows
+    (let* ((image-buffer-name "plantuml-preview.png")
+           (preview-file (concat "~/Documents/" image-buffer-name)))
+      (when (file-exists-p preview-file)
+        (delete-file preview-file))
+      (when (buffer-live-p (get-buffer image-buffer-name))
+        (set-buffer image-buffer-name)
+        (set-buffer-modified-p nil)
+        (kill-this-buffer))
+      (plantuml-preview-current-block 1)
+      (with-current-buffer (switch-to-buffer-other-frame "*PLANTUML Preview*")
+        (write-file preview-file)
+        (set-buffer image-buffer-name)
+        (save-buffer)
+        (image-mode)))))
 #+end_src
 ** Python
 *** python-mode

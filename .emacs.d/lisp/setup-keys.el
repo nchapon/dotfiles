@@ -120,6 +120,10 @@
    "Search"
    (("?" nc/search-notes "Search Notes"))))
 
+(major-mode-hydra-define markdown-mode nil
+  ("Actions"
+   (("p" nc/plantuml-preview-current-block "Plantuml Preview"))))
+
 (use-package key-chord
   :init
   (key-chord-mode 1)
@@ -209,7 +213,7 @@
   "d" prefix-buffer-map-d
   "e" #'casual-editkit-main-tmenu
   "g" prefix-buffer-map-g
-  "h" #'major-mode-hydra
+  "C-q" #'major-mode-hydra
   "i" prefix-buffer-map-i
   "j" prefix-buffer-map-j
   "s" prefix-buffer-map-s
