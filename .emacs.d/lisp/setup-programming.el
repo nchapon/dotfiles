@@ -451,7 +451,11 @@
         (write-file preview-file)
         (set-buffer image-buffer-name)
         (save-buffer)
-        (image-mode)))))
+        (image-mode))))
+  (when is-mac
+    (plantuml-preview-current-block 1))
+  (when is-linux
+    (plantuml-preview-current-block 1)))
 
 (use-package python-mode
   :straight nil
