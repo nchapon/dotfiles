@@ -442,12 +442,14 @@
            (preview-file (concat "~/Documents/" image-buffer-name)))
       (when (file-exists-p preview-file)
         (delete-file preview-file))
+
+      (plantuml-preview-current-block 1)
       (when (buffer-live-p (get-buffer image-buffer-name))
         (set-buffer image-buffer-name)
         (set-buffer-modified-p nil)
         (kill-this-buffer))
-      (plantuml-preview-current-block 1)
-      (with-current-buffer (switch-to-buffer-other-frame "*PLANTUML Preview*")
+      
+      (with-current-buffer (get-buffer "*PLANTUML Preview*")
         (write-file preview-file)
         (set-buffer image-buffer-name)
         (save-buffer)
