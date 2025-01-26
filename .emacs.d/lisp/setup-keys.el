@@ -115,7 +115,8 @@
    (("s" nc/org-insert-daily-review "Start Daily Review")
     ("d" nc/insert-daily-heading "Insert Daily Heading"))
    "Actions"
-   (("r" nc/org-refile-subtree-to-file "Refile subtree to file")
+   (("p" nc/plantuml-preview-current-block "Plantuml Preview Current Block")
+    ("r" nc/org-refile-subtree-to-file "Refile subtree to file")
     ("A" nc/create-buffer-attachment-directory "Create attachment directory"))
    "Search"
    (("?" nc/search-notes "Search Notes"))))
@@ -193,7 +194,7 @@
 
 
 (defvar-keymap prefix-buffer-map-t
-  :doc "Prefix map for C-q for GTD/org mode"
+  :doc "Prefix map for C-q for toggle features."
   "D" #'toggle-debug-on-error
   "P" #'smartparens-strict-mode
   "S" #'show-smartparens-mode
@@ -206,18 +207,23 @@
   "t" #'treemacs
   "w" #'whitespace-mode)
 
+(defvar-keymap prefix-buffer-map-w
+  :doc "Prefix map for C-q for Windows."
+  "M-n" #'windmove-display-new-frame)
+
+
 (defvar-keymap prefix-command-q
   :doc "Prefix Map for C-q:"
   ";" #'nc/goto-emacs-config
   "a" #'embark-act
   "d" prefix-buffer-map-d
-  "e" #'casual-editkit-main-tmenu
   "g" prefix-buffer-map-g
   "C-q" #'major-mode-hydra
   "i" prefix-buffer-map-i
   "j" prefix-buffer-map-j
   "s" prefix-buffer-map-s
-  "t" prefix-buffer-map-t)
+  "t" prefix-buffer-map-t
+  "w" prefix-buffer-map-w)
 
 
 (which-key-add-keymap-based-replacements prefix-command-q
@@ -229,7 +235,9 @@
   "t" `("Toggles" . ,prefix-buffer-map-t)
   ;; "m m" `("Mark" . ,prefix-buffer-map-mark)
   ;;"c" `("Casual" . ,prefix-buffer-map-casual)
-  "s" `("Search" . ,prefix-buffer-map-s))
+  "s" `("Search" . ,prefix-buffer-map-s)
+  "w" `("Window" . ,prefix-buffer-map-w)
+  )
 
 (keymap-set global-map "C-q" prefix-command-q)
 
