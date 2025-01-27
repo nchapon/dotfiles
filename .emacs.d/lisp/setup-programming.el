@@ -531,14 +531,14 @@
   (setq python-pytest-executable "python -m pytest")
   :bind
   (:map python-mode-map
-          ("C-c C-t a" . python-pytest)
-          ([remap python-skeleton-try] . python-pytest-function-dwim)
+          ("C-c C-t x" . python-pytest)
+          ("C-c C-t t" . python-pytest-function-dwim)
           ("C-c C-t T" . python-pytest-function)
-          ([remap python-skeleton-for] . python-pytest-file-dwim)
+          ("C-c C-t f" . python-pytest-file-dwim)
           ("C-c C-t F" . python-pytest-file)
-          ([remap python-skeleton-def] . python-pytest-dispatch)
-          ("C-c C-t r" . python-pytest-repeat)
-          ("C-c C-t x" . python-pytest-last-failed)))
+          ("C-c C-t C-t" . python-pytest-dispatch)
+          ("C-c C-t C-r" . python-pytest-repeat)
+          ("C-c C-t C-x" . python-pytest-last-failed)))
 
 (use-package python-insert-docstring
   :bind

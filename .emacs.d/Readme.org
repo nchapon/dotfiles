@@ -3764,20 +3764,20 @@ Automatic formatting with ruff when saving
 *** Python pytest
 
 #+begin_src emacs-lisp
-  (use-package python-pytest
-    :straight '(python-pytest :host github :repo "nchapon/emacs-python-pytest")
-    :config
-    (setq python-pytest-executable "python -m pytest")
-    :bind
-    (:map python-mode-map
-            ("C-c C-t a" . python-pytest)
-            ([remap python-skeleton-try] . python-pytest-function-dwim)
-            ("C-c C-t T" . python-pytest-function)
-            ([remap python-skeleton-for] . python-pytest-file-dwim)
-            ("C-c C-t F" . python-pytest-file)
-            ([remap python-skeleton-def] . python-pytest-dispatch)
-            ("C-c C-t r" . python-pytest-repeat)
-            ("C-c C-t x" . python-pytest-last-failed)))
+(use-package python-pytest
+  :straight '(python-pytest :host github :repo "nchapon/emacs-python-pytest")
+  :config
+  (setq python-pytest-executable "python -m pytest")
+  :bind
+  (:map python-mode-map
+          ("C-c C-t x" . python-pytest)
+          ("C-c C-t t" . python-pytest-function-dwim)
+          ("C-c C-t T" . python-pytest-function)
+          ("C-c C-t f" . python-pytest-file-dwim)
+          ("C-c C-t F" . python-pytest-file)
+          ("C-c C-t C-t" . python-pytest-dispatch)
+          ("C-c C-t C-r" . python-pytest-repeat)
+          ("C-c C-t C-x" . python-pytest-last-failed)))
 #+end_src
 *** Python Docstring
 Automatic generation of function docstrings according to the [[https://google.github.io/styleguide/pyguide.html#383-functions-and-methods][Google style guide]]
