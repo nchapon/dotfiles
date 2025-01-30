@@ -209,7 +209,12 @@
 
 (defvar-keymap prefix-buffer-map-w
   :doc "Prefix map for C-q for Windows."
-  "M-n" #'windmove-display-new-frame)
+  "M-n" #'windmove-display-new-frame
+  "C-d" #'windmove-delete-down
+  "C-u" #'windmove-delete-up
+  "C-l" #'windmove-delete-left
+  "C-r" #'windmove-delete-right
+  "f" #'make-frame-command)
 
 
 (defvar-keymap prefix-command-q
