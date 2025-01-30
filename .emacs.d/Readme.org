@@ -310,6 +310,7 @@ Backup files in  [[id:3f627579-3efc-4c40-9dbe-558de5359f8e][no Littering]] folde
  (setq default-buffer-file-coding-system 'utf-8-unix)
  (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
  (setq file-name-coding-system  'utf-8)
+ (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
  #+end_src
 ** French Calendar & Holydays
  French Calendar & Holidays

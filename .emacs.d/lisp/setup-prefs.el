@@ -65,6 +65,7 @@
 (setq default-buffer-file-coding-system 'utf-8-unix)
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
 (setq file-name-coding-system  'utf-8)
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 (setq calendar-week-start-day 1
       calendar-day-name-array ["Dimanche" "Lundi" "Mardi" "Mercredi"
