@@ -97,5 +97,31 @@
   (nc/goto-journal-file)
   (org-roam-node-random))
 
+(require 'org-element)
+(require 'seq)
+
+(defun nc-browser-bookmarks (org-file)
+  "Return all links from ORG-FILE."
+  (with-temp-buffer
+    (let (links)
+      (insert-file-contents org-file)
+      (org-mode)
+      (org-element-map (org-element-parse-buffer) 'link
+        (lambda (link)
+          (let* ((raw-link (org-element-property :raw-link link))
+                 (content (org-element-contents link))
+                 (title (substring-no-properties (or (seq-first content) raw-link))))
+            (push (concat title
+                          "\n"
+                          (propertize raw-link 'face 'whitespace-space)
+                          "\n")
+                  links)))
+        nil nil 'link)
+      (seq-sort 'string-greaterp links))))
+
+(defun nc/open-bookmark ()
+  (interactive)
+  (browse-url (seq-elt (split-string (completing-read "Open: " (nc-browser-bookmarks "~/my-bookmarks.org")) "\n") 1)))
+
 (provide 'setup-functions)
 ;;; setup-functions.el ends here
