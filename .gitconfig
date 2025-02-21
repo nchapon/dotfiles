@@ -16,6 +16,7 @@
     undo = reset --hard HEAD~1
     uncommit = reset HEAD~1
     redo = reset --hard HEAD@{1}
+    gpr = "!git pull --rebase"
     wip = "!git add -A; git commit -m \"wip\""
     addall = "!git add -A; git status"
     unwip = !git log -n 1 | grep -q -c wip && git reset HEAD~1
