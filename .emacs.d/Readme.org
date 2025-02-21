@@ -823,6 +823,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "C-q" #'major-mode-hydra
   "i" prefix-buffer-map-i
   "j" prefix-buffer-map-j
+  "l" #'nc/open-bookmark
   "s" prefix-buffer-map-s
   "t" prefix-buffer-map-t
   "w" prefix-buffer-map-w)
@@ -4279,7 +4280,7 @@ Experimental get Ready
     (nc/goto-journal-file)
     (org-roam-node-random))
 #+end_src
-** Bookmark launcher
+** Bookmark Links
 From : https://xenodium.com/building-your-own-bookmark-launcher/
 #+begin_src elisp
 (require 'org-element)
@@ -4306,7 +4307,7 @@ From : https://xenodium.com/building-your-own-bookmark-launcher/
 
 (defun nc/open-bookmark ()
   (interactive)
-  (browse-url (seq-elt (split-string (completing-read "Open: " (nc-browser-bookmarks "~/my-bookmarks.org")) "\n") 1)))
+  (browse-url (seq-elt (split-string (completing-read "Open: " (nc-browser-bookmarks "~/emacs-bookmarks.org")) "\n") 1)))
 
 #+end_src
 

@@ -121,7 +121,7 @@
 
 (defun nc/open-bookmark ()
   (interactive)
-  (browse-url (seq-elt (split-string (completing-read "Open: " (nc-browser-bookmarks "~/my-bookmarks.org")) "\n") 1)))
+  (browse-url (seq-elt (split-string (completing-read "Open: " (nc-browser-bookmarks "~/emacs-bookmarks.org")) "\n") 1)))
 
 (provide 'setup-functions)
 ;;; setup-functions.el ends here

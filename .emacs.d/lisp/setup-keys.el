@@ -226,6 +226,7 @@
   "C-q" #'major-mode-hydra
   "i" prefix-buffer-map-i
   "j" prefix-buffer-map-j
+  "l" #'nc/open-bookmark
   "s" prefix-buffer-map-s
   "t" prefix-buffer-map-t
   "w" prefix-buffer-map-w)
