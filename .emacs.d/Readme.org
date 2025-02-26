@@ -428,7 +428,15 @@ Toggle Repeat Mode
 #+begin_src emacs-lisp
   (repeat-mode)
 #+end_src
- 
+** Registers
+Keeping files and buffers in registers. To visit the file whose name is in register r, type =C-x r j r=
+#+begin_src emacs-lisp
+(set-register ?S '(buffer . "*scratch*"))
+(set-register ?E  `(file . ,(expand-file-name "README.org" user-emacs-directory)))
+(set-register ?m '(buffer . "*Messages*"))
+(set-register ?c '(buffer . "*Compile*"))
+#+end_src
+
 * UI
 :properties:
 :header-args+: :tangle "./lisp/setup-ui.el"

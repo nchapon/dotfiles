@@ -147,5 +147,10 @@
 
 (repeat-mode)
 
+(set-register ?S '(buffer . "*scratch*"))
+(set-register ?E  `(file . ,(expand-file-name "README.org" user-emacs-directory)))
+(set-register ?m '(buffer . "*Messages*"))
+(set-register ?c '(buffer . "*Compile*"))
+
 (provide 'setup-prefs)
 ;;; setup-prefs.el ends here
