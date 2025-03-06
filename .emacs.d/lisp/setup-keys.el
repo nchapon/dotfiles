@@ -150,6 +150,19 @@
 
 (global-set-key (kbd "C-q") nil)
 
+(defvar-keymap prefix-buffer-map-c
+  :doc "Prefix map for C-q for coding"
+  "j" #'consult-lsp-symbols
+  "r" #'lsp-rename
+  "o" #'lsp-organize-imports
+  "X" #'lsp-treemacs-errors-list
+  "y" #'lsp-treemacs-call-hierarchy
+  "S" #'lsp-treemacs-symbols
+  "R" #'lsp-treemacs-references 
+  ;; "d" prefix-buffer-map-denote
+  )
+
+
 (defvar-keymap prefix-buffer-map-d
   :doc "Prefix map for C-q for dired/Denote"
   "j" #'dired
@@ -162,6 +175,7 @@
     :doc "Prefix map for C-q for Insert"
     "d" #'nc/insert-datestamp-inactive
     "D" #'nc/insert-datestamp
+    "e" #'emoji-search
     "p" #'nc/generate-password
     "t" #'tempel-insert
     "u" #'nc/uuid
@@ -233,6 +247,7 @@
 
 
 (which-key-add-keymap-based-replacements prefix-command-q
+  "c" `("Code" . ,prefix-buffer-map-c)
   "d" `("Dired/Denote" . ,prefix-buffer-map-d)
   ;; "d d" `("Denote" . ,prefix-buffer-map-denote)
   "g" `("Goto My Files" . ,prefix-buffer-map-g)
