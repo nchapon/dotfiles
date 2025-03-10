@@ -152,6 +152,8 @@
 
 (defvar-keymap prefix-buffer-map-c
   :doc "Prefix map for C-q for coding"
+  "c" #'compile
+  "C" #'recompile
   "j" #'consult-lsp-symbols
   "r" #'lsp-rename
   "o" #'lsp-organize-imports
@@ -200,6 +202,22 @@
   "o" #'occur
   "d" #'dired-jump)
 
+
+(defvar-keymap prefix-buffer-map-n
+  :doc "Prefix map for C-q for notes"
+  "s" #'org-search-view
+  "t" #'org-todo-list
+  "l" #'org-store-link
+  )
+
+
+(defvar-keymap prefix-buffer-map-o
+  :doc "Prefix map for C-q for open"
+  "f" #'make-frame
+  "p" #'nc/treemacs-toggle
+  "P" #'treemacs-find-file)
+
+
 (defvar-keymap prefix-buffer-map-s
   :doc "Prefix map for C-q for Search"
   "f" #'nc/consult-fd-my-projects
@@ -241,6 +259,7 @@
   "i" prefix-buffer-map-i
   "j" prefix-buffer-map-j
   "l" #'nc/open-bookmark
+  "o" prefix-buffer-map-o
   "s" prefix-buffer-map-s
   "t" prefix-buffer-map-t
   "w" prefix-buffer-map-w)
@@ -256,6 +275,7 @@
   "t" `("Toggles" . ,prefix-buffer-map-t)
   ;; "m m" `("Mark" . ,prefix-buffer-map-mark)
   ;;"c" `("Casual" . ,prefix-buffer-map-casual)
+  "o" `("Open" . ,prefix-buffer-map-o)
   "s" `("Search" . ,prefix-buffer-map-s)
   "w" `("Window" . ,prefix-buffer-map-w)
   )

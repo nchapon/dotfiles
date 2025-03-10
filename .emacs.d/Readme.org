@@ -756,6 +756,8 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
 
 (defvar-keymap prefix-buffer-map-c
   :doc "Prefix map for C-q for coding"
+  "c" #'compile
+  "C" #'recompile
   "j" #'consult-lsp-symbols
   "r" #'lsp-rename
   "o" #'lsp-organize-imports
@@ -804,6 +806,22 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "o" #'occur
   "d" #'dired-jump)
 
+
+(defvar-keymap prefix-buffer-map-n
+  :doc "Prefix map for C-q for notes"
+  "s" #'org-search-view
+  "t" #'org-todo-list
+  "l" #'org-store-link
+  )
+
+
+(defvar-keymap prefix-buffer-map-o
+  :doc "Prefix map for C-q for open"
+  "f" #'make-frame
+  "p" #'nc/treemacs-toggle
+  "P" #'treemacs-find-file)
+
+
 (defvar-keymap prefix-buffer-map-s
   :doc "Prefix map for C-q for Search"
   "f" #'nc/consult-fd-my-projects
@@ -845,6 +863,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "i" prefix-buffer-map-i
   "j" prefix-buffer-map-j
   "l" #'nc/open-bookmark
+  "o" prefix-buffer-map-o
   "s" prefix-buffer-map-s
   "t" prefix-buffer-map-t
   "w" prefix-buffer-map-w)
@@ -860,6 +879,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "t" `("Toggles" . ,prefix-buffer-map-t)
   ;; "m m" `("Mark" . ,prefix-buffer-map-mark)
   ;;"c" `("Casual" . ,prefix-buffer-map-casual)
+  "o" `("Open" . ,prefix-buffer-map-o)
   "s" `("Search" . ,prefix-buffer-map-s)
   "w" `("Window" . ,prefix-buffer-map-w)
   )
@@ -1226,26 +1246,45 @@ Cf https://github.com/Alexander-Miller/treemacs#navigation-without-projects-and-
 
 
 #+begin_src emacs-lisp
-  (use-package treemacs
-    :ensure t
-    :bind (:map global-map
-                ("M-à" . treemacs-select-window)
-                ("M-0" . treemacs-select-window)
-                ("C-x t t" . treemacs)
-                ("C-x t 1" . treemacs-delete-other-windows))
-    :custom
-    (treemacs-is-never-other-window t)
-    (treemacs-persist-file (expand-file-name ".cache/treemacs-persist" user-emacs-directory))
-    :hook
-    (treemacs-mode . treemacs-project-follow-mode))
+(use-package treemacs
+  :ensure t
+  :bind (:map global-map
+              ("M-à" . treemacs-select-window)
+              ("M-0" . treemacs-select-window)
+              ("C-x t t" . treemacs)
+              ("C-x t 1" . treemacs-delete-other-windows))
+  :custom
+  (treemacs-is-never-other-window t)
+  (treemacs-persist-file (expand-file-name ".cache/treemacs-persist" user-emacs-directory))
+  :hook
+  (treemacs-mode . treemacs-project-follow-mode))
 
-  ;; (use-package treemacs-projectile
-  ;;   :after (treemacs projectile)
-  ;;   :ensure t)
+;; (use-package treemacs-projectile
+;;   :after (treemacs projectile)
+;;   :ensure t)
 
-  (use-package treemacs-icons-dired
-    :hook (dired-mode . treemacs-icons-dired-enable-once)
-    :ensure t)
+(use-package treemacs-icons-dired
+  :hook (dired-mode . treemacs-icons-dired-enable-once)
+  :ensure t)
+
+
+;; From https://github.com/doomemacs/doomemacs/blob/master/modules/ui/treemacs/autoload.el
+(defun nc/treemacs-toggle ()
+  "Initialize or toggle treemacs.
+
+Ensures that only the current project is present and all other projects have
+been removed.
+
+Use `treemacs' command for old functionality."
+  (interactive)
+  (require 'treemacs)
+  (pcase (treemacs-current-visibility)
+    (`visible (delete-window (treemacs-get-local-window)))
+    (_ (let ((project (treemacs--find-current-user-project)))
+         (if (and project (not (file-equal-p project "~")))
+             (treemacs-add-and-display-current-project-exclusively)
+           (message "No valid project in current buffer; opening last treemacs session")
+           (treemacs))))))
 #+end_src
 
 ** Rainbow mode

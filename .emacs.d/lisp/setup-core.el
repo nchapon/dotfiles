@@ -186,6 +186,25 @@
   :hook (dired-mode . treemacs-icons-dired-enable-once)
   :ensure t)
 
+
+;; From https://github.com/doomemacs/doomemacs/blob/master/modules/ui/treemacs/autoload.el
+(defun nc/treemacs-toggle ()
+  "Initialize or toggle treemacs.
+
+Ensures that only the current project is present and all other projects have
+been removed.
+
+Use `treemacs' command for old functionality."
+  (interactive)
+  (require 'treemacs)
+  (pcase (treemacs-current-visibility)
+    (`visible (delete-window (treemacs-get-local-window)))
+    (_ (let ((project (treemacs--find-current-user-project)))
+         (if (and project (not (file-equal-p project "~")))
+             (treemacs-add-and-display-current-project-exclusively)
+           (message "No valid project in current buffer; opening last treemacs session")
+           (treemacs))))))
+
 (use-package rainbow-mode
   :ensure t
   :config
