@@ -466,7 +466,7 @@
          (python-mode . dap-mode)
          (python-mode . lsp-deferred))
   :custom
-  (python-shell-interpreter "python3")
+  (python-shell-interpreter "python")
 
 
   :config

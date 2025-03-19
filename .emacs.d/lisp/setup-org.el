@@ -277,7 +277,7 @@
          (file nc/org-projects-file)
          "* %^{ProjectName} :project:\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:END:\n %?")
         ("pt" "Todo" entry
-         (file nc/org-projects-file)
+         (file+headline nc/inbox-file "Inbox")
          "* TODO %?" :refile-targets ((nil :maxlevel . 1))
          :prepend t)
         ("o" "@office")
@@ -285,7 +285,7 @@
          (file nc/org-office-file)
          "* %^{ProjectName}:project:\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:END:\n %?")
         ("ot" "Todo" entry
-         (file nc/org-office-file)
+         (file+headline nc/inbox-file "Inbox")
          "* TODO %?" :refile-targets ((nil :maxlevel . 1))
          :prepend t)
         ("t" "Task Entry"        entry
