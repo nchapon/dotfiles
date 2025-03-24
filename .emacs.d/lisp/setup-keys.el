@@ -158,12 +158,11 @@
   "r" #'lsp-rename
   "o" #'lsp-organize-imports
   "X" #'lsp-treemacs-errors-list
-  "y" #'lsp-treemacs-call-hierarchy
+  "H" #'lsp-treemacs-call-hierarchy
   "S" #'lsp-treemacs-symbols
   "R" #'lsp-treemacs-references 
   ;; "d" prefix-buffer-map-denote
   )
-
 
 (defvar-keymap prefix-buffer-map-d
   :doc "Prefix map for C-q for dired/Denote"
@@ -202,6 +201,11 @@
   "o" #'occur
   "d" #'dired-jump)
 
+(defvar-keymap  prefix-buffer-map-k
+  :doc "Prefix map for C-q for killing"
+  "w" #'kill-buffer-and-window
+  "f" #'delete-frame
+  )
 
 (defvar-keymap prefix-buffer-map-n
   :doc "Prefix map for C-q for notes"
@@ -210,11 +214,12 @@
   "l" #'org-store-link
   )
 
-
 (defvar-keymap prefix-buffer-map-o
   :doc "Prefix map for C-q for open"
   "f" #'make-frame
+  "l" #'nc/open-bookmark
   "p" #'nc/treemacs-toggle
+  "." #'projectile-edit-dir-locals
   "P" #'treemacs-find-file)
 
 
@@ -258,7 +263,7 @@
   "C-q" #'major-mode-hydra
   "i" prefix-buffer-map-i
   "j" prefix-buffer-map-j
-  "l" #'nc/open-bookmark
+  "k" prefix-buffer-map-k
   "o" prefix-buffer-map-o
   "s" prefix-buffer-map-s
   "t" prefix-buffer-map-t
@@ -272,6 +277,7 @@
   "g" `("Goto My Files" . ,prefix-buffer-map-g)
   "i" `("Insert" . ,prefix-buffer-map-i)
   "j" `("Jump" . ,prefix-buffer-map-j)
+  "k" `("Kill" . ,prefix-buffer-map-k)
   "t" `("Toggles" . ,prefix-buffer-map-t)
   ;; "m m" `("Mark" . ,prefix-buffer-map-mark)
   ;;"c" `("Casual" . ,prefix-buffer-map-casual)
