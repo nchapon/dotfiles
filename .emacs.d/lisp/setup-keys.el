@@ -160,7 +160,7 @@
   "X" #'lsp-treemacs-errors-list
   "H" #'lsp-treemacs-call-hierarchy
   "S" #'lsp-treemacs-symbols
-  "R" #'lsp-treemacs-references 
+  "R" #'lsp-treemacs-references
   ;; "d" prefix-buffer-map-denote
   )
 
@@ -173,15 +173,15 @@
 
 
 (defvar-keymap prefix-buffer-map-i
-    :doc "Prefix map for C-q for Insert"
-    "d" #'nc/insert-datestamp-inactive
-    "D" #'nc/insert-datestamp
-    "e" #'emoji-search
-    "p" #'nc/generate-password
-    "t" #'tempel-insert
-    "u" #'nc/uuid
-    "y" #'consult-yasnippet
-    "Y" #'yankpad-insert)
+  :doc "Prefix map for C-q for Insert"
+  "d" #'nc/insert-datestamp-inactive
+  "D" #'nc/insert-datestamp
+  "e" #'emoji-search
+  "p" #'nc/generate-password
+  "t" #'tempel-insert
+  "u" #'nc/uuid
+  "y" #'consult-yasnippet
+  "Y" #'yankpad-insert)
 
 (defvar-keymap prefix-buffer-map-g
   :doc "Prefix map for C-q for goto my files or folders"
@@ -216,11 +216,14 @@
 
 (defvar-keymap prefix-buffer-map-o
   :doc "Prefix map for C-q for open"
+  "c" #'calc
+  "e" #'crux-open-with
   "f" #'make-frame
   "l" #'nc/open-bookmark
   "p" #'nc/treemacs-toggle
   "." #'projectile-edit-dir-locals
-  "P" #'treemacs-find-file)
+  "P" #'treemacs-find-file
+  )
 
 
 (defvar-keymap prefix-buffer-map-s
