@@ -125,6 +125,10 @@
   ("Actions"
    (("p" nc/plantuml-preview-current-block "Plantuml Preview"))))
 
+(major-mode-hydra-define plantuml-mode nil
+  ("Actions"
+   (("p" nc/plantuml-preview-current-block "Plantuml Preview"))))
+
 (use-package key-chord
   :init
   (key-chord-mode 1)

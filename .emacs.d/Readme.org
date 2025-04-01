@@ -712,6 +712,17 @@ Some Emacs Global Bindings are redefined here.
 #+end_src
 
 
+*** hydra plantuml-mode
+#+begin_src emacs-lisp
+(major-mode-hydra-define plantuml-mode nil
+  ("Actions"
+   (("p" nc/plantuml-preview-current-block "Plantuml Preview"))))
+#+end_src
+
+
+
+
+
 ** Key Chords
 
 #+begin_src emacs-lisp
