@@ -171,6 +171,12 @@
     (interactive)
     (consult-fd "~/Projects"))
 
+  ;; From https://arialdomartini.github.io/consult-line-at-point
+  (defun nc/consult-line-symbol-at-point ()
+    "Search for a line matching the symbol found near point."
+    (interactive)
+    (consult-line
+     (or (thing-at-point 'symbol))))
   
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.

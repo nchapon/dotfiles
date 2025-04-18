@@ -175,6 +175,10 @@
   :custom
   (treemacs-is-never-other-window t)
   (treemacs-persist-file (expand-file-name ".cache/treemacs-persist" user-emacs-directory))
+  :config
+  (defun treemacs-ignore-gitignore (file _)
+    (string= file "__pycache__"))
+  (push #'treemacs-ignore-gitignore treemacs-ignored-file-predicates)
   :hook
   (treemacs-mode . treemacs-project-follow-mode))
 

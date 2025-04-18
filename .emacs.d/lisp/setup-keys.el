@@ -201,7 +201,7 @@
 (defvar-keymap prefix-buffer-map-j
   :doc "Prefix map for C-q for jump"
   "j" #'avy-goto-char-timer
-  "i" #'imenu
+  "i" #'consult-imenu
   "o" #'occur
   "d" #'dired-jump)
 
@@ -232,6 +232,7 @@
 
 (defvar-keymap prefix-buffer-map-s
   :doc "Prefix map for C-q for Search"
+  "." #'nc/consult-line-symbol-at-point
   "f" #'nc/consult-fd-my-projects
   "n" #'nc/search-notes
   "r" #'nc/consult-rg-my-projects)
@@ -264,6 +265,7 @@
 (defvar-keymap prefix-command-q
   :doc "Prefix Map for C-q:"
   ";" #'nc/goto-emacs-config
+  "/" #'nc/consult-line-symbol-at-point
   "a" #'embark-act
   "d" prefix-buffer-map-d
   "g" prefix-buffer-map-g

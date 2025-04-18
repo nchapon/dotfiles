@@ -152,5 +152,17 @@
 (set-register ?m '(buffer . "*Messages*"))
 (set-register ?c '(buffer . "*Compile*"))
 
+(setq tramp-default-method "ssh"          ; Use SSH by default
+        tramp-verbose 1                      ; Reduce verbosity
+        tramp-use-ssh-controlmaster-options nil  ; Don't use control master
+        tramp-chunksize 500                 ; Bigger chunks for better performance
+        tramp-connection-timeout 10         ; Shorter timeout
+        ;; Use SSH configuration
+        tramp-use-ssh-controlmaster-options nil
+        ;; Cache remote files
+        remote-file-name-inhibit-cache nil
+        ;; Enable file-name-handler cache
+        tramp-cache-read-persistent-data t)
+
 (provide 'setup-prefs)
 ;;; setup-prefs.el ends here
