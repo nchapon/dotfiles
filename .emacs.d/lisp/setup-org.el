@@ -756,9 +756,7 @@ if nil,the top of the file."
 (use-package ox-gfm
   :after (ox org))
 
-(use-package ob-restclient)
 (use-package ob-mermaid)
-
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -770,8 +768,7 @@ if nil,the top of the file."
    (js . t)
    (plantuml . t)
    (dot . t)
-   (java .t)
-   (restclient . t)))
+   (java .t)))
 
 (setq org-edit-src-content-indentation 0)
 
@@ -1078,7 +1075,7 @@ capture was not aborted."
              )
   :config
   ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
-  
+
   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
   (setq consult-notes-org-headings-files '("~/notes/"))
   (consult-notes-org-headings-mode)

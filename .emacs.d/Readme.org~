@@ -80,7 +80,7 @@ It can install packages from Git repositories listed on ELPA, MELPA, and directl
 (setq straight-build-dir (format "build-%s" emacs-version))
 
 ;; Compute use pacakge stats
-(setq use-package-compute-statistics t)
+(set use-package-compute-statistics t)
 
 (defvar bootstrap-version)
 (let ((bootstrap-file

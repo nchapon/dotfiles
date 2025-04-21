@@ -37,6 +37,9 @@
 (defvar straight-build-dir)
 (setq straight-build-dir (format "build-%s" emacs-version))
 
+;; Compute use pacakge stats
+(setq use-package-compute-statistics t)
+
 (defvar bootstrap-version)
 (let ((bootstrap-file
    (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
