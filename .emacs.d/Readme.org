@@ -853,8 +853,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "e" #'crux-open-with
   "f" #'make-frame
   "l" #'nc/open-bookmark
-  "t" #'nc/treemacs-toggle
-  )
+  "t" #'nc/treemacs-toggle)
 
 
 (defvar-keymap prefix-buffer-map-ctrl-s
@@ -891,8 +890,11 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
 (defvar-keymap prefix-command-q
   :doc "Prefix Map for C-q:"
   ";" #'nc/goto-emacs-config
+  ":" #'avy-goto-char-timer
   "/" #'nc/consult-line-symbol-at-point
   "a" #'embark-act
+  "f" #'nc/consult-fd-my-projects
+  "l" #'nc/open-bookmark
   "C-d" prefix-buffer-map-ctrl-d
   "C-f" prefix-buffer-map-ctrl-f
   "C-g" prefix-buffer-map-ctrl-g
@@ -1692,10 +1694,6 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
        ("C-x C-j" . consult-dir-jump-file))
   :config
   (setq consult-dir-project-list-function #'consult-dir-projectile-dirs))
-
-
-
-
 #+end_src
 ** Embark
 
@@ -4403,7 +4401,7 @@ From : https://xenodium.com/building-your-own-bookmark-launcher/
           (let* ((raw-link (org-element-property :raw-link link))
                  (content (org-element-contents link))
                  (title (substring-no-properties (or (seq-first content) raw-link))))
-            (push (concat title
+            (push (concat (s-pad-right 40 "." title)
                           "\n"
                           (propertize raw-link 'face 'whitespace-space)
                           "\n")

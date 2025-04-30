@@ -225,8 +225,7 @@
   "e" #'crux-open-with
   "f" #'make-frame
   "l" #'nc/open-bookmark
-  "t" #'nc/treemacs-toggle
-  )
+  "t" #'nc/treemacs-toggle)
 
 
 (defvar-keymap prefix-buffer-map-ctrl-s
@@ -263,8 +262,11 @@
 (defvar-keymap prefix-command-q
   :doc "Prefix Map for C-q:"
   ";" #'nc/goto-emacs-config
+  ":" #'avy-goto-char-timer
   "/" #'nc/consult-line-symbol-at-point
   "a" #'embark-act
+  "f" #'nc/consult-fd-my-projects
+  "l" #'nc/open-bookmark
   "C-d" prefix-buffer-map-ctrl-d
   "C-f" prefix-buffer-map-ctrl-f
   "C-g" prefix-buffer-map-ctrl-g

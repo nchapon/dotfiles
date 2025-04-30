@@ -111,7 +111,7 @@
           (let* ((raw-link (org-element-property :raw-link link))
                  (content (org-element-contents link))
                  (title (substring-no-properties (or (seq-first content) raw-link))))
-            (push (concat title
+            (push (concat (s-pad-right 40 "." title)
                           "\n"
                           (propertize raw-link 'face 'whitespace-space)
                           "\n")
