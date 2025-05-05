@@ -173,7 +173,8 @@
 
 (defvar-keymap prefix-buffer-map-ctrl-f
   :doc "Prefix map for C-q for files"
-  "f" #'nc/consult-fd-my-projects)
+  "f" #'nc/consult-fd-my-projects
+  "r" #'rename-visited-file)
 
 (defvar-keymap prefix-buffer-map-ctrl-i
   :doc "Prefix map for C-q for Insert"
