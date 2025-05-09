@@ -225,6 +225,7 @@
   "c" #'calc
   "e" #'crux-open-with
   "f" #'make-frame
+  "g" #'nc/vc-browse-remote
   "l" #'nc/open-bookmark
   "t" #'nc/treemacs-toggle)
 
