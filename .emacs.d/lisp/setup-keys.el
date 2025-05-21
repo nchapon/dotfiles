@@ -201,6 +201,7 @@
 (defvar-keymap prefix-buffer-map-ctrl-j
   :doc "Prefix map for C-q for jump"
   ":" #'avy-goto-char-timer
+  "h" #'consult-org-agenda
   "i" #'consult-imenu
   "o" #'occur
   "d" #'dired-jump
