@@ -736,8 +736,13 @@ Some Emacs Global Bindings are redefined here.
    (("p" nc/plantuml-preview-current-block "Plantuml Preview"))))
 #+end_src
 
-
-
+*** hydra python-mode
+#+begin_src emacs-lisp
+(major-mode-hydra-define python-mode nil
+  ("Actions"
+   (("f" nc/format-buffer-with-ruff "Format Buffer with Ruff")
+    ("d" python-insert-docstring-with-google-style-at-point "Add docstring"))))
+#+end_src
 
 
 ** Key Chords
@@ -3862,18 +3867,18 @@ Needs Java and plantuml.jar installed in =~/opt=
       (message "project: %s\nactivated: %s" default-directory path)))
 #+end_src
 
-*** Apheleia
+*** Format buffer with Ruff
 
-Automatic formatting with ruff when saving 
+Formatting with ruff  : from https://github.com/DavidVujic/my-emacs-config/blob/master/customizations/setup-python.el
 
 #+begin_src emacs-lisp
-  (use-package apheleia
-    :config
-    (add-to-list 'apheleia-mode-alist '(python-mode . ruff))
-    :bind
-    (("C-c f" . apheleia-format-buffer)))
-
-
+(defun nc/format-buffer-with-ruff ()
+  "Format the Python buffer using `ruff`."
+  (interactive)
+  (save-buffer)
+  (shell-command (concat "ruff check " (buffer-file-name) " --fix"))
+  (shell-command (concat "ruff format " (buffer-file-name)))
+  (revert-buffer t t t))
 #+end_src
 *** Python pytest
 

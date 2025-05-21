@@ -129,6 +129,11 @@
   ("Actions"
    (("p" nc/plantuml-preview-current-block "Plantuml Preview"))))
 
+(major-mode-hydra-define python-mode nil
+  ("Actions"
+   (("f" nc/format-buffer-with-ruff "Format Buffer with Ruff")
+    ("d" python-insert-docstring-with-google-style-at-point "Add docstring"))))
+
 (use-package key-chord
   :init
   (key-chord-mode 1)
