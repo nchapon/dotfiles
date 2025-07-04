@@ -14,7 +14,7 @@
 (defun nc/goto-emacs-config ()
     "Edit Readme.org"
     (interactive)
-    (find-file "~/.emacs.d/Readme.org"))
+    (find-file (concat user-emacs-directory "/Readme.org")))
 
 (defun nc/goto-my-credentials ()
   "Goto my credentials"

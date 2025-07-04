@@ -278,7 +278,7 @@
   "C-d" prefix-buffer-map-ctrl-d
   "C-f" prefix-buffer-map-ctrl-f
   "C-g" prefix-buffer-map-ctrl-g
-  "C-h" #'major-mode-hydra
+  "C-q" #'major-mode-hydra
   "C-i" prefix-buffer-map-ctrl-i
   "C-j" prefix-buffer-map-ctrl-j
   "C-k" prefix-buffer-map-ctrl-k

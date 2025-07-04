@@ -444,14 +444,17 @@ Keeping files and buffers in registers. To visit the file whose name is in regis
 (setq tramp-default-method "ssh"          ; Use SSH by default
         tramp-verbose 1                      ; Reduce verbosity
         tramp-use-ssh-controlmaster-options nil  ; Don't use control master
-        tramp-chunksize 500                 ; Bigger chunks for better performance
         tramp-connection-timeout 10         ; Shorter timeout
-        ;; Use SSH configuration
-        tramp-use-ssh-controlmaster-options nil
         ;; Cache remote files
         remote-file-name-inhibit-cache nil
         ;; Enable file-name-handler cache
-        tramp-cache-read-persistent-data t)
+        tramp-cache-read-persistent-data t
+        
+        remote-file-name-inhibit-locks t
+        tramp-use-scp-direct-remote-copying t
+        remote-file-name-inhibit-auto-save-visited t)
+
+(setq auth-sources '("~/.authinfo.gpg"))
 #+end_src
 
 * UI
@@ -906,7 +909,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "C-d" prefix-buffer-map-ctrl-d
   "C-f" prefix-buffer-map-ctrl-f
   "C-g" prefix-buffer-map-ctrl-g
-  "C-h" #'major-mode-hydra
+  "C-q" #'major-mode-hydra
   "C-i" prefix-buffer-map-ctrl-i
   "C-j" prefix-buffer-map-ctrl-j
   "C-k" prefix-buffer-map-ctrl-k
@@ -1936,7 +1939,7 @@ Org mode configuration automatically tangled in =./lisp/setup-org.el=
 
 #+begin_src emacs-lisp
 (use-package org
-
+  :straight (:type built-in)
   :bind (("C-c c" . org-capture)
          ("C-c a" . org-agenda)
          ("C-c C-b" . org-iswitchb))
@@ -4264,10 +4267,10 @@ Custom functions module automatically tangled in =./lisp/setup-functions.el=
 ** Emacs Config File
 
  #+begin_src emacs-lisp
-   (defun nc/goto-emacs-config ()
-       "Edit Readme.org"
-       (interactive)
-       (find-file "~/.emacs.d/Readme.org"))     
+ (defun nc/goto-emacs-config ()
+     "Edit Readme.org"
+     (interactive)
+     (find-file (concat user-emacs-directory "/Readme.org")))     
  #+end_src
 
 ** My personal credentials
