@@ -869,9 +869,10 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
 
 (defvar-keymap prefix-buffer-map-ctrl-s
   :doc "Prefix map for C-q for Search"
-  "/" #'nc/consult-line-symbol-at-point
+  "e" #'emoji-search
   "n" #'nc/search-notes
-  "p" #'nc/consult-rg-my-projects)
+  "p" #'nc/consult-rg-my-projects
+  "s" #'nc/consult-line-symbol-at-point)
 
 
 (defvar-keymap prefix-buffer-map-ctrl-t
