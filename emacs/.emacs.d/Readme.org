@@ -3421,6 +3421,8 @@ Hydra
 #+end_src
 ** Treesitter
 
+🤔 To install Treesitter languages perhaps I should use : https://github.com/emacs-tree-sitter/treesit-langs/blob/main/README.md
+
 #+begin_src emacs-lisp
   ;; -*- lexical-binding: t; -*-
   (use-package treesit
