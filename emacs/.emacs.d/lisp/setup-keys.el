@@ -187,6 +187,7 @@
   "D" #'nc/insert-datestamp
   "e" #'emoji-search
   "p" #'nc/generate-password
+  "q" #'quoted-insert
   "t" #'tempel-insert
   "u" #'nc/uuid
   "y" #'consult-yasnippet

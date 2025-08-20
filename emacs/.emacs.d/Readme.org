@@ -782,6 +782,9 @@ your currently entered incomplete command (a prefix) in a popup.
     (which-key-enable-god-mode-support))
 #+end_src
 ** My Universal Key Binding
+:PROPERTIES:
+:ID:       597a0c88-991d-48a9-bf3f-48a942a070c8
+:END:
 
 🚧 Experimental : inspired by https://summeremacs.github.io/posts/universal-keybind/ 
 
@@ -818,6 +821,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "D" #'nc/insert-datestamp
   "e" #'emoji-search
   "p" #'nc/generate-password
+  "q" #'quoted-insert
   "t" #'tempel-insert
   "u" #'nc/uuid
   "y" #'consult-yasnippet
