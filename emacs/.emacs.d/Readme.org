@@ -246,29 +246,28 @@ user with the UI, I add the generated code in a separate file.
 Small configs for better emacs experience...
 
 #+begin_src emacs-lisp
-  (setq initial-major-mode 'lisp-interaction-mode
-        redisplay-dont-pause t
-        column-number-mode t
-        echo-keystrokes 0.02
-        fill-column 80
-        transient-mark-mode t
-        shift-select-mode nil
-        require-final-newline t
-        truncate-partial-width-windows nil
-        delete-by-moving-to-trash t
-        confirm-nonexistent-file-or-buffer nil
-        query-replace-highlight t
-        ;; do not create lock files
-        create-lockfiles nil
-        ring-bell-function 'ignore
-        sentence-end-double-space nil)
+(use-package emacs
+  :straight nil
+  :custom
+  (initial-major-mode 'lisp-interaction-mode)
+  (redisplay-dont-pause t)
+  (column-number-mode t)
+  (echo-keystrokes 0.02)
+  (fill-column 80)
+  (transient-mark-mode t)
+  (shift-select-mode nil)
+  (require-final-newline t)
+  (truncate-partial-width-windows nil)
+  (delete-by-moving-to-trash t)
+  (confirm-nonexistent-file-or-buffer nil)
+  (query-replace-highlight t)
+  ;; do not create lock files
+  (create-lockfiles nil)
+  (ring-bell-function 'ignore)
+  (sentence-end-double-space nil)
+  (tab-always-indent 'complete))
+
  #+end_src
-*** Tab Defaults
-
-#+begin_src emacs-lisp
-  (setq-default tab-width 4)
-#+end_src
-
 *** Transparently open compressed files
  #+begin_src emacs-lisp
  (auto-compression-mode t)
@@ -3951,6 +3950,9 @@ Verb is a package for Emacs which allows you to organize and send HTTP requests
     (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 
 #+end_src
+
+
+
 ** Web
 *** Web Mode
 [[https://web-mode.org/][Web Mode]] major mode for editing HTML pages

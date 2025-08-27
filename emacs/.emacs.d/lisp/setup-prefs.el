@@ -23,24 +23,26 @@
 (when (file-exists-p custom-file)
   (load custom-file t))
 
-(setq initial-major-mode 'lisp-interaction-mode
-      redisplay-dont-pause t
-      column-number-mode t
-      echo-keystrokes 0.02
-      fill-column 80
-      transient-mark-mode t
-      shift-select-mode nil
-      require-final-newline t
-      truncate-partial-width-windows nil
-      delete-by-moving-to-trash t
-      confirm-nonexistent-file-or-buffer nil
-      query-replace-highlight t
-      ;; do not create lock files
-      create-lockfiles nil
-      ring-bell-function 'ignore
-      sentence-end-double-space nil)
-
-(setq-default tab-width 4)
+(use-package emacs
+  :straight nil
+  :custom
+  (initial-major-mode 'lisp-interaction-mode)
+  (redisplay-dont-pause t)
+  (column-number-mode t)
+  (echo-keystrokes 0.02)
+  (fill-column 80)
+  (transient-mark-mode t)
+  (shift-select-mode nil)
+  (require-final-newline t)
+  (truncate-partial-width-windows nil)
+  (delete-by-moving-to-trash t)
+  (confirm-nonexistent-file-or-buffer nil)
+  (query-replace-highlight t)
+  ;; do not create lock files
+  (create-lockfiles nil)
+  (ring-bell-function 'ignore)
+  (sentence-end-double-space nil)
+  (tab-always-indent 'complete))
 
 (auto-compression-mode t)
 
