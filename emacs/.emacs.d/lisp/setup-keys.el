@@ -193,16 +193,18 @@
   "y" #'consult-yasnippet
   "Y" #'yankpad-insert)
 
-(defvar-keymap prefix-buffer-map-ctrl-g
-  :doc "Prefix map for C-q for goto my files or folders"
-  ";" #'nc/goto-emacs-config
-  "i" #'nc/goto-inbox
-  "p" #'nc/goto-my-credentials
-  "A" #'nc/goto-archives-dir
-  "N" #'nc/goto-notes-dir
-  "P" #'nc/goto-projects-dir
-  "T" #'nc/goto-templates-dir
-  )
+;; (transient-define-prefix nc/goto-menu ()
+;;   "Go To: Quick Navigation"
+;;   [["Directories"
+;;     ("a" "Archives" nc/goto-archives-dir)
+;;     ("n" "Notes" nc/goto-notes-dir)
+;;     ("P" "Projects" nc/goto-projects-dir)
+;;     ("t" "Templates" nc/goto-templates-dir)
+;;     ]
+;;    ["Files"
+;;     (";" "Emacs Config" nc/goto-emacs-config)
+;;     ("p" "Credentials" nc/goto-my-credentials)
+;;     ]])
 
 (defvar-keymap prefix-buffer-map-ctrl-j
   :doc "Prefix map for C-q for jump"
@@ -277,9 +279,9 @@
   "a" #'embark-act
   "f" #'nc/consult-fd-my-projects
   "l" #'nc/open-bookmark
+  "g" #'nc/goto-menu
   "C-d" prefix-buffer-map-ctrl-d
   "C-f" prefix-buffer-map-ctrl-f
-  "C-g" prefix-buffer-map-ctrl-g
   "C-q" #'major-mode-hydra
   "C-i" prefix-buffer-map-ctrl-i
   "C-j" prefix-buffer-map-ctrl-j
@@ -296,7 +298,7 @@
   "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)
   "C-d" `("Dired/Denote"  . ,prefix-buffer-map-ctrl-d)
   "C-f" `("File"  . ,prefix-buffer-map-ctrl-f)
-  "C-g" `("Goto My Files" . ,prefix-buffer-map-ctrl-g)
+  ;;"C-g" `("Goto My Files" . ,prefix-buffer-map-ctrl-g)
   "C-i" `("Insert" . ,prefix-buffer-map-ctrl-i)
   "C-j" `("Jump" . ,prefix-buffer-map-ctrl-j)
   "C-k" `("Kill" . ,prefix-buffer-map-ctrl-k)
