@@ -159,6 +159,10 @@
 
 (global-set-key (kbd "C-q") nil)
 
+;; Eanble transinet menus
+(use-package transient
+    :commands (transient-define-prefix))
+
 (defvar-keymap prefix-buffer-map-ctrl-l
   :doc "Prefix map for C-q for LSP"
   "j" #'consult-lsp-symbols
@@ -193,18 +197,19 @@
   "y" #'consult-yasnippet
   "Y" #'yankpad-insert)
 
-;; (transient-define-prefix nc/goto-menu ()
-;;   "Go To: Quick Navigation"
-;;   [["Directories"
-;;     ("a" "Archives" nc/goto-archives-dir)
-;;     ("n" "Notes" nc/goto-notes-dir)
-;;     ("P" "Projects" nc/goto-projects-dir)
-;;     ("t" "Templates" nc/goto-templates-dir)
-;;     ]
-;;    ["Files"
-;;     (";" "Emacs Config" nc/goto-emacs-config)
-;;     ("p" "Credentials" nc/goto-my-credentials)
-;;     ]])
+(transient-define-prefix nc/goto-menu ()
+  "Go To: Quick Navigation"
+  [["Directories"
+    ("a" "Archives" nc/goto-archives-dir)
+    ("n" "Notes" nc/goto-notes-dir)
+    ("P" "Projects" nc/goto-projects-dir)
+    ("t" "Templates" nc/goto-templates-dir)
+    ]
+   ["Files"
+    (";" "Emacs Config" nc/goto-emacs-config)
+    ("p" "Credentials" nc/goto-my-credentials)
+    ]])
+
 
 (defvar-keymap prefix-buffer-map-ctrl-j
   :doc "Prefix map for C-q for jump"
