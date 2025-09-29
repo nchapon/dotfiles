@@ -283,7 +283,7 @@
         ("o" "@office")
         ("op" "Project" entry
          (file nc/org-office-file)
-         "* %^{ProjectName}:project:\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:END:\n %?")
+         "* %^{ProjectName} :project:\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:ARCHIVES:./archives/%s_archive::* %\\1\n:END:\n %?")
         ("ot" "Todo" entry
          (file+headline nc/inbox-file "Inbox")
          "* TODO %?" :refile-targets ((nil :maxlevel . 1))
