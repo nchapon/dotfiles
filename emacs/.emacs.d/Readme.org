@@ -790,164 +790,175 @@ your currently entered incomplete command (a prefix) in a popup.
 See also : https://github.com/pivaldi/pimacs/tree/master/doc
 
 #+begin_src emacs-lisp
-(global-set-key (kbd "C-q") nil)
+  (global-set-key (kbd "C-q") nil)
 
-;; Eanble transinet menus
-(use-package transient
-    :commands (transient-define-prefix))
+  ;; Eanble transinet menus
+  (use-package transient
+      :commands (transient-define-prefix))
 
-(defvar-keymap prefix-buffer-map-ctrl-l
-  :doc "Prefix map for C-q for LSP"
-  "j" #'consult-lsp-symbols
-  "r" #'lsp-rename
-  "o" #'lsp-organize-imports
-  "X" #'lsp-treemacs-errors-list
-  "H" #'lsp-treemacs-call-hierarchy
-  "S" #'lsp-treemacs-symbols
-  "R" #'lsp-treemacs-references)
+  (defvar-keymap prefix-buffer-map-ctrl-l
+    :doc "Prefix map for C-q for LSP"
+    "j" #'consult-lsp-symbols
+    "r" #'lsp-rename
+    "o" #'lsp-organize-imports
+    "X" #'lsp-treemacs-errors-list
+    "H" #'lsp-treemacs-call-hierarchy
+    "S" #'lsp-treemacs-symbols
+    "R" #'lsp-treemacs-references)
 
-(defvar-keymap prefix-buffer-map-ctrl-d
-  :doc "Prefix map for C-q for dired / directories"
-  "j" #'dired
-  "s" #'denote-sort-dired
-  ;; "d" prefix-buffer-map-ctrl-denote
-  )
+  (defvar-keymap prefix-buffer-map-ctrl-d
+    :doc "Prefix map for C-q for dired / directories"
+    "j" #'dired
+    "s" #'denote-sort-dired
+    ;; "d" prefix-buffer-map-ctrl-denote
+    )
 
-(defvar-keymap prefix-buffer-map-ctrl-f
-  :doc "Prefix map for C-q for files"
-  "f" #'nc/consult-fd-my-projects
-  "r" #'rename-visited-file)
+  (defvar-keymap prefix-buffer-map-ctrl-f
+    :doc "Prefix map for C-q for files"
+    "f" #'nc/consult-fd-my-projects
+    "r" #'rename-visited-file)
 
-(defvar-keymap prefix-buffer-map-ctrl-i
-  :doc "Prefix map for C-q for Insert"
-  "d" #'nc/insert-datestamp-inactive
-  "D" #'nc/insert-datestamp
-  "e" #'emoji-search
-  "p" #'nc/generate-password
-  "q" #'quoted-insert
-  "t" #'tempel-insert
-  "u" #'nc/uuid
-  "y" #'consult-yasnippet
-  "Y" #'yankpad-insert)
+  (defvar-keymap prefix-buffer-map-ctrl-i
+    :doc "Prefix map for C-q for Insert"
+    "d" #'nc/insert-datestamp-inactive
+    "D" #'nc/insert-datestamp
+    "e" #'emoji-search
+    "p" #'nc/generate-password
+    "q" #'quoted-insert
+    "t" #'tempel-insert
+    "u" #'nc/uuid
+    "y" #'consult-yasnippet
+    "Y" #'yankpad-insert)
 
-(transient-define-prefix nc/goto-menu ()
-  "Go To: Quick Navigation"
-  [["Directories"
-    ("a" "Archives" nc/goto-archives-dir)
-    ("n" "Notes" nc/goto-notes-dir)
-    ("P" "Projects" nc/goto-projects-dir)
-    ("t" "Templates" nc/goto-templates-dir)
-    ]
-   ["Files"
-    (";" "Emacs Config" nc/goto-emacs-config)
-    ("p" "Credentials" nc/goto-my-credentials)
-    ]])
+  (transient-define-prefix nc/goto-menu ()
+    "Go To: Quick Navigation"
+    [["Directories"
+      ("a" "Archives" nc/goto-archives-dir)
+      ("n" "Notes" nc/goto-notes-dir)
+      ("P" "Projects" nc/goto-projects-dir)
+      ("t" "Templates" nc/goto-templates-dir)
+      ]
+     ["Files"
+      (";" "Emacs Config" nc/goto-emacs-config)
+      ("p" "Credentials" nc/goto-my-credentials)
+      ]])
 
+  (transient-define-prefix nc/jump-menu ()
+    "Jump menu with avy and consult..."
+    ["Jump"
+     ["Avy"
+      (":" "Char" avy-goto-char-timer)
+      ("w" "Word" avy-goto-word-1)
+      ("l" "Line" avy-goto-line)
+      ]
+     ["Consult"
+      ("h" "Org Agenda Heading" consult-org-agenda)
+      ("i" "Outline/imenu" consult-imenu)
+      ("m" "Mark ring" consult-mark)
+      ("r" "Register" consult-register-load)
+      ]
+     ["Other"
+      ("." "Project dir-locals.el" projectile-edit-dir-locals)
+      ("g" "Goto line" goto-line)
+      ("f" "Find file at point" ffap)
+      ("F" "FFAP in buffer" ffap-menu)
+      ("v" "Browse VC Remote File" nc/vc-browse-remote)
+      ]])
 
-(defvar-keymap prefix-buffer-map-ctrl-j
-  :doc "Prefix map for C-q for jump"
-  ":" #'avy-goto-char-timer
-  "h" #'consult-org-agenda
-  "i" #'consult-imenu
-  "o" #'occur
-  "d" #'dired-jump
-  "." #'projectile-edit-dir-locals
-  )
+  (defvar-keymap prefix-buffer-map-ctrl-k
+    :doc "Prefix map for C-q for killing"
+    "w" #'kill-buffer-and-window
+    "f" #'delete-frame
+    )
 
-(defvar-keymap prefix-buffer-map-ctrl-k
-  :doc "Prefix map for C-q for killing"
-  "w" #'kill-buffer-and-window
-  "f" #'delete-frame
-  )
+  (defvar-keymap prefix-buffer-map-ctrl-n
+    :doc "Prefix map for C-q for notes"
+    "s" #'org-search-view
+    "t" #'org-todo-list
+    "l" #'org-store-link
+    )
 
-(defvar-keymap prefix-buffer-map-ctrl-n
-  :doc "Prefix map for C-q for notes"
-  "s" #'org-search-view
-  "t" #'org-todo-list
-  "l" #'org-store-link
-  )
-
-(defvar-keymap prefix-buffer-map-ctrl-o
-  :doc "Prefix map for C-q for open"
-  "c" #'calc
-  "e" #'crux-open-with
-  "f" #'make-frame
-  "g" #'nc/vc-browse-remote
-  "l" #'nc/open-bookmark
-  "t" #'nc/treemacs-toggle)
-
-
-(defvar-keymap prefix-buffer-map-ctrl-s
-  :doc "Prefix map for C-q for Search"
-  "e" #'emoji-search
-  "n" #'nc/search-notes
-  "p" #'nc/consult-rg-my-projects
-  "s" #'nc/consult-line-symbol-at-point)
-
-
-(defvar-keymap prefix-buffer-map-ctrl-t
-  :doc "Prefix map for C-q for toggle features."
-  "D" #'toggle-debug-on-error
-  "P" #'smartparens-strict-mode
-  "S" #'show-smartparens-mode
-  "X" #'toggle-debug-on-quit
-  "e" #'eldoc-mode
-  "l" #'hl-line-mode
-  "n" #'linum-mode
-  "p" #'smartparens-mode
-  "r" #'rainbow-mode
-  "t" #'treemacs
-  "w" #'whitespace-mode)
-
-(defvar-keymap prefix-buffer-map-ctrl-w
-  :doc "Prefix map for C-q for Windows."
-  "M-n" #'windmove-display-new-frame
-  "C-d" #'windmove-delete-down
-  "C-u" #'windmove-delete-up
-  "C-l" #'windmove-delete-left
-  "C-r" #'windmove-delete-right
-  "f" #'make-frame-command)
+  (defvar-keymap prefix-buffer-map-ctrl-o
+    :doc "Prefix map for C-q for open"
+    "c" #'calc
+    "e" #'crux-open-with
+    "f" #'make-frame
+    "g" #'nc/vc-browse-remote
+    "l" #'nc/open-bookmark
+    "t" #'nc/treemacs-toggle)
 
 
-(defvar-keymap prefix-command-q
-  :doc "Prefix Map for C-q:"
-  ";" #'nc/goto-emacs-config
-  ":" #'avy-goto-char-timer
-  "/" #'nc/consult-line-symbol-at-point
-  "a" #'embark-act
-  "f" #'nc/consult-fd-my-projects
-  "l" #'nc/open-bookmark
-  "g" #'nc/goto-menu
-  "C-d" prefix-buffer-map-ctrl-d
-  "C-f" prefix-buffer-map-ctrl-f
-  "C-q" #'major-mode-hydra
-  "C-i" prefix-buffer-map-ctrl-i
-  "C-j" prefix-buffer-map-ctrl-j
-  "C-k" prefix-buffer-map-ctrl-k
-  "C-n" prefix-buffer-map-ctrl-n
-  "C-o" prefix-buffer-map-ctrl-o
-  "C-p" #'projectile-command-map
-  "C-s" prefix-buffer-map-ctrl-s
-  "C-t" prefix-buffer-map-ctrl-t
-  "C-w" prefix-buffer-map-ctrl-w)
+  (defvar-keymap prefix-buffer-map-ctrl-s
+    :doc "Prefix map for C-q for Search"
+    "e" #'emoji-search
+    "n" #'nc/search-notes
+    "p" #'nc/consult-rg-my-projects
+    "s" #'nc/consult-line-symbol-at-point)
 
 
-(which-key-add-keymap-based-replacements prefix-command-q
-  "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)
-  "C-d" `("Dired/Denote"  . ,prefix-buffer-map-ctrl-d)
-  "C-f" `("File"  . ,prefix-buffer-map-ctrl-f)
-  ;;"C-g" `("Goto My Files" . ,prefix-buffer-map-ctrl-g)
-  "C-i" `("Insert" . ,prefix-buffer-map-ctrl-i)
-  "C-j" `("Jump" . ,prefix-buffer-map-ctrl-j)
-  "C-k" `("Kill" . ,prefix-buffer-map-ctrl-k)
-  "C-n" `("Notes" . ,prefix-buffer-map-ctrl-n)
-  "C-o" `("Open" . ,prefix-buffer-map-ctrl-o)
-  "C-s" `("Search" . ,prefix-buffer-map-ctrl-s)
-  "C-t" `("Toggles" . ,prefix-buffer-map-ctrl-t)
-  "C-w" `("Window" . ,prefix-buffer-map-ctrl-w)
-  )
+  (defvar-keymap prefix-buffer-map-ctrl-t
+    :doc "Prefix map for C-q for toggle features."
+    "D" #'toggle-debug-on-error
+    "P" #'smartparens-strict-mode
+    "S" #'show-smartparens-mode
+    "X" #'toggle-debug-on-quit
+    "e" #'eldoc-mode
+    "l" #'hl-line-mode
+    "n" #'linum-mode
+    "p" #'smartparens-mode
+    "r" #'rainbow-mode
+    "t" #'treemacs
+    "w" #'whitespace-mode)
 
-(keymap-set global-map "C-q" prefix-command-q)
+  (defvar-keymap prefix-buffer-map-ctrl-w
+    :doc "Prefix map for C-q for Windows."
+    "M-n" #'windmove-display-new-frame
+    "C-d" #'windmove-delete-down
+    "C-u" #'windmove-delete-up
+    "C-l" #'windmove-delete-left
+    "C-r" #'windmove-delete-right
+    "f" #'make-frame-command)
+
+
+  (defvar-keymap prefix-command-q
+    :doc "Prefix Map for C-q:"
+    ";" #'nc/goto-emacs-config
+    ":" #'avy-goto-char-timer
+    "/" #'nc/consult-line-symbol-at-point
+    "a" #'embark-act
+    "f" #'nc/consult-fd-my-projects
+    "l" #'nc/open-bookmark
+    "g" #'nc/goto-menu
+    "j" #'nc/jump-menu
+    "C-d" prefix-buffer-map-ctrl-d
+    "C-f" prefix-buffer-map-ctrl-f
+    "C-q" #'major-mode-hydra
+    "C-i" prefix-buffer-map-ctrl-i
+    "C-k" prefix-buffer-map-ctrl-k
+    "C-n" prefix-buffer-map-ctrl-n
+    "C-o" prefix-buffer-map-ctrl-o
+    "C-p" #'projectile-command-map
+    "C-s" prefix-buffer-map-ctrl-s
+    "C-t" prefix-buffer-map-ctrl-t
+    "C-w" prefix-buffer-map-ctrl-w)
+
+
+  (which-key-add-keymap-based-replacements prefix-command-q
+    "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)
+    "C-d" `("Dired/Denote"  . ,prefix-buffer-map-ctrl-d)
+    "C-f" `("File"  . ,prefix-buffer-map-ctrl-f)
+    ;;"C-g" `("Goto My Files" . ,prefix-buffer-map-ctrl-g)
+    "C-i" `("Insert" . ,prefix-buffer-map-ctrl-i)
+    ;; "C-j" `("Jump" . ,prefix-buffer-map-ctrl-j)
+    "C-k" `("Kill" . ,prefix-buffer-map-ctrl-k)
+    "C-n" `("Notes" . ,prefix-buffer-map-ctrl-n)
+    "C-o" `("Open" . ,prefix-buffer-map-ctrl-o)
+    "C-s" `("Search" . ,prefix-buffer-map-ctrl-s)
+    "C-t" `("Toggles" . ,prefix-buffer-map-ctrl-t)
+    "C-w" `("Window" . ,prefix-buffer-map-ctrl-w)
+    )
+
+  (keymap-set global-map "C-q" prefix-command-q)
 #+end_src
 
 

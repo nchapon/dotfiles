@@ -210,16 +210,27 @@
     ("p" "Credentials" nc/goto-my-credentials)
     ]])
 
-
-(defvar-keymap prefix-buffer-map-ctrl-j
-  :doc "Prefix map for C-q for jump"
-  ":" #'avy-goto-char-timer
-  "h" #'consult-org-agenda
-  "i" #'consult-imenu
-  "o" #'occur
-  "d" #'dired-jump
-  "." #'projectile-edit-dir-locals
-  )
+(transient-define-prefix nc/jump-menu ()
+  "Jump menu with avy and consult..."
+  ["Jump"
+   ["Avy"
+    (":" "Char" avy-goto-char-timer)
+    ("w" "Word" avy-goto-word-1)
+    ("l" "Line" avy-goto-line)
+    ]
+   ["Consult"
+    ("h" "Org Agenda Heading" consult-org-agenda)
+    ("i" "Outline/imenu" consult-imenu)
+    ("m" "Mark ring" consult-mark)
+    ("r" "Register" consult-register-load)
+    ]
+   ["Other"
+    ("." "Project dir-locals.el" projectile-edit-dir-locals)
+    ("g" "Goto line" goto-line)
+    ("f" "Find file at point" ffap)
+    ("F" "FFAP in buffer" ffap-menu)
+    ("v" "Browse VC Remote File" nc/vc-browse-remote)
+    ]])
 
 (defvar-keymap prefix-buffer-map-ctrl-k
   :doc "Prefix map for C-q for killing"
@@ -285,11 +296,11 @@
   "f" #'nc/consult-fd-my-projects
   "l" #'nc/open-bookmark
   "g" #'nc/goto-menu
+  "j" #'nc/jump-menu
   "C-d" prefix-buffer-map-ctrl-d
   "C-f" prefix-buffer-map-ctrl-f
   "C-q" #'major-mode-hydra
   "C-i" prefix-buffer-map-ctrl-i
-  "C-j" prefix-buffer-map-ctrl-j
   "C-k" prefix-buffer-map-ctrl-k
   "C-n" prefix-buffer-map-ctrl-n
   "C-o" prefix-buffer-map-ctrl-o
@@ -305,7 +316,7 @@
   "C-f" `("File"  . ,prefix-buffer-map-ctrl-f)
   ;;"C-g" `("Goto My Files" . ,prefix-buffer-map-ctrl-g)
   "C-i" `("Insert" . ,prefix-buffer-map-ctrl-i)
-  "C-j" `("Jump" . ,prefix-buffer-map-ctrl-j)
+  ;; "C-j" `("Jump" . ,prefix-buffer-map-ctrl-j)
   "C-k" `("Kill" . ,prefix-buffer-map-ctrl-k)
   "C-n" `("Notes" . ,prefix-buffer-map-ctrl-n)
   "C-o" `("Open" . ,prefix-buffer-map-ctrl-o)
