@@ -129,21 +129,46 @@
   ;; only check on save
   (setq flycheck-check-syntax-automatically '(mode-enabled save)))
 
+;; (use-package dap-mode
+;;   ;; Uncomment the config below if you want all UI panes to be hidden by default!
+;;   ;; :custom
+;;   ;; (lsp-enable-dap-auto-configure nil)
+;;   ;; :config
+;;   ;; (dap-ui-mode 1)
+;;   :commands dap-debug
+
+;;   :config
+;;   ;; Enable DAP UI automatically
+;;   (dap-ui-mode 1)
+;;   (dap-tooltip-mode 1)
+;;   (tooltip-mode 1)
+
+;;   ;; Enable DAP controls in the modeline
+;;   (dap-ui-controls-mode 1)
+  
+;;   (require 'dap-hydra)
+
+;;   ;; Bind `C-c l d` to `dap-hydra` for easy access
+
+;;   (dap-register-debug-template "Python :: Attach to running process"
+;;   (list :type "python"
+;;         :request "attach"
+;;         :processId "${command:pickProcess}"
+;;         :name "Python :: Attach to running process")))
+
+(use-package with-venv)
+
 (use-package dap-mode
-  ;; Uncomment the config below if you want all UI panes to be hidden by default!
-  ;; :custom
-  ;; (lsp-enable-dap-auto-configure nil)
-  ;; :config
-  ;; (dap-ui-mode 1)
+  :after lsp-mode
   :commands dap-debug
   :config
-  (require 'dap-hydra)
+  (require 'dap-python)
+  (setq dap-python-debugger 'debugpy)
+  (defun dap-python--pyenv-executable-find (command)
+    (with-venv (executable-find "python")))
 
-  ;; Bind `C-c l d` to `dap-hydra` for easy access
-
-
-
-  )
+  (add-hook 'dap-stopped-hook
+            (lambda (arg) (call-interactively #'dap-hydra))))
 
 ;; -*- lexical-binding: t; -*-
 (use-package treesit
@@ -258,6 +283,16 @@
            (-filter (lambda (n) (eq (car n) 'name)))
            (-map #'cdr)
            (-mapcat (lambda (n) (treesit-node-text n t)))))))
+
+(use-package combobulate
+    :custom
+    ;; You can customize Combobulate's key prefix here.
+    ;; Note that you may have to restart Emacs for this to take effect!
+    (combobulate-key-prefix "C-c o")
+    :hook ((python-ts-mode . combobulate-mode))
+    ;; Amend this to the directory where you keep Combobulate's source
+    ;; code.
+    :load-path ("~/Projects/_playground/combobulate"))
 
 (use-package smartparens
   :defer t
@@ -459,26 +494,46 @@
   (when is-linux
     (plantuml-preview-current-block 1)))
 
-(use-package python-mode
-  :straight nil
-  :mode ("\\.py\\'")
-  :hook ((python-mode . dap-ui-mode)
-         (python-mode . dap-mode)
-         (python-mode . lsp-deferred))
-  :custom
-  (python-shell-interpreter "python")
+(use-package python
+  ;; python-ts-mode is part of Emacs itself, so we use :ensure nil
+  :ensure nil
+  :mode ("\\.py\\'" . python-ts-mode)
+  :init
+  ;; Prefer tree-sitter mode over classic python-mode
+  (add-to-list 'major-mode-remap-alist
+               '(python-mode . python-ts-mode)))
 
+(defun nc/setup-python-environment ()
+  "Setup a Python development environment in the current buffer."
 
-  :config
+  ;; Enable YASnippet mode.
+  (yas-minor-mode 1)
+
+  ;; Setup active backends for `python-mode'.
+  ;; (company-backend-for-hook 'lsp-completion-mode-hook
+  ;;                           '((company-capf :with company-yasnippet)
+  ;;                             company-dabbrev-code))
+
+  ;; Enable LSP support in Python buffers.
+  (require 'lsp-pyright)
+  (lsp-deferred)
+
+  ;; Enable DAP support in Python buffers.
   (require 'dap-python)
-  (setq dap-python-debugger 'debugpy))
+  (setq-local dap-python-debugger 'debugpy)
+
+  (dap-mode 1))
+
+;; Configure hooks after `python-ts-mode' is loaded.
+(add-hook 'python-ts-mode-hook #'nc/setup-python-environment)
 
 (use-package lsp-pyright
   :init
+  ;; Prevent `lsp-pyright' start in multi-root mode.
+  ;; This must be set before the package is loaded.
+  (setq lsp-pyright-multi-root nil)
   (setq lsp-pyright-typechecking-mode "basic") ;; too much noise in "real" projects
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-pyright)
-                         (lsp-deferred))))
+  )
 
 (use-package conda
   :when (executable-find "conda")
@@ -509,16 +564,6 @@
   :config
   (pyvenv-mode))
 
-
-(defun pyvenv-activate-poetry ()
-  "Activate the venv created by Poetry."
-  (interactive)
-  (let ((default-directory (project-root (project-current)))
-        (path (string-trim
-               (shell-command-to-string "env -u VIRTUAL_ENV poetry env info --path"))))
-    (pyvenv-activate path)
-    (message "project: %s\nactivated: %s" default-directory path)))
-
 (defun nc/format-buffer-with-ruff ()
   "Format the Python buffer using `ruff`."
   (interactive)
@@ -532,7 +577,7 @@
   :config
   (setq python-pytest-executable "python -m pytest")
   :bind
-  (:map python-mode-map
+  (:map python-ts-mode-map
           ("C-c C-t x" . python-pytest)
           ("C-c C-t t" . python-pytest-function-dwim)
           ("C-c C-t T" . python-pytest-function)

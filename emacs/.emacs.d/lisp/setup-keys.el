@@ -229,7 +229,8 @@
     ("g" "Goto line" goto-line)
     ("f" "Find file at point" ffap)
     ("F" "FFAP in buffer" ffap-menu)
-    ("v" "Browse VC Remote File" nc/vc-browse-remote)
+    ("G" "Browse VC Remote" nc/vc-browse-remote)
+    ("v" "Browse VC Remote File" nc/vc-browse-remote-current-line)
     ]])
 
 (defvar-keymap prefix-buffer-map-ctrl-k

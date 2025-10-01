@@ -146,5 +146,11 @@ Otherwise, open the repository's main page."
 			 (format "https://%s/%s" host path))))
 	  (message "Could not determine repository URL"))))
 
+
+(defun nc/vc-browse-remote-current-line ()
+  (interactive)
+  (let ((current-prefix-arg '(4))) ;; C-u
+    (call-interactively #'nc/vc-browse-remote)))
+
 (provide 'setup-functions)
 ;;; setup-functions.el ends here
