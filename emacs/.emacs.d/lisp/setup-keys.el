@@ -180,6 +180,50 @@
   ;; "d" prefix-buffer-map-ctrl-denote
   )
 
+(transient-define-prefix nc/buffer-menu ()
+  "Control buffer operations."
+  ["Buffer Navigation"
+   ("n" "Next buffer" next-buffer :transient t)
+   ("p" "Previous buffer" previous-buffer :transient t)
+   ("b" "Switch buffer" switch-to-buffer)
+   ("o" "Switch other window" switch-to-buffer-other-window)
+   ("5" "Switch other frame" switch-to-buffer-other-frame)
+   ("B" "Bury buffer" bury-buffer :transient t)]
+  ["Buffer Management"
+   ("k" "Kill buffer" kill-buffer)
+   ("s" "Save buffer" save-buffer :transient t)
+   ("S" "Save all buffers" save-some-buffers)
+   ("r" "Rename file & buffer" crux-rename-file-and-buffer)
+   ("d" "Delete file & buffer" crux-delete-file-and-buffer)
+   ("c" "Copy file" crux-copy-file-preserve-attributes)]
+  ["Display & View"
+   ("l" "List buffers" ibuffer)
+   ("m" "Buffer menu" buffer-menu)
+   ("v" "View mode" view-mode :transient t)
+   ("=" "Compare with file" diff-buffer-with-file)
+   ("C" "Clone indirect buffer" clone-indirect-buffer)]
+  ["Git & History"
+   ("R" "Revert buffer" revert-buffer)
+   ("g" "Magit log file" magit-log-buffer-file)]
+  ["Buffer Properties"
+   ("w" "Toggle read-only" read-only-mode :transient t)
+   ("a" "Toggle auto-save" auto-save-mode :transient t)
+   ("A" "Toggle auto-fill" auto-fill-mode :transient t)
+   ("f" "Set fill column" set-fill-column)
+   ("F" "Show fill column" display-fill-column-indicator-mode :transient t)
+   ("e" "Set encoding" set-buffer-file-coding-system)]
+  ["Exit"
+   ("q" "Quit" transient-quit-one)])
+
+(defun kill-other-buffers ()
+  "Kill all buffers except the current one."
+  (interactive)
+  (when (yes-or-no-p "Kill all other buffers? ")
+    (mapc 'kill-buffer 
+          (delq (current-buffer) 
+                (cl-remove-if-not 'buffer-file-name (buffer-list))))
+    (message "Killed other file buffers")))
+
 (defvar-keymap prefix-buffer-map-ctrl-f
   :doc "Prefix map for C-q for files"
   "f" #'nc/consult-fd-my-projects
@@ -294,6 +338,7 @@
   ":" #'avy-goto-char-timer
   "/" #'nc/consult-line-symbol-at-point
   "a" #'embark-act
+  "b" #'nc/buffer-menu
   "f" #'nc/consult-fd-my-projects
   "l" #'nc/open-bookmark
   "g" #'nc/goto-menu
