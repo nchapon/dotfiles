@@ -182,7 +182,7 @@
 
 (transient-define-prefix nc/buffer-menu ()
   "Control buffer operations."
-  ["Buffer Navigation"
+  [["Buffer Navigation"
    ("n" "Next buffer" next-buffer :transient t)
    ("p" "Previous buffer" previous-buffer :transient t)
    ("b" "Switch buffer" switch-to-buffer)
@@ -211,7 +211,7 @@
    ("A" "Toggle auto-fill" auto-fill-mode :transient t)
    ("f" "Set fill column" set-fill-column)
    ("F" "Show fill column" display-fill-column-indicator-mode :transient t)
-   ("e" "Set encoding" set-buffer-file-coding-system)]
+   ("e" "Set encoding" set-buffer-file-coding-system)]]
   ["Exit"
    ("q" "Quit" transient-quit-one)])
 
