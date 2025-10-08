@@ -70,5 +70,30 @@
       (delete-other-windows)
     (nc--split-window-right-and-move-there-dammit)))
 
+(defun nc/layout-ide ()
+  "IDE layout: main (75%) + sidebar (25%) + terminal bottom."
+  (interactive)
+  (delete-other-windows)
+  (let ((main-width (floor (* (window-total-width) 0.75))))
+    (split-window-right main-width)
+    (split-window-below (floor (* (window-total-height) 0.7))))
+  (balance-windows))
+
+(defun nc/layout-sidebar-left ()
+  "Sidebar left (25%) + main (75%)."
+  (interactive)
+  (delete-other-windows)
+  (let ((sidebar-width (floor (* (window-total-width) 0.25))))
+    (split-window-right sidebar-width)
+    (other-window 1)))
+
+(defun nc/layout-sidebar-right ()
+  "Main (75%) + sidebar right (25%)."
+  (interactive)
+  (delete-other-windows)
+  (let ((main-width (floor (* (window-total-width) 0.75))))
+    (split-window-right main-width)
+    (other-window 1)))
+
 (provide 'setup-windows)
 ;;; setup-windows.el ends here

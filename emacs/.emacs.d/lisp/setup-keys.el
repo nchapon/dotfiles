@@ -331,6 +331,45 @@
   "C-r" #'windmove-delete-right
   "f" #'make-frame-command)
 
+(transient-define-prefix nc/window-menu ()
+  "Simple frame, window and buffer management."
+  ["Frame, Window & Buffer Manager"
+   
+   ["Frames"
+    ("n" "New frame" make-frame-command)
+    ("d" "Delete frame" delete-frame)
+    ("o" "Other frame" other-frame :transient t)
+    ("O" "Only this frame" delete-other-frames)
+    ("m" "Maximize" toggle-frame-maximized)
+    ("f" "Fullscreen" toggle-frame-fullscreen)]
+   
+   ["Windows"
+    ("2" "Split below" split-window-below)
+    ("3" "Split right" split-window-right)
+    ("1" "Delete others" delete-other-windows)
+    ("0" "Delete window" delete-window)
+    ("w" "Other window" other-window :transient t)
+    ("=" "Balance" balance-windows)]
+   
+   ["Layouts"
+    ("L i" "IDE layout" fwb-layout-ide)
+    ("L l" "Sidebar left" fwb-layout-sidebar-left)
+    ("L r" "Sidebar right" fwb-layout-sidebar-right)]
+   
+   ["Buffers"
+    ("b" "Switch buffer" switch-to-buffer)
+    ("B" "Buffer other window" switch-to-buffer-other-window)
+    ("F" "Buffer other frame" switch-to-buffer-other-frame)
+    ("D" "Display buffer" display-buffer)
+    ("k" "Kill buffer" kill-buffer)
+    ("K" "Kill buffer & window" kill-buffer-and-window)
+    ("i" "Ibuffer" ibuffer)]
+   
+   ["Actions"
+    ("s" "Save config" window-configuration-to-register)
+    ("r" "Restore config" jump-to-register)
+    ("x" "Swap windows" window-swap-states)
+    ("q" "Quit" transient-quit-one)]])
 
 (defvar-keymap prefix-command-q
   :doc "Prefix Map for C-q:"
@@ -343,6 +382,7 @@
   "l" #'nc/open-bookmark
   "g" #'nc/goto-menu
   "j" #'nc/jump-menu
+  "w" #'nc/window-menu
   "C-d" prefix-buffer-map-ctrl-d
   "C-f" prefix-buffer-map-ctrl-f
   "C-q" #'major-mode-hydra
