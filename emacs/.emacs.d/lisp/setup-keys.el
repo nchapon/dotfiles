@@ -352,9 +352,9 @@
     ("=" "Balance" balance-windows)]
    
    ["Layouts"
-    ("L i" "IDE layout" fwb-layout-ide)
-    ("L l" "Sidebar left" fwb-layout-sidebar-left)
-    ("L r" "Sidebar right" fwb-layout-sidebar-right)]
+    ("L i" "IDE layout" nc/layout-ide)
+    ("L l" "Sidebar left" nc/layout-sidebar-left)
+    ("L r" "Sidebar right" nc/layout-sidebar-right)]
    
    ["Buffers"
     ("b" "Switch buffer" switch-to-buffer)
