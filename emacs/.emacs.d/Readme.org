@@ -3704,7 +3704,8 @@ Hydra
     ;; You can customize Combobulate's key prefix here.
     ;; Note that you may have to restart Emacs for this to take effect!
     (combobulate-key-prefix "C-c o")
-    :hook ((python-ts-mode . combobulate-mode))
+    :hook ((python-ts-mode . combobulate-mode)
+           (yaml-ts-mode . combobulate-mode))
     ;; Amend this to the directory where you keep Combobulate's source
     ;; code.
     :load-path ("~/Projects/_playground/combobulate"))
