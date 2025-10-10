@@ -338,7 +338,7 @@
    ["Frames"
     ("n" "New frame" make-frame-command)
     ("d" "Delete frame" delete-frame)
-    ("o" "Other frame" other-frame :transient t)
+    ("o" "Other frame" other-frame)
     ("O" "Only this frame" delete-other-frames)
     ("m" "Maximize" toggle-frame-maximized)
     ("f" "Fullscreen" toggle-frame-fullscreen)]

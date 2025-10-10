@@ -1033,7 +1033,7 @@ capture was not aborted."
         ("C-c C-d C-R" . 'denote-dired-rename-marked-files-using-front-matter))
   
   :init
-  (setq denote-directory (expand-file-name "notes" (getenv "PIM_HOME")))
+  (setq denote-directory (expand-file-name "main" (getenv "PIM_HOME")))
   :config
   
   (setq denote-prompts '(subdirectory title keyword))
