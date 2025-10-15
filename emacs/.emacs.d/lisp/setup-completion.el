@@ -382,7 +382,7 @@
          ("M-*" . tempel-insert))
 
   :config
-  (setq tempel-path (expand-file-name "tempel" nc/org-default-templates-dir))
+  (setq tempel-path (expand-file-name "tempel" "~/notes/templates"))
 
   :init
 
