@@ -111,7 +111,7 @@ source $ZSH/oh-my-zsh.sh
 
 alias cdp="cd ~/Projects"
 alias cdn="cd ~/notes"
-alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+#alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 # Set JAVA_HOME
 if [ -f $HOME/.asdf/plugins/java/set-java-home.zsh ]; then
@@ -126,13 +126,6 @@ if [ -d $HOME/dotfiles/bin ]; then
     export PATH=$PATH:$HOME/dotfiles/bin 
 fi
 
-if [ -d $HOME/.dotfiles/bin ]; then
-    export PATH=$PATH:$HOME/.dotfiles/bin 
-fi
-
-
 if [ -d $HOME/adr-tools/src ]; then
     export PATH=$PATH:$HOME/adr-tools/src
 fi
-
-

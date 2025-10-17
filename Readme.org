@@ -1,54 +1,44 @@
-#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
-#+options: author:t broken-links:nil c:nil creator:nil
-#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
-#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
-#+options: timestamp:t title:t toc:t todo:t |:t
 #+title: Readme
 #+date: <2022-05-13 ven.>
 #+author: Nicolas Chapon
 #+email: nchapon@gmail.com
-#+language: en
-#+select_tags: export
-#+exclude_tags: noexport
-#+creator: Emacs 27.1 (Org mode 9.5)
-#+cite_export:
 * Dotfiles
 
-My personal dotfiles  when I setip a new environnement (Ubuntu)
+My personal dotfiles  when I setUp a new environnement
 
 Tested on :
 - Ubuntu 20 LTS
 - Ubuntu 22 LTS
-
+- MacOS
+- Windows (w/ limited profile) 
 ** Pre Installl
 
-At first install =Git=
+At first install =Git= and Emacs
 
-#+begin_src shell
-  sudo add-apt-repository -y ppa:git-core/ppa
-  sudo apt-get update
-  sudo apt-get install -y git-all git-extras
-#+end_src
+On windows install GitBash and msys2 https://packages.msys2.org
+
+
 ** Installation
+*** Ubuntu 
 
-*** Clone git repository
+First clone this repo in your HOME folder
 
 #+begin_src shell
 git clone https://github.com/nchapon/dotfiles.git dotfiles
 #+end_src
 
-*** Install essentials
+**** Install essentials
 
 #+begin_src shell
   cd dotfiles
   ./ubuntu-setup.sh 
 #+end_src
 
-*** Install OhMyZsh
+**** Install OhMyZsh
 
 See instructions here : https://ohmyz.sh/#install
 
-*** Link my configuration files
+**** Link my configuration files
 
 #+begin_src shell
   cd ~/dotfiles
@@ -56,16 +46,42 @@ See instructions here : https://ohmyz.sh/#install
   stow emacs
   stow zsh
 #+end_src
-** Post Install
+*** Windows
+**** MSYS2
+Cf https://www.msys2.org/
+Installed in  C:/msys64/
+Par défaut raccourci sur le bureau vers Mintty UCRT64
+
+After install some useful package from https://packages.msys2.org/search and add to your PATH =C:/msys64/usr/bin=
+
+Setup your HOME directory in MSYS2 home folder  Example : =C:/msys64/home/nchapon/=
+
+And then clone this repo in your home folder
+
+#+begin_src shell
+git clone https://github.com/nchapon/dotfiles.git dotfiles
+#+end_src
+
+**** ZSH and GIT
+On windows symlinks is a mess, so copy and sync the content of =git/= and =zsh/= folders 
+
+**** Emacs
+
+Create a desktop shortcut to Emacs 
+
+C:\tools\emacs\bin\runemacs.exe --init-directory="C:\msys64\home\nchapon\dotfiles\emacs\.emacs.d"
+
+
+** Ubuntu Post Install
 *** Asdf
 I try to install all my tools with [[https://github.com/asdf-vm/asdf][Asdf]] 
-*** Java
+**** Java
 
 #+begin_src shell
   asdf plugin-add java
   asdf plugin-add maven
 #+end_src
-*** Clojure
+**** Clojure
 
 #+begin_src shell
   asdf plugin-add clojure
@@ -85,11 +101,11 @@ asdf install babashka latest
 #+end_src
 
 
-*** Docker 
+**** Docker 
 Docker is installed from this script :
 
 https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script
-*** Kubernetes
+
 **** Kind
 I use [[https://kind.sigs.k8s.io/][Kind]] when I need to run Kubernetes locally
 
@@ -103,3 +119,7 @@ I use [[https://kind.sigs.k8s.io/][Kind]] when I need to run Kubernetes locally
 asdf plugin-add kubectl
 asdf install kubectl 1.24.0
 #+end_src
+** Windows Post Install
+To install third party packages :
+- Try first from https://scoop.sh/ (no need to be Administrator)
+- or Download and install standalone packages in =C:/tools/= 
