@@ -252,7 +252,12 @@
    ["Files"
     (";" "Emacs Config" nc/goto-emacs-config)
     ("p" "Credentials" nc/goto-my-credentials)
-    ]])
+    ]
+   ["Agenda / Clock"
+    ("h" "Org Agenda Heading" consult-org-agenda)
+    ("c" "Goto Clock" org-clock-goto)
+    ]
+   ])
 
 (transient-define-prefix nc/jump-menu ()
   "Jump menu with avy and consult..."
@@ -263,7 +268,6 @@
     ("l" "Line" avy-goto-line)
     ]
    ["Consult"
-    ("h" "Org Agenda Heading" consult-org-agenda)
     ("i" "Outline/imenu" consult-imenu)
     ("m" "Mark ring" consult-mark)
     ("r" "Register" consult-register-load)
