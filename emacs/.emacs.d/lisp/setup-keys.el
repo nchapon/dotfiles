@@ -401,6 +401,7 @@
 
 
 (which-key-add-keymap-based-replacements prefix-command-q
+  "b" `("Buffer" . ,#'nc/buffer-menu)
   "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)
   "C-d" `("Dired/Denote"  . ,prefix-buffer-map-ctrl-d)
   "C-f" `("File"  . ,prefix-buffer-map-ctrl-f)
