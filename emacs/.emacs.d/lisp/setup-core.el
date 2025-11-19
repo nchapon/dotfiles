@@ -122,7 +122,8 @@
 
 (use-package expand-region
   :bind
-  ("C-=" . er/expand-region))
+  ("C-=" . er/expand-region)
+  ("C-M-=" . er/contract-region))
 
 (use-package multiple-cursors
   :bind
@@ -230,8 +231,11 @@ Use `treemacs' command for old functionality."
 
 (use-package yasnippet-capf
   :after cape
-  :config
-  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+  :init
+  (defun my/yasnippet-capf-h ()
+    (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+  :hook
+  (emacs-lisp-mode . my/yasnippet-capf-h))
 
 (defun +yas/org-src-header-p ()
     "Determine whether `point' is within a src-block header or header-args."

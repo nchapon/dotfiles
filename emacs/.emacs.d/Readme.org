@@ -1338,12 +1338,13 @@ Expand region increases the selected region by semantic units. Just keep pressin
 #+END_QUOTE
 
 - expand selection with =C-==
-- contract with negative argument =M--= then =C-==
+- contract with ==C-M-==
 
  #+begin_src emacs-lisp
  (use-package expand-region
    :bind
-   ("C-=" . er/expand-region))
+   ("C-=" . er/expand-region)
+   ("C-M-=" . er/contract-region))
  #+end_src
 
 ** Multiple Cursors
@@ -1513,13 +1514,13 @@ Consult integration
 
 
 #+begin_src emacs-lisp
-  (use-package yasnippet-capf
-    :after cape
-    :config
+(use-package yasnippet-capf
+  :after cape
+  :init
+  (defun my/yasnippet-capf-h ()
     (add-to-list 'completion-at-point-functions #'yasnippet-capf))
-
-
-
+  :hook
+  (emacs-lisp-mode . my/yasnippet-capf-h))
 #+end_src
 
 *** src block snippets helpers
