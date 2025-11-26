@@ -377,44 +377,44 @@
 
 (defvar-keymap prefix-command-q
   :doc "Prefix Map for C-q:"
-  ";" #'nc/goto-emacs-config
-  ":" #'avy-goto-char-timer
+  "." #'projectile-edit-dir-locals
   "/" #'nc/consult-line-symbol-at-point
+  ":" #'avy-goto-char-timer
+  ";" #'nc/goto-emacs-config
   "a" #'embark-act
-  "b" #'nc/buffer-menu
   "f" #'nc/consult-fd-my-projects
   "l" #'nc/open-bookmark
-  "g" #'nc/goto-menu
-  "j" #'nc/jump-menu
-  "w" #'nc/window-menu
+  "t" #'nc/treemacs-toggle
+  "v" #'nc/vc-browse-remote-current-line
+  "C-b" #'nc/buffer-menu
   "C-d" prefix-buffer-map-ctrl-d
   "C-f" prefix-buffer-map-ctrl-f
-  "C-q" #'major-mode-hydra
+  "C-g" #'nc/goto-menu
   "C-i" prefix-buffer-map-ctrl-i
+  "C-j" #'nc/jump-menu
   "C-k" prefix-buffer-map-ctrl-k
   "C-n" prefix-buffer-map-ctrl-n
   "C-o" prefix-buffer-map-ctrl-o
   "C-p" #'projectile-command-map
+  "C-q" #'major-mode-hydra
   "C-s" prefix-buffer-map-ctrl-s
   "C-t" prefix-buffer-map-ctrl-t
-  "C-w" prefix-buffer-map-ctrl-w)
+  "C-w" #'nc/window-menu)
 
 
 (which-key-add-keymap-based-replacements prefix-command-q
-  "b" `("Buffer" . ,#'nc/buffer-menu)
-  "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)
+    "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)
   "C-d" `("Dired/Denote"  . ,prefix-buffer-map-ctrl-d)
   "C-f" `("File"  . ,prefix-buffer-map-ctrl-f)
-  ;;"C-g" `("Goto My Files" . ,prefix-buffer-map-ctrl-g)
+  "C-g" `("Goto My Files" . ,#'nc/goto-menu)
   "C-i" `("Insert" . ,prefix-buffer-map-ctrl-i)
-  ;; "C-j" `("Jump" . ,prefix-buffer-map-ctrl-j)
+  "C-j" `("Jump" . ,#'nc/jump-menu)
   "C-k" `("Kill" . ,prefix-buffer-map-ctrl-k)
   "C-n" `("Notes" . ,prefix-buffer-map-ctrl-n)
   "C-o" `("Open" . ,prefix-buffer-map-ctrl-o)
   "C-s" `("Search" . ,prefix-buffer-map-ctrl-s)
   "C-t" `("Toggles" . ,prefix-buffer-map-ctrl-t)
-  "C-w" `("Window" . ,prefix-buffer-map-ctrl-w)
-  )
+  "C-w" `("Window" . ,#'nc/window-menu))
 
 (keymap-set global-map "C-q" prefix-command-q)
 
