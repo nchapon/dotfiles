@@ -384,6 +384,7 @@
   "a" #'embark-act
   "f" #'nc/consult-fd-my-projects
   "l" #'nc/open-bookmark
+  "s" #'nc/consult-rg-my-projects
   "t" #'nc/treemacs-toggle
   "v" #'nc/vc-browse-remote-current-line
   "C-b" #'nc/buffer-menu
