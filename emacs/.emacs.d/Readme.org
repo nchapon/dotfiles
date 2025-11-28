@@ -806,12 +806,24 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "S" #'lsp-treemacs-symbols
   "R" #'lsp-treemacs-references)
 
-(defvar-keymap prefix-buffer-map-ctrl-d
-  :doc "Prefix map for C-q for dired / directories"
-  "j" #'dired
-  "s" #'denote-sort-dired
-  ;; "d" prefix-buffer-map-ctrl-denote
-  )
+
+
+(transient-define-prefix nc/directory-menu ()
+  "My Directory Menu"
+  [["Notes"
+    ("a" "Archives" nc/goto-archives-dir)
+    ("n" "Notes" nc/goto-notes-dir)
+    ("t" "Templates" nc/goto-templates-dir)
+    ]
+   ["Others"
+    ("p" "Projects" nc/goto-projects-dir)
+    ("h" "Home" nc/goto-my-credentials)
+    ]
+   ["Dired"
+    ("j" "Dired" dired)
+    ("d" "Denote Sort Dired" denote-sort-dired)
+    ]])
+
 
 (transient-define-prefix nc/buffer-menu ()
   "Control buffer operations."
@@ -1017,11 +1029,12 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "a" #'embark-act
   "f" #'nc/consult-fd-my-projects
   "l" #'nc/open-bookmark
+  "m" #'mc/mark-all-words-like-this
   "s" #'nc/consult-rg-my-projects
   "t" #'nc/treemacs-toggle
   "v" #'nc/vc-browse-remote-current-line
   "C-b" #'nc/buffer-menu
-  "C-d" prefix-buffer-map-ctrl-d
+  "C-d" #'nc/directory-menu
   "C-f" prefix-buffer-map-ctrl-f
   "C-g" #'nc/goto-menu
   "C-i" prefix-buffer-map-ctrl-i
@@ -1038,7 +1051,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
 
 (which-key-add-keymap-based-replacements prefix-command-q
     "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)
-  "C-d" `("Dired/Denote"  . ,prefix-buffer-map-ctrl-d)
+  "C-d" `("Dirs"  . ,#'nc/directory-menu)
   "C-f" `("File"  . ,prefix-buffer-map-ctrl-f)
   "C-g" `("Goto My Files" . ,#'nc/goto-menu)
   "C-i" `("Insert" . ,prefix-buffer-map-ctrl-i)
