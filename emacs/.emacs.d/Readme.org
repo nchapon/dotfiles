@@ -817,13 +817,65 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
     ]
    ["Others"
     ("p" "Projects" nc/goto-projects-dir)
-    ("h" "Home" nc/goto-my-credentials)
+    ("h" "Home" (lambda () (interactive) (dired "~")))
     ]
    ["Dired"
     ("j" "Dired" dired)
     ("d" "Denote Sort Dired" denote-sort-dired)
     ]])
 
+
+;; Stolen from Doom
+(defun nc/yank-buffer-path ()
+  "Copy the file name or directory name of the current buffer to the clipboard."
+  (interactive)
+  (let* ((filename (or buffer-file-name default-directory))
+         (project (ignore-errors (project-root (project-current))))
+         (relpath (if (and project (file-in-directory-p filename project))
+                      (file-relative-name filename project)
+                    nil)))
+    (kill-new
+     (cond
+      ((equal current-prefix-arg '(4)) ; C-u
+       (file-name-nondirectory filename))
+      ((equal current-prefix-arg '(16)) ; C-u C-u
+       (or relpath filename))
+      (t
+       filename)))
+    (message "Copied: %s"
+             (substring-no-properties (car kill-ring)))))
+
+(transient-define-prefix nc/file-menu ()
+  "File Management + Config + Credentials"
+  
+  [[ "Actions"
+   ;; File ops
+   ("r" "Rename file" rename-visited-file)
+   ("c" "Copy file" crux-copy-file-preserve-attributes)
+   ("k" "Delete file" crux-delete-file-and-buffer)
+  ]
+  ["Config & Credentials"
+    (";" "Emacs Config" nc/goto-emacs-config)
+    ("p" "Credentials" nc/goto-my-credentials)
+    ("s" "SSH config"          (lambda () (interactive) (find-file "~/.ssh/config")))
+    ("t" "Authinfo"            (lambda () (interactive) (find-file "~/.authinfo.gpg")))
+  ]
+  ["Yank Paths"
+   ("y" "Full path"
+    (lambda () (interactive)
+      (let ((current-prefix-arg nil))
+        (call-interactively #'nc/yank-buffer-path))))
+
+   ("f" "Filename only  (C-u)"
+    (lambda () (interactive)
+      (let ((current-prefix-arg '(4)))
+        (call-interactively #'nc/yank-buffer-path))))
+
+   ("P" "Yank project-relative path  (C-u C-u)"
+    (lambda () (interactive)
+      (let ((current-prefix-arg '(16)))
+        (call-interactively #'nc/yank-buffer-path))))
+   ]])
 
 (transient-define-prefix nc/buffer-menu ()
   "Control buffer operations."
@@ -838,7 +890,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
    ("k" "Kill buffer" kill-buffer)
    ("s" "Save buffer" save-buffer :transient t)
    ("S" "Save all buffers" save-some-buffers)
-   ("r" "Rename file & buffer" crux-rename-file-and-buffer)
+   ("r" "Rename file & buffer" rename-visited-file)
    ("d" "Delete file & buffer" crux-delete-file-and-buffer)
    ("c" "Copy file" crux-copy-file-preserve-attributes)]
   ["Display & View"
@@ -860,20 +912,6 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   ["Exit"
    ("q" "Quit" transient-quit-one)])
 
-(defun kill-other-buffers ()
-  "Kill all buffers except the current one."
-  (interactive)
-  (when (yes-or-no-p "Kill all other buffers? ")
-    (mapc 'kill-buffer 
-          (delq (current-buffer) 
-                (cl-remove-if-not 'buffer-file-name (buffer-list))))
-    (message "Killed other file buffers")))
-
-(defvar-keymap prefix-buffer-map-ctrl-f
-  :doc "Prefix map for C-q for files"
-  "f" #'nc/consult-fd-my-projects
-  "r" #'rename-visited-file)
-
 (defvar-keymap prefix-buffer-map-ctrl-i
   :doc "Prefix map for C-q for Insert"
   "d" #'nc/insert-datestamp-inactive
@@ -885,24 +923,6 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "u" #'nc/uuid
   "y" #'consult-yasnippet
   "Y" #'yankpad-insert)
-
-(transient-define-prefix nc/goto-menu ()
-  "Go To: Quick Navigation"
-  [["Directories"
-    ("a" "Archives" nc/goto-archives-dir)
-    ("n" "Notes" nc/goto-notes-dir)
-    ("P" "Projects" nc/goto-projects-dir)
-    ("t" "Templates" nc/goto-templates-dir)
-    ]
-   ["Files"
-    (";" "Emacs Config" nc/goto-emacs-config)
-    ("p" "Credentials" nc/goto-my-credentials)
-    ]
-   ["Agenda / Clock"
-    ("h" "Org Agenda Heading" consult-org-agenda)
-    ("c" "Goto Clock" org-clock-goto)
-    ]
-   ])
 
 (transient-define-prefix nc/jump-menu ()
   "Jump menu with avy and consult..."
@@ -925,12 +945,6 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
     ("G" "Browse VC Remote" nc/vc-browse-remote)
     ("v" "Browse VC Remote File" nc/vc-browse-remote-current-line)
     ]])
-
-(defvar-keymap prefix-buffer-map-ctrl-k
-  :doc "Prefix map for C-q for killing"
-  "w" #'kill-buffer-and-window
-  "f" #'delete-frame
-  )
 
 (defvar-keymap prefix-buffer-map-ctrl-n
   :doc "Prefix map for C-q for notes"
@@ -1035,11 +1049,9 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "v" #'nc/vc-browse-remote-current-line
   "C-b" #'nc/buffer-menu
   "C-d" #'nc/directory-menu
-  "C-f" prefix-buffer-map-ctrl-f
-  "C-g" #'nc/goto-menu
+  "C-f" #'nc/file-menu
   "C-i" prefix-buffer-map-ctrl-i
   "C-j" #'nc/jump-menu
-  "C-k" prefix-buffer-map-ctrl-k
   "C-n" prefix-buffer-map-ctrl-n
   "C-o" prefix-buffer-map-ctrl-o
   "C-p" #'projectile-command-map
@@ -1049,19 +1061,18 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "C-w" #'nc/window-menu)
 
 
-(which-key-add-keymap-based-replacements prefix-command-q
-    "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)
-  "C-d" `("Dirs"  . ,#'nc/directory-menu)
-  "C-f" `("File"  . ,prefix-buffer-map-ctrl-f)
-  "C-g" `("Goto My Files" . ,#'nc/goto-menu)
-  "C-i" `("Insert" . ,prefix-buffer-map-ctrl-i)
-  "C-j" `("Jump" . ,#'nc/jump-menu)
-  "C-k" `("Kill" . ,prefix-buffer-map-ctrl-k)
-  "C-n" `("Notes" . ,prefix-buffer-map-ctrl-n)
-  "C-o" `("Open" . ,prefix-buffer-map-ctrl-o)
-  "C-s" `("Search" . ,prefix-buffer-map-ctrl-s)
-  "C-t" `("Toggles" . ,prefix-buffer-map-ctrl-t)
-  "C-w" `("Window" . ,#'nc/window-menu))
+;; (which-key-add-keymap-based-replacements prefix-command-q
+;;     "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)
+;;   "C-d" `("Dirs"  . ,#'nc/directory-menu)
+;;   "C-f" `("Files"  . ,#'nc/file-menu)
+;;   "C-i" `("Insert" . ,prefix-buffer-map-ctrl-i)
+;;   "C-j" `("Jump" . ,#'nc/jump-menu)
+;;   "C-k" `("Kill" . ,prefix-buffer-map-ctrl-k)
+;;   "C-n" `("Notes" . ,prefix-buffer-map-ctrl-n)
+;;   "C-o" `("Open" . ,prefix-buffer-map-ctrl-o)
+;;   "C-s" `("Search" . ,prefix-buffer-map-ctrl-s)
+;;   "C-t" `("Toggles" . ,prefix-buffer-map-ctrl-t)
+;;   "C-w" `("Window" . ,#'nc/window-menu))
 
 (keymap-set global-map "C-q" prefix-command-q)
 #+end_src
