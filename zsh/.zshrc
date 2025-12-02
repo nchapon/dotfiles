@@ -126,6 +126,10 @@ if [ -d $HOME/dotfiles/bin ]; then
     export PATH=$PATH:$HOME/dotfiles/bin 
 fi
 
+if [ -d $HOME/.local/bin ]; then
+    export PATH=$PATH:$HOME/.local/bin
+fi
+
 if [ -d $HOME/adr-tools/src ]; then
     export PATH=$PATH:$HOME/adr-tools/src
 fi

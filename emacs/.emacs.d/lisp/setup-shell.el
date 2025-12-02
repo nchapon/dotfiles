@@ -154,6 +154,15 @@
             (delete-window)))
       (delete-forward-char arg)))
 
+  (defun eshell/l (&rest args)
+    "ls -lah shortcut"
+    (apply #'eshell/ls "-lah" args))
+
+;; Git status shortcut
+  (defun eshell/g ()
+    "Git status"
+    (eshell-command-result "git status"))
+  
   :bind
   (:map eshell-mode-map
         ("C-d" . nc/eshell-quit-or-delete-char)
@@ -161,7 +170,13 @@
 
   )
 
-(add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
+
+  ;; Enable xterm 256 color support
+  (setq eshell-term-name "xterm-256color")
+  
+  ;; ANSI color support
+  (require 'ansi-color)
+  (add-hook 'eshell-preoutput-filter-functions 'ansi-color-apply)
 
 (use-package eshell-toggle
   :custom
@@ -210,7 +225,7 @@
      )
     )
    (bind-key "C-c C-! t" #'nc/dwim-run-pytest 'python-mode-map)
-
+   
   )
 
 (provide 'setup-shell)
