@@ -409,6 +409,7 @@
   ";" #'nc/goto-emacs-config
   "a" #'embark-act
   "f" #'nc/consult-fd-my-projects
+  "j" #'crux-top-join-line
   "l" #'nc/open-bookmark
   "m" #'mc/mark-all-words-like-this
   "s" #'nc/consult-rg-my-projects
@@ -426,7 +427,6 @@
   "C-s" prefix-buffer-map-ctrl-s
   "C-t" prefix-buffer-map-ctrl-t
   "C-w" #'nc/window-menu)
-
 
 ;; (which-key-add-keymap-based-replacements prefix-command-q
 ;;     "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)

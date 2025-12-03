@@ -1042,6 +1042,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   ";" #'nc/goto-emacs-config
   "a" #'embark-act
   "f" #'nc/consult-fd-my-projects
+  "j" #'crux-top-join-line
   "l" #'nc/open-bookmark
   "m" #'mc/mark-all-words-like-this
   "s" #'nc/consult-rg-my-projects
@@ -1059,7 +1060,6 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "C-s" prefix-buffer-map-ctrl-s
   "C-t" prefix-buffer-map-ctrl-t
   "C-w" #'nc/window-menu)
-
 
 ;; (which-key-add-keymap-based-replacements prefix-command-q
 ;;     "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)
@@ -4077,7 +4077,7 @@ Needs Java and plantuml.jar installed in =~/opt=
   (venv-initialize-eshell))
 #+end_src
 
-*** Pyvenv
+***² Pyvenv
 
 #+begin_src emacs-lisp
   (use-package pyvenv
@@ -4122,8 +4122,26 @@ Automatic generation of function docstrings according to the [[https://google.gi
 #+begin_src emacs-lisp
 (use-package python-insert-docstring
   :bind
-  (:map python-mode-map
+  (:map python-ts-mode-map
         ("C-c i" . python-insert-docstring-with-google-style-at-point)))
+#+end_src
+*** Transient Python 
+
+#+begin_src elisp
+(transient-define-prefix nc/transient-python ()
+  "Python tools"
+  [
+   ["Insert"
+    ("d" "DocString" python-insert-docstring-with-google-style-at-point)]
+   ["Format"
+    ("f" "Ruff Format"  nc/format-buffer-with-ruff)]
+   ["Env"
+    ("a" "PyVenv Activate" pyvenv-activate)
+    ("v" "Show venv"     (lambda ()
+                           (interactive)
+                           (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
+
+(define-key python-ts-mode-map [f1] 'nc/transient-python)
 #+end_src
 
 

@@ -590,8 +590,23 @@
 
 (use-package python-insert-docstring
   :bind
-  (:map python-mode-map
+  (:map python-ts-mode-map
         ("C-c i" . python-insert-docstring-with-google-style-at-point)))
+
+(transient-define-prefix nc/transient-python ()
+  "Python tools"
+  [
+   ["Insert"
+    ("d" "DocString" python-insert-docstring-with-google-style-at-point)]
+   ["Format"
+    ("f" "Ruff Format"  nc/format-buffer-with-ruff)]
+   ["Env"
+    ("a" "PyVenv Activate" pyvenv-activate)
+    ("v" "Show venv"     (lambda ()
+                           (interactive)
+                           (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
+
+(define-key python-ts-mode-map [f1] 'nc/transient-python)
 
 (use-package terraform-mode
   :hook ((terraform-mode . lsp)))
