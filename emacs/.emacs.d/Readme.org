@@ -709,20 +709,6 @@ Some Emacs Global Bindings are redefined here.
         ("h" nc/split-window-horizontally "Split Window H"))))
 #+end_src
 
-*** hydra org-mode
-#+begin_src emacs-lisp
-(major-mode-hydra-define org-mode nil
-  ("GTD"
-   (("s" nc/org-insert-daily-review "Start Daily Review")
-    ("d" nc/insert-daily-heading "Insert Daily Heading"))
-   "Actions"
-   (("p" nc/plantuml-preview-current-block "Plantuml Preview Current Block")
-    ("r" nc/org-refile-subtree-to-file "Refile subtree to file")
-    ("A" nc/create-buffer-attachment-directory "Create attachment directory"))
-   "Search"
-   (("?" nc/search-notes "Search Notes"))))
-#+end_src
-
 *** hydra markdown-mode
 #+begin_src emacs-lisp
 (major-mode-hydra-define markdown-mode nil
@@ -1056,7 +1042,6 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "C-n" prefix-buffer-map-ctrl-n
   "C-o" prefix-buffer-map-ctrl-o
   "C-p" #'projectile-command-map
-  "C-q" #'major-mode-hydra
   "C-s" prefix-buffer-map-ctrl-s
   "C-t" prefix-buffer-map-ctrl-t
   "C-w" #'nc/window-menu)
@@ -3406,6 +3391,24 @@ I try to do a lot of things with =org-roam= :
     :bind
       (("C-c n F" . consult-notes)
        ("C-c n s" . consult-notes-search-in-all-notes)))
+#+end_src
+** Transient org
+#+begin_src emacs-lisp
+(transient-define-prefix nc/transient-org()
+  "Org Mode Transient Menu"
+  [["GTD"
+    ("s"  "Start Daily Review" nc/org-insert-daily-review)
+    ("d"  "Insert Daily Heading" nc/insert-daily-heading)
+    ]
+   ["Actions"
+    ("p"  "Plantuml Preview Current Block" nc/plantuml-preview-current-block)
+    ("r"  "Refile subtree to file" nc/org-refile-subtree-to-file)
+    ("A"  "Create attachment directory" nc/create-buffer-attachment-directory)
+    ]
+   ["Search"
+    ("?"  "Search Notes" nc/search-notes)]])
+
+(define-key org-mode-map (kbd "C-q C-q") 'nc/transient-org)
 #+end_src
 
 * Programming

@@ -225,7 +225,7 @@
      )
     )
    (bind-key "C-c C-! t" #'nc/dwim-run-pytest 'python-mode-map)
-   
+
   )
 
 (provide 'setup-shell)

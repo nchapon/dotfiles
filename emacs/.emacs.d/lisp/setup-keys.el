@@ -110,17 +110,6 @@
      (("v" nc/maximize-or-split-window-vertically "Maximize or Split Window V")
       ("h" nc/split-window-horizontally "Split Window H"))))
 
-(major-mode-hydra-define org-mode nil
-  ("GTD"
-   (("s" nc/org-insert-daily-review "Start Daily Review")
-    ("d" nc/insert-daily-heading "Insert Daily Heading"))
-   "Actions"
-   (("p" nc/plantuml-preview-current-block "Plantuml Preview Current Block")
-    ("r" nc/org-refile-subtree-to-file "Refile subtree to file")
-    ("A" nc/create-buffer-attachment-directory "Create attachment directory"))
-   "Search"
-   (("?" nc/search-notes "Search Notes"))))
-
 (major-mode-hydra-define markdown-mode nil
   ("Actions"
    (("p" nc/plantuml-preview-current-block "Plantuml Preview"))))
@@ -423,7 +412,6 @@
   "C-n" prefix-buffer-map-ctrl-n
   "C-o" prefix-buffer-map-ctrl-o
   "C-p" #'projectile-command-map
-  "C-q" #'major-mode-hydra
   "C-s" prefix-buffer-map-ctrl-s
   "C-t" prefix-buffer-map-ctrl-t
   "C-w" #'nc/window-menu)

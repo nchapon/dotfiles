@@ -1075,7 +1075,7 @@ capture was not aborted."
              )
   :config
   ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
-  
+
   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
   (setq consult-notes-org-headings-files '("~/notes/"))
   (consult-notes-org-headings-mode)
@@ -1087,6 +1087,22 @@ capture was not aborted."
   :bind
     (("C-c n F" . consult-notes)
      ("C-c n s" . consult-notes-search-in-all-notes)))
+
+(transient-define-prefix nc/transient-org()
+  "Org Mode Transient Menu"
+  [["GTD"
+    ("s"  "Start Daily Review" nc/org-insert-daily-review)
+    ("d"  "Insert Daily Heading" nc/insert-daily-heading)
+    ]
+   ["Actions"
+    ("p"  "Plantuml Preview Current Block" nc/plantuml-preview-current-block)
+    ("r"  "Refile subtree to file" nc/org-refile-subtree-to-file)
+    ("A"  "Create attachment directory" nc/create-buffer-attachment-directory)
+    ]
+   ["Search"
+    ("?"  "Search Notes" nc/search-notes)]])
+
+(define-key org-mode-map (kbd "C-q C-q") 'nc/transient-org)
 
 (provide 'setup-org)
 ;;; setup-org.el ends here
