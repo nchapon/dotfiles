@@ -1090,7 +1090,9 @@ capture was not aborted."
 
 (transient-define-prefix nc/transient-org()
   "Org Mode Transient Menu"
-  [["GTD"
+  [["Commands"
+    ("l󠇘" "Link" nc/org-link-transient)]
+   ["GTD"
     ("s"  "Start Daily Review" nc/org-insert-daily-review)
     ("d"  "Insert Daily Heading" nc/insert-daily-heading)
     ]
@@ -1102,6 +1104,11 @@ capture was not aborted."
    ["Search"
     ("?"  "Search Notes" nc/search-notes)]])
 
+ (transient-define-prefix nc/org-link-transient()
+   [("i" "insert" org-insert-link)
+    ("s" "store" org-store-link)
+    ]
+    )
 (define-key org-mode-map (kbd "C-q C-q") 'nc/transient-org)
 
 (provide 'setup-org)
