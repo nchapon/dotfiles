@@ -1075,7 +1075,7 @@ capture was not aborted."
              )
   :config
   ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
-
+  
   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
   (setq consult-notes-org-headings-files '("~/notes/"))
   (consult-notes-org-headings-mode)
@@ -1088,10 +1088,11 @@ capture was not aborted."
     (("C-c n F" . consult-notes)
      ("C-c n s" . consult-notes-search-in-all-notes)))
 
-(transient-define-prefix nc/transient-org()
-  "Org Mode Transient Menu"
-  [["Commands"
-    ("l󠇘" "Link" nc/org-link-transient)]
+(transient-define-prefix nc/transient-org-menu ()
+  "Transient menu for managing org-mode links."
+  [["Org Commands"
+    ("l" "Link..." nc/transient-org-link-submenu)
+    ]
    ["GTD"
     ("s"  "Start Daily Review" nc/org-insert-daily-review)
     ("d"  "Insert Daily Heading" nc/insert-daily-heading)
@@ -1100,16 +1101,20 @@ capture was not aborted."
     ("p"  "Plantuml Preview Current Block" nc/plantuml-preview-current-block)
     ("r"  "Refile subtree to file" nc/org-refile-subtree-to-file)
     ("A"  "Create attachment directory" nc/create-buffer-attachment-directory)
+    ("q" "Quit" transient-quit-all)
     ]
-   ["Search"
-    ("?"  "Search Notes" nc/search-notes)]])
+   ])
 
- (transient-define-prefix nc/org-link-transient()
-   [("i" "insert" org-insert-link)
-    ("s" "store" org-store-link)
-    ]
-    )
-(define-key org-mode-map (kbd "C-q C-q") 'nc/transient-org)
+(transient-define-prefix nc/transient-org-link-submenu ()
+  "Submenu for additional link operations."
+  ["Link Management"
+   ["Insert"
+    ("i" "Insert link" org-insert-link)
+    ("s" "Store link" org-store-link)]
+   ["Return"
+    ("q" "Back to main menu" nc/transient-org-menu)]])
+
+(define-key org-mode-map (kbd "C-q C-q") 'nc/transient-org-menu)
 
 (provide 'setup-org)
 ;;; setup-org.el ends here

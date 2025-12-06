@@ -593,7 +593,7 @@
   (:map python-ts-mode-map
         ("C-c i" . python-insert-docstring-with-google-style-at-point)))
 
-(transient-define-prefix nc/transient-python ()
+(transient-define-prefix nc/transient-python-menu ()
   "Python tools"
   [
    ["Insert"
@@ -606,7 +606,7 @@
                            (interactive)
                            (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
 
-(define-key python-ts-mode-map [f1] 'nc/transient-python)
+(define-key python-ts-mode-map (kbd "C-q C-q") 'nc/transient-python-menu)
 
 (use-package terraform-mode
   :hook ((terraform-mode . lsp)))

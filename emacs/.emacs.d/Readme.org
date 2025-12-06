@@ -3392,12 +3392,13 @@ I try to do a lot of things with =org-roam= :
       (("C-c n F" . consult-notes)
        ("C-c n s" . consult-notes-search-in-all-notes)))
 #+end_src
-** Transient org
+** Transient Org Menu
 #+begin_src emacs-lisp
-(transient-define-prefix nc/transient-org()
-  "Org Mode Transient Menu"
-  [["Commands"
-    ("l󠇘" "Link" nc/org-link-transient)]
+(transient-define-prefix nc/transient-org-menu ()
+  "Transient menu for managing org-mode links."
+  [["Org Commands"
+    ("l" "Link..." nc/transient-org-link-submenu)
+    ]
    ["GTD"
     ("s"  "Start Daily Review" nc/org-insert-daily-review)
     ("d"  "Insert Daily Heading" nc/insert-daily-heading)
@@ -3406,16 +3407,20 @@ I try to do a lot of things with =org-roam= :
     ("p"  "Plantuml Preview Current Block" nc/plantuml-preview-current-block)
     ("r"  "Refile subtree to file" nc/org-refile-subtree-to-file)
     ("A"  "Create attachment directory" nc/create-buffer-attachment-directory)
+    ("q" "Quit" transient-quit-all)
     ]
-   ["Search"
-    ("?"  "Search Notes" nc/search-notes)]])
+   ])
 
- (transient-define-prefix nc/org-link-transient()
-   [("i" "insert" org-insert-link)
-    ("s" "store" org-store-link)
-    ]
-    )
-(define-key org-mode-map (kbd "C-q C-q") 'nc/transient-org)
+(transient-define-prefix nc/transient-org-link-submenu ()
+  "Submenu for additional link operations."
+  ["Link Management"
+   ["Insert"
+    ("i" "Insert link" org-insert-link)
+    ("s" "Store link" org-store-link)]
+   ["Return"
+    ("q" "Back to main menu" nc/transient-org-menu)]])
+
+(define-key org-mode-map (kbd "C-q C-q") 'nc/transient-org-menu)
 #+end_src
 
 * Programming
@@ -4138,7 +4143,7 @@ Automatic generation of function docstrings according to the [[https://google.gi
 *** Transient Python 
 
 #+begin_src elisp
-(transient-define-prefix nc/transient-python ()
+(transient-define-prefix nc/transient-python-menu ()
   "Python tools"
   [
    ["Insert"
@@ -4151,7 +4156,7 @@ Automatic generation of function docstrings according to the [[https://google.gi
                            (interactive)
                            (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
 
-(define-key python-ts-mode-map [f1] 'nc/transient-python)
+(define-key python-ts-mode-map (kbd "C-q C-q") 'nc/transient-python-menu)
 #+end_src
 
 
