@@ -180,7 +180,6 @@
     ("d" "Denote Sort Dired" denote-sort-dired)
     ]])
 
-
 ;; Stolen from Doom
 (defun nc/yank-buffer-path ()
   "Copy the file name or directory name of the current buffer to the clipboard."
@@ -204,20 +203,21 @@
 (transient-define-prefix nc/file-menu ()
   "File Management + Config + Credentials"
   
-  [[ "Actions"
-   ;; File ops
-   ("r" "Rename file" rename-visited-file)
-   ("c" "Copy file" crux-copy-file-preserve-attributes)
-   ("k" "Delete file" crux-delete-file-and-buffer)
-  ]
+  [
   ["Config & Credentials"
     (";" "Emacs Config" nc/goto-emacs-config)
     ("p" "Credentials" nc/goto-my-credentials)
     ("s" "SSH config"          (lambda () (interactive) (find-file "~/.ssh/config")))
     ("t" "Authinfo"            (lambda () (interactive) (find-file "~/.authinfo.gpg")))
   ]
-  ["Yank Paths"
-   ("y" "Full path"
+  ])
+
+
+(transient-define-prefix nc/yank-path-submenu ()
+  "Yank Paths"
+  
+  [["Yank Paths"
+   ("F" "Full path"
     (lambda () (interactive)
       (let ((current-prefix-arg nil))
         (call-interactively #'nc/yank-buffer-path))))
@@ -227,11 +227,12 @@
       (let ((current-prefix-arg '(4)))
         (call-interactively #'nc/yank-buffer-path))))
 
-   ("P" "Yank project-relative path  (C-u C-u)"
+   ("p" "Yank project-relative path  (C-u C-u)"
     (lambda () (interactive)
       (let ((current-prefix-arg '(16)))
         (call-interactively #'nc/yank-buffer-path))))
    ]])
+
 
 (transient-define-prefix nc/buffer-menu ()
   "Control buffer operations."
@@ -243,12 +244,10 @@
    ("5" "Switch other frame" switch-to-buffer-other-frame)
    ("B" "Bury buffer" bury-buffer :transient t)]
   ["Buffer Management"
-   ("k" "Kill buffer" kill-buffer)
-   ("s" "Save buffer" save-buffer :transient t)
-   ("S" "Save all buffers" save-some-buffers)
    ("r" "Rename file & buffer" rename-visited-file)
    ("d" "Delete file & buffer" crux-delete-file-and-buffer)
-   ("c" "Copy file" crux-copy-file-preserve-attributes)]
+   ("c" "Copy file" crux-copy-file-preserve-attributes)
+   ("C-y" "Yank buffer path..." nc/yank-path-submenu)]
   ["Display & View"
    ("l" "List buffers" ibuffer)
    ("m" "Buffer menu" buffer-menu)
@@ -281,25 +280,31 @@
   "Y" #'yankpad-insert)
 
 (transient-define-prefix nc/jump-menu ()
-  "Jump menu with avy and consult..."
+  "Jump"
   ["Jump"
-   ["Avy"
+   ["Buffer"
     (":" "Char" avy-goto-char-timer)
     ("w" "Word" avy-goto-word-1)
-    ("l" "Line" avy-goto-line)
-    ]
-   ["Consult"
-    ("i" "Outline/imenu" consult-imenu)
+    ;; ("l" "Line" avy-goto-line)
+    ("l" "Line" goto-line)
+    ("o" "Outline / imenu" consult-imenu)
     ("m" "Mark ring" consult-mark)
-    ("r" "Register" consult-register-load)
     ]
-   ["Other"
+   ["Files"
     ("." "Project dir-locals.el" projectile-edit-dir-locals)
-    ("g" "Goto line" goto-line)
-    ("f" "Find file at point" ffap)
+    ("r" "Register" consult-register-load)
+    ("C-f" "Files..." nc/file-menu)]
+   ["Dirs"
+    ("n" "Notes" nc/goto-notes-dir)
+    ("p" "Projects" nc/goto-projects-dir)
+    ("h" "Home" (lambda () (interactive) (dired "~")))
+    ("C-f" "Dirs..." nc/directory-menu)]
+   ["Other"
+    ("c" "Goto Clock" org-clock-goto)
+    ("C-o" "Find file at point" ffap)
     ("F" "FFAP in buffer" ffap-menu)
-    ("G" "Browse VC Remote" nc/vc-browse-remote)
-    ("v" "Browse VC Remote File" nc/vc-browse-remote-current-line)
+    ("R" "Browse VC Remote Repository" nc/vc-browse-remote)
+    ("g" "Browse VC Remote File" nc/vc-browse-remote-current-line)
     ]])
 
 (defvar-keymap prefix-buffer-map-ctrl-n
@@ -398,15 +403,13 @@
   ";" #'nc/goto-emacs-config
   "a" #'embark-act
   "f" #'nc/consult-fd-my-projects
+  "g" #'nc/vc-browse-remote-current-line
   "j" #'crux-top-join-line
   "l" #'nc/open-bookmark
   "m" #'mc/mark-all-words-like-this
   "s" #'nc/consult-rg-my-projects
   "t" #'nc/treemacs-toggle
-  "v" #'nc/vc-browse-remote-current-line
   "C-b" #'nc/buffer-menu
-  "C-d" #'nc/directory-menu
-  "C-f" #'nc/file-menu
   "C-i" prefix-buffer-map-ctrl-i
   "C-j" #'nc/jump-menu
   "C-n" prefix-buffer-map-ctrl-n
