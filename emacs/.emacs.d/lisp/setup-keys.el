@@ -298,7 +298,7 @@
     ("n" "Notes" nc/goto-notes-dir)
     ("p" "Projects" nc/goto-projects-dir)
     ("h" "Home" (lambda () (interactive) (dired "~")))
-    ("C-f" "Dirs..." nc/directory-menu)]
+    ("C-d" "Dirs..." nc/directory-menu)]
    ["Other"
     ("c" "Goto Clock" org-clock-goto)
     ("C-o" "Find file at point" ffap)
