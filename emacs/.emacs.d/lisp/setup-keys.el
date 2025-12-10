@@ -409,6 +409,7 @@
   "m" #'mc/mark-all-words-like-this
   "s" #'nc/consult-rg-my-projects
   "t" #'nc/treemacs-toggle
+  "y" #'consult-yasnippet
   "C-b" #'nc/buffer-menu
   "C-i" prefix-buffer-map-ctrl-i
   "C-j" #'nc/jump-menu

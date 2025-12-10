@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: Add Plantuml blockquote
+# key: toc
+# --
+``` plantuml
+@startuml
+
+
+@enduml
+```
+

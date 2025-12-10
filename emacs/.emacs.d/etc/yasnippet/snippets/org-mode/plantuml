@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: plantuml
+# key: <plantuml
+# --
+#+begin_src plantuml :file ./output/`(file-name-base (buffer-file-name))`.png 
+
+#+end_src
