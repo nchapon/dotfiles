@@ -323,14 +323,19 @@
   "l" #'nc/open-bookmark
   "t" #'nc/treemacs-toggle)
 
-
-(defvar-keymap prefix-buffer-map-ctrl-s
-  :doc "Prefix map for C-q for Search"
-  "e" #'emoji-search
-  "n" #'nc/search-notes
-  "p" #'nc/consult-rg-my-projects
-  "s" #'nc/consult-line-symbol-at-point)
-
+(transient-define-prefix nc/search-menu ()
+  "Jump"
+  ["Search"
+   ["Org Files"
+    ("h" "Heading" consult-org-agenda)
+    ("n" "Notes" nc/search-notes)
+    ]
+   ["Projects"
+    ("r" "rg" nc/consult-rg-my-projects)
+    ("s" "symbol" nc/consult-line-symbol-at-point)]
+   ["Other"
+    ("e" "emoji" nc/consult-rg-my-projects)]
+   ])
 
 (defvar-keymap prefix-buffer-map-ctrl-t
   :doc "Prefix map for C-q for toggle features."
@@ -416,7 +421,7 @@
   "C-n" prefix-buffer-map-ctrl-n
   "C-o" prefix-buffer-map-ctrl-o
   "C-p" #'projectile-command-map
-  "C-s" prefix-buffer-map-ctrl-s
+  "C-s" #'nc/search-menu
   "C-t" prefix-buffer-map-ctrl-t
   "C-w" #'nc/window-menu)
 
