@@ -600,6 +600,11 @@
     ("d" "DocString" python-insert-docstring-with-google-style-at-point)]
    ["Format"
     ("f" "Ruff Format"  nc/format-buffer-with-ruff)]
+   ["Run Tests"
+    ("t" "Run tests in current def/class"  python-pytest-function-dwim)
+    ("T" "Run tests in current file"  python-pytest-file-dwim)
+    ("C-t" "Pytest Submenu..." python-pytest-dispatch)
+    ]
    ["Env"
     ("a" "PyVenv Activate" pyvenv-activate)
     ("v" "Show venv"     (lambda ()

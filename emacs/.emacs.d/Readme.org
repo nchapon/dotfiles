@@ -917,7 +917,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
     ("w" "Word" avy-goto-word-1)
     ;; ("l" "Line" avy-goto-line)
     ("l" "Line" goto-line)
-    ("o" "Outline / imenu" consult-imenu)
+    ("i" "imenu" consult-imenu)
     ("m" "Mark ring" consult-mark)
     ]
    ["Files"
@@ -941,8 +941,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   :doc "Prefix map for C-q for notes"
   "s" #'org-search-view
   "t" #'org-todo-list
-  "l" #'org-store-link
-  )
+  "l" #'org-store-link)
 
 (defvar-keymap prefix-buffer-map-ctrl-o
   :doc "Prefix map for C-q for open"
@@ -1042,6 +1041,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "j" #'crux-top-join-line
   "l" #'nc/open-bookmark
   "m" #'mc/mark-all-words-like-this
+  "p" #'consult-projectile
   "s" #'nc/consult-rg-my-projects
   "t" #'nc/treemacs-toggle
   "y" #'consult-yasnippet
@@ -1863,6 +1863,24 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
        ("C-x C-j" . consult-dir-jump-file))
   :config
   (setq consult-dir-project-list-function #'consult-dir-projectile-dirs))
+
+
+
+(with-eval-after-load 'consult-imenu
+  (dolist (python '(python-mode python-ts-mode))
+    (add-to-list 'consult-imenu-config
+               `(,python
+                 :toplevel "Method"
+                 :types ((?f "Field" font-lock-variable-name-face)
+                         (?c "Class" font-lock-property-use-face)
+                         (?m "Method" font-lock-function-name-face)
+                         (?M "Module" font-lock-builtin-face)
+                         (?v "Variable" font-lock-variable-name-face))))))
+
+(use-package consult-projectile
+  :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
+  :commands (consult-projectile)
+  :bind (("C-x 4 p" . consult-projectile-find-file-other-window)))
 #+end_src
 ** Embark
 
@@ -4159,6 +4177,11 @@ Automatic generation of function docstrings according to the [[https://google.gi
     ("d" "DocString" python-insert-docstring-with-google-style-at-point)]
    ["Format"
     ("f" "Ruff Format"  nc/format-buffer-with-ruff)]
+   ["Run Tests"
+    ("t" "Run tests in current def/class"  python-pytest-function-dwim)
+    ("T" "Run tests in current file"  python-pytest-file-dwim)
+    ("C-t" "Pytest Submenu..." python-pytest-dispatch)
+    ]
    ["Env"
     ("a" "PyVenv Activate" pyvenv-activate)
     ("v" "Show venv"     (lambda ()

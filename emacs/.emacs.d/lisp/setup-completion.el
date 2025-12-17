@@ -230,6 +230,24 @@
   :config
   (setq consult-dir-project-list-function #'consult-dir-projectile-dirs))
 
+
+
+(with-eval-after-load 'consult-imenu
+  (dolist (python '(python-mode python-ts-mode))
+    (add-to-list 'consult-imenu-config
+               `(,python
+                 :toplevel "Method"
+                 :types ((?f "Field" font-lock-variable-name-face)
+                         (?c "Class" font-lock-property-use-face)
+                         (?m "Method" font-lock-function-name-face)
+                         (?M "Module" font-lock-builtin-face)
+                         (?v "Variable" font-lock-variable-name-face))))))
+
+(use-package consult-projectile
+  :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
+  :commands (consult-projectile)
+  :bind (("C-x 4 p" . consult-projectile-find-file-other-window)))
+
 (use-package embark
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding

@@ -287,7 +287,7 @@
     ("w" "Word" avy-goto-word-1)
     ;; ("l" "Line" avy-goto-line)
     ("l" "Line" goto-line)
-    ("o" "Outline / imenu" consult-imenu)
+    ("i" "imenu" consult-imenu)
     ("m" "Mark ring" consult-mark)
     ]
    ["Files"
@@ -311,8 +311,7 @@
   :doc "Prefix map for C-q for notes"
   "s" #'org-search-view
   "t" #'org-todo-list
-  "l" #'org-store-link
-  )
+  "l" #'org-store-link)
 
 (defvar-keymap prefix-buffer-map-ctrl-o
   :doc "Prefix map for C-q for open"
@@ -412,6 +411,7 @@
   "j" #'crux-top-join-line
   "l" #'nc/open-bookmark
   "m" #'mc/mark-all-words-like-this
+  "p" #'consult-projectile
   "s" #'nc/consult-rg-my-projects
   "t" #'nc/treemacs-toggle
   "y" #'consult-yasnippet
