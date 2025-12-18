@@ -592,49 +592,52 @@ Key bindings configuration module automatically tangled in =./lisp/setup-keys.el
   <<nc-header>>
 #+end_src
 ** Global Key Bindings
+:PROPERTIES:
+:ID:       82fbc0b5-2c93-4062-8901-80ee49883d4e
+:END:
 Some Emacs Global Bindings are redefined here.
 #+begin_src emacs-lisp
-  ;; Unbind unneeded keys
-  (global-set-key (kbd "C-z") nil)
-  (global-set-key (kbd "C-l") nil)
-  (global-set-key (kbd "M-z") nil)
-  (global-set-key (kbd "C-x C-z") nil)
-  (global-set-key (kbd "M-o") nil)
-  (global-set-key (kbd "M-SPC") nil)
+;; Unbind unneeded keys
+(global-set-key (kbd "C-z") nil)
+(global-set-key (kbd "C-l") nil)
+(global-set-key (kbd "M-z") nil)
+(global-set-key (kbd "C-x C-z") nil)
+(global-set-key (kbd "M-o") nil)
+(global-set-key (kbd "M-SPC") nil)
 
 
-  (global-set-key (kbd "C-+") #'text-scale-increase)
-  (global-set-key (kbd "C--") #'text-scale-decrease)
+(global-set-key (kbd "C-+") #'text-scale-increase)
+(global-set-key (kbd "C--") #'text-scale-decrease)
 
-  ;; Prefer backward-kill-word over Backspace
-  (global-set-key (kbd "C-w") #'backward-kill-word)
-  (global-set-key (kbd "C-x C-k") #'kill-region)
+;; Prefer backward-kill-word over Backspace
+(global-set-key (kbd "C-w") #'backward-kill-word)
+(global-set-key (kbd "C-x C-k") #'kill-region)
 
-  (global-set-key (kbd "C-x C-r") #'recentf-open-files)
+(global-set-key (kbd "C-x C-r") #'recentf-open-files)
 
-  ;; Move up/down paragraph
-  (global-set-key (kbd "M-n") #'forward-paragraph)
-  (global-set-key (kbd "M-p") #'backward-paragraph)
-  (global-set-key (kbd "C-x c") #'compile)
+;; Move up/down paragraph
+(global-set-key (kbd "M-n") #'forward-paragraph)
+(global-set-key (kbd "M-p") #'backward-paragraph)
+(global-set-key (kbd "C-x c") #'compile)
 
+;; Remap goto-map 
+(global-set-key (kbd "C-M-g") goto-map)
 
-  ;; Functions
-  (bind-keys
-   ("<f5>" . revert-buffer)
-   ("C-<f5>" . magit-log-buffer-file)
-   ("<f9>" . treemacs)
-   ("<f11>" . nc/maximize-or-split-window-vertically)
-   ("C-<f11>" . nc/split-window-horizontally)
-   ("<f12>" . org-agenda)
-   ("C-<f12>" . org-agenda))
+;; Functions
+(bind-keys
+ ("<f5>" . revert-buffer)
+ ("C-<f5>" . magit-log-buffer-file)
+ ("<f9>" . treemacs)
+ ("<f11>" . nc/maximize-or-split-window-vertically)
+ ("C-<f11>" . nc/split-window-horizontally)
+ ("<f12>" . org-agenda)
+ ("C-<f12>" . org-agenda))
 
-  ;; Tools alt-[0-9]
-  (bind-keys
-   ("M-0" . nc/maximize-or-split-window-vertically))
+;; Tools alt-[0-9]
+(bind-keys
+ ("M-0" . nc/maximize-or-split-window-vertically))
 #+end_src
 ** TODO Hydra
-
-
 
 #+begin_src emacs-lisp
   (use-package hydra
@@ -1739,6 +1742,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
          ("M-y" . consult-yank-pop)                ;; orig. yank-pop
          ("<help> a" . consult-apropos)            ;; orig. apropos-command
          ;; M-g bindings (goto-map)
+         ;; C-M-g bindings (goto-map)
          ("M-g e" . consult-compile-error)
          ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
          ("M-g g" . consult-goto-line)             ;; orig. goto-line
@@ -1760,9 +1764,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
          ("M-s m" . consult-multi-occur)
          ("M-s k" . consult-keep-lines)
          ("M-s u" . consult-focus-lines)
-         ;; Custom searching
-         ("C-c sf" . nc/consult-fd-my-projects)
-         ("C-c sr" . nc/consult-rg-my-projects)
+         
          ;; Isearch integration
          ("M-s e" . consult-isearch)
          :map isearch-mode-map

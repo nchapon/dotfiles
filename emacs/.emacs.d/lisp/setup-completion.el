@@ -105,6 +105,7 @@
          ("M-y" . consult-yank-pop)                ;; orig. yank-pop
          ("<help> a" . consult-apropos)            ;; orig. apropos-command
          ;; M-g bindings (goto-map)
+         ;; C-M-g bindings (goto-map)
          ("M-g e" . consult-compile-error)
          ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
          ("M-g g" . consult-goto-line)             ;; orig. goto-line
@@ -126,9 +127,7 @@
          ("M-s m" . consult-multi-occur)
          ("M-s k" . consult-keep-lines)
          ("M-s u" . consult-focus-lines)
-         ;; Custom searching
-         ("C-c sf" . nc/consult-fd-my-projects)
-         ("C-c sr" . nc/consult-rg-my-projects)
+         
          ;; Isearch integration
          ("M-s e" . consult-isearch)
          :map isearch-mode-map

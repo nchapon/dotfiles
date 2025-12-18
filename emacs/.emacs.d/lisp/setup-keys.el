@@ -34,6 +34,8 @@
 (global-set-key (kbd "M-p") #'backward-paragraph)
 (global-set-key (kbd "C-x c") #'compile)
 
+;; Remap goto-map 
+(global-set-key (kbd "C-M-g") goto-map)
 
 ;; Functions
 (bind-keys
