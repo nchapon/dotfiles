@@ -258,7 +258,7 @@
    ("C" "Clone indirect buffer" clone-indirect-buffer)]
   ["Git & History"
    ("R" "Revert buffer" revert-buffer)
-   ("g" "Magit log file" magit-log-buffer-file)]
+   ("g" "Magit File Dispatch" magit-file-dispatch)]
   ["Buffer Properties"
    ("w" "Toggle read-only" read-only-mode :transient t)
    ("a" "Toggle auto-save" auto-save-mode :transient t)
@@ -409,7 +409,7 @@
   ";" #'nc/goto-emacs-config
   "a" #'embark-act
   "f" #'nc/consult-fd-my-projects
-  "g" #'nc/vc-browse-remote-current-line
+  "g" goto-map
   "j" #'crux-top-join-line
   "l" #'nc/open-bookmark
   "m" #'mc/mark-all-words-like-this
@@ -424,7 +424,7 @@
   "C-o" prefix-buffer-map-ctrl-o
   "C-p" #'projectile-command-map
   "C-s" #'nc/search-menu
-  "C-t" prefix-buffer-map-ctrl-t
+  "C-t" #'nc/toggle-menu
   "C-w" #'nc/window-menu)
 
 ;; (which-key-add-keymap-based-replacements prefix-command-q
@@ -441,6 +441,186 @@
 ;;   "C-w" `("Window" . ,#'nc/window-menu))
 
 (keymap-set global-map "C-q" prefix-command-q)
+
+(transient-define-prefix nc/toggle-menu ()
+  "Toggle common Emacs settings."
+  [ "Toggle Menu"
+   ["Display"
+    ("l" "Line Numbers" nc/toggle-line-numbers
+     :transient t
+     :description (lambda ()
+                    (format "Line Numbers %s"
+                            (if (bound-and-true-p display-line-numbers-mode)
+                                "[ON]" "[OFF]"))))
+    ;; ("L" "Linum Mode" linum-mode
+    ;;  :transient t
+    ;;  :description (lambda ()
+    ;;                 (format "Linum Mode %s"
+    ;;                         (if (bound-and-true-p linum-mode)
+    ;;                             "[ON]" "[OFF]"))))
+    ("t" "Truncate Lines" toggle-truncate-lines
+     :transient t
+     :description (lambda ()
+                    (format "Truncate Lines %s"
+                            (if truncate-lines "[ON]" "[OFF]"))))
+    ("w" "Whitespace Mode" whitespace-mode
+     :transient t
+     :description (lambda ()
+                    (format "Whitespace Mode %s"
+                            (if (bound-and-true-p whitespace-mode)
+                                "[ON]" "[OFF]"))))
+    ("v" "Visual Line Mode" visual-line-mode
+     :transient t
+     :description (lambda ()
+                    (format "Visual Line Mode %s"
+                            (if (bound-and-true-p visual-line-mode)
+                                "[ON]" "[OFF]"))))
+    ("h" "HL Line Mode" hl-line-mode
+     :transient t
+     :description (lambda ()
+                    (format "HL Line Mode %s"
+                            (if (bound-and-true-p hl-line-mode)
+                                "[ON]" "[OFF]"))))]]
+  
+  ["Editing"
+   ("a" "Auto Fill Mode" auto-fill-mode
+    :transient t
+    :description (lambda ()
+                   (format "Auto Fill Mode %s"
+                           (if (bound-and-true-p auto-fill-function)
+                               "[ON]" "[OFF]"))))
+   ("o" "Overwrite Mode" overwrite-mode
+    :transient t
+    :description (lambda ()
+                   (format "Overwrite Mode %s"
+                           (if (bound-and-true-p overwrite-mode)
+                               "[ON]" "[OFF]"))))
+   ("r" "Read Only Mode" read-only-mode
+    :transient t
+    :description (lambda ()
+                   (format "Read Only Mode %s"
+                           (if buffer-read-only "[ON]" "[OFF]"))))
+   ("s" "Smartparens Mode" smartparens-mode
+    :transient t
+    :description (lambda ()
+                   (format "Smartparens Mode %s"
+                           (if (bound-and-true-p smartparens-mode)
+                               "[ON]" "[OFF]"))))
+   ("p" "Show Paren Mode" show-paren-mode
+    :transient t
+    :description (lambda ()
+                   (format "Show Paren Mode %s"
+                           (if (bound-and-true-p show-paren-mode)
+                               "[ON]" "[OFF]"))))
+   ("e" "Electric Pair Mode" electric-pair-mode
+    :transient t
+    :description (lambda ()
+                   (format "Electric Pair Mode %s"
+                           (if (bound-and-true-p electric-pair-mode)
+                               "[ON]" "[OFF]"))))]
+  
+  ["Completion & Help"
+   ;; ("c" "Company Mode" company-mode
+   ;;  :transient t
+   ;;  :description (lambda ()
+   ;;                 (format "Company Mode %s"
+   ;;                         (if (bound-and-true-p company-mode)
+   ;;                             "[ON]" "[OFF]"))))
+   ("E" "Eldoc Mode" eldoc-mode
+    :transient t
+    :description (lambda ()
+                   (format "Eldoc Mode %s"
+                           (if (bound-and-true-p eldoc-mode)
+                               "[ON]" "[OFF]"))))
+   ("f" "Flycheck Mode" flycheck-mode
+    :transient t
+    :description (lambda ()
+                   (format "Flycheck Mode %s"
+                           (if (bound-and-true-p flycheck-mode)
+                               "[ON]" "[OFF]"))))
+   ("F" "Flymake Mode" flymake-mode
+    :transient t
+    :description (lambda ()
+                   (format "Flymake Mode %s"
+                           (if (bound-and-true-p flymake-mode)
+                               "[ON]" "[OFF]"))))]
+  
+  ["Visual & Colors"
+   ("R" "Rainbow Mode" rainbow-mode
+    :transient t
+    :description (lambda ()
+                   (format "Rainbow Mode %s"
+                           (if (bound-and-true-p rainbow-mode)
+                               "[ON]" "[OFF]"))))
+   ;; ("D" "Rainbow Delimiters" rainbow-delimiters-mode
+   ;;  :transient t
+   ;;  :description (lambda ()
+   ;;                 (format "Rainbow Delimiters %s"
+   ;;                         (if (bound-and-true-p rainbow-delimiters-mode)
+   ;;                             "[ON]" "[OFF]"))))
+   ;; ("i" "Indent Guide" highlight-indent-guides-mode 
+   ;;  :transient t
+   ;;  :description (lambda ()
+   ;;                 (format "Indent Guide %s"
+   ;;                         (if (bound-and-true-p highlight-indent-guides-mode)
+   ;;                             "[ON]" "[OFF]"))))
+   ]
+  
+  ["UI & Sidebar"
+   ("m" "Menu Bar" menu-bar-mode
+    :transient t
+    :description (lambda ()
+                   (format "Menu Bar %s"
+                           (if (bound-and-true-p menu-bar-mode)
+                               "[ON]" "[OFF]"))))
+   ("T" "Tool Bar" tool-bar-mode
+    :transient t
+    :description (lambda ()
+                   (format "Tool Bar %s"
+                           (if (bound-and-true-p tool-bar-mode)
+                               "[ON]" "[OFF]"))))
+   ("S" "Scroll Bar" scroll-bar-mode
+    :transient t
+    :description (lambda ()
+                   (format "Scroll Bar %s"
+                           (if (bound-and-true-p scroll-bar-mode)
+                               "[ON]" "[OFF]"))))
+   ("M" "Treemacs" treemacs
+    :transient t
+    :description (lambda ()
+                   (format "Treemacs %s"
+                           (if (and (fboundp 'treemacs-current-visibility)
+                                    (eq (treemacs-current-visibility) 'visible))
+                               "[ON]" "[OFF]"))))]
+  
+  ["Debug & Dev"
+   ("d" "Debug on Error" toggle-debug-on-error
+    :transient t
+    :description (lambda ()
+                   (format "Debug on Error %s"
+                           (if debug-on-error "[ON]" "[OFF]"))))
+   ("Q" "Debug on Quit" toggle-debug-on-quit
+    :transient t
+    :description (lambda ()
+                   (format "Debug on Quit %s"
+                           (if debug-on-quit "[ON]" "[OFF]"))))
+   ;; ("g" "Aggressive Indent" aggressive-indent-mode
+   ;;  :transient t
+   ;;  :description (lambda ()
+   ;;                 (format "Aggressive Indent %s"
+   ;;                         (if (bound-and-true-p aggressive-indent-mode)
+   ;;                             "[ON]" "[OFF]"))))
+   ]
+  
+  ["Actions"
+   ("q" "Quit" transient-quit-one)])
+
+(defun nc/toggle-line-numbers ()
+  "Toggle line numbers."
+  (interactive)
+  (if (fboundp 'display-line-numbers-mode)
+      (display-line-numbers-mode 'toggle)
+    (linum-mode 'toggle)))
 
 (provide 'setup-keys)
 ;;; setup-keys.el ends here
