@@ -401,8 +401,8 @@
     ("x" "Swap windows" window-swap-states)
     ("q" "Quit" transient-quit-one)]])
 
-(defvar-keymap prefix-command-q
-  :doc "Prefix Map for C-q:"
+(defvar-keymap nc-prefix-command
+  :doc "Prefix Map for C-; :"
   "." #'projectile-edit-dir-locals
   "/" #'nc/consult-line-symbol-at-point
   ":" #'avy-goto-char-timer
@@ -427,7 +427,7 @@
   "C-t" #'nc/toggle-menu
   "C-w" #'nc/window-menu)
 
-;; (which-key-add-keymap-based-replacements prefix-command-q
+;; (which-key-add-keymap-based-replacements nc-prefix-command
 ;;     "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)
 ;;   "C-d" `("Dirs"  . ,#'nc/directory-menu)
 ;;   "C-f" `("Files"  . ,#'nc/file-menu)
@@ -440,7 +440,7 @@
 ;;   "C-t" `("Toggles" . ,prefix-buffer-map-ctrl-t)
 ;;   "C-w" `("Window" . ,#'nc/window-menu))
 
-(keymap-set global-map "C-q" prefix-command-q)
+(keymap-set global-map "C-;" nc-prefix-command)
 
 (transient-define-prefix nc/toggle-menu ()
   "Toggle common Emacs settings."

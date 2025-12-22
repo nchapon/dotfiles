@@ -1075,7 +1075,7 @@ capture was not aborted."
              )
   :config
   ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
-  
+
   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
   (setq consult-notes-org-headings-files '("~/notes/"))
   (consult-notes-org-headings-mode)

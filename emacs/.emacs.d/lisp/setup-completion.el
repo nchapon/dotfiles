@@ -250,7 +250,7 @@
 (use-package embark
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
-   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("M-." . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
   :init
@@ -328,7 +328,7 @@
               ([backtab]    . corfu-previous)
               ("<return>" . corfu-insert)
               ("C-q"        . corfu-quit))
-  
+
   :init
   (global-corfu-mode)
   (corfu-history-mode)

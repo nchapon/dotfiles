@@ -1032,8 +1032,8 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
     ("x" "Swap windows" window-swap-states)
     ("q" "Quit" transient-quit-one)]])
 
-(defvar-keymap prefix-command-q
-  :doc "Prefix Map for C-q:"
+(defvar-keymap nc-prefix-command
+  :doc "Prefix Map for C-; :"
   "." #'projectile-edit-dir-locals
   "/" #'nc/consult-line-symbol-at-point
   ":" #'avy-goto-char-timer
@@ -1058,7 +1058,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "C-t" #'nc/toggle-menu
   "C-w" #'nc/window-menu)
 
-;; (which-key-add-keymap-based-replacements prefix-command-q
+;; (which-key-add-keymap-based-replacements nc-prefix-command
 ;;     "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)
 ;;   "C-d" `("Dirs"  . ,#'nc/directory-menu)
 ;;   "C-f" `("Files"  . ,#'nc/file-menu)
@@ -1071,7 +1071,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
 ;;   "C-t" `("Toggles" . ,prefix-buffer-map-ctrl-t)
 ;;   "C-w" `("Window" . ,#'nc/window-menu))
 
-(keymap-set global-map "C-q" prefix-command-q)
+(keymap-set global-map "C-;" nc-prefix-command)
 #+end_src
 
 *** Transient Toggle Menu
@@ -2081,40 +2081,40 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 [[https://github.com/oantolin/embark][Embark]] Emacs Minibuffer Actions Rooted in Key Maps
 
 #+begin_src emacs-lisp
-  (use-package embark
-    :bind
-    (("C-." . embark-act)         ;; pick some comfortable binding
-     ("C-;" . embark-dwim)        ;; good alternative: M-.
-     ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+(use-package embark
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("M-." . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
-    :init
+  :init
 
-    ;; Optionally replace the key help with a completing-read interface
-    (setq prefix-help-command #'embark-prefix-help-command)
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
 
-    :config
+  :config
 
-    ;; Hide the mode line of the Embark live/completions buffers
-    (add-to-list 'display-buffer-alist
-                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                   nil
-                   (window-parameters (mode-line-format . none))))
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none))))
 
-    ;; Custom some actions
-    (define-key embark-defun-map "j" 'crux-top-join-line)
-    (define-key embark-symbol-map "j" 'crux-top-join-line)
-    (define-key embark-expression-map "j" 'crux-top-join-line)
+  ;; Custom some actions
+  (define-key embark-defun-map "j" 'crux-top-join-line)
+  (define-key embark-symbol-map "j" 'crux-top-join-line)
+  (define-key embark-expression-map "j" 'crux-top-join-line)
 
-    (define-key embark-file-map (kbd "S") 'nc/sudo-find-file))
+  (define-key embark-file-map (kbd "S") 'nc/sudo-find-file))
 
-  ;; Consult users will also want the embark-consult package.
-  (use-package embark-consult
-    :after (embark consult)
-    :demand t ; only necessary if you have the hook below
-    ;; if you want to have consult previews as you move around an
-    ;; auto-updating embark collect buffer
-    :hook
-    (embark-collect-mode . consult-preview-at-point-mode))
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 
 
 #+end_src
