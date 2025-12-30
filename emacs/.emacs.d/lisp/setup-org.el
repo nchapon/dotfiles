@@ -1075,7 +1075,7 @@ capture was not aborted."
              )
   :config
   ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
-
+  
   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
   (setq consult-notes-org-headings-files '("~/notes/"))
   (consult-notes-org-headings-mode)
@@ -1114,7 +1114,7 @@ capture was not aborted."
    ["Return"
     ("q" "Back to main menu" nc/transient-org-menu)]])
 
-(define-key org-mode-map (kbd "C-q C-q") 'nc/transient-org-menu)
+(define-key org-mode-map (kbd "C-; C-;") 'nc/transient-org-menu)
 
 (provide 'setup-org)
 ;;; setup-org.el ends here

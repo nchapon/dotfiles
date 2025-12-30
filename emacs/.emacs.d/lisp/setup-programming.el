@@ -611,7 +611,7 @@
                            (interactive)
                            (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
 
-(define-key python-ts-mode-map (kbd "C-q C-q") 'nc/transient-python-menu)
+(define-key python-ts-mode-map (kbd "C-; C-;") 'nc/transient-python-menu)
 
 (use-package terraform-mode
   :hook ((terraform-mode . lsp)))

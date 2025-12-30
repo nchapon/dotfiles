@@ -63,55 +63,6 @@
 (use-package pretty-hydra
   :ensure t)
 
-(pretty-hydra-define nc-hydra-insert (:foreign-keys warn :title "Insert" :quit-key "q" :exit t)
-  ("Insert"
-   (("d" nc/insert-datestamp-inactive "Date InActive")
-    ("D" nc/insert-datestamp "Date Active")
-    ("p" nc/generate-password "Password")
-    ("u" nc/uuid "UUID"))
-
-   "Snippet"
-   (("y" consult-yasnippet "Yasnippet")
-    ("Y" yankpad-insert "Yankpad"))))
-
-(pretty-hydra-define nc-hydra-goto (:foreign-keys warn :title "Goto" :quit-key "q" :exit t)
-  ("Configuration"
-   ((";" nc/goto-emacs-config "Emacs Config"))
-
-    "Personal Files"
-    (("i" nc/goto-inbox "Inbox")
-     ("p" nc/goto-my-credentials "Passwords"))
-
-   "Personal Dirs"
-   (("A" nc/goto-archives-dir "Archives")
-    ("N" nc/goto-notes-dir "Notes")
-    ("P" nc/goto-projects-dir "Projects")
-    ("T" nc/goto-templates-dir "Templates"))))
-
-(pretty-hydra-define nc-hydra-toggle
-  (:color amaranth :quit-key "q" :title "Toggles")
-  ("Basic"
-   (("n" linum-mode "line number" :toggle t)
-    ("w" whitespace-mode "whitespace" :toggle t)
-    ;;("W" whitespace-cleanup-mode "whitespace cleanup" :toggle t)
-    ("r" rainbow-mode "rainbow" :toggle t))
-   "Highlight"
-   (("l" hl-line-mode "line" :toggle t))
-   "Coding"
-   (("p" smartparens-mode "smartparens" :toggle t)
-    ("P" smartparens-strict-mode "smartparens strict" :toggle t)
-    ("S" show-smartparens-mode "show smartparens" :toggle t)
-    ("e" eldoc-mode "eldoc" :toggle t))
-   "Emacs"
-   (("D" toggle-debug-on-error "debug on error" :toggle (default-value 'debug-on-error))
-    ("X" toggle-debug-on-quit "debug on quit" :toggle (default-value 'debug-on-quit)))))
-
-(pretty-hydra-define nc-hydra-windows
-    (:color amaranth :quit-key "q" :title "Windows" :exit t)
-    ("Move"
-     (("v" nc/maximize-or-split-window-vertically "Maximize or Split Window V")
-      ("h" nc/split-window-horizontally "Split Window H"))))
-
 (major-mode-hydra-define markdown-mode nil
   ("Actions"
    (("p" nc/plantuml-preview-current-block "Plantuml Preview"))))
@@ -294,19 +245,20 @@
     ]
    ["Files"
     ("." "Project dir-locals.el" projectile-edit-dir-locals)
+    (";" "Emacs config" nc/goto-emacs-config)
     ("r" "Register" consult-register-load)
     ("C-f" "Files..." nc/file-menu)]
    ["Dirs"
-    ("n" "Notes" nc/goto-notes-dir)
-    ("p" "Projects" nc/goto-projects-dir)
-    ("h" "Home" (lambda () (interactive) (dired "~")))
+    ("N" "Notes" nc/goto-notes-dir)
+    ("P" "Projects" nc/goto-projects-dir)
+    ("H" "Home" (lambda () (interactive) (dired "~")))
     ("C-d" "Dirs..." nc/directory-menu)]
    ["Other"
     ("c" "Goto Clock" org-clock-goto)
     ("C-o" "Find file at point" ffap)
     ("F" "FFAP in buffer" ffap-menu)
-    ("R" "Browse VC Remote Repository" nc/vc-browse-remote)
-    ("g" "Browse VC Remote File" nc/vc-browse-remote-current-line)
+    ("V" "Browse VC Remote Repository" nc/vc-browse-remote)
+    ("v" "Browse VC Remote File" nc/vc-browse-remote-current-line)
     ]])
 
 (defvar-keymap prefix-buffer-map-ctrl-n
@@ -329,28 +281,13 @@
   ["Search"
    ["Org Files"
     ("h" "Heading" consult-org-agenda)
-    ("n" "Notes" nc/search-notes)
-    ]
+    ("n" "Notes" nc/search-notes)]
    ["Projects"
     ("r" "rg" nc/consult-rg-my-projects)
     ("s" "symbol" nc/consult-line-symbol-at-point)]
    ["Other"
     ("e" "emoji" nc/consult-rg-my-projects)]
    ])
-
-(defvar-keymap prefix-buffer-map-ctrl-t
-  :doc "Prefix map for C-q for toggle features."
-  "D" #'toggle-debug-on-error
-  "P" #'smartparens-strict-mode
-  "S" #'show-smartparens-mode
-  "X" #'toggle-debug-on-quit
-  "e" #'eldoc-mode
-  "l" #'hl-line-mode
-  "n" #'linum-mode
-  "p" #'smartparens-mode
-  "r" #'rainbow-mode
-  "t" #'treemacs
-  "w" #'whitespace-mode)
 
 (defvar-keymap prefix-buffer-map-ctrl-w
   :doc "Prefix map for C-q for Windows."
@@ -403,42 +340,30 @@
 
 (defvar-keymap nc-prefix-command
   :doc "Prefix Map for C-; :"
-  "." #'projectile-edit-dir-locals
-  "/" #'nc/consult-line-symbol-at-point
-  ":" #'avy-goto-char-timer
-  ";" #'nc/goto-emacs-config
-  "a" #'embark-act
-  "f" #'nc/consult-fd-my-projects
+  "b" #'nc/buffer-menu
   "g" goto-map
-  "j" #'crux-top-join-line
-  "l" #'nc/open-bookmark
-  "m" #'mc/mark-all-words-like-this
-  "p" #'consult-projectile
-  "s" #'nc/consult-rg-my-projects
-  "t" #'nc/treemacs-toggle
-  "y" #'consult-yasnippet
-  "C-b" #'nc/buffer-menu
+  "j" #'nc/jump-menu
+  "p" #'projectile-command-map
+  "s" #'nc/search-menu
+  "t" #'nc/toggle-menu
+  "w" #'nc/window-menu
+  "C-." #'nc/consult-line-symbol-at-point
+  "C-:" #'avy-goto-char-timer
+  "C-f" #'nc/consult-fd-my-projects
+  "C-j" #'crux-top-join-line
+  "C-l" #'nc/open-bookmark
+  "C-m" #'consult-mark
+  "C-p" #'consult-projectile
+  "C-s" #'nc/consult-rg-my-projects
+  "C-v" #'nc/vc-browse-remote-current-line
+  "C-t" #'nc/treemacs-toggle
+  "C-y" #'consult-yasnippet
+
   "C-i" prefix-buffer-map-ctrl-i
-  "C-j" #'nc/jump-menu
   "C-n" prefix-buffer-map-ctrl-n
   "C-o" prefix-buffer-map-ctrl-o
-  "C-p" #'projectile-command-map
-  "C-s" #'nc/search-menu
-  "C-t" #'nc/toggle-menu
-  "C-w" #'nc/window-menu)
+  )
 
-;; (which-key-add-keymap-based-replacements nc-prefix-command
-;;     "C-l" `("LSP" . ,prefix-buffer-map-ctrl-l)
-;;   "C-d" `("Dirs"  . ,#'nc/directory-menu)
-;;   "C-f" `("Files"  . ,#'nc/file-menu)
-;;   "C-i" `("Insert" . ,prefix-buffer-map-ctrl-i)
-;;   "C-j" `("Jump" . ,#'nc/jump-menu)
-;;   "C-k" `("Kill" . ,prefix-buffer-map-ctrl-k)
-;;   "C-n" `("Notes" . ,prefix-buffer-map-ctrl-n)
-;;   "C-o" `("Open" . ,prefix-buffer-map-ctrl-o)
-;;   "C-s" `("Search" . ,prefix-buffer-map-ctrl-s)
-;;   "C-t" `("Toggles" . ,prefix-buffer-map-ctrl-t)
-;;   "C-w" `("Window" . ,#'nc/window-menu))
 
 (keymap-set global-map "C-;" nc-prefix-command)
 
