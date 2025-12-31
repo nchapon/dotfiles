@@ -105,33 +105,7 @@
 (use-package transient
     :commands (transient-define-prefix))
 
-(defvar-keymap prefix-buffer-map-ctrl-l
-  :doc "Prefix map for C-q for LSP"
-  "j" #'consult-lsp-symbols
-  "r" #'lsp-rename
-  "o" #'lsp-organize-imports
-  "X" #'lsp-treemacs-errors-list
-  "H" #'lsp-treemacs-call-hierarchy
-  "S" #'lsp-treemacs-symbols
-  "R" #'lsp-treemacs-references)
 
-
-
-(transient-define-prefix nc/directory-menu ()
-  "My Directory Menu"
-  [["Notes"
-    ("a" "Archives" nc/goto-archives-dir)
-    ("n" "Notes" nc/goto-notes-dir)
-    ("t" "Templates" nc/goto-templates-dir)
-    ]
-   ["Others"
-    ("p" "Projects" nc/goto-projects-dir)
-    ("h" "Home" (lambda () (interactive) (dired "~")))
-    ]
-   ["Dired"
-    ("j" "Dired" dired)
-    ("d" "Denote Sort Dired" denote-sort-dired)
-    ]])
 
 ;; Stolen from Doom
 (defun nc/yank-buffer-path ()
@@ -153,17 +127,6 @@
     (message "Copied: %s"
              (substring-no-properties (car kill-ring)))))
 
-(transient-define-prefix nc/file-menu ()
-  "File Management + Config + Credentials"
-  
-  [
-  ["Config & Credentials"
-    (";" "Emacs Config" nc/goto-emacs-config)
-    ("p" "Credentials" nc/goto-my-credentials)
-    ("s" "SSH config"          (lambda () (interactive) (find-file "~/.ssh/config")))
-    ("t" "Authinfo"            (lambda () (interactive) (find-file "~/.authinfo.gpg")))
-  ]
-  ])
 
 
 (transient-define-prefix nc/yank-path-submenu ()
@@ -175,32 +138,46 @@
       (let ((current-prefix-arg nil))
         (call-interactively #'nc/yank-buffer-path))))
 
-   ("f" "Filename only  (C-u)"
+   ("y" "Filename only  (C-u)"
     (lambda () (interactive)
       (let ((current-prefix-arg '(4)))
         (call-interactively #'nc/yank-buffer-path))))
 
-   ("p" "Yank project-relative path  (C-u C-u)"
+   ("Y" "Yank project-relative path  (C-u C-u)"
     (lambda () (interactive)
       (let ((current-prefix-arg '(16)))
         (call-interactively #'nc/yank-buffer-path))))
    ]])
 
 
-(transient-define-prefix nc/buffer-menu ()
-  "Control buffer operations."
-  [["Buffer Navigation"
-   ("n" "Next buffer" next-buffer :transient t)
-   ("p" "Previous buffer" previous-buffer :transient t)
-   ("b" "Switch buffer" switch-to-buffer)
-   ("o" "Switch other window" switch-to-buffer-other-window)
-   ("5" "Switch other frame" switch-to-buffer-other-frame)
-   ("B" "Bury buffer" bury-buffer :transient t)]
-  ["Buffer Management"
+(transient-define-prefix nc/file-menu ()
+  "File"
+  
+  [["Actions"
    ("r" "Rename file & buffer" rename-visited-file)
    ("d" "Delete file & buffer" crux-delete-file-and-buffer)
    ("c" "Copy file" crux-copy-file-preserve-attributes)
-   ("C-y" "Yank buffer path..." nc/yank-path-submenu)]
+   ("y" "Yank buffer path..." nc/yank-path-submenu)]
+  
+  ["Config & Credentials"
+    ("e" "Emacs Config" nc/goto-emacs-config)
+    ("p" "Credentials" nc/goto-my-credentials)
+    ("s" "SSH config"          (lambda () (interactive) (find-file "~/.ssh/config")))
+    ("t" "Authinfo"            (lambda () (interactive) (find-file "~/.authinfo.gpg")))
+  ]
+  ["Browse Files"
+    ("A" "Archives" nc/goto-archives-dir)
+    ("F" "Find Files in Project Dir" nc/consult-fd-my-projects)
+    ("H" "Home" (lambda () (interactive) (dired "~")))
+    ("N" "Notes" nc/goto-notes-dir)
+    ("T" "Templates" nc/goto-templates-dir)
+    ("P" "Projects" nc/goto-projects-dir)
+    ]])
+
+(transient-define-prefix nc/buffer-menu ()
+  "Control buffer operations."
+  [
+  
   ["Display & View"
    ("l" "List buffers" ibuffer)
    ("m" "Buffer menu" buffer-menu)
@@ -220,61 +197,6 @@
   ["Exit"
    ("q" "Quit" transient-quit-one)])
 
-(defvar-keymap prefix-buffer-map-ctrl-i
-  :doc "Prefix map for C-q for Insert"
-  "d" #'nc/insert-datestamp-inactive
-  "D" #'nc/insert-datestamp
-  "e" #'emoji-search
-  "p" #'nc/generate-password
-  "q" #'quoted-insert
-  "t" #'tempel-insert
-  "u" #'nc/uuid
-  "y" #'consult-yasnippet
-  "Y" #'yankpad-insert)
-
-(transient-define-prefix nc/jump-menu ()
-  "Jump"
-  ["Jump"
-   ["Buffer"
-    (":" "Char" avy-goto-char-timer)
-    ("w" "Word" avy-goto-word-1)
-    ;; ("l" "Line" avy-goto-line)
-    ("l" "Line" goto-line)
-    ("i" "imenu" consult-imenu)
-    ("m" "Mark ring" consult-mark)
-    ]
-   ["Files"
-    ("." "Project dir-locals.el" projectile-edit-dir-locals)
-    (";" "Emacs config" nc/goto-emacs-config)
-    ("r" "Register" consult-register-load)
-    ("C-f" "Files..." nc/file-menu)]
-   ["Dirs"
-    ("N" "Notes" nc/goto-notes-dir)
-    ("P" "Projects" nc/goto-projects-dir)
-    ("H" "Home" (lambda () (interactive) (dired "~")))
-    ("C-d" "Dirs..." nc/directory-menu)]
-   ["Other"
-    ("c" "Goto Clock" org-clock-goto)
-    ("C-o" "Find file at point" ffap)
-    ("F" "FFAP in buffer" ffap-menu)
-    ("V" "Browse VC Remote Repository" nc/vc-browse-remote)
-    ("v" "Browse VC Remote File" nc/vc-browse-remote-current-line)
-    ]])
-
-(defvar-keymap prefix-buffer-map-ctrl-n
-  :doc "Prefix map for C-q for notes"
-  "s" #'org-search-view
-  "t" #'org-todo-list
-  "l" #'org-store-link)
-
-(defvar-keymap prefix-buffer-map-ctrl-o
-  :doc "Prefix map for C-q for open"
-  "c" #'calc
-  "e" #'crux-open-with
-  "f" #'make-frame
-  "g" #'nc/vc-browse-remote
-  "l" #'nc/open-bookmark
-  "t" #'nc/treemacs-toggle)
 
 (transient-define-prefix nc/search-menu ()
   "Jump"
@@ -283,11 +205,8 @@
     ("h" "Heading" consult-org-agenda)
     ("n" "Notes" nc/search-notes)]
    ["Projects"
-    ("r" "rg" nc/consult-rg-my-projects)
-    ("s" "symbol" nc/consult-line-symbol-at-point)]
-   ["Other"
-    ("e" "emoji" nc/consult-rg-my-projects)]
-   ])
+    ("p" "Search in Projects" nc/consult-rg-my-projects)
+    ("." "symbol" nc/consult-line-symbol-at-point)]])
 
 (defvar-keymap prefix-buffer-map-ctrl-w
   :doc "Prefix map for C-q for Windows."
@@ -306,17 +225,9 @@
     ("n" "New frame" make-frame-command)
     ("d" "Delete frame" delete-frame)
     ("o" "Other frame" other-frame)
-    ("O" "Only this frame" delete-other-frames)
+    ("D" "Only this frame" delete-other-frames)
     ("m" "Maximize" toggle-frame-maximized)
     ("f" "Fullscreen" toggle-frame-fullscreen)]
-   
-   ["Windows"
-    ("2" "Split below" split-window-below)
-    ("3" "Split right" split-window-right)
-    ("1" "Delete others" delete-other-windows)
-    ("0" "Delete window" delete-window)
-    ("w" "Other window" other-window :transient t)
-    ("=" "Balance" balance-windows)]
    
    ["Layouts"
     ("L i" "IDE layout" nc/layout-ide)
@@ -324,11 +235,9 @@
     ("L r" "Sidebar right" nc/layout-sidebar-right)]
    
    ["Buffers"
-    ("b" "Switch buffer" switch-to-buffer)
     ("B" "Buffer other window" switch-to-buffer-other-window)
     ("F" "Buffer other frame" switch-to-buffer-other-frame)
-    ("D" "Display buffer" display-buffer)
-    ("k" "Kill buffer" kill-buffer)
+    ("b" "Display buffer" display-buffer)
     ("K" "Kill buffer & window" kill-buffer-and-window)
     ("i" "Ibuffer" ibuffer)]
    
@@ -340,13 +249,82 @@
 
 (defvar-keymap nc-prefix-command
   :doc "Prefix Map for C-; :"
-  "b" #'nc/buffer-menu
-  "g" goto-map
-  "j" #'nc/jump-menu
-  "p" #'projectile-command-map
-  "s" #'nc/search-menu
-  "t" #'nc/toggle-menu
-  "w" #'nc/window-menu
+
+  ;; Code
+  "c s" #'consult-lsp-symbols
+  "c r" #'lsp-rename
+  "c o" #'lsp-organize-imports
+  "c X" #'lsp-treemacs-errors-list
+  "c H" #'lsp-treemacs-call-hierarchy
+  "c S" #'lsp-treemacs-symbols
+  "c R" #'lsp-treemacs-references
+  
+  ;; File Commands
+  "f ." #'ffap
+  "f c" #'crux-copy-file-preserve-attributes
+  "f d" #'crux-delete-file-and-buffer
+  "f e" #'nc/goto-emacs-config
+  "f f" #'nc/file-menu
+  "f l" #'projectile-edit-dir-locals
+  "f m" #'ffap-menu
+  "f r" #'rename-visited-file
+  "f F" #'nc/consult-fd-my-projects
+  "f P" #'nc/goto-projects-dir
+  "f y" #'nc/yank-buffer-path
+  "f Y" #'nc/yank-buffer-path           ; TODO copy project file path
+
+  ;; Insert
+  "i d" #'nc/insert-datestamp-inactive
+  "i D" #'nc/insert-datestamp
+  "i e" #'emoji-search
+  "i p" #'nc/generate-password
+  "i q" #'quoted-insert
+  "i t" #'tempel-insert
+  "i u" #'nc/uuid
+  "i y" #'consult-yasnippet
+  "i Y" #'yankpad-insert
+  
+  ;; Notes
+  "n a" #'consult-org-agenda
+  "n c" #'org-clock-goto
+  "n d" #'denote-dired
+  "n l" #'org-store-link
+  "n s" #'nc/search-notes
+  "n t" #'org-todo-list
+  "n v" #'org-search-view
+  
+  ;; Open Commands
+  "o c" #'calc
+  "o e" #'crux-open-with
+  "o f" #'make-frame
+  "o l" #'nc/open-bookmark
+  
+  ;; Search
+  "s ." #'nc/consult-line-symbol-at-point
+  "s p" #'nc/consult-rg-my-projects
+  "s s" #'nc/search-menu
+
+  ;; Project
+  "p p" #'projectile-command-map
+
+  ;; Quit
+  "q f" #'delete-frame
+  "q K" #'kill-buffer-and-window
+
+  ;; Toggle 
+  "t t" #'nc/toggle-menu
+
+  ;; Versionning (Magit / Git)
+  "v ." #'nc/vc-browse-remote-current-line
+  "v o" #'nc/vc-browse-remote
+  
+  ;; Window Menu
+  "w D" #'delete-other-frames
+  "w b" #'display-buffer
+  "w k" #'kill-buffer-and-window
+  "w o" #'other-frame
+  "w w" #'nc/window-menu
+
   "C-." #'nc/consult-line-symbol-at-point
   "C-:" #'avy-goto-char-timer
   "C-f" #'nc/consult-fd-my-projects
@@ -357,12 +335,7 @@
   "C-s" #'nc/consult-rg-my-projects
   "C-v" #'nc/vc-browse-remote-current-line
   "C-t" #'nc/treemacs-toggle
-  "C-y" #'consult-yasnippet
-
-  "C-i" prefix-buffer-map-ctrl-i
-  "C-n" prefix-buffer-map-ctrl-n
-  "C-o" prefix-buffer-map-ctrl-o
-  )
+  "C-y" #'consult-yasnippet)
 
 
 (keymap-set global-map "C-;" nc-prefix-command)
