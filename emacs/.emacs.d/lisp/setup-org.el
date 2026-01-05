@@ -345,7 +345,7 @@
 (add-to-list 'org-capture-templates
                  '("b" "Book"  entry
                    (file+headline nc/reading-file "Inbox")
-                   "* NEXT %^{Title} %^g\n:PROPERTIES:\n:author: %^{Author}\n:name: %^{Title}\n:END:\n\n%i\n\n" :empty-lines 1))
+                   "* NEXT %^{Title} %^g\n:PROPERTIES:\n:author: %^{Author}\n:name: %^{Title}\n:rating:\n:END:\n\n%i\n\n" :empty-lines 1))
 
 (add-to-list 'org-capture-templates
              `("i" "Interrupting task" entry
