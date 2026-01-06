@@ -99,8 +99,6 @@
   (which-key-mode)
   (which-key-enable-god-mode-support))
 
-(global-set-key (kbd "C-q") nil)
-
 ;; Eanble transinet menus
 (use-package transient
     :commands (transient-define-prefix))
