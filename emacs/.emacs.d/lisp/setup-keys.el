@@ -206,14 +206,7 @@
     ("p" "Search in Projects" nc/consult-rg-my-projects)
     ("." "symbol" nc/consult-line-symbol-at-point)]])
 
-(defvar-keymap prefix-buffer-map-ctrl-w
-  :doc "Prefix map for C-q for Windows."
-  "M-n" #'windmove-display-new-frame
-  "C-d" #'windmove-delete-down
-  "C-u" #'windmove-delete-up
-  "C-l" #'windmove-delete-left
-  "C-r" #'windmove-delete-right
-  "f" #'make-frame-command)
+
 
 (transient-define-prefix nc/window-menu ()
   "Simple frame, window and buffer management."
@@ -245,98 +238,129 @@
     ("x" "Swap windows" window-swap-states)
     ("q" "Quit" transient-quit-one)]])
 
-(defvar-keymap nc-prefix-command
-  :doc "Prefix Map for C-; :"
 
+(defvar-keymap nc-code-map
+  :doc "My custom coding (LSP) map"
   ;; Code
-  "c s" #'consult-lsp-symbols
-  "c r" #'lsp-rename
-  "c o" #'lsp-organize-imports
-  "c X" #'lsp-treemacs-errors-list
-  "c H" #'lsp-treemacs-call-hierarchy
-  "c S" #'lsp-treemacs-symbols
-  "c R" #'lsp-treemacs-references
-  
+  "s" #'consult-lsp-symbols
+  "r" #'lsp-rename
+  "o" #'lsp-organize-imports
+  "X" #'lsp-treemacs-errors-list
+  "H" #'lsp-treemacs-call-hierarchy
+  "S" #'lsp-treemacs-symbols
+  "R" #'lsp-treemacs-references)
+
+(defvar-keymap nc-file-map
+  :doc "My custom file keymap"
   ;; File Commands
-  "f ." #'ffap
-  "f c" #'crux-copy-file-preserve-attributes
-  "f d" #'crux-delete-file-and-buffer
-  "f e" #'nc/goto-emacs-config
-  "f f" #'nc/file-menu
-  "f l" #'projectile-edit-dir-locals
-  "f m" #'ffap-menu
-  "f r" #'rename-visited-file
-  "f F" #'nc/consult-fd-my-projects
-  "f P" #'nc/goto-projects-dir
-  "f y" #'nc/yank-buffer-path
-  "f Y" #'nc/yank-buffer-path           ; TODO copy project file path
+  "." #'ffap
+  ";" #'nc/goto-emacs-config
+  "," #'projectile-edit-dir-locals
+  "c" #'crux-copy-file-preserve-attributes
+  "d" #'crux-delete-file-and-buffer
+  "m" #'ffap-menu
+  "r" #'rename-visited-file
+  "P" #'nc/goto-projects-dir
+  "y" #'nc/yank-buffer-path
+  "C-;" #'nc/file-menu
+  "C-f" #'nc/consult-fd-my-projects
+  )
 
+(defvar-keymap nc-insert-map
+  :doc "My custom insert map"
   ;; Insert
-  "i d" #'nc/insert-datestamp-inactive
-  "i D" #'nc/insert-datestamp
-  "i e" #'emoji-search
-  "i p" #'nc/generate-password
-  "i q" #'quoted-insert
-  "i t" #'tempel-insert
-  "i u" #'nc/uuid
-  "i y" #'consult-yasnippet
-  "i Y" #'yankpad-insert
-  
+  "d" #'nc/insert-datestamp-inactive
+  "D" #'nc/insert-datestamp
+  "e" #'emoji-search
+  "p" #'nc/generate-password
+  "q" #'quoted-insert
+  "t" #'tempel-insert
+  "u" #'nc/uuid
+  "y" #'consult-yasnippet
+  "Y" #'yankpad-insert)
+
+(defvar-keymap nc-kill-map
+  :doc "My custom kill map"
+  "f" #'delete-frame
+  "K" #'kill-buffer-and-window
+)
+
+(defvar-keymap nc-notes-map
+  :doc "My custom notes map"
   ;; Notes
-  "n a" #'consult-org-agenda
-  "n c" #'org-clock-goto
-  "n d" #'denote-dired
-  "n l" #'org-store-link
-  "n s" #'nc/search-notes
-  "n t" #'org-todo-list
-  "n v" #'org-search-view
-  
+  "a" #'consult-org-agenda
+  "c" #'org-clock-goto
+  "d" #'denote-dired
+  "l" #'org-store-link
+  "s" #'nc/search-notes
+  "t" #'org-todo-list
+  "v" #'org-search-view)
+
+(defvar-keymap nc-open-map
+  :doc "My custom open map"
   ;; Open Commands
-  "o c" #'calc
-  "o e" #'crux-open-with
-  "o f" #'make-frame
-  "o l" #'nc/open-bookmark
-  
+  "c" #'calc
+  "e" #'crux-open-with
+  "f" #'make-frame
+  "l" #'nc/open-bookmark
+  "p" #'consult-projectile
+  "v" #'nc/vc-browse-remote-current-line
+  "R" #'nc/vc-browse-remote)
+
+(defvar-keymap nc-search-map
+  :doc "My custom search map"
   ;; Search
-  "s ." #'nc/consult-line-symbol-at-point
-  "s p" #'nc/consult-rg-my-projects
-  "s s" #'nc/search-menu
+  "." #'nc/consult-line-symbol-at-point
+  "C-s" #'nc/consult-rg-my-projects
+  "s" #'nc/search-menu)
 
-  ;; Project
-  "p p" #'projectile-command-map
+(defvar-keymap nc-window-map
+  :doc "My custom window map"
 
-  ;; Quit
-  "q f" #'delete-frame
-  "q K" #'kill-buffer-and-window
+  "D" #'delete-other-frames
+  "b" #'display-buffer
+  "k" #'kill-buffer-and-window
+  "o" #'other-frame
+  "C-;" #'nc/window-menu
+  "M-n" #'windmove-display-new-frame
+  "C-d" #'windmove-delete-down
+  "C-u" #'windmove-delete-up
+  "C-l" #'windmove-delete-left
+  "C-r" #'windmove-delete-right)
 
-  ;; Toggle 
-  "t t" #'nc/toggle-menu
-
-  ;; Versionning (Magit / Git)
-  "v ." #'nc/vc-browse-remote-current-line
-  "v o" #'nc/vc-browse-remote
-  
-  ;; Window Menu
-  "w D" #'delete-other-frames
-  "w b" #'display-buffer
-  "w k" #'kill-buffer-and-window
-  "w o" #'other-frame
-  "w w" #'nc/window-menu
+(defvar-keymap nc-prefix-map
+  :doc "My global prefix keymap"
 
   "C-." #'nc/consult-line-symbol-at-point
   "C-:" #'avy-goto-char-timer
-  "C-f" #'nc/consult-fd-my-projects
+  "C-c" nc-code-map
+  "C-f" nc-file-map
+  "C-i" nc-insert-map
   "C-j" #'crux-top-join-line
+  "C-k" nc-kill-map
   "C-l" #'nc/open-bookmark
   "C-m" #'consult-mark
-  "C-p" #'consult-projectile
-  "C-s" #'nc/consult-rg-my-projects
+  "C-n" nc-notes-map
+  "C-o" nc-open-map
+  "C-p" #'projectile-command-map
+  "C-s" nc-search-map
   "C-v" #'nc/vc-browse-remote-current-line
-  "C-t" #'nc/treemacs-toggle
+  "C-t" #'nc/toggle-menu
+  "C-w" nc-window-map
   "C-y" #'consult-yasnippet)
 
 
-(keymap-set global-map "C-;" nc-prefix-command)
+(which-key-add-keymap-based-replacements nc-prefix-map
+  "C-c" `("LSP / Coding"  . ,nc-code-map)
+  "C-f" `("File"  . ,nc-file-map)
+  "C-i" `("Insert"  . ,nc-insert-map)
+  "C-k" `("Kill"  . ,nc-kill-map)
+  "C-n" `("Notes"  . ,nc-notes-map)
+  "C-o" `("Open"  . ,nc-open-map)
+  "C-s" `("Search"  . ,nc-search-map)
+  "C-w" `("Windows"  . ,nc-window-map)
+  )
+(keymap-set global-map "C-;" nc-prefix-map)
 
 (transient-define-prefix nc/toggle-menu ()
   "Toggle common Emacs settings."
