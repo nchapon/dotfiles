@@ -43,7 +43,7 @@
   (("C-x C-j" . dired-jump)
    (:map dired-mode-map
               ("E" . wdired-change-to-wdired-mode)))
-
+  
   :custom
   ;; Always delete and copy recursively
   (dired-recursive-deletes 'always)
@@ -148,6 +148,7 @@
 
 (use-package ediff
   :straight nil
+  :defer t
   :custom
    ;; Ediff should be opened in selected frame and split window horizontally
   (ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -212,6 +213,7 @@ Use `treemacs' command for old functionality."
 
 (use-package rainbow-mode
   :ensure t
+  :defer t
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode)
   (diminish 'rainbow-mode))

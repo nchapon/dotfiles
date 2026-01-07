@@ -841,9 +841,11 @@ the result as a time value."
           (setq count (1+ count))))
       (message "Replaced %d occurences" count))))
 
-(use-package yankpad    
+(use-package yankpad
+  :defer t
   :init
   (setq yankpad-file (concat org-directory "/templates/yankpad.org"))
+  :commands (yankpad-insert yankpad-edit yankpad-map)
   :config
   ;; If you want to complete snippets using company-mode
   ;; (add-to-list 'company-backends 'company-yankpad)
@@ -1075,7 +1077,7 @@ capture was not aborted."
              )
   :config
   ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
-
+  
   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
   (setq consult-notes-org-headings-files '("~/notes/"))
   (consult-notes-org-headings-mode)

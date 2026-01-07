@@ -132,6 +132,7 @@
         eshell-prefer-lisp-functions nil))
 
 (use-package eshell
+  :defer t
   :after esh-mode
   :hook (eshell-first-time-mode . nc/eshell-configure)
 
@@ -225,7 +226,7 @@
      )
     )
    (bind-key "C-c C-! t" #'nc/dwim-run-pytest 'python-mode-map)
-
+   
   )
 
 (provide 'setup-shell)

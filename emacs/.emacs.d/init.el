@@ -22,6 +22,7 @@
 (use-package diminish)
 
 (use-package exec-path-from-shell
+  :defer 5
   :config
   (when (memq window-system '(mac ns x))
     (progn

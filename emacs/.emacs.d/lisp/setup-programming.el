@@ -55,10 +55,9 @@
 
    ))
 
-
-
 ;; optionally
 (use-package lsp-ui
+  :defer t
   :hook lsp-mode
   :init
   ;; (setq lsp-ui-doc-alignment 'frame
@@ -76,11 +75,13 @@
                ([remap xref-find-references] . lsp-ui-peek-find-references))))
 
 (use-package lsp-treemacs
+  :defer t
   :commands lsp-treemacs-errors-list)
 
 
 ;; Integration with consult
-(use-package consult-lsp)
+(use-package consult-lsp
+  :defer t)
 
 (with-eval-after-load 'lsp-mode
   ;; Remap `lsp-treemacs-errors-list' (bound to C-c l g e).
@@ -285,6 +286,7 @@
            (-mapcat (lambda (n) (treesit-node-text n t)))))))
 
 (use-package combobulate
+    :defer t
     :custom
     ;; You can customize Combobulate's key prefix here.
     ;; Note that you may have to restart Emacs for this to take effect!
@@ -363,9 +365,11 @@
 (use-package dockerfile-mode
   :mode "Dockerfile.*\\'")
 
-(use-package go-mode)
+(use-package go-mode
+  :defer t)
 
-(use-package just-mode)
+(use-package just-mode
+  :defer t)
 
 (use-package lua-mode
   :mode "\\.lua\\'")
@@ -374,6 +378,9 @@
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'"       . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
+  :bind
+  (:map markdown-mode-map
+        ("C-; C-;" . nc/transient-markdown-menu))
   :config
   (setq markdown-live-preview-delete-export 'delete-on-destroy)
   (setq markdown-fontify-code-blocks-natively t)
@@ -440,8 +447,6 @@
    ["Actions"
     ("p" "PlantUML preview" nc/plantuml-preview-current-block)]])
 
-(define-key markdown-mode-map (kbd "C-; C-;") 'nc/transient-markdown-menu)
-
 (use-package plantuml-mode
   :init
   (setq plantuml-default-exec-mode 'jar)
@@ -453,7 +458,8 @@
   :mode "\\.puml\\'"
   :bind
   (:map plantuml-mode-map
-        ("C-c C-p" . nc/plantuml-generate-png))
+        ("C-c C-p" . nc/plantuml-generate-png)
+        ("C-; C-;" . nc/transient-plantuml-menu))
   :config
   (setq plantuml-output-type "png")
   (defun nc/plantuml-generate-png ()
@@ -509,8 +515,6 @@
    ["Actions"
     ("p" "Preview" nc/plantuml-preview-current-block)]])
 
-(define-key plantuml-mode-map (kbd "C-; C-;") 'nc/transient-plantuml-menu)
-
 (use-package python
   ;; python-ts-mode is part of Emacs itself, so we use :ensure nil
   :ensure nil
@@ -545,6 +549,7 @@
 (add-hook 'python-ts-mode-hook #'nc/setup-python-environment)
 
 (use-package lsp-pyright
+  :defer t
   :init
   ;; Prevent `lsp-pyright' start in multi-root mode.
   ;; This must be set before the package is loaded.
@@ -574,10 +579,12 @@
 
 (use-package virtualenvwrapper
   :ensure t
+  :defer t
   :init
   (venv-initialize-eshell))
 
 (use-package pyvenv
+  :defer t
   :config
   (pyvenv-mode))
 
@@ -630,9 +637,11 @@
 (define-key python-ts-mode-map (kbd "C-; C-;") 'nc/transient-python-menu)
 
 (use-package terraform-mode
+  :defer t
   :hook ((terraform-mode . lsp)))
 
 (use-package verb
+  :defer t
   :config
   (setq verb-auto-kill-response-buffers nil) ; Response buffers killed before sending a request.
 
@@ -642,6 +651,7 @@
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 
 (use-package web-mode
+  :defer t
   :mode (("\\.html\\'" . web-mode)
          ("\\.hbs\\'" . web-mode)
          ("\\.tag$" . web-mode)

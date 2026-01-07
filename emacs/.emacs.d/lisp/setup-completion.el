@@ -328,7 +328,7 @@
               ([backtab]    . corfu-previous)
               ("<return>" . corfu-insert)
               ("C-q"        . corfu-quit))
-
+  
   :init
   (global-corfu-mode)
   (corfu-history-mode)
@@ -392,6 +392,7 @@
 ;; Configure Tempel
 (use-package tempel
   ;; Require trigger prefix before template name when completing.
+  :defer t
   :custom
   (tempel-trigger-prefix "<")
 
