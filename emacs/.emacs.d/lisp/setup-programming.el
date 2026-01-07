@@ -434,6 +434,14 @@
   (:map markdown-mode-map
         ([remap markdown-preview] . gh-md-render-buffer)))
 
+(transient-define-prefix nc/transient-markdown-menu ()
+  "Markdown Transient Menu"
+  [
+   ["Actions"
+    ("p" "PlantUML preview" nc/plantuml-preview-current-block)]])
+
+(define-key markdown-mode-map (kbd "C-; C-;") 'nc/transient-markdown-menu)
+
 (use-package plantuml-mode
   :init
   (setq plantuml-default-exec-mode 'jar)
@@ -494,6 +502,14 @@
     (plantuml-preview-current-block 1))
   (when is-linux
     (plantuml-preview-current-block 1)))
+
+(transient-define-prefix nc/transient-plantuml-menu ()
+  "Python tools"
+  [
+   ["Actions"
+    ("p" "Preview" nc/plantuml-preview-current-block)]])
+
+(define-key plantuml-mode-map (kbd "C-; C-;") 'nc/transient-plantuml-menu)
 
 (use-package python
   ;; python-ts-mode is part of Emacs itself, so we use :ensure nil

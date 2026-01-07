@@ -637,45 +637,6 @@ Some Emacs Global Bindings are redefined here.
 (bind-keys
  ("M-0" . nc/maximize-or-split-window-vertically))
 #+end_src
-** TODO Hydra
-
-#+begin_src emacs-lisp
-  (use-package hydra
-    :ensure t
-    :custom
-    (hydra-default-hint nil))
-
-  (use-package major-mode-hydra
-    :ensure t)
-
-  ;; Pretty Hydra
-  (use-package pretty-hydra
-    :ensure t)
-#+end_src
-*** hydra markdown-mode
-#+begin_src emacs-lisp
-(major-mode-hydra-define markdown-mode nil
-  ("Actions"
-   (("p" nc/plantuml-preview-current-block "Plantuml Preview"))))
-#+end_src
-
-
-*** hydra plantuml-mode
-#+begin_src emacs-lisp
-(major-mode-hydra-define plantuml-mode nil
-  ("Actions"
-   (("p" nc/plantuml-preview-current-block "Plantuml Preview"))))
-#+end_src
-
-*** hydra python-mode
-#+begin_src emacs-lisp
-(major-mode-hydra-define python-mode nil
-  ("Actions"
-   (("f" nc/format-buffer-with-ruff "Format Buffer with Ruff")
-    ("d" python-insert-docstring-with-google-style-at-point "Add docstring"))))
-#+end_src
-
-
 ** Key Chords
 
 #+begin_src emacs-lisp
@@ -4067,8 +4028,25 @@ GitHub Flavored Markdown by default for README.md files.
         ([remap markdown-preview] . gh-md-render-buffer)))
 
 #+end_src
-** Plant UML
 
+
+*** Markdown Transient Menu
+
+#+begin_src emacs-lisp
+(transient-define-prefix nc/transient-markdown-menu ()
+  "Markdown Transient Menu"
+  [
+   ["Actions"
+    ("p" "PlantUML preview" nc/plantuml-preview-current-block)]])
+
+(define-key markdown-mode-map (kbd "C-; C-;") 'nc/transient-markdown-menu)
+
+#+end_src
+
+
+
+
+** Plant UML
 Needs Java and plantuml.jar installed in =~/opt=
 
 #+begin_src shell :tangle no  
@@ -4140,6 +4118,19 @@ Needs Java and plantuml.jar installed in =~/opt=
   (when is-linux
     (plantuml-preview-current-block 1)))
 #+end_src
+*** PlantUML Transient Menu
+
+#+begin_src emacs-lisp
+(transient-define-prefix nc/transient-plantuml-menu ()
+  "Python tools"
+  [
+   ["Actions"
+    ("p" "Preview" nc/plantuml-preview-current-block)]])
+
+(define-key plantuml-mode-map (kbd "C-; C-;") 'nc/transient-plantuml-menu)
+
+#+end_src
+
 ** Python
 *** python-mode
 :PROPERTIES:

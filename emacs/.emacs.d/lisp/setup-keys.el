@@ -51,31 +51,6 @@
 (bind-keys
  ("M-0" . nc/maximize-or-split-window-vertically))
 
-(use-package hydra
-  :ensure t
-  :custom
-  (hydra-default-hint nil))
-
-(use-package major-mode-hydra
-  :ensure t)
-
-;; Pretty Hydra
-(use-package pretty-hydra
-  :ensure t)
-
-(major-mode-hydra-define markdown-mode nil
-  ("Actions"
-   (("p" nc/plantuml-preview-current-block "Plantuml Preview"))))
-
-(major-mode-hydra-define plantuml-mode nil
-  ("Actions"
-   (("p" nc/plantuml-preview-current-block "Plantuml Preview"))))
-
-(major-mode-hydra-define python-mode nil
-  ("Actions"
-   (("f" nc/format-buffer-with-ruff "Format Buffer with Ruff")
-    ("d" python-insert-docstring-with-google-style-at-point "Add docstring"))))
-
 (use-package key-chord
   :init
   (key-chord-mode 1)
