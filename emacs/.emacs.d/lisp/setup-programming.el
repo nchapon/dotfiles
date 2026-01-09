@@ -519,6 +519,7 @@
   ;; python-ts-mode is part of Emacs itself, so we use :ensure nil
   :ensure nil
   :mode ("\\.py\\'" . python-ts-mode)
+  :defer t
   :init
   ;; Prefer tree-sitter mode over classic python-mode
   (add-to-list 'major-mode-remap-alist
@@ -559,6 +560,7 @@
 
 (use-package conda
   :when (executable-find "conda")
+  :defer t
   :config
   (conda-env-initialize-interactive-shells)
   (conda-env-initialize-eshell)

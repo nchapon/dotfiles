@@ -343,9 +343,18 @@
                    "* %(org-insert-time-stamp nil nil t) %?\n  %i \n  See: %a" :empty-lines 1))
 
 (add-to-list 'org-capture-templates
-                 '("b" "Book"  entry
-                   (file+headline nc/reading-file "Inbox")
-                   "* NEXT %^{Title} %^g\n:PROPERTIES:\n:author: %^{Author}\n:name: %^{Title}\n:rating:\n:END:\n\n%i\n\n" :empty-lines 1))
+             '("b" "Book"  entry
+               (file+headline nc/reading-file "Inbox")
+               "* NEXT %^{Title} 
+:PROPERTIES:
+:AUTHOR: %^{Author}
+:GENRE: %^{Genre|BD|SF|ESSAY|TECH|SCIENTIFIC|POLAR}
+:RATING: %^{Rating (1-5)|1|2|3|4|5}
+:DATE_ADDED: %u
+:END:
+
+%?"
+               :empty-lines 1))
 
 (add-to-list 'org-capture-templates
              `("i" "Interrupting task" entry
@@ -1021,6 +1030,7 @@ capture was not aborted."
 
 (use-package denote
   :when (getenv "PIM_HOME")
+  :defer t
   :bind
   ("C-c n n" . 'denote)
   ("C-c n f" . 'denote-open-or-create)
@@ -1077,7 +1087,7 @@ capture was not aborted."
              )
   :config
   ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
-  
+
   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
   (setq consult-notes-org-headings-files '("~/notes/"))
   (consult-notes-org-headings-mode)

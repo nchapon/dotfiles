@@ -2597,10 +2597,19 @@ will appear as projects.
 #+end_src
 *** Book
 #+begin_src emacs-lisp
-  (add-to-list 'org-capture-templates
-                   '("b" "Book"  entry
-                     (file+headline nc/reading-file "Inbox")
-                     "* NEXT %^{Title} %^g\n:PROPERTIES:\n:author: %^{Author}\n:name: %^{Title}\n:rating:\n:END:\n\n%i\n\n" :empty-lines 1))
+(add-to-list 'org-capture-templates
+             '("b" "Book"  entry
+               (file+headline nc/reading-file "Inbox")
+               "* NEXT %^{Title} 
+:PROPERTIES:
+:AUTHOR: %^{Author}
+:GENRE: %^{Genre|BD|SF|ESSAY|TECH|SCIENTIFIC|POLAR}
+:RATING: %^{Rating (1-5)|1|2|3|4|5}
+:DATE_ADDED: %u
+:END:
+
+%?"
+               :empty-lines 1))
 #+end_src
 *** Interruption task
  #+begin_src emacs-lisp
@@ -3417,6 +3426,7 @@ I try to do a lot of things with =org-roam= :
 
 (use-package denote
   :when (getenv "PIM_HOME")
+  :defer t
   :bind
   ("C-c n n" . 'denote)
   ("C-c n f" . 'denote-open-or-create)
@@ -4149,6 +4159,7 @@ Needs Java and plantuml.jar installed in =~/opt=
   ;; python-ts-mode is part of Emacs itself, so we use :ensure nil
   :ensure nil
   :mode ("\\.py\\'" . python-ts-mode)
+  :defer t
   :init
   ;; Prefer tree-sitter mode over classic python-mode
   (add-to-list 'major-mode-remap-alist
@@ -4193,25 +4204,26 @@ Needs Java and plantuml.jar installed in =~/opt=
 *** Conda
 
 #+begin_src emacs-lisp
-  (use-package conda
-    :when (executable-find "conda")
-    :config
-    (conda-env-initialize-interactive-shells)
-    (conda-env-initialize-eshell)
-    (add-to-list
-       'global-mode-string
-       '(:eval
-         (list
-          (if conda-env-current-name
-              (propertize (concat "(py: " conda-env-current-name ") ")
-                          'face 'font-lock-builtin-face
-                          'help-echo "Conda environment"
-                          'mouse-face '(:box 1)
-                          'local-map (make-mode-line-mouse-map
-                                      'mouse-1
-                                      (lambda () (interactive)
-                                        (conda-env-activate))))
-            "")))))
+(use-package conda
+  :when (executable-find "conda")
+  :defer t
+  :config
+  (conda-env-initialize-interactive-shells)
+  (conda-env-initialize-eshell)
+  (add-to-list
+     'global-mode-string
+     '(:eval
+       (list
+        (if conda-env-current-name
+            (propertize (concat "(py: " conda-env-current-name ") ")
+                        'face 'font-lock-builtin-face
+                        'help-echo "Conda environment"
+                        'mouse-face '(:box 1)
+                        'local-map (make-mode-line-mouse-map
+                                    'mouse-1
+                                    (lambda () (interactive)
+                                      (conda-env-activate))))
+          "")))))
 #+end_src
 *** Virtualenvwrapper
 
