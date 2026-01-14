@@ -400,10 +400,20 @@
          ("M-*" . tempel-insert))
 
   :config
-  (setq tempel-path (expand-file-name "tempel" "~/notes/templates"))
 
+  ;; (setq tempel-path (expand-file-name "tempel" "~/notes/templates"))
+
+  (defvar nc-tempel-templates
+    (list (expand-file-name "~/notes/templates/tempel"))
+    "List of my tempel templates.")
+
+  (let ((nc-tempel-local-templates (expand-file-name "tempel" (getenv "PIM_HOME"))))
+    (when (file-exists-p nc-tempel-local-templates)
+      (add-to-list 'nc-tempel-templates nc-tempel-local-templates)))
+
+  (setq tempel-path nc-tempel-templates)
+  
   :init
-
   ;; Setup completion at point
   (defun tempel-setup-capf ()
     ;; Add the Tempel Capf to `completion-at-point-functions'.
