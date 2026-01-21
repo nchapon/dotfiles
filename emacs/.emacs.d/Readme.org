@@ -2018,45 +2018,42 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 *** Corfu
 
 #+begin_src emacs-lisp
-  (use-package corfu
-    :straight (corfu :files (:defaults "extensions/*")
-                     :includes
-                     (corfu-history    ;; corfu-history-mode remembers selected candidates and sorts the candidates by their history position.
-                      corfu-info       ;; Actions to access the candidate location and documentation.
-                      corfu-popupinfo  ;; Display candidate documentation or source in a popup next to the candidate menu.
-                      ))
+(use-package corfu
+  :straight (corfu :files (:defaults "extensions/*")
+                   :includes
+                   (corfu-history    ;; corfu-history-mode remembers selected candidates and sorts the candidates by their history position.
+                    corfu-info       ;; Actions to access the candidate location and documentation.
+                    corfu-popupinfo  ;; Display candidate documentation or source in a popup next to the candidate menu.
+                    ))
 
-    ;; Optional customizations
-    :custom
-    (corfu-cycle t)                 ; Allows cycling through candidates
-    (corfu-auto t)                  ; Enable auto completion
-    (corfu-auto-prefix 2)
-    (corfu-auto-delay 0.25)
-    (corfu-popupinfo-delay '(0.5 . 0.2))
-    (corfu-preview-current 'insert) ; Do not preview current candidate
-    (corfu-preselect-first nil)
-    (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
+  ;; Optional customizations
+  :custom
+  (corfu-cycle t)                 ; Allows cycling through candidates
+  (corfu-auto t)                  ; Enable auto completion
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.25)
+  (corfu-popupinfo-delay '(0.5 . 0.2))
+  (corfu-preview-current 'insert) ; Do not preview current candidate
+  (corfu-preselect-first nil)
+  (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
 
-    ;; Optionally use TAB for cycling, default is `corfu-complete'.
-    :bind (:map corfu-map
-                ("M-SPC"      . corfu-insert-separator)
-                ("TAB"        . corfu-next)
-                ([tab]        . corfu-next)
-                ("S-TAB"      . corfu-previous)
-                ([backtab]    . corfu-previous)
-                ("<return>" . corfu-insert)
-                ("C-q"        . corfu-quit))
-    
-    :init
-    (global-corfu-mode)
-    (corfu-history-mode)
-    (corfu-popupinfo-mode) ; Popup completion info
-    :config
-    (add-hook 'eshell-mode-hook
-              (lambda () (setq-local corfu-quit-at-boundary t
-                                     corfu-quit-no-match t
-                                     corfu-auto nil)
-                (corfu-mode))))
+  ;; Optionally use TAB for cycling, default is `corfu-complete'.
+  :bind (:map corfu-map
+              ("M-SPC"      . corfu-insert-separator)
+              ("C-n"        . corfu-next)
+              ("C-p"    . corfu-previous)
+              ("<return>" . corfu-insert))
+
+  :init
+  (global-corfu-mode)
+  (corfu-history-mode)
+  (corfu-popupinfo-mode) ; Popup completion info
+  :config
+  (add-hook 'eshell-mode-hook
+            (lambda () (setq-local corfu-quit-at-boundary t
+                                   corfu-quit-no-match t
+                                   corfu-auto nil)
+              (corfu-mode))))
 #+end_src
 
 *** Cape
@@ -4316,6 +4313,58 @@ Automatic generation of function docstrings according to the [[https://google.gi
                            (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
 
 (define-key python-ts-mode-map (kbd "C-; C-;") 'nc/transient-python-menu)
+#+end_src
+*** Orderless tuning
+
+#+begin_src elisp
+
+
+(defun my/orderless-python-split (string)
+  "Split STRING on spaces and underscores for Python identifiers."
+  (split-string string "[ _]+" t))
+
+(defun my/orderless-pyright-filter (cand)
+  "Hide private and dunder symbols unless explicitly requested."
+  (not (string-match-p "\\`__.*__\\|\\`_[^_]" cand)))
+
+(defun my/orderless-pyright-dispatch (pattern _index _total)
+  (cond
+   ((string-prefix-p "=" pattern)
+    `(orderless-literal . ,(substring pattern 1)))
+   ((string-prefix-p "~" pattern)
+    `(orderless-initialism . ,(substring pattern 1)))
+   ((string-prefix-p "/" pattern)
+    `(orderless-regexp . ,(substring pattern 1)))))
+
+
+(defun my/python-orderless-setup ()
+  "Python-only Orderless tuning (Pyright)."
+  (setq-local orderless-matching-styles
+              '(orderless-literal
+                orderless-prefixes
+                orderless-initialism
+                orderless-flex))
+
+  (setq-local orderless-component-separator
+              #'my/orderless-python-split)
+
+  (setq-local orderless-filter
+              #'my/orderless-pyright-filter)
+
+  (setq-local orderless-dispatchers
+              '(my/orderless-pyright-dispatch)))
+
+(add-hook 'python-ts-mode-hook #'my/python-orderless-setup)
+
+
+
+(defun my/python-completion-category ()
+  (setq-local completion-category-overrides
+              '((file (styles partial-completion))
+                (capf (styles orderless)))))
+
+(add-hook 'python-ts-mode-hook #'my/python-completion-category)
+
 #+end_src
 
 

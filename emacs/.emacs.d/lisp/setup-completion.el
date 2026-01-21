@@ -322,12 +322,9 @@
   ;; Optionally use TAB for cycling, default is `corfu-complete'.
   :bind (:map corfu-map
               ("M-SPC"      . corfu-insert-separator)
-              ("TAB"        . corfu-next)
-              ([tab]        . corfu-next)
-              ("S-TAB"      . corfu-previous)
-              ([backtab]    . corfu-previous)
-              ("<return>" . corfu-insert)
-              ("C-q"        . corfu-quit))
+              ("C-n"        . corfu-next)
+              ("C-p"    . corfu-previous)
+              ("<return>" . corfu-insert))
 
   :init
   (global-corfu-mode)

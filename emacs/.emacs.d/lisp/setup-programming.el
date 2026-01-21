@@ -638,6 +638,52 @@
 
 (define-key python-ts-mode-map (kbd "C-; C-;") 'nc/transient-python-menu)
 
+(defun my/orderless-python-split (string)
+  "Split STRING on spaces and underscores for Python identifiers."
+  (split-string string "[ _]+" t))
+
+(defun my/orderless-pyright-filter (cand)
+  "Hide private and dunder symbols unless explicitly requested."
+  (not (string-match-p "\\`__.*__\\|\\`_[^_]" cand)))
+
+(defun my/orderless-pyright-dispatch (pattern _index _total)
+  (cond
+   ((string-prefix-p "=" pattern)
+    `(orderless-literal . ,(substring pattern 1)))
+   ((string-prefix-p "~" pattern)
+    `(orderless-initialism . ,(substring pattern 1)))
+   ((string-prefix-p "/" pattern)
+    `(orderless-regexp . ,(substring pattern 1)))))
+
+
+(defun my/python-orderless-setup ()
+  "Python-only Orderless tuning (Pyright)."
+  (setq-local orderless-matching-styles
+              '(orderless-literal
+                orderless-prefixes
+                orderless-initialism
+                orderless-flex))
+
+  (setq-local orderless-component-separator
+              #'my/orderless-python-split)
+
+  (setq-local orderless-filter
+              #'my/orderless-pyright-filter)
+
+  (setq-local orderless-dispatchers
+              '(my/orderless-pyright-dispatch)))
+
+(add-hook 'python-ts-mode-hook #'my/python-orderless-setup)
+
+
+
+(defun my/python-completion-category ()
+  (setq-local completion-category-overrides
+              '((file (styles partial-completion))
+                (capf (styles orderless)))))
+
+(add-hook 'python-ts-mode-hook #'my/python-completion-category)
+
 (use-package terraform-mode
   :defer t
   :hook ((terraform-mode . lsp)))
