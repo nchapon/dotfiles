@@ -181,8 +181,6 @@
     ("p" "Search in Projects" nc/consult-rg-my-projects)
     ("." "symbol" nc/consult-line-symbol-at-point)]])
 
-
-
 (transient-define-prefix nc/window-menu ()
   "Simple frame, window and buffer management."
   ["Frame, Window & Buffer Manager"
@@ -238,8 +236,7 @@
   "P" #'nc/goto-projects-dir
   "y" #'nc/yank-buffer-path
   "C-;" #'nc/file-menu
-  "C-f" #'nc/consult-fd-my-projects
-  )
+  "M-f" #'nc/consult-fd-my-projects)
 
 (defvar-keymap nc-insert-map
   :doc "My custom insert map"
@@ -257,8 +254,15 @@
 (defvar-keymap nc-kill-map
   :doc "My custom kill map"
   "f" #'delete-frame
-  "K" #'kill-buffer-and-window
-)
+  "K" #'kill-buffer-and-window)
+
+(defvar-keymap nc-menu-map
+  :doc "My custom menu map"
+  "f" #'nc/file-menu
+  "s" #'nc/search-menu
+  "t" #'nc/toggle-menu
+  "w" #'nc/window-menu)
+
 
 (defvar-keymap nc-notes-map
   :doc "My custom notes map"
@@ -282,13 +286,6 @@
   "v" #'nc/vc-browse-remote-current-line
   "R" #'nc/vc-browse-remote)
 
-(defvar-keymap nc-search-map
-  :doc "My custom search map"
-  ;; Search
-  "." #'nc/consult-line-symbol-at-point
-  "C-s" #'nc/consult-rg-my-projects
-  "s" #'nc/search-menu)
-
 (defvar-keymap nc-window-map
   :doc "My custom window map"
 
@@ -296,7 +293,7 @@
   "b" #'display-buffer
   "k" #'kill-buffer-and-window
   "o" #'other-frame
-  "C-;" #'nc/window-menu
+  "C-m" #'nc/window-menu
   "M-n" #'windmove-display-new-frame
   "C-d" #'windmove-delete-down
   "C-u" #'windmove-delete-up
@@ -306,23 +303,28 @@
 (defvar-keymap nc-prefix-map
   :doc "My global prefix keymap"
 
-  "C-." #'nc/consult-line-symbol-at-point
-  "C-:" #'avy-goto-char-timer
+  ";" #'nc/goto-emacs-config
+  ":" #'avy-goto-char-timer
+  
   "C-c" nc-code-map
+  "c" nc-code-map
   "C-f" nc-file-map
+  "f" nc-file-map
   "C-i" nc-insert-map
   "C-j" #'crux-top-join-line
   "C-k" nc-kill-map
   "C-l" #'nc/open-bookmark
-  "C-m" #'consult-mark
+  "C-;" nc-menu-map
   "C-n" nc-notes-map
   "C-o" nc-open-map
   "C-p" #'projectile-command-map
-  "C-s" nc-search-map
+  "C-s" #'nc/consult-line-symbol-at-point
   "C-v" #'nc/vc-browse-remote-current-line
-  "C-t" #'nc/toggle-menu
   "C-w" nc-window-map
-  "C-y" #'consult-yasnippet)
+  "C-y" #'consult-yasnippet
+
+  "M-s" #'nc/consult-rg-my-projects
+  "M-f" #'nc/consult-fd-my-projects)
 
 
 (which-key-add-keymap-based-replacements nc-prefix-map
@@ -332,10 +334,10 @@
   "C-k" `("Kill"  . ,nc-kill-map)
   "C-n" `("Notes"  . ,nc-notes-map)
   "C-o" `("Open"  . ,nc-open-map)
-  "C-s" `("Search"  . ,nc-search-map)
   "C-w" `("Windows"  . ,nc-window-map)
   )
-(keymap-set global-map "C-;" nc-prefix-map)
+;; (keymap-set global-map "C-;" nc-prefix-map)
+(keymap-set global-map "C-c C-;" nc-prefix-map)
 
 (transient-define-prefix nc/toggle-menu ()
   "Toggle common Emacs settings."
