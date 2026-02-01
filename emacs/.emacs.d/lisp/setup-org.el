@@ -294,8 +294,7 @@
          :empty-lines 1)
         ("s" "Someday" entry (file+headline nc/inbox-file "Inbox")
          "* SOMEDAY %? :idea:\n%u" :clock-in t :clock-resume t)
-        ("f" "FishLog" plain (file+olp+datetree nc/fishing-file)
-         "%[~/notes/templates/fishlog.org]" :time-prompt t)
+        
         ("F" "Film" entry (file+headline nc/watching-file "Films")
          "* NEXT %^{Titre}
        %i
@@ -338,6 +337,31 @@
                       "* %?\n  %i\n  From: %a" :empty-lines 1))
 
 (add-to-list 'org-capture-templates
+      '("f" "Fishing Log Entry" entry
+        (file+headline nc/fishing-file "Sessions")
+        "* %^t - %^{Location| Vilaine| Etangs Bruz| Doubs}
+:PROPERTIES:
+:Date: %^t %\\1
+:Horaire: %^{Horaire}
+:Location: %\\2
+:Type: %^{Type|🚶 Du bord|🛟 Float tube|⛵ Bateau}
+:Météo: %^{Weather|☀️ Sunny|⛅ Partly Cloudy|☁️ Cloudy|🌧️ Rainy|⛈️ Stormy|🌫️ Foggy}
+:Temp: %^{Temperature (°C)}
+:Vent: %^{Wind conditions}
+:Prise: %^{Prises}
+:Rating: %^{Rating| 🔴| ⭐| ⭐⭐| ⭐⭐⭐}
+:END:
+
+Notes
+- Techniques leurres: 
+- What worked: 
+- What didn't work: 
+- Next time: 
+
+"
+        :empty-lines 1))
+
+(add-to-list 'org-capture-templates
                  '("n" "Note"  entry
                    (file+headline nc/inbox-file "Notes")
                    "* %(org-insert-time-stamp nil nil t) %?\n  %i \n  See: %a" :empty-lines 1))
@@ -353,7 +377,7 @@
 :DATE_ADDED: %u
 :END:
 
-%?"
+'%?"
                :empty-lines 1))
 
 (add-to-list 'org-capture-templates
