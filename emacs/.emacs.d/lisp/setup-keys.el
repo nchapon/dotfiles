@@ -196,7 +196,7 @@
   "Transient Search Menu"
   ["Search"
    ["Org Files"
-    ("h" "Heading" consult-org-agenda)
+    ("a" "Agenda Heading" consult-org-agenda)
     ("n" "Notes" nc/search-notes)]
    ["Projects"
     ("p" "Search in Projects" nc/consult-rg-my-projects)
@@ -251,11 +251,11 @@
   "," #'projectile-edit-dir-locals
   "c" #'crux-copy-file-preserve-attributes
   "d" #'crux-delete-file-and-buffer
-  "C-f" #'ffap-menu
+  "M-." #'ffap-menu
   "r" #'rename-visited-file
   "y" #'nc/yank-buffer-path
-  "C-;" #'nc/file-menu
-  "M-f" #'nc/consult-fd-my-projects)
+  "M-f" #'nc/file-menu
+  "C-f" #'nc/consult-fd-my-projects)
 
 (defvar-keymap nc-goto-map
   :doc "My custom goto keymap"
