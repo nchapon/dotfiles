@@ -294,7 +294,7 @@
          :empty-lines 1)
         ("s" "Someday" entry (file+headline nc/inbox-file "Inbox")
          "* SOMEDAY %? :idea:\n%u" :clock-in t :clock-resume t)
-        
+
         ("F" "Film" entry (file+headline nc/watching-file "Films")
          "* NEXT %^{Titre}
        %i
@@ -1111,7 +1111,7 @@ capture was not aborted."
              )
   :config
   ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
-  
+
   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
   (setq consult-notes-org-headings-files '("~/notes/"))
   (consult-notes-org-headings-mode)

@@ -585,6 +585,7 @@ User interface library for Emacs editing commands.
 * Key Bindings
 :properties:
 :header-args+: :tangle "./lisp/setup-keys.el"
+:ID:       3fdc1f8d-a113-4282-aad3-a0afe66d120e
 :end:
 Key bindings configuration module automatically tangled in =./lisp/setup-keys.el=
 #+begin_src emacs-lisp :noweb yes
@@ -3917,14 +3918,15 @@ Hydra
 
 #+end_src
 *** Combobulate
+:PROPERTIES:
+:ID:       247d1bf6-eeda-464a-8a45-f9f64fe6eda8
+:END:
 
 #+begin_src emacs-lisp
 (use-package combobulate
     :defer t
-    :custom
-    ;; You can customize Combobulate's key prefix here.
-    ;; Note that you may have to restart Emacs for this to take effect!
-    (combobulate-key-prefix "C-c o")
+    :bind
+    ("C-c o o" . combobulate)
     :hook ((python-ts-mode . combobulate-mode)
            (yaml-ts-mode . combobulate-mode))
     ;; Amend this to the directory where you keep Combobulate's source

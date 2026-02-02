@@ -287,10 +287,8 @@
 
 (use-package combobulate
     :defer t
-    :custom
-    ;; You can customize Combobulate's key prefix here.
-    ;; Note that you may have to restart Emacs for this to take effect!
-    (combobulate-key-prefix "C-c o")
+    :bind
+    ("C-c o o" . combobulate)
     :hook ((python-ts-mode . combobulate-mode)
            (yaml-ts-mode . combobulate-mode))
     ;; Amend this to the directory where you keep Combobulate's source
