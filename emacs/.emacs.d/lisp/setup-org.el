@@ -52,7 +52,7 @@
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode)
   :after org
-  :custom (org-bullets-bullet-list '("◉" "✿" "★" "•")))
+  :custom (org-bullets-bullet-list '("◉" "✿" "★" "•" "•" "•" "•" "•")))
 
 ;; Hiding leading bullets in headers
 (setq org-hide-leading-stars t)
@@ -70,14 +70,14 @@
   (custom-theme-set-faces 'user
                           '(org-special-keyword  ((t (:inherit (font-lock-comment-face fixed-pitch)) :foreground "#69ffeb")))
 
-                          `(org-level-8 ((t (,@headline ,@variable-tuple))))
-                          `(org-level-7 ((t (,@headline ,@variable-tuple))))
-                          `(org-level-6 ((t (,@headline ,@variable-tuple))))
-                          `(org-level-5 ((t (,@headline ,@variable-tuple))))
-                          `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+                          `(org-level-8 ((t (,@headline ,@variable-tuple :height 1.1))))
+                          `(org-level-7 ((t (,@headline ,@variable-tuple :height 1.1))))
+                          `(org-level-6 ((t (,@headline ,@variable-tuple :height 1.1))))
+                          `(org-level-5 ((t (,@headline ,@variable-tuple :height 1.1))))
+                          `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1 :foreground "#ff8a69"))))
                           `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2 :foreground "#ff8a69"))))
                           `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3 :foreground "#ffd569"))))
-                          `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.4 :foreground "#ffaf69"))))
+                          `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.35 :foreground "#ffaf69"))))
                           `(org-document-title ((t (,@headline ,@variable-tuple :height 1.6 :underline nil :foreground "#e6b68d"))))
                           `(org-document-info         ((t (:foreground "#697dff"))))
                           `(org-document-info-keyword         ((t (:foreground "#697dff"))))
