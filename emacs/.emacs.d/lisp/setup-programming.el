@@ -177,126 +177,136 @@
   (add-hook 'dap-stopped-hook
             (lambda (arg) (call-interactively #'dap-hydra))))
 
-;; -*- lexical-binding: t; -*-
-(use-package treesit
-  :straight (:type built-in)
-  :mode ("\\.tsx\\'" . tsx-ts-mode)
+(use-package treesit-auto
+  :ensure t
+  :custom
+  (treesit-auto-install 'prompt)
   :config
-  (setq treesit-language-source-alist
-        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-          (cmake "https://github.com/uyha/tree-sitter-cmake")
-          (css "https://github.com/tree-sitter/tree-sitter-css")
-          (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-          (go "https://github.com/tree-sitter/tree-sitter-go")
-          (html "https://github.com/tree-sitter/tree-sitter-html")
-          (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-          (json "https://github.com/tree-sitter/tree-sitter-json")
-          (make "https://github.com/alemuller/tree-sitter-make")
-          (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-          (python "https://github.com/tree-sitter/tree-sitter-python")
-          (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
-          (rust "https://github.com/tree-sitter/tree-sitter-rust")
-          (toml "https://github.com/tree-sitter/tree-sitter-toml")
-          (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src")
-          (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src")
-          (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-          (astro "https://github.com/virchau13/tree-sitter-astro")
-          (sql "https://github.com/DerekStride/tree-sitter-sql" "gh-pages" "src")
-          (hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")))
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 
-  (defun treesit-install-all-grammars ()
-    (interactive)
-    (dolist (lang (mapcar #'car treesit-language-source-alist))
-      (treesit-install-language-grammar lang)))
 
-  (defvar treesit-langs-mode-overrides '((sh-mode . bash)
-                                         (sh-ts-mode . bash)
-                                         (css-mode . css)
-                                         (emacs-lisp-mode . elisp)
-                                         (emacs-lisp-ts-mode . elisp)
-                                         (js-mode . javascript)
-                                         (js-ts-mode . javascript)
-                                         (json-mode . json)
-                                         (makefile-mode . make)
-                                         (makefile-ts-mode . make)))
+;; ;; -*- lexical-binding: t; -*-
+;; (use-package treesit
+;;   :straight (:type built-in)
+;;   :mode ("\\.tsx\\'" . tsx-ts-mode)
+;;   :config
+;;   (setq treesit-language-source-alist
+;;         '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+;;           (cmake "https://github.com/uyha/tree-sitter-cmake")
+;;           (css "https://github.com/tree-sitter/tree-sitter-css")
+;;           (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+;;           (go "https://github.com/tree-sitter/tree-sitter-go")
+;;           (html "https://github.com/tree-sitter/tree-sitter-html")
+;;           (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+;;           (json "https://github.com/tree-sitter/tree-sitter-json")
+;;           (make "https://github.com/alemuller/tree-sitter-make")
+;;           (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+;;           (python "https://github.com/tree-sitter/tree-sitter-python")
+;;           (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
+;;           (rust "https://github.com/tree-sitter/tree-sitter-rust")
+;;           (toml "https://github.com/tree-sitter/tree-sitter-toml")
+;;           (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src")
+;;           (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src")
+;;           (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+;;           (astro "https://github.com/virchau13/tree-sitter-astro")
+;;           (sql "https://github.com/DerekStride/tree-sitter-sql" "gh-pages" "src")
+;;           (hcl "https://github.com/tree-sitter-grammars/tree-sitter-hcl")))
 
-  (defun treesit-parse-lang-from-mode (mode)
-    (let* ((mode (if (symbolp mode) (symbol-name mode) mode))
-           (lang (save-match-data
-                   (string-match "\\(.*?\\)\\(-ts\\)?-mode" mode)
-                   (match-string 1 mode))))
-      (intern lang)))
+;;   (defun treesit-install-all-grammars ()
+;;     (interactive)
+;;     (dolist (lang (mapcar #'car treesit-language-source-alist))
+;;       (treesit-install-language-grammar lang)))
 
-  (defun treesit-lang-for-mode (mode)
-    (or (cdr (assoc mode treesit-langs-mode-overrides))
-        (treesit-parse-lang-from-mode mode)
-        (error "Unable to determine tree-sitter parser for %s" mode)))
+;;   (defvar treesit-langs-mode-overrides '((sh-mode . bash)
+;;                                          (sh-ts-mode . bash)
+;;                                          (css-mode . css)
+;;                                          (emacs-lisp-mode . elisp)
+;;                                          (emacs-lisp-ts-mode . elisp)
+;;                                          (js-mode . javascript)
+;;                                          (js-ts-mode . javascript)
+;;                                          (json-mode . json)
+;;                                          (makefile-mode . make)
+;;                                          (makefile-ts-mode . make)))
 
-  (defun treesit-parser ()
-    (if-let ((lang (treesit-lang-for-mode major-mode)))
-        (treesit-parser-create lang (current-buffer))
-      (user-error "No tree-sitter parser for %s" major-mode)))
+;;   (defun treesit-parse-lang-from-mode (mode)
+;;     (let* ((mode (if (symbolp mode) (symbol-name mode) mode))
+;;            (lang (save-match-data
+;;                    (string-match "\\(.*?\\)\\(-ts\\)?-mode" mode)
+;;                    (match-string 1 mode))))
+;;       (intern lang)))
 
-  (defun treesit-node-start-line-number (node)
-    (when-let ((start (treesit-node-start node)))
-      (line-number-at-pos start)))
+;;   (defun treesit-lang-for-mode (mode)
+;;     (or (cdr (assoc mode treesit-langs-mode-overrides))
+;;         (treesit-parse-lang-from-mode mode)
+;;         (error "Unable to determine tree-sitter parser for %s" mode)))
 
-  (defun treesit-surrounding-method-call-named (name)
-    (treesit-parent-until
-     (treesit-node-at (point) (treesit-parser))
-     (lambda (n)
-       (and
-        (equal (treesit-node-type n) "call")
-        (equal
-         (treesit-node-text
-          (treesit-node-child-by-field-name n "method"))
-         name)))
-     t))
+;;   (defun treesit-parser ()
+;;     (if-let ((lang (treesit-lang-for-mode major-mode)))
+;;         (treesit-parser-create lang (current-buffer))
+;;       (user-error "No tree-sitter parser for %s" major-mode)))
 
-  (defun treesit-rspec-all-calls-named (type)
-    (let* ((parser (treesit-parser))
-           (root (treesit-parser-root-node parser)))
-      (->> (treesit-query-capture
-            root
-            `((call
-               method: (identifier) @id
-               (:equal @id ,type)
-               arguments: (argument_list (string (string_content)))
-               block: (_)) @node))
-           (-filter (lambda (n) (eq (car n) 'node)))
-           (-map #'cdr))))
+;;   (defun treesit-node-start-line-number (node)
+;;     (when-let ((start (treesit-node-start node)))
+;;       (line-number-at-pos start)))
 
-  (defun treesit-rspec-all-examples ()
-    (treesit-rspec-all-calls-named "it"))
+;;   (defun treesit-surrounding-method-call-named (name)
+;;     (treesit-parent-until
+;;      (treesit-node-at (point) (treesit-parser))
+;;      (lambda (n)
+;;        (and
+;;         (equal (treesit-node-type n) "call")
+;;         (equal
+;;          (treesit-node-text
+;;           (treesit-node-child-by-field-name n "method"))
+;;          name)))
+;;      t))
 
-  (defun treesit-rspec-all-example-groups ()
-    (treesit-rspec-all-calls-named "describe"))
+;;   (defun treesit-rspec-all-calls-named (type)
+;;     (let* ((parser (treesit-parser))
+;;            (root (treesit-parser-root-node parser)))
+;;       (->> (treesit-query-capture
+;;             root
+;;             `((call
+;;                method: (identifier) @id
+;;                (:equal @id ,type)
+;;                arguments: (argument_list (string (string_content)))
+;;                block: (_)) @node))
+;;            (-filter (lambda (n) (eq (car n) 'node)))
+;;            (-map #'cdr))))
 
-  (defun treesit-rspec-all-contexts ()
-    (treesit-rspec-all-calls-named "context"))
+;;   (defun treesit-rspec-all-examples ()
+;;     (treesit-rspec-all-calls-named "it"))
 
-  (defun treesit-rspec-example-at-point ()
-    (treesit-surrounding-method-call-named "it"))
+;;   (defun treesit-rspec-all-example-groups ()
+;;     (treesit-rspec-all-calls-named "describe"))
 
-  (defun treesit-rspec-context-at-point ()
-    (treesit-surrounding-method-call-named "context"))
+;;   (defun treesit-rspec-all-contexts ()
+;;     (treesit-rspec-all-calls-named "context"))
 
-  (defun treesit-rspec-example-group-at-point ()
-    (treesit-surrounding-method-call-named "describe"))
+;;   (defun treesit-rspec-example-at-point ()
+;;     (treesit-surrounding-method-call-named "it"))
 
-  (defun treesit-rspec-method-name (node)
-    (when-let ((args (treesit-node-child-by-field-name node "arguments")))
-      (->> (treesit-query-capture args '((string (string_content) @name)))
-           (-filter (lambda (n) (eq (car n) 'name)))
-           (-map #'cdr)
-           (-mapcat (lambda (n) (treesit-node-text n t)))))))
+;;   (defun treesit-rspec-context-at-point ()
+;;     (treesit-surrounding-method-call-named "context"))
+
+;;   (defun treesit-rspec-example-group-at-point ()
+;;     (treesit-surrounding-method-call-named "describe"))
+
+;;   (defun treesit-rspec-method-name (node)
+;;     (when-let ((args (treesit-node-child-by-field-name node "arguments")))
+;;       (->> (treesit-query-capture args '((string (string_content) @name)))
+;;            (-filter (lambda (n) (eq (car n) 'name)))
+;;            (-map #'cdr)
+;;            (-mapcat (lambda (n) (treesit-node-text n t)))))))
 
 (use-package combobulate
     :defer t
     :bind
     ("C-c o o" . combobulate)
     :hook ((python-ts-mode . combobulate-mode)
-           (yaml-ts-mode . combobulate-mode))
+           (yaml-ts-mode . combobulate-mode)
+           (json-ts-mode . combobulate-mode))
     ;; Amend this to the directory where you keep Combobulate's source
     ;; code.
     :load-path ("~/Projects/_playground/combobulate"))
