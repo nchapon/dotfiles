@@ -76,7 +76,13 @@
 
 (use-package lsp-treemacs
   :defer t
-  :commands lsp-treemacs-errors-list)
+  :commands lsp-treemacs-errors-list
+  :bind (:map lsp-mode-map
+              ("C-c ?" . lsp-treemacs-references)
+              ("C-c :" . lsp-treemacs-call-hierarchy))
+  :config
+  
+  (setq lsp-treemacs-sync-mode 1))
 
 
 ;; Integration with consult

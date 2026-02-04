@@ -240,9 +240,9 @@
   "r" #'lsp-rename
   "o" #'lsp-organize-imports
   "X" #'lsp-treemacs-errors-list
-  "H" #'lsp-treemacs-call-hierarchy
+  ":" #'lsp-treemacs-call-hierarchy
   "S" #'lsp-treemacs-symbols
-  "R" #'lsp-treemacs-references)
+  "?" #'lsp-treemacs-references)
 
 (defvar-keymap nc-file-map
   :doc "My custom file keymap"
