@@ -248,10 +248,10 @@
   :doc "My custom file keymap"
   ;; File Commands
   "." #'ffap
+  "M-." #'ffap-menu
   "," #'projectile-edit-dir-locals
   "c" #'crux-copy-file-preserve-attributes
   "d" #'crux-delete-file-and-buffer
-  "M-." #'ffap-menu
   "r" #'rename-visited-file
   "y" #'nc/yank-buffer-path
   "M-f" #'nc/file-menu
@@ -315,7 +315,7 @@
   "b" #'display-buffer
   "k" #'kill-buffer-and-window
   "o" #'other-frame
-  "C-m" #'nc/window-menu
+  "M-w" #'nc/window-menu
   "M-n" #'windmove-display-new-frame
   "C-d" #'windmove-delete-down
   "C-u" #'windmove-delete-up

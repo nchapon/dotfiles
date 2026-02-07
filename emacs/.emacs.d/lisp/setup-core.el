@@ -43,7 +43,7 @@
   (("C-x C-j" . dired-jump)
    (:map dired-mode-map
               ("E" . wdired-change-to-wdired-mode)))
-
+  
   :custom
   ;; Always delete and copy recursively
   (dired-recursive-deletes 'always)
