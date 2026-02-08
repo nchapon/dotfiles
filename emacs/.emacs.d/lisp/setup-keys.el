@@ -143,35 +143,12 @@
    ("y" "Yank buffer path..." nc/yank-path-submenu)]
   ])
 
-(transient-define-prefix nc/buffer-menu ()
-  "Control buffer operations."
-  [
-  
-  ["Display & View"
-   ("l" "List buffers" ibuffer)
-   ("m" "Buffer menu" buffer-menu)
-   ("v" "View mode" view-mode :transient t)
-   ("=" "Compare with file" diff-buffer-with-file)
-   ("C" "Clone indirect buffer" clone-indirect-buffer)]
-  ["Git & History"
-   ("R" "Revert buffer" revert-buffer)
-   ("g" "Magit File Dispatch" magit-file-dispatch)]
-  ["Buffer Properties"
-   ("w" "Toggle read-only" read-only-mode :transient t)
-   ("a" "Toggle auto-save" auto-save-mode :transient t)
-   ("A" "Toggle auto-fill" auto-fill-mode :transient t)
-   ("f" "Set fill column" set-fill-column)
-   ("F" "Show fill column" display-fill-column-indicator-mode :transient t)
-   ("e" "Set encoding" set-buffer-file-coding-system)]]
-  ["Exit"
-   ("q" "Quit" transient-quit-one)])
-
 
 (transient-define-prefix nc/goto-menu ()
   "Goto Transient Menu"
   
   [["Config File & Credentials"
-    (";" "Emacs Config" nc/goto-emacs-config)
+    ("e" "Emacs Config" nc/goto-emacs-config)
     ("p" "Credentials" nc/goto-my-credentials)
     ("s" "SSH config"  nc/goto-ssh-config-file)
     ("a" "Authinfo"  nc/goto-authinfo-file)
@@ -183,13 +160,6 @@
     ("T" "Templates" nc/goto-templates-dir)
     ("P" "Projects" nc/goto-projects-dir)
     ]])
-
-(transient-define-prefix nc/project-menu ()
-  "Transient Search Menu"
-  ["Projects"
-   ("p" "Projectile" projectile-commander)
-   ("s" "Search in my Projects" nc/consult-rg-my-projects)
-   ("f" "Find in my projects" nc/consult-fd-my-projects)])
 
 
 (transient-define-prefix nc/search-menu ()
@@ -244,22 +214,26 @@
   "S" #'lsp-treemacs-symbols
   "?" #'lsp-treemacs-references)
 
+(keymap-set global-map "C-c l" nc-code-map)
+
 (defvar-keymap nc-file-map
   :doc "My custom file keymap"
   ;; File Commands
   "." #'ffap
   "M-." #'ffap-menu
-  "," #'projectile-edit-dir-locals
   "c" #'crux-copy-file-preserve-attributes
   "d" #'crux-delete-file-and-buffer
   "r" #'rename-visited-file
   "y" #'nc/yank-buffer-path
-  "M-f" #'nc/file-menu
-  "C-f" #'nc/consult-fd-my-projects)
+  "m" #'nc/file-menu
+  
+  )
+
+(keymap-set global-map "C-c f" nc-file-map)
 
 (defvar-keymap nc-goto-map
   :doc "My custom goto keymap"
-  ";" #'nc/goto-emacs-config
+  "e" #'nc/goto-emacs-config
   "a" #'nc/goto-authinfo-file
   "p" #'nc/goto-my-credentials
   "s" #'nc/goto-ssh-config-file
@@ -268,6 +242,7 @@
   "N" #'nc/goto-notes-dir
   "T" #'nc/goto-templates-dir)
 
+(keymap-set global-map "C-c g" nc-goto-map)
 
 (defvar-keymap nc-insert-map
   :doc "My custom insert map"
@@ -282,10 +257,14 @@
   "y" #'consult-yasnippet
   "Y" #'yankpad-insert)
 
+(keymap-set global-map "C-c i" nc-insert-map)
+
 (defvar-keymap nc-kill-map
   :doc "My custom kill map"
   "f" #'delete-frame
-  "K" #'kill-buffer-and-window)
+  "b" #'kill-buffer-and-window)
+
+(keymap-set global-map "C-c k" nc-kill-map)
 
 (defvar-keymap nc-notes-map
   :doc "My custom notes map"
@@ -298,74 +277,101 @@
   "t" #'org-todo-list
   "v" #'org-search-view)
 
-(defvar-keymap nc-open-map
-  :doc "My custom open map"
-  ;; Open Commands
-  "c" #'calc
-  "e" #'crux-open-with
-  "f" #'make-frame
-  "l" #'nc/open-bookmark
-  "v" #'nc/vc-browse-remote-current-line
-  "R" #'nc/vc-browse-remote)
+(keymap-set global-map "C-c n" nc-notes-map)
+
+(defvar-keymap nc-project-map
+  :doc "My custom kill map"
+  "," #'projectile-edit-dir-locals
+  "c" #'consult-projectile
+  "f" #'nc/consult-fd-my-projects
+  "p" #'projectile-command-map
+  "s" #'nc/consult-rg-my-projects)
+
+(keymap-set global-map "C-c p" nc-project-map)
+
+(defvar-keymap nc-search-map
+  :doc "My custom kill map"
+  "." #'nc/consult-line-symbol-at-point)
+
+(keymap-set global-map "C-c s" nc-search-map)
+
 
 (defvar-keymap nc-window-map
   :doc "My custom window map"
 
   "D" #'delete-other-frames
   "b" #'display-buffer
+  "f" #'make-frame
   "k" #'kill-buffer-and-window
   "o" #'other-frame
-  "M-w" #'nc/window-menu
+  "m" #'nc/window-menu
   "M-n" #'windmove-display-new-frame
   "C-d" #'windmove-delete-down
   "C-u" #'windmove-delete-up
   "C-l" #'windmove-delete-left
   "C-r" #'windmove-delete-right)
 
-(defvar-keymap nc-prefix-map
-  :doc "My global prefix keymap"
+(keymap-set global-map "C-c w" nc-window-map)
 
-  ";" #'nc/goto-emacs-config
-  ":" #'avy-goto-char-timer
+(defvar-keymap nc-external-map
+  :doc "My custom external map"
+  ;; Open Commands
+  "c" #'calc
+  "o" #'crux-open-with
+  "l" #'nc/open-bookmark
+  "v" #'nc/vc-browse-remote-current-line
+  "R" #'nc/vc-browse-remote)
+
+(keymap-set global-map "C-c x" nc-external-map)
+
+
+
+
+;; (defvar-keymap nc-prefix-map
+;;   :doc "My global prefix keymap"
+
   
-  "c" nc-code-map
-  "f" nc-file-map
-  "g" nc-goto-map
-  "i" nc-insert-map
-  "k" nc-kill-map
+;;   ":" #'avy-goto-char-timer
   
-  "n" nc-notes-map
-  "o" nc-open-map
-  "p" #'projectile-command-map
-  "w" nc-window-map
+;;   "c" nc-code-map
+;;   "f" nc-file-map
+;;   "g" nc-goto-map
+;;   "i" nc-insert-map
+;;   "k" nc-kill-map
   
-  "C-j" #'crux-top-join-line
-  "C-l" #'nc/open-bookmark
-  "C-p" #'consult-projectile
-  "C-s" #'nc/consult-line-symbol-at-point
-  "C-v" #'nc/vc-browse-remote-current-line
+;;   "n" nc-notes-map
+;;   "o" nc-open-map
+;;   "p" #'projectile-command-map
+;;   "w" nc-window-map
+  
+;;   "C-j" #'crux-top-join-line
+;;   "C-l" #'nc/open-bookmark
+;;   "C-p" #'consult-projectile
+;;   "C-s" #'nc/consult-line-symbol-at-point
+;;   "C-v" #'nc/vc-browse-remote-current-line
 
-  "M-b" #'nc/buffer-menu
-  "M-f" #'nc/file-menu
-  "M-g" #'nc/goto-menu
-  "M-p" #'nc/project-menu
-  "M-s" #'nc/search-menu
-  "M-t" #'nc/toggle-menu
-  "M-w" #'nc/window-menu)
+;;   "M-b" #'nc/buffer-menu
+;;   "M-f" #'nc/file-menu
+;;   "M-g" #'nc/goto-menu
+;;   "M-p" #'nc/project-menu
+;;   "M-s" #'nc/search-menu
+;;   "M-t" #'nc/toggle-menu
+;;   "M-w" #'nc/window-menu)
 
 
-(which-key-add-keymap-based-replacements nc-prefix-map
-  "c" `("Code"  . ,nc-code-map)
-  "f" `("File"  . ,nc-file-map)
-  "g" `("Goto"  . ,nc-goto-map)
-  "i" `("Insert"  . ,nc-insert-map)
-  "k" `("Kill"  . ,nc-kill-map)
-  "n" `("Notes"  . ,nc-notes-map)
-  "o" `("Open"  . ,nc-open-map)
-  "w" `("Windows"  . ,nc-window-map)
-  )
-(keymap-set global-map "C-;" nc-prefix-map)
-(keymap-set global-map "C-c C-;" nc-prefix-map)
+;; (which-key-add-keymap-based-replacements nc-prefix-map
+;;   "c" `("Code"  . ,nc-code-map)
+;;   "f" `("File"  . ,nc-file-map)
+;;   "g" `("Goto"  . ,nc-goto-map)
+;;   "i" `("Insert"  . ,nc-insert-map)
+;;   "k" `("Kill"  . ,nc-kill-map)
+;;   "n" `("Notes"  . ,nc-notes-map)
+;;   "o" `("Open"  . ,nc-open-map)
+;;   "w" `("Windows"  . ,nc-window-map)
+;;   )
+
+;; (keymap-set global-map "C-;" nc-prefix-map)
+;; (keymap-set global-map "C-c C-;" nc-prefix-map)
 
 (transient-define-prefix nc/toggle-menu ()
   "Toggle common Emacs settings."

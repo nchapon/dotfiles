@@ -25,7 +25,7 @@
   (:map lsp-mode-map
         ( ;;("C-\M-b" . lsp-find-implementation)
          ("M-RET" . lsp-execute-code-action)))
-  :bind-keymap ("C-c l" . lsp-command-map)
+  :bind-keymap ("C-c l m" . lsp-command-map)
   :hook (lsp-mode . lsp-enable-which-key-integration)
   :config
   (setq ; recommended

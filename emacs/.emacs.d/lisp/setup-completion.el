@@ -339,17 +339,17 @@
 
 (use-package cape
   :defer 10
-  :bind (("C-c p p" . completion-at-point)
-         ("C-c p d" . cape-dabbrev)
-         ("C-c p h" . cape-history)
-         ("C-c p f" . cape-file)
-         ("C-c p k" . cape-keyword)
-         ("C-c p a" . cape-abbrev)
-         ("C-c p e" . cape-emoji)
-         ("C-c p l" . cape-line)
-         ("C-c p w" . cape-dict)
-         ("C-c p &" . cape-sgml)
-         ("C-c p r" . cape-rfc1345))
+  :bind (("C-c c p" . completion-at-point)
+         ("C-c c d" . cape-dabbrev)
+         ("C-c c h" . cape-history)
+         ("C-c c f" . cape-file)
+         ("C-c c k" . cape-keyword)
+         ("C-c c a" . cape-abbrev)
+         ("C-c c e" . cape-emoji)
+         ("C-c c l" . cape-line)
+         ("C-c c w" . cape-dict)
+         ("C-c c &" . cape-sgml)
+         ("C-c c r" . cape-rfc1345))
   :init
   ;; Add `completion-at-point-functions', used by `completion-at-point'.
   (defalias 'dabbrev-after-2 (cape-capf-prefix-length #'cape-dabbrev 2))
