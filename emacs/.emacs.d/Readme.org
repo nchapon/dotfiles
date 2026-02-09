@@ -833,9 +833,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "d" #'crux-delete-file-and-buffer
   "r" #'rename-visited-file
   "y" #'nc/yank-buffer-path
-  "m" #'nc/file-menu
-  
-  )
+  "m" #'nc/file-menu)
 
 (keymap-set global-map "C-c f" nc-file-map)
 
@@ -903,10 +901,15 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
 
 (keymap-set global-map "C-c s" nc-search-map)
 
+(defvar-keymap nc-version-map
+  :doc "My custom Version Control Map"
+  "f" #'nc/vc-browse-remote-current-line
+  "R" #'nc/vc-browse-remote)
+
+(keymap-set global-map "C-c v" nc-version-map)
 
 (defvar-keymap nc-window-map
   :doc "My custom window map"
-
   "D" #'delete-other-frames
   "b" #'display-buffer
   "f" #'make-frame
@@ -926,9 +929,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   ;; Open Commands
   "c" #'calc
   "o" #'crux-open-with
-  "l" #'nc/open-bookmark
-  "v" #'nc/vc-browse-remote-current-line
-  "R" #'nc/vc-browse-remote)
+  "l" #'nc/open-bookmark)
 
 (keymap-set global-map "C-c x" nc-external-map)
 
@@ -1322,8 +1323,8 @@ Core packages configuration module automatically tangled in =./lisp/setup-core.e
     (avy-style 'pre)
     (avy-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l ?m))
     :bind
-    (("C-:" . avy-goto-subword-1)
-     ("s-j"   . avy-goto-char-timer))     ; start / opt 
+    (("M-g w" . avy-goto-word-1)
+     ("M-g :"   . avy-goto-char-timer))     ; start / opt 
     :custom-face
     (avy-lead-face ((t (:background "#51afef" :foreground "#870000" :weight bold)))))
     

@@ -225,9 +225,7 @@
   "d" #'crux-delete-file-and-buffer
   "r" #'rename-visited-file
   "y" #'nc/yank-buffer-path
-  "m" #'nc/file-menu
-  
-  )
+  "m" #'nc/file-menu)
 
 (keymap-set global-map "C-c f" nc-file-map)
 
@@ -295,10 +293,15 @@
 
 (keymap-set global-map "C-c s" nc-search-map)
 
+(defvar-keymap nc-version-map
+  :doc "My custom Version Control Map"
+  "f" #'nc/vc-browse-remote-current-line
+  "R" #'nc/vc-browse-remote)
+
+(keymap-set global-map "C-c v" nc-version-map)
 
 (defvar-keymap nc-window-map
   :doc "My custom window map"
-
   "D" #'delete-other-frames
   "b" #'display-buffer
   "f" #'make-frame
@@ -318,9 +321,7 @@
   ;; Open Commands
   "c" #'calc
   "o" #'crux-open-with
-  "l" #'nc/open-bookmark
-  "v" #'nc/vc-browse-remote-current-line
-  "R" #'nc/vc-browse-remote)
+  "l" #'nc/open-bookmark)
 
 (keymap-set global-map "C-c x" nc-external-map)
 

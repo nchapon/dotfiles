@@ -18,8 +18,8 @@
   (avy-style 'pre)
   (avy-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l ?m))
   :bind
-  (("C-:" . avy-goto-subword-1)
-   ("s-j"   . avy-goto-char-timer))     ; start / opt 
+  (("M-g w" . avy-goto-word-1)
+   ("M-g :"   . avy-goto-char-timer))     ; start / opt 
   :custom-face
   (avy-lead-face ((t (:background "#51afef" :foreground "#870000" :weight bold)))))
 
@@ -43,7 +43,7 @@
   (("C-x C-j" . dired-jump)
    (:map dired-mode-map
               ("E" . wdired-change-to-wdired-mode)))
-  
+
   :custom
   ;; Always delete and copy recursively
   (dired-recursive-deletes 'always)
