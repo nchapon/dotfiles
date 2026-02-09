@@ -55,7 +55,6 @@
   :init
   (key-chord-mode 1)
   (key-chord-define-global "FF" 'projectile-find-file)
-  (key-chord-define-global "::" 'avy-goto-char-timer)
   (key-chord-define-global "GG" 'consult-ripgrep)  
   (key-chord-define-global "OO" 'consult-outline)
   (key-chord-define-global "DD" 'delete-region)
@@ -236,9 +235,11 @@
   "p" #'nc/goto-my-credentials
   "s" #'nc/goto-ssh-config-file
   "A" #'nc/goto-archives-dir
+  "B" #'nc/open-bookmark
   "P" #'nc/goto-projects-dir
   "N" #'nc/goto-notes-dir
-  "T" #'nc/goto-templates-dir)
+  "T" #'nc/goto-templates-dir
+)
 
 (keymap-set global-map "C-c g" nc-goto-map)
 
@@ -249,20 +250,12 @@
   "D" #'nc/insert-datestamp
   "e" #'emoji-search
   "p" #'nc/generate-password
-  "q" #'quoted-insert
   "t" #'tempel-insert
   "u" #'nc/uuid
   "y" #'consult-yasnippet
   "Y" #'yankpad-insert)
 
 (keymap-set global-map "C-c i" nc-insert-map)
-
-(defvar-keymap nc-kill-map
-  :doc "My custom kill map"
-  "f" #'delete-frame
-  "b" #'kill-buffer-and-window)
-
-(keymap-set global-map "C-c k" nc-kill-map)
 
 (defvar-keymap nc-notes-map
   :doc "My custom notes map"
@@ -287,6 +280,7 @@
 
 (keymap-set global-map "C-c p" nc-project-map)
 
+;TODO: remove and remap M-S .
 (defvar-keymap nc-search-map
   :doc "My custom kill map"
   "." #'nc/consult-line-symbol-at-point)
@@ -316,17 +310,14 @@
 
 (keymap-set global-map "C-c w" nc-window-map)
 
-(defvar-keymap nc-external-map
-  :doc "My custom external map"
+(defvar-keymap nc-extended-command-map
+  :doc "My custom extended command map"
   ;; Open Commands
   "c" #'calc
-  "o" #'crux-open-with
-  "l" #'nc/open-bookmark)
+  "d" #'nc/jwt-decode
+  "o" #'crux-open-with)
 
-(keymap-set global-map "C-c x" nc-external-map)
-
-
-
+(keymap-set global-map "C-c x" nc-extended-command-map)
 
 ;; (defvar-keymap nc-prefix-map
 ;;   :doc "My global prefix keymap"

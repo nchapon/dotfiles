@@ -152,5 +152,51 @@ Otherwise, open the repository's main page."
   (let ((current-prefix-arg '(4))) ;; C-u
     (call-interactively #'nc/vc-browse-remote)))
 
+(defun nc/jwt-decode (start end)
+  "Decode a JWT token from the selected region and display it in a JSON buffer.
+If called interactively, uses the current region.
+If called from Lisp, START and END specify the region."
+  (interactive "r")
+  (let* ((token (string-trim (buffer-substring-no-properties start end)))
+         (parts (split-string token "\\."))
+         (header-b64 (car parts))
+         (payload-b64 (cadr parts))
+         (signature (caddr parts)))
+    (unless (= (length parts) 3)
+      (error "Invalid JWT format: expected 3 parts separated by dots"))
+    (let ((header (json-read-from-string 
+                   (decode-coding-string 
+                    (base64-decode-string 
+                     (jwt--base64url-to-base64 header-b64))
+                    'utf-8)))
+          (payload (json-read-from-string 
+                    (decode-coding-string 
+                     (base64-decode-string 
+                      (jwt--base64url-to-base64 payload-b64))
+                     'utf-8))))
+      (with-current-buffer (get-buffer-create "*JWT Decoded*")
+        (erase-buffer)
+        (insert "{\n  \"header\": ")
+        (insert (json-encode header))
+        (insert ",\n  \"payload\": ")
+        (insert (json-encode payload))
+        (insert ",\n  \"signature\": \"")
+        (insert signature)
+        (insert "\"\n}")
+        (js-json-mode)
+        (json-pretty-print-buffer)
+        (goto-char (point-min))
+        (display-buffer (current-buffer))))))
+
+(defun jwt--base64url-to-base64 (str)
+  "Convert base64url encoded STR to standard base64."
+  (let* ((b64 (replace-regexp-in-string "-" "+" str))
+         (b64 (replace-regexp-in-string "_" "/" b64)))
+    ;; Add padding if needed
+    (let ((pad (% (length b64) 4)))
+      (if (> pad 0)
+          (concat b64 (make-string (- 4 pad) ?=))
+        b64))))
+
 (provide 'setup-functions)
 ;;; setup-functions.el ends here
