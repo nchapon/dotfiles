@@ -101,7 +101,7 @@
 
 
 
-(transient-define-prefix nc/yank-path-submenu ()
+(transient-define-prefix nc/yank-path-menu ()
   "Yank Paths"
   
   [["Yank Paths"
@@ -110,12 +110,12 @@
       (let ((current-prefix-arg nil))
         (call-interactively #'nc/yank-buffer-path))))
 
-   ("y" "Filename only  (C-u)"
+   ("f" "Filename only"
     (lambda () (interactive)
       (let ((current-prefix-arg '(4)))
         (call-interactively #'nc/yank-buffer-path))))
 
-   ("Y" "Yank project-relative path  (C-u C-u)"
+   ("p" "Project relative path"
     (lambda () (interactive)
       (let ((current-prefix-arg '(16)))
         (call-interactively #'nc/yank-buffer-path))))
@@ -139,7 +139,7 @@
    ("r" "Rename file & buffer" rename-visited-file)
    ("d" "Delete file & buffer" crux-delete-file-and-buffer)
    ("c" "Copy file" crux-copy-file-preserve-attributes)
-   ("y" "Yank buffer path..." nc/yank-path-submenu)]
+   ("y" "Yank buffer path..." nc/yank-path-menu)]
   ])
 
 
@@ -223,7 +223,7 @@
   "c" #'crux-copy-file-preserve-attributes
   "d" #'crux-delete-file-and-buffer
   "r" #'rename-visited-file
-  "y" #'nc/yank-buffer-path
+  "y" #'nc/yank-path-menu
   "m" #'nc/file-menu)
 
 (keymap-set global-map "C-c f" nc-file-map)
@@ -280,13 +280,6 @@
 
 (keymap-set global-map "C-c p" nc-project-map)
 
-;TODO: remove and remap M-S .
-(defvar-keymap nc-search-map
-  :doc "My custom kill map"
-  "." #'nc/consult-line-symbol-at-point)
-
-(keymap-set global-map "C-c s" nc-search-map)
-
 (defvar-keymap nc-version-map
   :doc "My custom Version Control Map"
   "f" #'nc/vc-browse-remote-current-line
@@ -315,6 +308,7 @@
   ;; Open Commands
   "c" #'calc
   "d" #'nc/jwt-decode
+  "j" #'crux-top-join-line
   "o" #'crux-open-with)
 
 (keymap-set global-map "C-c x" nc-extended-command-map)

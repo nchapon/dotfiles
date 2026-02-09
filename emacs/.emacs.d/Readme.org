@@ -709,7 +709,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
 
 
 
-(transient-define-prefix nc/yank-path-submenu ()
+(transient-define-prefix nc/yank-path-menu ()
   "Yank Paths"
   
   [["Yank Paths"
@@ -718,12 +718,12 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
       (let ((current-prefix-arg nil))
         (call-interactively #'nc/yank-buffer-path))))
 
-   ("y" "Filename only  (C-u)"
+   ("f" "Filename only"
     (lambda () (interactive)
       (let ((current-prefix-arg '(4)))
         (call-interactively #'nc/yank-buffer-path))))
 
-   ("Y" "Yank project-relative path  (C-u C-u)"
+   ("p" "Project relative path"
     (lambda () (interactive)
       (let ((current-prefix-arg '(16)))
         (call-interactively #'nc/yank-buffer-path))))
@@ -747,7 +747,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
    ("r" "Rename file & buffer" rename-visited-file)
    ("d" "Delete file & buffer" crux-delete-file-and-buffer)
    ("c" "Copy file" crux-copy-file-preserve-attributes)
-   ("y" "Yank buffer path..." nc/yank-path-submenu)]
+   ("y" "Yank buffer path..." nc/yank-path-menu)]
   ])
 
 
@@ -831,7 +831,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   "c" #'crux-copy-file-preserve-attributes
   "d" #'crux-delete-file-and-buffer
   "r" #'rename-visited-file
-  "y" #'nc/yank-buffer-path
+  "y" #'nc/yank-path-menu
   "m" #'nc/file-menu)
 
 (keymap-set global-map "C-c f" nc-file-map)
@@ -888,13 +888,6 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
 
 (keymap-set global-map "C-c p" nc-project-map)
 
-;TODO: remove and remap M-S .
-(defvar-keymap nc-search-map
-  :doc "My custom kill map"
-  "." #'nc/consult-line-symbol-at-point)
-
-(keymap-set global-map "C-c s" nc-search-map)
-
 (defvar-keymap nc-version-map
   :doc "My custom Version Control Map"
   "f" #'nc/vc-browse-remote-current-line
@@ -923,6 +916,7 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
   ;; Open Commands
   "c" #'calc
   "d" #'nc/jwt-decode
+  "j" #'crux-top-join-line
   "o" #'crux-open-with)
 
 (keymap-set global-map "C-c x" nc-extended-command-map)
@@ -1836,6 +1830,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
          ("<help> a" . consult-apropos)            ;; orig. apropos-command
          ;; M-g bindings (goto-map)
          ;; C-M-g bindings (goto-map)
+         ("M-g ." . nc/consult-line-symbol-at-point)
          ("M-g e" . consult-compile-error)
          ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
          ("M-g g" . consult-goto-line)             ;; orig. goto-line
