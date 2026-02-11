@@ -309,7 +309,8 @@
   "c" #'calc
   "d" #'nc/jwt-decode
   "j" #'crux-top-join-line
-  "o" #'crux-open-with)
+  "o" #'crux-open-with
+  "s" #'org-store-link)
 
 (keymap-set global-map "C-c x" nc-extended-command-map)
 
