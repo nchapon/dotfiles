@@ -47,25 +47,23 @@ One of the main reasons why Emacs startup time is big is that the garbage collec
 This can be migrated by setting high GC threshold and restoring it back in =after-init-hook=.
 
 #+begin_src emacs-lisp :tangle early-init.el
-  (defvar nc--gc-cons-threshold gc-cons-threshold)
-  (defvar nc--gc-cons-percentage gc-cons-percentage)
-  (defvar nc--file-name-handler-alist file-name-handler-alist)
+(defvar nc--gc-cons-threshold gc-cons-threshold)
+(defvar nc--gc-cons-percentage gc-cons-percentage)
+(defvar nc--file-name-handler-alist file-name-handler-alist)
 
-  (setq-default gc-cons-threshold 402653184
-                gc-cons-percentage 0.6
-                file-name-handler-alist nil)
+(setq-default gc-cons-threshold most-positive-fixnum
+              gc-cons-percentage 0.6
+              file-name-handler-alist nil)
 
-  (defun nc/restore-defaults-after-init ()
-    "Restore default values after initialization."
-    (setq-default gc-cons-threshold nc--gc-cons-threshold
-                  gc-cons-percentage nc--gc-cons-percentage
-                  file-name-handler-alist nc--file-name-handler-alist))
+(defun nc/restore-defaults-after-init ()
+  "Restore default values after initialization."
+  (setq-default file-name-handler-alist nc--file-name-handler-alist))
 
-  (add-hook 'after-init-hook #'nc/restore-defaults-after-init)
+(add-hook 'after-init-hook #'nc/restore-defaults-after-init)
 
-  (setq read-process-output-max (* 1024 1024 4) ; 4mb
-        inhibit-compacting-font-caches t
-        message-log-max 16384)
+(setq read-process-output-max (* 1024 1024 8) ; 8mb
+      inhibit-compacting-font-caches t
+      message-log-max 16384)
 #+end_src
 
 ** Straight
@@ -132,14 +130,6 @@ Main GNU Emacs init file =init.el=.
 #+end_src
 
 
-** Loading =early-init.el= in Emacs 26 and earlier
-When using pre Emacs 27 =eraly-init.el= must be loaded manually before anything from =init.el=.
-
-#+begin_src emacs-lisp
-  (unless (featurep 'early-init)
-    (load (expand-file-name "early-init" user-emacs-directory)))
-#+end_src
-
 ** Package Management
 *** =use-package=
 A macro for managing installed packages, and encapsulating their configurations.
@@ -154,6 +144,16 @@ A macro for managing installed packages, and encapsulating their configurations.
 Remove minor modes from mode line
 #+begin_src emacs-lisp
 (use-package diminish)
+#+end_src
+** GCMH
+
+#+begin_src emacs-lisp
+(use-package gcmh
+  :hook (after-init . gcmh-mode)
+  :custom
+  (gcmh-idle-delay 'auto)
+  (gcmh-auto-idle-delay-factor 10)
+  (gcmh-high-cons-threshold (* 64 1024 1024)))
 #+end_src
 
 ** Exec Path From Shell

@@ -15,19 +15,17 @@
 (defvar nc--gc-cons-percentage gc-cons-percentage)
 (defvar nc--file-name-handler-alist file-name-handler-alist)
 
-(setq-default gc-cons-threshold 402653184
+(setq-default gc-cons-threshold most-positive-fixnum
               gc-cons-percentage 0.6
               file-name-handler-alist nil)
 
 (defun nc/restore-defaults-after-init ()
   "Restore default values after initialization."
-  (setq-default gc-cons-threshold nc--gc-cons-threshold
-                gc-cons-percentage nc--gc-cons-percentage
-                file-name-handler-alist nc--file-name-handler-alist))
+  (setq-default file-name-handler-alist nc--file-name-handler-alist))
 
 (add-hook 'after-init-hook #'nc/restore-defaults-after-init)
 
-(setq read-process-output-max (* 1024 1024 4) ; 4mb
+(setq read-process-output-max (* 1024 1024 8) ; 8mb
       inhibit-compacting-font-caches t
       message-log-max 16384)
 

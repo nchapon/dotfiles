@@ -11,15 +11,19 @@
 
 ;;; Code:
 
-(unless (featurep 'early-init)
-  (load (expand-file-name "early-init" user-emacs-directory)))
-
 (straight-use-package 'use-package)
 (defvar straight-use-package-by-default)
 (setq straight-use-package-by-default t)
 (require 'use-package)
 
 (use-package diminish)
+
+(use-package gcmh
+  :hook (after-init . gcmh-mode)
+  :custom
+  (gcmh-idle-delay 'auto)
+  (gcmh-auto-idle-delay-factor 10)
+  (gcmh-high-cons-threshold (* 64 1024 1024)))
 
 (use-package exec-path-from-shell
   :defer 5
