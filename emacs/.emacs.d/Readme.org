@@ -844,7 +844,148 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
 ;; (keymap-set global-map "C-c C-;" nc-prefix-map)
 #+end_src
 
-*** Transient Toggle Menu
+
+
+** Transient Menus
+
+Be sure transient is loaded.
+
+#+begin_src emacs-lisp
+(use-package transient
+    :commands (transient-define-prefix))
+#+end_src
+
+*** File Menu
+#+begin_src emacs-lisp
+(use-package transient
+    :commands (transient-define-prefix))
+;; Stolen from Doom
+(defun nc/yank-buffer-path ()
+  "Copy the file name or directory name of the current buffer to the clipboard."
+  (interactive)
+  (let* ((filename (or buffer-file-name default-directory))
+         (project (ignore-errors (project-root (project-current))))
+         (relpath (if (and project (file-in-directory-p filename project))
+                      (file-relative-name filename project)
+                    nil)))
+    (kill-new
+     (cond
+      ((equal current-prefix-arg '(4)) ; C-u
+       (file-name-nondirectory filename))
+      ((equal current-prefix-arg '(16)) ; C-u C-u
+       (or relpath filename))
+      (t
+       filename)))
+    (message "Copied: %s"
+             (substring-no-properties (car kill-ring)))))
+
+(transient-define-prefix nc/yank-path-menu ()
+  "Yank Paths"
+  
+  [["Yank Paths"
+   ("F" "Full path"
+    (lambda () (interactive)
+      (let ((current-prefix-arg nil))
+        (call-interactively #'nc/yank-buffer-path))))
+
+   ("f" "Filename only"
+    (lambda () (interactive)
+      (let ((current-prefix-arg '(4)))
+        (call-interactively #'nc/yank-buffer-path))))
+
+   ("p" "Project relative path"
+    (lambda () (interactive)
+      (let ((current-prefix-arg '(16)))
+        (call-interactively #'nc/yank-buffer-path))))
+   ]])
+
+(transient-define-prefix nc/file-menu ()
+  "File"
+  
+  [["Actions"
+   ("r" "Rename file & buffer" rename-visited-file)
+   ("d" "Delete file & buffer" crux-delete-file-and-buffer)
+   ("c" "Copy file" crux-copy-file-preserve-attributes)
+   ("y" "Yank buffer path..." nc/yank-path-menu)]
+  ])
+#+end_src
+*** Window Menu
+
+#+begin_src emacs-lisp
+(transient-define-prefix nc/window-menu ()
+  "Simple frame, window and buffer management."
+  ["Frame, Window & Buffer Manager"
+   
+   ["Frames"
+    ("n" "New frame" make-frame-command)
+    ("d" "Delete frame" delete-frame)
+    ("o" "Other frame" other-frame)
+    ("D" "Only this frame" delete-other-frames)
+    ("m" "Maximize" toggle-frame-maximized)
+    ("f" "Fullscreen" toggle-frame-fullscreen)]
+   
+   ["Layouts"
+    ("L i" "IDE layout" nc/layout-ide)
+    ("L l" "Sidebar left" nc/layout-sidebar-left)
+    ("L r" "Sidebar right" nc/layout-sidebar-right)]
+   
+   ["Buffers"
+    ("B" "Buffer other window" switch-to-buffer-other-window)
+    ("F" "Buffer other frame" switch-to-buffer-other-frame)
+    ("b" "Display buffer" display-buffer)
+    ("K" "Kill buffer & window" kill-buffer-and-window)
+    ("i" "Ibuffer" ibuffer)]
+   
+   ["Actions"
+    ("s" "Save config" window-configuration-to-register)
+    ("r" "Restore config" jump-to-register)
+    ("x" "Swap windows" window-swap-states)
+    ("q" "Quit" transient-quit-one)]])
+
+#+end_src
+*** Goto Menu
+#+begin_src emacs-lisp
+(defun nc/goto-ssh-config-file ()
+  "Goto my ssh config files"
+  (interactive)
+  (find-file "~/.ssh/config"))
+
+(defun nc/goto-authinfo-file ()
+  "Goto my auth info file"
+  (interactive)
+  (find-file "~/.authinfo.gpg"))
+
+(transient-define-prefix nc/goto-menu ()
+  "Goto Transient Menu"
+  
+  [["Config File & Credentials"
+    ("e" "Emacs Config" nc/goto-emacs-config)
+    ("p" "Credentials" nc/goto-my-credentials)
+    ("s" "SSH config"  nc/goto-ssh-config-file)
+    ("a" "Authinfo"  nc/goto-authinfo-file)
+  ]
+  ["Dirs"
+    ("A" "Archives" nc/goto-archives-dir)
+    ("H" "Home" (lambda () (interactive) (dired "~")))
+    ("N" "Notes" nc/goto-notes-dir)
+    ("T" "Templates" nc/goto-templates-dir)
+    ("P" "Projects" nc/goto-projects-dir)
+    ]])
+#+end_src
+*** Search Menu
+#+begin_src emacs-lisp
+(transient-define-prefix nc/search-menu ()
+  "Transient Search Menu"
+  ["Search"
+   ["Org Files"
+    ("a" "Agenda Heading" consult-org-agenda)
+    ("n" "Notes" nc/search-notes)]
+   ["Projects"
+    ("p" "Search in Projects" nc/consult-rg-my-projects)
+    ("." "symbol" nc/consult-line-symbol-at-point)]])
+#+end_src
+
+*** Toggle Menu
 #+begin_src elisp
 (transient-define-prefix nc/toggle-menu ()
   "Toggle common Emacs settings."
@@ -1037,6 +1178,15 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
       (linum-mode 'toggle)))
 
 #+end_src
+
+
+
+
+
+
+
+
+
 
 * Windows
 :properties:
@@ -3463,7 +3613,6 @@ I try to do a lot of things with =org-roam= :
 
 (define-key org-mode-map (kbd "C-; C-;") 'nc/transient-org-menu)
 #+end_src
-
 * Programming
 :properties:
 :header-args+: :tangle "./lisp/setup-programming.el"
@@ -3889,7 +4038,6 @@ GitHub Flavored Markdown by default for README.md files.
 
 #+end_src
 
-
 *** Markdown Transient Menu
 
 #+begin_src emacs-lisp
@@ -3899,9 +4047,6 @@ GitHub Flavored Markdown by default for README.md files.
    ["Actions"
     ("p" "PlantUML preview" nc/plantuml-preview-current-block)]])
 #+end_src
-
-
-
 
 ** Plant UML
 Needs Java and plantuml.jar installed in =~/opt=
@@ -4121,29 +4266,6 @@ Automatic generation of function docstrings according to the [[https://google.gi
   (:map python-ts-mode-map
         ("C-c i" . python-insert-docstring-with-google-style-at-point)))
 #+end_src
-*** Transient Python Menu 
-
-#+begin_src elisp
-(transient-define-prefix nc/transient-python-menu ()
-  "Python tools"
-  [
-   ["Insert"
-    ("d" "DocString" python-insert-docstring-with-google-style-at-point)]
-   ["Format"
-    ("f" "Ruff Format"  nc/format-buffer-with-ruff)]
-   ["Run Tests"
-    ("t" "Run tests in current def/class"  python-pytest-function-dwim)
-    ("T" "Run tests in current file"  python-pytest-file-dwim)
-    ("C-t" "Pytest Submenu..." python-pytest-dispatch)
-    ]
-   ["Env"
-    ("a" "PyVenv Activate" pyvenv-activate)
-    ("v" "Show venv"     (lambda ()
-                           (interactive)
-                           (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
-
-(define-key python-ts-mode-map (kbd "C-; C-;") 'nc/transient-python-menu)
-#+end_src
 *** Orderless tuning
 
 #+begin_src elisp
@@ -4197,7 +4319,29 @@ Automatic generation of function docstrings according to the [[https://google.gi
 
 #+end_src
 
+*** Transient Python Menu 
 
+#+begin_src elisp
+(transient-define-prefix nc/transient-python-menu ()
+  "Python tools"
+  [
+   ["Insert"
+    ("d" "DocString" python-insert-docstring-with-google-style-at-point)]
+   ["Format"
+    ("f" "Ruff Format"  nc/format-buffer-with-ruff)]
+   ["Run Tests"
+    ("t" "Run tests in current def/class"  python-pytest-function-dwim)
+    ("T" "Run tests in current file"  python-pytest-file-dwim)
+    ("C-t" "Pytest Submenu..." python-pytest-dispatch)
+    ]
+   ["Env"
+    ("a" "PyVenv Activate" pyvenv-activate)
+    ("v" "Show venv"     (lambda ()
+                           (interactive)
+                           (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
+
+(define-key python-ts-mode-map (kbd "C-; C-;") 'nc/transient-python-menu)
+#+end_src
 ** Terraform
 
 Needs Terraform LSP Server, not the latest version, works fine with =0.28.1=
@@ -4559,152 +4703,6 @@ FIX : Path to plantuml ??
      (bind-key "C-c C-! t" #'nc/dwim-run-pytest 'python-mode-map)
      
     )
-#+end_src
-* Transient Menus
-:properties:
-:header-args+: :tangle "./lisp/setup-menus.el"
-:end:
-
-Transient menus module automatically tangled in =./lisp/setup-menus.el=
-#+begin_src emacs-lisp :noweb yes
-  ;;; setup-menus.el --- Transient Menus Module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
-
-  <<nc-header>>
-#+end_src
-
-Be sure transient is loaded.
-
-#+begin_src emacs-lisp
-(use-package transient
-    :commands (transient-define-prefix))
-#+end_src
-
-** File Menu
-#+begin_src emacs-lisp
-;; Stolen from Doom
-(defun nc/yank-buffer-path ()
-  "Copy the file name or directory name of the current buffer to the clipboard."
-  (interactive)
-  (let* ((filename (or buffer-file-name default-directory))
-         (project (ignore-errors (project-root (project-current))))
-         (relpath (if (and project (file-in-directory-p filename project))
-                      (file-relative-name filename project)
-                    nil)))
-    (kill-new
-     (cond
-      ((equal current-prefix-arg '(4)) ; C-u
-       (file-name-nondirectory filename))
-      ((equal current-prefix-arg '(16)) ; C-u C-u
-       (or relpath filename))
-      (t
-       filename)))
-    (message "Copied: %s"
-             (substring-no-properties (car kill-ring)))))
-
-(transient-define-prefix nc/yank-path-menu ()
-  "Yank Paths"
-  
-  [["Yank Paths"
-   ("F" "Full path"
-    (lambda () (interactive)
-      (let ((current-prefix-arg nil))
-        (call-interactively #'nc/yank-buffer-path))))
-
-   ("f" "Filename only"
-    (lambda () (interactive)
-      (let ((current-prefix-arg '(4)))
-        (call-interactively #'nc/yank-buffer-path))))
-
-   ("p" "Project relative path"
-    (lambda () (interactive)
-      (let ((current-prefix-arg '(16)))
-        (call-interactively #'nc/yank-buffer-path))))
-   ]])
-
-(transient-define-prefix nc/file-menu ()
-  "File"
-  
-  [["Actions"
-   ("r" "Rename file & buffer" rename-visited-file)
-   ("d" "Delete file & buffer" crux-delete-file-and-buffer)
-   ("c" "Copy file" crux-copy-file-preserve-attributes)
-   ("y" "Yank buffer path..." nc/yank-path-menu)]
-  ])
-#+end_src
-** Window Menu
-
-#+begin_src emacs-lisp
-(transient-define-prefix nc/window-menu ()
-  "Simple frame, window and buffer management."
-  ["Frame, Window & Buffer Manager"
-   
-   ["Frames"
-    ("n" "New frame" make-frame-command)
-    ("d" "Delete frame" delete-frame)
-    ("o" "Other frame" other-frame)
-    ("D" "Only this frame" delete-other-frames)
-    ("m" "Maximize" toggle-frame-maximized)
-    ("f" "Fullscreen" toggle-frame-fullscreen)]
-   
-   ["Layouts"
-    ("L i" "IDE layout" nc/layout-ide)
-    ("L l" "Sidebar left" nc/layout-sidebar-left)
-    ("L r" "Sidebar right" nc/layout-sidebar-right)]
-   
-   ["Buffers"
-    ("B" "Buffer other window" switch-to-buffer-other-window)
-    ("F" "Buffer other frame" switch-to-buffer-other-frame)
-    ("b" "Display buffer" display-buffer)
-    ("K" "Kill buffer & window" kill-buffer-and-window)
-    ("i" "Ibuffer" ibuffer)]
-   
-   ["Actions"
-    ("s" "Save config" window-configuration-to-register)
-    ("r" "Restore config" jump-to-register)
-    ("x" "Swap windows" window-swap-states)
-    ("q" "Quit" transient-quit-one)]])
-
-#+end_src
-** Goto Menu
-#+begin_src emacs-lisp
-(defun nc/goto-ssh-config-file ()
-  "Goto my ssh config files"
-  (interactive)
-  (find-file "~/.ssh/config"))
-
-(defun nc/goto-authinfo-file ()
-  "Goto my auth info file"
-  (interactive)
-  (find-file "~/.authinfo.gpg"))
-
-(transient-define-prefix nc/goto-menu ()
-  "Goto Transient Menu"
-  
-  [["Config File & Credentials"
-    ("e" "Emacs Config" nc/goto-emacs-config)
-    ("p" "Credentials" nc/goto-my-credentials)
-    ("s" "SSH config"  nc/goto-ssh-config-file)
-    ("a" "Authinfo"  nc/goto-authinfo-file)
-  ]
-  ["Dirs"
-    ("A" "Archives" nc/goto-archives-dir)
-    ("H" "Home" (lambda () (interactive) (dired "~")))
-    ("N" "Notes" nc/goto-notes-dir)
-    ("T" "Templates" nc/goto-templates-dir)
-    ("P" "Projects" nc/goto-projects-dir)
-    ]])
-#+end_src
-** Search Menu
-#+begin_src emacs-lisp
-(transient-define-prefix nc/search-menu ()
-  "Transient Search Menu"
-  ["Search"
-   ["Org Files"
-    ("a" "Agenda Heading" consult-org-agenda)
-    ("n" "Notes" nc/search-notes)]
-   ["Projects"
-    ("p" "Search in Projects" nc/consult-rg-my-projects)
-    ("." "symbol" nc/consult-line-symbol-at-point)]])
 #+end_src
 * Custom Functions
 :properties:

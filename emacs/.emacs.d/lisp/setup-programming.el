@@ -518,26 +518,6 @@
   (:map python-ts-mode-map
         ("C-c i" . python-insert-docstring-with-google-style-at-point)))
 
-(transient-define-prefix nc/transient-python-menu ()
-  "Python tools"
-  [
-   ["Insert"
-    ("d" "DocString" python-insert-docstring-with-google-style-at-point)]
-   ["Format"
-    ("f" "Ruff Format"  nc/format-buffer-with-ruff)]
-   ["Run Tests"
-    ("t" "Run tests in current def/class"  python-pytest-function-dwim)
-    ("T" "Run tests in current file"  python-pytest-file-dwim)
-    ("C-t" "Pytest Submenu..." python-pytest-dispatch)
-    ]
-   ["Env"
-    ("a" "PyVenv Activate" pyvenv-activate)
-    ("v" "Show venv"     (lambda ()
-                           (interactive)
-                           (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
-
-(define-key python-ts-mode-map (kbd "C-; C-;") 'nc/transient-python-menu)
-
 (defun my/orderless-python-split (string)
   "Split STRING on spaces and underscores for Python identifiers."
   (split-string string "[ _]+" t))
@@ -583,6 +563,26 @@
                 (capf (styles orderless)))))
 
 (add-hook 'python-ts-mode-hook #'my/python-completion-category)
+
+(transient-define-prefix nc/transient-python-menu ()
+  "Python tools"
+  [
+   ["Insert"
+    ("d" "DocString" python-insert-docstring-with-google-style-at-point)]
+   ["Format"
+    ("f" "Ruff Format"  nc/format-buffer-with-ruff)]
+   ["Run Tests"
+    ("t" "Run tests in current def/class"  python-pytest-function-dwim)
+    ("T" "Run tests in current file"  python-pytest-file-dwim)
+    ("C-t" "Pytest Submenu..." python-pytest-dispatch)
+    ]
+   ["Env"
+    ("a" "PyVenv Activate" pyvenv-activate)
+    ("v" "Show venv"     (lambda ()
+                           (interactive)
+                           (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
+
+(define-key python-ts-mode-map (kbd "C-; C-;") 'nc/transient-python-menu)
 
 (use-package terraform-mode
   :defer t
