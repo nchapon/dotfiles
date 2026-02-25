@@ -43,7 +43,9 @@
   ;; Either the Key ID or set to nil to use symmetric encryption.
   (setq org-crypt-key "0DF2D6C6E8443FE7")
 
-
+  :custom
+  (org-special-ctrl-a t)
+  (org-special-ctrl-e t)
   :hook
   ;; Redisplau inline images
   (org-babel-after-execute . org-redisplay-inline-images)
