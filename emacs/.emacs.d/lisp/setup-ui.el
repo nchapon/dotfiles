@@ -86,9 +86,10 @@
 
     (require 'font-lock))
 
-;; (use-package casual-editkit
-;;       :ensure nil
-;;       :bind (("<f2>" . casual-editkit-main-tmenu)))
+(use-package casual
+  :ensure t)
+
+(keymap-global-set "C-o" #'casual-editkit-main-tmenu)
 
 (provide 'setup-ui)
 ;;; setup-ui.el ends here

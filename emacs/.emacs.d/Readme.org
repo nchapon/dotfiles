@@ -577,9 +577,10 @@ Contextual User Interfaces based on Transient (aka magit interface)
 *** casual-editkit
 User interface library for Emacs editing commands.
 #+begin_src emacs-lisp
-  ;; (use-package casual-editkit
-  ;;       :ensure nil
-  ;;       :bind (("<f2>" . casual-editkit-main-tmenu)))
+(use-package casual
+  :ensure t)
+
+(keymap-global-set "C-o" #'casual-editkit-main-tmenu)
 #+end_src
 
 * Key Bindings
@@ -593,6 +594,9 @@ Key bindings configuration module automatically tangled in =./lisp/setup-keys.el
 
   <<nc-header>>
 #+end_src
+
+
+
 ** Global Key Bindings
 :PROPERTIES:
 :ID:       82fbc0b5-2c93-4062-8901-80ee49883d4e
@@ -2242,7 +2246,9 @@ Org mode configuration automatically tangled in =./lisp/setup-org.el=
   :straight (:type built-in)
   :bind (("C-c o c" . org-capture)
          ("C-c o a" . org-agenda)
-         ("C-c C-b" . org-iswitchb))
+         ("C-c C-b" . org-iswitchb)
+         :map org-mode-map
+         ("C-M-h" .  org-mark-subtree))
 
   :config
   ;; New template exapnsion
