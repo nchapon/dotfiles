@@ -185,52 +185,6 @@
 
 (keymap-set global-map "C-c x" nc-extended-command-map)
 
-;; (defvar-keymap nc-prefix-map
-;;   :doc "My global prefix keymap"
-
-  
-;;   ":" #'avy-goto-char-timer
-  
-;;   "c" nc-code-map
-;;   "f" nc-file-map
-;;   "g" nc-goto-map
-;;   "i" nc-insert-map
-;;   "k" nc-kill-map
-  
-;;   "n" nc-notes-map
-;;   "o" nc-open-map
-;;   "p" #'projectile-command-map
-;;   "w" nc-window-map
-  
-;;   "C-j" #'crux-top-join-line
-;;   "C-l" #'nc/open-bookmark
-;;   "C-p" #'consult-projectile
-;;   "C-s" #'nc/consult-line-symbol-at-point
-;;   "C-v" #'nc/vc-browse-remote-current-line
-
-;;   "M-b" #'nc/buffer-menu
-;;   "M-f" #'nc/file-menu
-;;   "M-g" #'nc/goto-menu
-;;   "M-p" #'nc/project-menu
-;;   "M-s" #'nc/search-menu
-;;   "M-t" #'nc/toggle-menu
-;;   "M-w" #'nc/window-menu)
-
-
-;; (which-key-add-keymap-based-replacements nc-prefix-map
-;;   "c" `("Code"  . ,nc-code-map)
-;;   "f" `("File"  . ,nc-file-map)
-;;   "g" `("Goto"  . ,nc-goto-map)
-;;   "i" `("Insert"  . ,nc-insert-map)
-;;   "k" `("Kill"  . ,nc-kill-map)
-;;   "n" `("Notes"  . ,nc-notes-map)
-;;   "o" `("Open"  . ,nc-open-map)
-;;   "w" `("Windows"  . ,nc-window-map)
-;;   )
-
-;; (keymap-set global-map "C-;" nc-prefix-map)
-;; (keymap-set global-map "C-c C-;" nc-prefix-map)
-
 (use-package transient
     :commands (transient-define-prefix))
 
