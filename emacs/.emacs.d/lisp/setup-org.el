@@ -469,6 +469,10 @@ Notes
                 (tags-todo "inbox"
                      ((org-agenda-prefix-format "  %?-12t% s")
                       (org-agenda-overriding-header "\n🚀 Inbox")))
+                (tags-todo "TODO=\"HOLD\""
+                           ((org-agenda-overriding-header "\n⌛ Hold / Waiting Tasks")
+                            (org-agenda-prefix-format " %i %-20:c")                            
+                            (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
                 (tags "personal+TODO=\"STARTED\"|personal+TODO=\"NEXT\""
                            ((org-agenda-overriding-header "\n:house: My current tasks")
                             (org-agenda-prefix-format " %i %-20:c [%e] ")
@@ -476,10 +480,6 @@ Notes
                              '(org-agenda-skip-if 'deadline))
                             ;;(org-agenda-files '("~/_PIM/notes/gtd.org"))
                             (org-agenda-sorting-strategy '(priority-down todo-state-down category-keep))))
-                (tags-todo "TODO=\"HOLD\""
-                           ((org-agenda-overriding-header "\n⌛ Hold / Waiting Tasks")
-                            (org-agenda-prefix-format " %i %-20:c")                            
-                            (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
                 )
                nil)
         ("g" . "GTD contexts")
