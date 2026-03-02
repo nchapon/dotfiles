@@ -151,6 +151,16 @@
 
 (keymap-set global-map "C-c p" nc-project-map)
 
+(defvar-keymap nc-transient-map
+  :doc "My custom Transient Menu Map"
+  "f" #'nc/file-transient
+  "g" #'nc/goto-transient
+  "s" #'nc/search-transient
+  "t" #'nc/toggle-transient
+  "w" #'nc/window-transient)
+
+(keymap-set global-map "C-c t" nc-transient-map)
+
 (defvar-keymap nc-version-map
   :doc "My custom Version Control Map"
   "f" #'nc/vc-browse-remote-current-line
@@ -230,7 +240,7 @@
         (call-interactively #'nc/yank-buffer-path))))
    ]])
 
-(transient-define-prefix nc/file-menu ()
+(transient-define-prefix nc/file-transient ()
   "File"
   
   [["Actions"
@@ -239,36 +249,6 @@
    ("c" "Copy file" crux-copy-file-preserve-attributes)
    ("y" "Yank buffer path..." nc/yank-path-menu)]
   ])
-
-(transient-define-prefix nc/window-menu ()
-  "Simple frame, window and buffer management."
-  ["Frame, Window & Buffer Manager"
-   
-   ["Frames"
-    ("n" "New frame" make-frame-command)
-    ("d" "Delete frame" delete-frame)
-    ("o" "Other frame" other-frame)
-    ("D" "Only this frame" delete-other-frames)
-    ("m" "Maximize" toggle-frame-maximized)
-    ("f" "Fullscreen" toggle-frame-fullscreen)]
-   
-   ["Layouts"
-    ("L i" "IDE layout" nc/layout-ide)
-    ("L l" "Sidebar left" nc/layout-sidebar-left)
-    ("L r" "Sidebar right" nc/layout-sidebar-right)]
-   
-   ["Buffers"
-    ("B" "Buffer other window" switch-to-buffer-other-window)
-    ("F" "Buffer other frame" switch-to-buffer-other-frame)
-    ("b" "Display buffer" display-buffer)
-    ("K" "Kill buffer & window" kill-buffer-and-window)
-    ("i" "Ibuffer" ibuffer)]
-   
-   ["Actions"
-    ("s" "Save config" window-configuration-to-register)
-    ("r" "Restore config" jump-to-register)
-    ("x" "Swap windows" window-swap-states)
-    ("q" "Quit" transient-quit-one)]])
 
 (defun nc/goto-ssh-config-file ()
   "Goto my ssh config files"
@@ -280,7 +260,7 @@
   (interactive)
   (find-file "~/.authinfo.gpg"))
 
-(transient-define-prefix nc/goto-menu ()
+(transient-define-prefix nc/goto-transient ()
   "Goto Transient Menu"
   
   [["Config File & Credentials"
@@ -297,7 +277,7 @@
     ("P" "Projects" nc/goto-projects-dir)
     ]])
 
-(transient-define-prefix nc/search-menu ()
+(transient-define-prefix nc/search-transient ()
   "Transient Search Menu"
   ["Search"
    ["Org Files"
@@ -307,7 +287,7 @@
     ("p" "Search in Projects" nc/consult-rg-my-projects)
     ("." "symbol" nc/consult-line-symbol-at-point)]])
 
-(transient-define-prefix nc/toggle-menu ()
+(transient-define-prefix nc/toggle-transient ()
   "Toggle common Emacs settings."
   ["Toggle Menu"
    
@@ -496,6 +476,36 @@
     (if (fboundp 'display-line-numbers-mode)
         (display-line-numbers-mode 'toggle)
       (linum-mode 'toggle)))
+
+(transient-define-prefix nc/window-transient ()
+  "Simple frame, window and buffer management."
+  ["Frame, Window & Buffer Manager"
+   
+   ["Frames"
+    ("n" "New frame" make-frame-command)
+    ("d" "Delete frame" delete-frame)
+    ("o" "Other frame" other-frame)
+    ("D" "Only this frame" delete-other-frames)
+    ("m" "Maximize" toggle-frame-maximized)
+    ("f" "Fullscreen" toggle-frame-fullscreen)]
+   
+   ["Layouts"
+    ("L i" "IDE layout" nc/layout-ide)
+    ("L l" "Sidebar left" nc/layout-sidebar-left)
+    ("L r" "Sidebar right" nc/layout-sidebar-right)]
+   
+   ["Buffers"
+    ("B" "Buffer other window" switch-to-buffer-other-window)
+    ("F" "Buffer other frame" switch-to-buffer-other-frame)
+    ("b" "Display buffer" display-buffer)
+    ("K" "Kill buffer & window" kill-buffer-and-window)
+    ("i" "Ibuffer" ibuffer)]
+   
+   ["Actions"
+    ("s" "Save config" window-configuration-to-register)
+    ("r" "Restore config" jump-to-register)
+    ("x" "Swap windows" window-swap-states)
+    ("q" "Quit" transient-quit-one)]])
 
 (provide 'setup-keys)
 ;;; setup-keys.el ends here
