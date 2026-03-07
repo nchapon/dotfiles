@@ -42,6 +42,8 @@
  ("<f5>" . revert-buffer)
  ("C-<f5>" . magit-log-buffer-file)
  ("<f9>" . treemacs)
+ ("<f10>" . org-capture)
+ ;; Not really used ??
  ("<f11>" . nc/maximize-or-split-window-vertically)
  ("C-<f11>" . nc/split-window-horizontally)
  ("<f12>" . org-agenda)
