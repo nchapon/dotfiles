@@ -197,6 +197,9 @@
     ;; code.
     :load-path ("~/Projects/_playground/combobulate"))
 
+;; (use-package treesit-fold
+;;   :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold"))
+
 (use-package smartparens
   :defer t
   :diminish ""

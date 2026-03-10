@@ -91,5 +91,8 @@
 
 (keymap-global-set "C-o" #'casual-editkit-main-tmenu)
 
+(keymap-set org-mode-map "M-m" #'casual-org-tmenu)
+(keymap-set org-table-fedit-map "M-m" #'casual-org-table-fedit-tmenu)
+
 (provide 'setup-ui)
 ;;; setup-ui.el ends here
