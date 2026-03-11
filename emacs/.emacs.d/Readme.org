@@ -574,18 +574,18 @@ Using moe theme dark all the day
 #+end_src
 ** Casual
 Contextual User Interfaces based on Transient (aka magit interface)
-*** casual-editkit
+
 User interface library for Emacs editing commands.
+
 #+begin_src emacs-lisp
 (use-package casual
-  :ensure t)
+  :after org
+  :bind (:map org-mode-map
+              ("M-m" . casual-org-tmenu)
+              :map org-table-fedit-map
+              ("M-m" . casual-org-table-fedit-tmenu)))
 
 (keymap-global-set "C-o" #'casual-editkit-main-tmenu)
-#+end_src
-*** casual org mode
-#+begin_src emacs-lisp
-(keymap-set org-mode-map "M-m" #'casual-org-tmenu)
-(keymap-set org-table-fedit-map "M-m" #'casual-org-table-fedit-tmenu)
 #+end_src
 * Key Bindings
 :properties:
@@ -1575,7 +1575,7 @@ Use `treemacs' command for old functionality."
            (message "No valid project in current buffer; opening last treemacs session")
            (treemacs))))))
 #+end_src
-** Outline
+** Outline Inde
 #+begin_src emacs-lisp
 (use-package outline-indent
   :commands outline-indent-minor-mode
@@ -4162,6 +4162,10 @@ Needs Java and plantuml.jar installed in =~/opt=
 
 ;; Configure hooks after `python-ts-mode' is loaded.
 (add-hook 'python-ts-mode-hook #'nc/setup-python-environment)
+
+;; Outline indent mapped on C-c z
+(add-hook 'python-mode-hook #'outline-indent-minor-mode)
+(add-hook 'python-ts-mode-hook #'outline-indent-minor-mode)
 #+end_src
 *** lsp-pyright
 :warning: LSP pyright needs NPM
@@ -4414,30 +4418,33 @@ Verb is a package for Emacs which allows you to organize and send HTTP requests
 ** YAML
 
 #+begin_src emacs-lisp
-  (use-package yaml-ts-mode
-    :mode ("\\.yaml\\'" "\\.yml\\'")
-    :config
-    (add-hook 'yaml-ts-mode-hook #'highlight-indent-guides-mode))
+(use-package yaml-ts-mode
+  :mode ("\\.yaml\\'" "\\.yml\\'")
+  :config
+  (add-hook 'yaml-ts-mode-hook #'highlight-indent-guides-mode)
+  ;; Outline indent mapped on C-c z
+  (add-hook 'yaml-mode-hook #'outline-indent-minor-mode)
+  (add-hook 'yaml-ts-mode-hook #'outline-indent-minor-mode))
 
-  (use-package yaml-pro
-    :hook (yaml-ts-mode . yaml-pro-ts-mode)
-    :config
-    (defun yaml-pro-edit-initialize-buffer-filter-args-advice (args)
-      (if-let ((mode (language-detection-detect-mode (buffer-string))))
-          (cl-destructuring-bind (parent-buffer buffer initial-text type initialize path) args
-            (let ((init-func (lambda ()
-                               (funcall mode)
-                               (when initialize
-                                 (call-interactively initialize)))))
-              (list parent-buffer buffer initial-text type init-func path)))
-        args))
-    (advice-add 'yaml-pro-edit-initialize-buffer :filter-args #'yaml-pro-edit-initialize-buffer-filter-args-advice)
+(use-package yaml-pro
+  :hook (yaml-ts-mode . yaml-pro-ts-mode)
+  :config
+  (defun yaml-pro-edit-initialize-buffer-filter-args-advice (args)
+    (if-let ((mode (language-detection-detect-mode (buffer-string))))
+        (cl-destructuring-bind (parent-buffer buffer initial-text type initialize path) args
+          (let ((init-func (lambda ()
+                             (funcall mode)
+                             (when initialize
+                               (call-interactively initialize)))))
+            (list parent-buffer buffer initial-text type init-func path)))
+      args))
+  (advice-add 'yaml-pro-edit-initialize-buffer :filter-args #'yaml-pro-edit-initialize-buffer-filter-args-advice)
 
-    :bind
-      (:map yaml-pro-ts-mode-map
-            ("C-c j" . yaml-pro-ts-move-subtree-down)
-            ("C-c k" . yaml-pro-ts-move-subtree-up)
-            ("C-c f" . yaml-pro-format)))
+  :bind
+    (:map yaml-pro-ts-mode-map
+          ("C-c j" . yaml-pro-ts-move-subtree-down)
+          ("C-c k" . yaml-pro-ts-move-subtree-up)
+          ("C-c f" . yaml-pro-format)))
 #+end_src
 * Shell
 :properties:

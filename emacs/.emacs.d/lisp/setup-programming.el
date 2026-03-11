@@ -452,6 +452,10 @@
 ;; Configure hooks after `python-ts-mode' is loaded.
 (add-hook 'python-ts-mode-hook #'nc/setup-python-environment)
 
+;; Outline indent mapped on C-c z
+(add-hook 'python-mode-hook #'outline-indent-minor-mode)
+(add-hook 'python-ts-mode-hook #'outline-indent-minor-mode)
+
 (use-package lsp-pyright
   :defer t
   :init
@@ -631,7 +635,10 @@
 (use-package yaml-ts-mode
   :mode ("\\.yaml\\'" "\\.yml\\'")
   :config
-  (add-hook 'yaml-ts-mode-hook #'highlight-indent-guides-mode))
+  (add-hook 'yaml-ts-mode-hook #'highlight-indent-guides-mode)
+  ;; Outline indent mapped on C-c z
+  (add-hook 'yaml-mode-hook #'outline-indent-minor-mode)
+  (add-hook 'yaml-ts-mode-hook #'outline-indent-minor-mode))
 
 (use-package yaml-pro
   :hook (yaml-ts-mode . yaml-pro-ts-mode)
