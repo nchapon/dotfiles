@@ -635,7 +635,6 @@
 (use-package yaml-ts-mode
   :mode ("\\.yaml\\'" "\\.yml\\'")
   :config
-  (add-hook 'yaml-ts-mode-hook #'highlight-indent-guides-mode)
   ;; Outline indent mapped on C-c z
   (add-hook 'yaml-mode-hook #'outline-indent-minor-mode)
   (add-hook 'yaml-ts-mode-hook #'outline-indent-minor-mode))
