@@ -4937,6 +4937,7 @@ If called from Lisp, START and END specify the region."
                       (jwt--base64url-to-base64 payload-b64))
                      'utf-8))))
       (with-current-buffer (get-buffer-create "*JWT Decoded*")
+        (read-only-mode -1)             ;; Disable read-only before editing
         (erase-buffer)
         (insert "{\n  \"header\": ")
         (insert (json-encode header))
@@ -4948,7 +4949,9 @@ If called from Lisp, START and END specify the region."
         (js-json-mode)
         (json-pretty-print-buffer)
         (goto-char (point-min))
-        (display-buffer (current-buffer))))))
+        (read-only-mode 1)
+        (local-set-key (kbd "q") (lambda () (interactive) (kill-buffer (current-buffer))))
+        (select-window (display-buffer (current-buffer)))))))
 
 (defun jwt--base64url-to-base64 (str)
   "Convert base64url encoded STR to standard base64."
