@@ -44,8 +44,7 @@
  ("<f9>" . treemacs)
  ("<f10>" . org-capture)
  ;; Not really used ??
- ("<f11>" . nc/maximize-or-split-window-vertically)
- ("C-<f11>" . nc/split-window-horizontally)
+ ("<f11>" . org-clock-goto)
  ("<f12>" . org-agenda)
  ("C-<f12>" . org-agenda))
 

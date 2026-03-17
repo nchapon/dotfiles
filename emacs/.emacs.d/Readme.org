@@ -581,9 +581,9 @@ User interface library for Emacs editing commands.
 (use-package casual
   :after org
   :bind (:map org-mode-map
-              ("M-m" . casual-org-tmenu)
+              ("M-o" . casual-org-tmenu)
               :map org-table-fedit-map
-              ("M-m" . casual-org-table-fedit-tmenu)))
+              ("M-o" . casual-org-table-fedit-tmenu)))
 
 (keymap-global-set "C-o" #'casual-editkit-main-tmenu)
 #+end_src
@@ -640,8 +640,7 @@ Some Emacs Global Bindings are redefined here.
  ("<f9>" . treemacs)
  ("<f10>" . org-capture)
  ;; Not really used ??
- ("<f11>" . nc/maximize-or-split-window-vertically)
- ("C-<f11>" . nc/split-window-horizontally)
+ ("<f11>" . org-clock-goto)
  ("<f12>" . org-agenda)
  ("C-<f12>" . org-agenda))
 

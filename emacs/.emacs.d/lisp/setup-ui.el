@@ -89,9 +89,9 @@
 (use-package casual
   :after org
   :bind (:map org-mode-map
-              ("M-m" . casual-org-tmenu)
+              ("M-o" . casual-org-tmenu)
               :map org-table-fedit-map
-              ("M-m" . casual-org-table-fedit-tmenu)))
+              ("M-o" . casual-org-table-fedit-tmenu)))
 
 (keymap-global-set "C-o" #'casual-editkit-main-tmenu)
 
