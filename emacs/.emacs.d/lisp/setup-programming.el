@@ -182,8 +182,7 @@
   :custom
   (treesit-auto-install 'prompt)
   :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (setq treesit-auto-langs '(python yaml json))
+  (setq treesit-auto-langs '(python yaml json rust))
   (global-treesit-auto-mode))
 
 (use-package combobulate
@@ -267,9 +266,6 @@
 
 (use-package dockerfile-mode
   :mode "Dockerfile.*\\'")
-
-(use-package go-mode
-  :defer t)
 
 (use-package just-mode
   :defer t)
@@ -590,6 +586,79 @@
                            (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
 
 (define-key python-ts-mode-map (kbd "C-; C-;") 'nc/transient-python-menu)
+
+;;
+;; Requirements:
+;;   - Emacs 29+ (built-in tree-sitter, eglot, use-package)
+;;   - rust-analyzer installed and on PATH
+;;       cargo install --locked rust-analyzer
+;;     or via rustup:
+;;       rustup component add rust-analyzer
+;;
+;; Usage: add at the end of your init.el:
+;;   (load-file "~/.emacs.d/rust-dev.el")
+;; or copy-paste the relevant sections directly into your init.el.
+
+;; Use the tree-sitter-powered major mode for .rs files
+(use-package rust-ts-mode
+  :ensure nil   ; built-in since Emacs 29
+  :mode "\\.rs\\'"
+  :hook
+  ;; Start Eglot automatically whenever rust-ts-mode is activated
+  (rust-ts-mode . eglot-ensure)
+  ;; Enable Corfu completion in Rust buffers
+  (rust-ts-mode . corfu-mode)
+  :config
+  (setq rust-ts-mode-indent-offset 4))
+
+
+(use-package eglot
+  :ensure nil   ; built-in
+  :commands eglot eglot-ensure
+  :custom
+  ;; Shut down the server when no more Rust buffers are open
+  (eglot-autoshutdown t)
+  ;; How long to wait for the server to respond (seconds)
+  (eglot-connect-timeout 30)
+  ;; Send changes to the server immediately (better completion)
+  (eglot-send-changes-idle-time 0.1)
+  ;; Show all LSP events set to nil for quieter operation
+  (eglot-events-buffer-size 0)
+  :config
+  ;; Register rust-analyzer for rust-ts-mode
+  ;; rust-analyzer must be on your PATH
+  (add-to-list 'eglot-server-programs
+               '((rust-ts-mode rust-mode) . ("rust-analyzer")))
+
+  ;; Useful rust-analyzer settings passed via initializationOptions
+  (setq-default eglot-workspace-configuration
+    '(:rust-analyzer
+      ( :checkOnSave       (:command "clippy")  ; use clippy instead of check
+        :cargo             (:allFeatures t)      ; enable all cargo features
+        :procMacro         (:enable t)
+        :inlayHints        ( :parameterHints    (:enable t)
+                             :typeHints         (:enable t)
+                             :chainingHints     (:enable t))
+        :completion        (:autoimport (:enable t))
+        :diagnostics       (:enable t))))
+  :bind (:map eglot-mode-map
+         ("C-c r"   . eglot-rename)
+         ("C-c C-f" . eglot-format-buffer)
+         ("C-c C-a" . eglot-code-actions)
+         ("M-?"     . xref-find-references)
+         ("M-."     . xref-find-definitions)
+         ("C-c d"   . eldoc)))
+
+
+(use-package cargo
+  :hook (rust-ts-mode . cargo-minor-mode))
+
+
+;; Auto-format on save via rust-analyzer
+(add-hook 'before-save-hook
+          (lambda ()
+            (when (eq major-mode 'rust-ts-mode)
+              (eglot-format-buffer))))
 
 (use-package terraform-mode
   :defer t
