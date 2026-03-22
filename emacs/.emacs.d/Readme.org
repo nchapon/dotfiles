@@ -876,6 +876,8 @@ Be sure transient is loaded.
    ("c" "Copy file" crux-copy-file-preserve-attributes)
    ("y" "Yank buffer path..." nc/yank-path-menu)]
   ])
+
+(global-set-key (kbd "C-c M-f") 'nc/file-transient)
 #+end_src
 *** Goto Menu
 #+begin_src emacs-lisp
@@ -905,6 +907,8 @@ Be sure transient is loaded.
     ("T" "Templates" nc/goto-templates-dir)
     ("P" "Projects" nc/goto-projects-dir)
     ]])
+
+(global-set-key (kbd "C-c M-j") 'nc/goto-transient)
 #+end_src
 *** Search Menu
 #+begin_src emacs-lisp
@@ -917,6 +921,8 @@ Be sure transient is loaded.
    ["Projects"
     ("p" "Search in Projects" nc/consult-rg-my-projects)
     ("." "symbol" nc/consult-line-symbol-at-point)]])
+
+(global-set-key (kbd "C-c M-s") 'nc/search-transient)
 #+end_src
 
 *** Toggle Menu
@@ -1111,6 +1117,7 @@ Be sure transient is loaded.
         (display-line-numbers-mode 'toggle)
       (linum-mode 'toggle)))
 
+(global-set-key (kbd "C-c M-t") 'nc/toggle-transient)
 #+end_src
 
 *** Window Menu
@@ -1145,6 +1152,8 @@ Be sure transient is loaded.
     ("r" "Restore config" jump-to-register)
     ("x" "Swap windows" window-swap-states)
     ("q" "Quit" transient-quit-one)]])
+
+(global-set-key (kbd "C-c M-w") 'nc/window-transient)
 #+end_src
 * Windows
 :properties:

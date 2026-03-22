@@ -251,6 +251,8 @@
    ("y" "Yank buffer path..." nc/yank-path-menu)]
   ])
 
+(global-set-key (kbd "C-c M-f") 'nc/file-transient)
+
 (defun nc/goto-ssh-config-file ()
   "Goto my ssh config files"
   (interactive)
@@ -278,6 +280,8 @@
     ("P" "Projects" nc/goto-projects-dir)
     ]])
 
+(global-set-key (kbd "C-c M-j") 'nc/goto-transient)
+
 (transient-define-prefix nc/search-transient ()
   "Transient Search Menu"
   ["Search"
@@ -287,6 +291,8 @@
    ["Projects"
     ("p" "Search in Projects" nc/consult-rg-my-projects)
     ("." "symbol" nc/consult-line-symbol-at-point)]])
+
+(global-set-key (kbd "C-c M-s") 'nc/search-transient)
 
 (transient-define-prefix nc/toggle-transient ()
   "Toggle common Emacs settings."
@@ -478,6 +484,8 @@
         (display-line-numbers-mode 'toggle)
       (linum-mode 'toggle)))
 
+(global-set-key (kbd "C-c M-t") 'nc/toggle-transient)
+
 (transient-define-prefix nc/window-transient ()
   "Simple frame, window and buffer management."
   ["Frame, Window & Buffer Manager"
@@ -507,6 +515,8 @@
     ("r" "Restore config" jump-to-register)
     ("x" "Swap windows" window-swap-states)
     ("q" "Quit" transient-quit-one)]])
+
+(global-set-key (kbd "C-c M-w") 'nc/window-transient)
 
 (provide 'setup-keys)
 ;;; setup-keys.el ends here
