@@ -280,8 +280,6 @@
     ("P" "Projects" nc/goto-projects-dir)
     ]])
 
-(global-set-key (kbd "C-c M-j") 'nc/goto-transient)
-
 (transient-define-prefix nc/search-transient ()
   "Transient Search Menu"
   ["Search"
@@ -517,6 +515,17 @@
     ("q" "Quit" transient-quit-one)]])
 
 (global-set-key (kbd "C-c M-w") 'nc/window-transient)
+
+(transient-define-prefix nc/main-transient ()
+  "Main dispatcher menu to select a transient menu to open."
+  ["Navigation & Commands"
+   ("f" "File"    nc/file-transient)
+   ("g" "Goto"    nc/goto-transient)
+   ("s" "Search"  nc/search-transient)
+   ("t" "Toggle"  nc/toggle-transient)
+   ("w" "Window"  nc/window-transient)])
+ 
+(global-set-key (kbd "C-c M-m") #'nc/main-transient)
 
 (provide 'setup-keys)
 ;;; setup-keys.el ends here

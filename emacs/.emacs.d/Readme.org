@@ -907,8 +907,6 @@ Be sure transient is loaded.
     ("T" "Templates" nc/goto-templates-dir)
     ("P" "Projects" nc/goto-projects-dir)
     ]])
-
-(global-set-key (kbd "C-c M-j") 'nc/goto-transient)
 #+end_src
 *** Search Menu
 #+begin_src emacs-lisp
@@ -1154,6 +1152,19 @@ Be sure transient is loaded.
     ("q" "Quit" transient-quit-one)]])
 
 (global-set-key (kbd "C-c M-w") 'nc/window-transient)
+#+end_src
+*** Main Dispatcher Menu
+#+begin_src emacs-lisp
+(transient-define-prefix nc/main-transient ()
+  "Main dispatcher menu to select a transient menu to open."
+  ["Navigation & Commands"
+   ("f" "File"    nc/file-transient)
+   ("g" "Goto"    nc/goto-transient)
+   ("s" "Search"  nc/search-transient)
+   ("t" "Toggle"  nc/toggle-transient)
+   ("w" "Window"  nc/window-transient)])
+ 
+(global-set-key (kbd "C-c M-m") #'nc/main-transient)
 #+end_src
 * Windows
 :properties:
