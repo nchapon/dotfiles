@@ -220,7 +220,7 @@
 
   :config
   (require 'smartparens-config)
-  (sp-use-paredit-bindings)
+  (sp-use-smartparens-bindings)
   ;; Unbind sp-convolute-xexp (conflict with xref-find-references / lsp-ui-peek-find-references)
   (unbind-key "M-?" smartparens-mode-map)
 

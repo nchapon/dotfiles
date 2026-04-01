@@ -552,25 +552,25 @@ Using moe theme dark all the day
 ℹ️ All-The-Icons and Noto Emoji should be installed
 
 #+begin_src emacs-lisp
-  (setf use-default-font-for-symbols nil)
-  (set-fontset-font t 'unicode "Noto Emoji" nil 'append)
+(setf use-default-font-for-symbols nil)
+(set-fontset-font t 'unicode "Noto Emoji" nil 'append)
 
-  (use-package emojify
-      :hook (after-init . global-emojify-mode)
-      :config
+(use-package emojify
+    :hook (after-init . global-emojify-mode)
+    :config
 
-      (set-fontset-font "fontset-default" 'symbol "Noto Color Emoji" nil 'append)
-      (set-fontset-font "fontset-default" 'symbol "Symbola" nil 'append)
-      (set-fontset-font t 'unicode (font-spec :family "all-the-icons") nil 'append)
-      (set-fontset-font t 'unicode (font-spec :family "file-icons") nil 'append)
-      (set-fontset-font t 'unicode (font-spec :family "Material Icons") nil 'append)
-      (set-fontset-font t 'unicode (font-spec :family "github-octicons") nil 'append)
-      (set-fontset-font t 'unicode (font-spec :family "FontAwesome") nil 'append)
-      (set-fontset-font t 'unicode (font-spec :family "Weather Icons") nil 'append)
+    (set-fontset-font "fontset-default" 'symbol "Noto Color Emoji" nil 'append)
+    (set-fontset-font "fontset-default" 'symbol "Symbola" nil 'append)
+    (set-fontset-font t 'unicode (font-spec :family "all-the-icons") nil 'append)
+    (set-fontset-font t 'unicode (font-spec :family "file-icons") nil 'append)
+    (set-fontset-font t 'unicode (font-spec :family "Material Icons") nil 'append)
+    (set-fontset-font t 'unicode (font-spec :family "github-octicons") nil 'append)
+    (set-fontset-font t 'unicode (font-spec :family "FontAwesome") nil 'append)
+    (set-fontset-font t 'unicode (font-spec :family "Weather Icons") nil 'append)
 
-      ;; (add-hook 'markdown-mode-hook 'ac-emoji-setup)
+    ;; (add-hook 'markdown-mode-hook 'ac-emoji-setup)
 
-      (require 'font-lock))
+    (require 'font-lock))
 #+end_src
 ** Casual
 Contextual User Interfaces based on Transient (aka magit interface)
@@ -3864,47 +3864,46 @@ Testing this mode https://github.com/renzmann/treesit-auto
 Smart parens for all programming modes with paredit bindings.
 
 #+begin_src emacs-lisp
-  (use-package smartparens
-    :defer t
-    :diminish ""
-    :hook (((clojure-mode
-             emacs-lisp-mode
-             common-lisp-mode
-             scheme-mode
-             lisp-mode
-             cider-repl-mode
-             inferior-lisp-mode
-             inferior-emacs-lisp-mode)
-            . smartparens-strict-mode)
-           (prog-mode . smartparens-mode))
+(use-package smartparens
+  :defer t
+  :diminish ""
+  :hook (((clojure-mode
+           emacs-lisp-mode
+           common-lisp-mode
+           scheme-mode
+           lisp-mode
+           cider-repl-mode
+           inferior-lisp-mode
+           inferior-emacs-lisp-mode)
+          . smartparens-strict-mode)
+         (prog-mode . smartparens-mode))
 
-    :bind (:map smartparens-mode-map
-                ("C-M-q" . sp-indent-defun)
-                :map smartparens-strict-mode-map
-                (";" . sp-comment))
+  :bind (:map smartparens-mode-map
+              ("C-M-q" . sp-indent-defun)
+              :map smartparens-strict-mode-map
+              (";" . sp-comment))
 
-    :config
-    (require 'smartparens-config)
-    (sp-use-paredit-bindings)
-    ;; Unbind sp-convolute-xexp (conflict with xref-find-references / lsp-ui-peek-find-references)
-    (unbind-key "M-?" smartparens-mode-map)
+  :config
+  (require 'smartparens-config)
+  (sp-use-smartparens-bindings)
+  ;; Unbind sp-convolute-xexp (conflict with xref-find-references / lsp-ui-peek-find-references)
+  (unbind-key "M-?" smartparens-mode-map)
 
-    (define-key smartparens-mode-map (kbd "M-r") 'sp-rewrap-sexp) ; needs to be set manually, because :bind section runs before config
-    (setq smartparens-strict-mode t)
-    (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))
+  (define-key smartparens-mode-map (kbd "M-r") 'sp-rewrap-sexp) ; needs to be set manually, because :bind section runs before config
+  (setq smartparens-strict-mode t)
+  (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))
 
-    (defun nc--create-newline-and-enter-sexp (&rest _ignored)
-      "Open a new brace or bracket expression, with relevant newlines and indent. "
-      (newline)
-      (indent-according-to-mode)
-      (forward-line -1)
-      (indent-according-to-mode))
+  (defun nc--create-newline-and-enter-sexp (&rest _ignored)
+    "Open a new brace or bracket expression, with relevant newlines and indent. "
+    (newline)
+    (indent-according-to-mode)
+    (forward-line -1)
+    (indent-according-to-mode))
 
-    (sp-with-modes '(c-mode c++-mode js-mode js2-mode java-mode
-                            typescript-mode perl-mode)
-      (sp-local-pair "{" nil :post-handlers
-                     '((nc--create-newline-and-enter-sexp "RET")))))
-
+  (sp-with-modes '(c-mode c++-mode js-mode js2-mode java-mode
+                          typescript-mode perl-mode)
+    (sp-local-pair "{" nil :post-handlers
+                   '((nc--create-newline-and-enter-sexp "RET")))))
 
 #+end_src
 
