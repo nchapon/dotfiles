@@ -4133,6 +4133,11 @@ Needs Java and plantuml.jar installed in =~/opt=
 #+end_src
 
 ** Python
+*** Default Interpreter
+#+begin_src emacs-lisp
+(when is-windows
+  (setq python-shell-interpreter "python"))
+#+end_src
 *** python-mode
 :PROPERTIES:
 :ID:       02349703-0f5e-4e81-a82f-08be2189690f

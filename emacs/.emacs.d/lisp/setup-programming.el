@@ -414,6 +414,9 @@
    ["Actions"
     ("p" "Preview" nc/plantuml-preview-current-block)]])
 
+(when is-windows
+  (setq python-shell-interpreter "python"))
+
 (use-package python
   ;; python-ts-mode is part of Emacs itself, so we use :ensure nil
   :ensure nil
