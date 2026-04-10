@@ -1941,8 +1941,8 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
    consult-theme :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
-   consult--source-bookmark consult--source-file-register
-   consult--source-recent-file consult--source-project-recent-file
+   consult-source-bookmark consult-source-file-register
+   consult-source-recent-file consult-source-project-recent-file
    ;; :preview-key (kbd "M-.")
    :preview-key '(:debounce 0.4 any))
 
@@ -3632,11 +3632,14 @@ Better defaults
 #+begin_src emacs-lisp
 (use-package compile
   :defer t
-  :hook ((compilation-filter . ansi-color-compilation-filter))
-  :config
+  :hook ((compilation-filter . ansi-color-compilation-filter)
+         (compilation-mode . goto-address-mode))
+  :bind (:map
+         compilation-mode-map
+         ("C-c C-o" . browse-url-at-point))
+  :custom
   (setopt compilation-scroll-output t)
-  (setopt compilation-ask-about-save nil)
-  (require 'ansi-color))
+  (setopt compilation-ask-about-save nil))
 #+end_src
 ** LSP Mode
 :PROPERTIES:

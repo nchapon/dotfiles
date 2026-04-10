@@ -13,11 +13,14 @@
 
 (use-package compile
   :defer t
-  :hook ((compilation-filter . ansi-color-compilation-filter))
-  :config
+  :hook ((compilation-filter . ansi-color-compilation-filter)
+         (compilation-mode . goto-address-mode))
+  :bind (:map
+         compilation-mode-map
+         ("C-c C-o" . browse-url-at-point))
+  :custom
   (setopt compilation-scroll-output t)
-  (setopt compilation-ask-about-save nil)
-  (require 'ansi-color))
+  (setopt compilation-ask-about-save nil))
 
 (use-package lsp-mode
   :commands lsp
