@@ -55,6 +55,23 @@
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/var/backups/")))
 
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+
+(setq redisplay-skip-fontification-on-input t)
+
+(setq save-interprogram-paste-before-kill t)
+
+(setq savehist-additional-variables
+      '(search-ring regexp-search-ring kill-ring))
+
+(add-hook 'savehist-save-hook
+          (lambda ()
+            (setq kill-ring
+                  (mapcar #'substring-no-properties
+                          (cl-remove-if-not #'stringp kill-ring)))))
+
 (prefer-coding-system 'utf-8-unix)
 (set-clipboard-coding-system 'utf-8-unix)
 (set-default-coding-systems 'utf-8-unix)

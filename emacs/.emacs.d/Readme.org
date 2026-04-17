@@ -297,6 +297,44 @@ Backup files in  [[id:3f627579-3efc-4c40-9dbe-558de5359f8e][no Littering]] folde
 #+begin_src emacs-lisp
 (setq backup-directory-alist '(("." . "~/.emacs.d/var/backups/")))
 #+end_src
+*** Disable Bidirectional Text Scanning
+#+begin_src emacs-lisp
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+#+end_src
+*** Skip Fontification During Input
+#+begin_src emacs-lisp
+(setq redisplay-skip-fontification-on-input t)
+#+end_src
+*** Save The Clipboard Before Killing
+#+begin_src emacs-lisp
+(setq save-interprogram-paste-before-kill t)
+#+end_src
+*** Do Not Duplicate In Kill Ring
+#+begin_src emacs-lisp :tangle yes
+(setq kill-do-not-save-duplicates t)
+#+end_src
+*** Persist the Kill Ring Across Sessions (Doom, Prot)
+Stolen from https://emacsredux.com/blog/2026/04/07/stealing-from-the-best-emacs-configs/
+Do I really need this ?
+
+Most configs that use savehist-mode only persist search rings. But savehist can save any variable including the kill ring. Add it and you get clipboard history that survives restarts:
+#+begin_src emacs-lisp
+(setq savehist-additional-variables
+      '(search-ring regexp-search-ring kill-ring))
+#+end_src
+
+One thing to watch out for: the kill ring can accumulate text properties (fonts, overlays, etc.) that bloat the savehist file. Doom strips them before saving:
+#+begin_src emacs-lisp
+(add-hook 'savehist-save-hook
+          (lambda ()
+            (setq kill-ring
+                  (mapcar #'substring-no-properties
+                          (cl-remove-if-not #'stringp kill-ring)))))
+#+end_src
+
+Probably overkill for most people, but it's good to be aware of if your savehist file starts growing 
 ** UTF-8 Encoding
 
  Set all coding systems to utf-8
