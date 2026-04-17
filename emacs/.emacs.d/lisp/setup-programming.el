@@ -17,6 +17,7 @@
          (compilation-mode . goto-address-mode))
   :bind (:map
          compilation-mode-map
+         ("q" . kill-buffer-and-window)
          ("C-c C-o" . browse-url-at-point))
   :custom
   (setopt compilation-scroll-output t)
