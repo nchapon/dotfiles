@@ -312,7 +312,7 @@ Backup files in  [[id:3f627579-3efc-4c40-9dbe-558de5359f8e][no Littering]] folde
 (setq save-interprogram-paste-before-kill t)
 #+end_src
 *** Do Not Duplicate In Kill Ring
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
 (setq kill-do-not-save-duplicates t)
 #+end_src
 *** Persist the Kill Ring Across Sessions (Doom, Prot)
@@ -334,7 +334,15 @@ One thing to watch out for: the kill ring can accumulate text properties (fonts,
                           (cl-remove-if-not #'stringp kill-ring)))))
 #+end_src
 
-Probably overkill for most people, but it's good to be aware of if your savehist file starts growing 
+Probably overkill for most people, but it's good to be aware of if your savehist file starts growing.
+*** Faster Map Poping
+
+With this setting, after the first =C-u C-SPC= you can keep pressing just =C-SPC= to continue popping:
+
+#+begin_src emacs-lisp
+(setq set-mark-command-repeat-pop t)
+#+end_src
+
 ** UTF-8 Encoding
 
  Set all coding systems to utf-8

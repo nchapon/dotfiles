@@ -63,6 +63,8 @@
 
 (setq save-interprogram-paste-before-kill t)
 
+(setq kill-do-not-save-duplicates t)
+
 (setq savehist-additional-variables
       '(search-ring regexp-search-ring kill-ring))
 
@@ -71,6 +73,8 @@
             (setq kill-ring
                   (mapcar #'substring-no-properties
                           (cl-remove-if-not #'stringp kill-ring)))))
+
+(setq set-mark-command-repeat-pop t)
 
 (prefer-coding-system 'utf-8-unix)
 (set-clipboard-coding-system 'utf-8-unix)
