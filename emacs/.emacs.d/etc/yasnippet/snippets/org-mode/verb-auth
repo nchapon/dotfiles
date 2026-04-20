@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: verb-auth
+# key: verb-auth
+# --
+
+* Requests                                                           :verb:
+
+** API Authentication
+:properties:
+:Verb-Store: oauth2-response
+:end:
+POST ${1:token_endpoint}
+Content-Type: application/x-www-form-urlencoded
+
+client_id=${2:id}&client_secret=${3:secret}&grant_type=client_credentials
+** End
+
+$0
