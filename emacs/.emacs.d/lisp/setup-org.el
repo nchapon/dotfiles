@@ -228,6 +228,7 @@
   (interactive)
   (let ( (header-title (format-time-string "%Y-W%W" ))
          (current-day (nc--get-current-day)))
+    (push-mark (point) t t) ;; mark point 
     ;; Don't change location of point.
     (goto-char (point-min)) ;; From the beginning...
     (if (search-forward header-title)
