@@ -224,7 +224,11 @@ Use `treemacs' command for old functionality."
 (global-set-key (kbd "C-c z r") 'kirigami-open-folds)    ; Open all folds
 (global-set-key (kbd "C-c z c") 'kirigami-close-fold)    ; Close fold at point
 (global-set-key (kbd "C-c z m") 'kirigami-close-folds)   ; Close all folds
-(global-set-key (kbd "C-c z TAB") 'kirigami-toggle-fold) ; Toggle fold at point
+(global-set-key (kbd "C-c z a") 'kirigami-toggle-fold) ; Toggle fold at point
+
+;; Experimental
+(global-set-key (kbd "C-S-<down>") 'kirigami-open-fold)     
+(global-set-key (kbd "C-S-<up>") 'kirigami-close-fold)
 
 (use-package rainbow-mode
   :ensure t

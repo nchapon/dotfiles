@@ -1640,7 +1640,7 @@ Use `treemacs' command for old functionality."
            (message "No valid project in current buffer; opening last treemacs session")
            (treemacs))))))
 #+end_src
-** Outline Inde
+** Outline Indent
 #+begin_src emacs-lisp
 (use-package outline-indent
   :commands outline-indent-minor-mode
@@ -1648,6 +1648,9 @@ Use `treemacs' command for old functionality."
   (outline-indent-ellipsis " ▼"))
 #+end_src
 ** Kirigami
+:PROPERTIES:
+:ID:       d8a6df9e-2bbb-4ced-9dcf-af53388e72a0
+:END:
 
 #+begin_quote
 The kirigami Emacs package provides a unified method to fold and unfold text in Emacs across a diverse set of Emacs modes.
@@ -1662,7 +1665,12 @@ The kirigami Emacs package provides a unified method to fold and unfold text in 
 (global-set-key (kbd "C-c z r") 'kirigami-open-folds)    ; Open all folds
 (global-set-key (kbd "C-c z c") 'kirigami-close-fold)    ; Close fold at point
 (global-set-key (kbd "C-c z m") 'kirigami-close-folds)   ; Close all folds
-(global-set-key (kbd "C-c z TAB") 'kirigami-toggle-fold) ; Toggle fold at point
+(global-set-key (kbd "C-c z a") 'kirigami-toggle-fold) ; Toggle fold at point
+
+;; Experimental
+(global-set-key (kbd "C-S-<down>") 'kirigami-open-fold)     
+(global-set-key (kbd "C-S-<up>") 'kirigami-close-fold)     
+
 #+end_src
 
 ** Rainbow mode
