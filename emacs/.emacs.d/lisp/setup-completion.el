@@ -106,7 +106,6 @@
          ("<help> a" . consult-apropos)            ;; orig. apropos-command
          ;; M-g bindings (goto-map)
          ;; C-M-g bindings (goto-map)
-         ("M-g ." . nc/consult-line-symbol-at-point)
          ("M-g e" . consult-compile-error)
          ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
          ("M-g g" . consult-goto-line)             ;; orig. goto-line
@@ -117,6 +116,7 @@
          ("M-g i" . consult-imenu)
          ("M-g I" . consult-imenu-multi)
          ;; M-s bindings (search-map)
+         ("M-s ." . nc/consult-line-symbol-at-point)
          ("M-s f" . consult-fd)
          ("M-s F" . consult-locate)
          ("M-s g" . consult-grep)
