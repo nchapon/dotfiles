@@ -1129,10 +1129,10 @@ capture was not aborted."
     (("C-c n F" . consult-notes)
      ("C-c n s" . consult-notes-search-in-all-notes)))
 
-(transient-define-prefix nc/transient-org-menu ()
+(transient-define-prefix nc/org-tmenu ()
   "Transient menu for managing org-mode links."
   [["Org Commands"
-    ("l" "Link..." nc/transient-org-link-submenu)
+    ("l" "Link..." nc/org-link-tmenu)
     ]
    ["GTD"
     ("s"  "Start Daily Review" nc/org-insert-daily-review)
@@ -1146,16 +1146,16 @@ capture was not aborted."
     ]
    ])
 
-(transient-define-prefix nc/transient-org-link-submenu ()
+(transient-define-prefix nc/org-link-tmenu ()
   "Submenu for additional link operations."
   ["Link Management"
    ["Insert"
     ("i" "Insert link" org-insert-link)
     ("s" "Store link" org-store-link)]
    ["Return"
-    ("q" "Back to main menu" nc/transient-org-menu)]])
+    ("q" "Back to main menu" nc/org-tmenu)]])
 
-(define-key org-mode-map (kbd "C-; C-;") 'nc/transient-org-menu)
+(define-key org-mode-map (kbd "C-; C-;") 'nc/org-tmenu)
 
 (provide 'setup-org)
 ;;; setup-org.el ends here

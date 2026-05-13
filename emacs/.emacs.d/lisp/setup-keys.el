@@ -152,15 +152,15 @@
 
 (keymap-set global-map "C-c p" nc-project-map)
 
-(defvar-keymap nc-transient-map
+(defvar-keymap nc-tmenu-map
   :doc "My custom Transient Menu Map"
-  "f" #'nc/file-transient
-  "g" #'nc/goto-transient
-  "s" #'nc/search-transient
-  "t" #'nc/toggle-transient
-  "w" #'nc/window-transient)
+  "f" #'nc/file-tmenu
+  "g" #'nc/goto-tmenu
+  "s" #'nc/search-tmenu
+  "t" #'nc/toggle-tmenu
+  "w" #'nc/window-tmenu)
 
-(keymap-set global-map "C-c t" nc-transient-map)
+(keymap-set global-map "C-c t" nc-tmenu-map)
 
 (defvar-keymap nc-version-map
   :doc "My custom Version Control Map"
@@ -221,7 +221,7 @@
     (message "Copied: %s"
              (substring-no-properties (car kill-ring)))))
 
-(transient-define-prefix nc/yank-path-menu ()
+(transient-define-prefix nc/file-yank-path-tmenu ()
   "Yank Paths"
   
   [["Yank Paths"
@@ -241,17 +241,17 @@
         (call-interactively #'nc/yank-buffer-path))))
    ]])
 
-(transient-define-prefix nc/file-transient ()
+(transient-define-prefix nc/file-tmenu ()
   "File"
   
   [["Actions"
    ("r" "Rename file & buffer" rename-visited-file)
    ("d" "Delete file & buffer" crux-delete-file-and-buffer)
    ("c" "Copy file" crux-copy-file-preserve-attributes)
-   ("y" "Yank buffer path..." nc/yank-path-menu)]
+   ("y" "Yank buffer path..." nc/file-yank-path-tmenu)]
   ])
 
-(global-set-key (kbd "C-c M-f") 'nc/file-transient)
+(global-set-key (kbd "C-c M-f") 'nc/file-tmenu)
 
 (defun nc/goto-ssh-config-file ()
   "Goto my ssh config files"
@@ -263,7 +263,7 @@
   (interactive)
   (find-file "~/.authinfo.gpg"))
 
-(transient-define-prefix nc/goto-transient ()
+(transient-define-prefix nc/goto-tmenu ()
   "Goto Transient Menu"
   
   [["Config File & Credentials"
@@ -280,7 +280,7 @@
     ("P" "Projects" nc/goto-projects-dir)
     ]])
 
-(transient-define-prefix nc/search-transient ()
+(transient-define-prefix nc/search-tmenu ()
   "Transient Search Menu"
   ["Search"
    ["Org Files"
@@ -290,9 +290,9 @@
     ("p" "Search in Projects" nc/consult-rg-my-projects)
     ("." "symbol" nc/consult-line-symbol-at-point)]])
 
-(global-set-key (kbd "C-c M-s") 'nc/search-transient)
+(global-set-key (kbd "C-c M-s") 'nc/search-tmenu)
 
-(transient-define-prefix nc/toggle-transient ()
+(transient-define-prefix nc/toggle-tmenu ()
   "Toggle common Emacs settings."
   ["Toggle Menu"
    
@@ -482,9 +482,9 @@
         (display-line-numbers-mode 'toggle)
       (linum-mode 'toggle)))
 
-(global-set-key (kbd "C-c M-t") 'nc/toggle-transient)
+(global-set-key (kbd "C-c M-t") 'nc/toggle-tmenu)
 
-(transient-define-prefix nc/window-transient ()
+(transient-define-prefix nc/window-tmenu ()
   "Simple frame, window and buffer management."
   ["Frame, Window & Buffer Manager"
    
@@ -514,18 +514,18 @@
     ("x" "Swap windows" window-swap-states)
     ("q" "Quit" transient-quit-one)]])
 
-(global-set-key (kbd "C-c M-w") 'nc/window-transient)
+(global-set-key (kbd "C-c M-w") 'nc/window-tmenu)
 
-(transient-define-prefix nc/main-transient ()
+(transient-define-prefix nc/main-tmenu ()
   "Main dispatcher menu to select a transient menu to open."
   ["Navigation & Commands"
-   ("f" "File"    nc/file-transient)
-   ("g" "Goto"    nc/goto-transient)
+   ("f" "File"    nc/file-tmenu)
+   ("g" "Goto"    nc/goto-tmenu)
    ("s" "Search"  nc/search-transient)
-   ("t" "Toggle"  nc/toggle-transient)
-   ("w" "Window"  nc/window-transient)])
+   ("t" "Toggle"  nc/toggle-tmenu)
+   ("w" "Window"  nc/window-tmenu)])
  
-(global-set-key (kbd "C-c M-m") #'nc/main-transient)
+(global-set-key (kbd "C-c M-m") #'nc/main-tmenu)
 
 (provide 'setup-keys)
 ;;; setup-keys.el ends here

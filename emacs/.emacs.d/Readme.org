@@ -814,15 +814,15 @@ See also : https://github.com/pivaldi/pimacs/tree/master/doc
 
 (keymap-set global-map "C-c p" nc-project-map)
 
-(defvar-keymap nc-transient-map
+(defvar-keymap nc-tmenu-map
   :doc "My custom Transient Menu Map"
-  "f" #'nc/file-transient
-  "g" #'nc/goto-transient
-  "s" #'nc/search-transient
-  "t" #'nc/toggle-transient
-  "w" #'nc/window-transient)
+  "f" #'nc/file-tmenu
+  "g" #'nc/goto-tmenu
+  "s" #'nc/search-tmenu
+  "t" #'nc/toggle-tmenu
+  "w" #'nc/window-tmenu)
 
-(keymap-set global-map "C-c t" nc-transient-map)
+(keymap-set global-map "C-c t" nc-tmenu-map)
 
 (defvar-keymap nc-version-map
   :doc "My custom Version Control Map"
@@ -893,7 +893,7 @@ Be sure transient is loaded.
     (message "Copied: %s"
              (substring-no-properties (car kill-ring)))))
 
-(transient-define-prefix nc/yank-path-menu ()
+(transient-define-prefix nc/file-yank-path-tmenu ()
   "Yank Paths"
   
   [["Yank Paths"
@@ -913,17 +913,17 @@ Be sure transient is loaded.
         (call-interactively #'nc/yank-buffer-path))))
    ]])
 
-(transient-define-prefix nc/file-transient ()
+(transient-define-prefix nc/file-tmenu ()
   "File"
   
   [["Actions"
    ("r" "Rename file & buffer" rename-visited-file)
    ("d" "Delete file & buffer" crux-delete-file-and-buffer)
    ("c" "Copy file" crux-copy-file-preserve-attributes)
-   ("y" "Yank buffer path..." nc/yank-path-menu)]
+   ("y" "Yank buffer path..." nc/file-yank-path-tmenu)]
   ])
 
-(global-set-key (kbd "C-c M-f") 'nc/file-transient)
+(global-set-key (kbd "C-c M-f") 'nc/file-tmenu)
 #+end_src
 *** Goto Menu
 #+begin_src emacs-lisp
@@ -937,7 +937,7 @@ Be sure transient is loaded.
   (interactive)
   (find-file "~/.authinfo.gpg"))
 
-(transient-define-prefix nc/goto-transient ()
+(transient-define-prefix nc/goto-tmenu ()
   "Goto Transient Menu"
   
   [["Config File & Credentials"
@@ -956,7 +956,7 @@ Be sure transient is loaded.
 #+end_src
 *** Search Menu
 #+begin_src emacs-lisp
-(transient-define-prefix nc/search-transient ()
+(transient-define-prefix nc/search-tmenu ()
   "Transient Search Menu"
   ["Search"
    ["Org Files"
@@ -966,12 +966,12 @@ Be sure transient is loaded.
     ("p" "Search in Projects" nc/consult-rg-my-projects)
     ("." "symbol" nc/consult-line-symbol-at-point)]])
 
-(global-set-key (kbd "C-c M-s") 'nc/search-transient)
+(global-set-key (kbd "C-c M-s") 'nc/search-tmenu)
 #+end_src
 
 *** Toggle Menu
 #+begin_src elisp
-(transient-define-prefix nc/toggle-transient ()
+(transient-define-prefix nc/toggle-tmenu ()
   "Toggle common Emacs settings."
   ["Toggle Menu"
    
@@ -1161,13 +1161,13 @@ Be sure transient is loaded.
         (display-line-numbers-mode 'toggle)
       (linum-mode 'toggle)))
 
-(global-set-key (kbd "C-c M-t") 'nc/toggle-transient)
+(global-set-key (kbd "C-c M-t") 'nc/toggle-tmenu)
 #+end_src
 
 *** Window Menu
 
 #+begin_src emacs-lisp
-(transient-define-prefix nc/window-transient ()
+(transient-define-prefix nc/window-tmenu ()
   "Simple frame, window and buffer management."
   ["Frame, Window & Buffer Manager"
    
@@ -1197,20 +1197,20 @@ Be sure transient is loaded.
     ("x" "Swap windows" window-swap-states)
     ("q" "Quit" transient-quit-one)]])
 
-(global-set-key (kbd "C-c M-w") 'nc/window-transient)
+(global-set-key (kbd "C-c M-w") 'nc/window-tmenu)
 #+end_src
 *** Main Dispatcher Menu
 #+begin_src emacs-lisp
-(transient-define-prefix nc/main-transient ()
+(transient-define-prefix nc/main-tmenu ()
   "Main dispatcher menu to select a transient menu to open."
   ["Navigation & Commands"
-   ("f" "File"    nc/file-transient)
-   ("g" "Goto"    nc/goto-transient)
+   ("f" "File"    nc/file-tmenu)
+   ("g" "Goto"    nc/goto-tmenu)
    ("s" "Search"  nc/search-transient)
-   ("t" "Toggle"  nc/toggle-transient)
-   ("w" "Window"  nc/window-transient)])
+   ("t" "Toggle"  nc/toggle-tmenu)
+   ("w" "Window"  nc/window-tmenu)])
  
-(global-set-key (kbd "C-c M-m") #'nc/main-transient)
+(global-set-key (kbd "C-c M-m") #'nc/main-tmenu)
 #+end_src
 * Windows
 :properties:
@@ -3644,10 +3644,10 @@ I try to do a lot of things with =org-roam= :
 #+end_src
 ** Transient Org Menu
 #+begin_src emacs-lisp
-(transient-define-prefix nc/transient-org-menu ()
+(transient-define-prefix nc/org-tmenu ()
   "Transient menu for managing org-mode links."
   [["Org Commands"
-    ("l" "Link..." nc/transient-org-link-submenu)
+    ("l" "Link..." nc/org-link-tmenu)
     ]
    ["GTD"
     ("s"  "Start Daily Review" nc/org-insert-daily-review)
@@ -3661,16 +3661,16 @@ I try to do a lot of things with =org-roam= :
     ]
    ])
 
-(transient-define-prefix nc/transient-org-link-submenu ()
+(transient-define-prefix nc/org-link-tmenu ()
   "Submenu for additional link operations."
   ["Link Management"
    ["Insert"
     ("i" "Insert link" org-insert-link)
     ("s" "Store link" org-store-link)]
    ["Return"
-    ("q" "Back to main menu" nc/transient-org-menu)]])
+    ("q" "Back to main menu" nc/org-tmenu)]])
 
-(define-key org-mode-map (kbd "C-; C-;") 'nc/transient-org-menu)
+(define-key org-mode-map (kbd "C-; C-;") 'nc/org-tmenu)
 #+end_src
 * Programming
 :properties:
@@ -4036,7 +4036,7 @@ GitHub Flavored Markdown by default for README.md files.
          ("\\.markdown\\'" . markdown-mode))
   :bind
   (:map markdown-mode-map
-        ("C-; C-;" . nc/transient-markdown-menu))
+        ("C-; C-;" . nc/markdown-tmenu))
   :config
   (setq markdown-live-preview-delete-export 'delete-on-destroy)
   (setq markdown-fontify-code-blocks-natively t)
@@ -4102,7 +4102,7 @@ GitHub Flavored Markdown by default for README.md files.
 *** Markdown Transient Menu
 
 #+begin_src emacs-lisp
-(transient-define-prefix nc/transient-markdown-menu ()
+(transient-define-prefix nc/markdown-tmenu ()
   "Markdown Transient Menu"
   [
    ["Actions"
@@ -4132,7 +4132,7 @@ Needs Java and plantuml.jar installed in =~/opt=
   :bind
   (:map plantuml-mode-map
         ("C-c C-p" . nc/plantuml-generate-png)
-        ("C-; C-;" . nc/transient-plantuml-menu))
+        ("C-; C-;" . nc/plantuml-tmenu))
   :config
   (setq plantuml-output-type "png")
   (defun nc/plantuml-generate-png ()
@@ -4185,7 +4185,7 @@ Needs Java and plantuml.jar installed in =~/opt=
 *** PlantUML Transient Menu
 
 #+begin_src emacs-lisp
-(transient-define-prefix nc/transient-plantuml-menu ()
+(transient-define-prefix nc/plantuml-tmenu ()
   "Python tools"
   [
    ["Actions"
@@ -4392,7 +4392,7 @@ Automatic generation of function docstrings according to the [[https://google.gi
 *** Transient Python Menu 
 
 #+begin_src elisp
-(transient-define-prefix nc/transient-python-menu ()
+(transient-define-prefix nc/python-tmenu ()
   "Python tools"
   [
    ["Insert"
@@ -4410,7 +4410,7 @@ Automatic generation of function docstrings according to the [[https://google.gi
                            (interactive)
                            (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
 
-(define-key python-ts-mode-map (kbd "C-; C-;") 'nc/transient-python-menu)
+(define-key python-ts-mode-map (kbd "C-; C-;") 'nc/python-tmenu)
 #+end_src
 ** Rust
 Rust4Fun

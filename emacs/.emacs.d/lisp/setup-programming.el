@@ -283,7 +283,7 @@
          ("\\.markdown\\'" . markdown-mode))
   :bind
   (:map markdown-mode-map
-        ("C-; C-;" . nc/transient-markdown-menu))
+        ("C-; C-;" . nc/markdown-tmenu))
   :config
   (setq markdown-live-preview-delete-export 'delete-on-destroy)
   (setq markdown-fontify-code-blocks-natively t)
@@ -344,7 +344,7 @@
   (:map markdown-mode-map
         ([remap markdown-preview] . gh-md-render-buffer)))
 
-(transient-define-prefix nc/transient-markdown-menu ()
+(transient-define-prefix nc/markdown-tmenu ()
   "Markdown Transient Menu"
   [
    ["Actions"
@@ -362,7 +362,7 @@
   :bind
   (:map plantuml-mode-map
         ("C-c C-p" . nc/plantuml-generate-png)
-        ("C-; C-;" . nc/transient-plantuml-menu))
+        ("C-; C-;" . nc/plantuml-tmenu))
   :config
   (setq plantuml-output-type "png")
   (defun nc/plantuml-generate-png ()
@@ -412,7 +412,7 @@
   (when is-linux
     (plantuml-preview-current-block 1)))
 
-(transient-define-prefix nc/transient-plantuml-menu ()
+(transient-define-prefix nc/plantuml-tmenu ()
   "Python tools"
   [
    ["Actions"
@@ -574,7 +574,7 @@
 
 (add-hook 'python-ts-mode-hook #'my/python-completion-category)
 
-(transient-define-prefix nc/transient-python-menu ()
+(transient-define-prefix nc/python-tmenu ()
   "Python tools"
   [
    ["Insert"
@@ -592,7 +592,7 @@
                            (interactive)
                            (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
 
-(define-key python-ts-mode-map (kbd "C-; C-;") 'nc/transient-python-menu)
+(define-key python-ts-mode-map (kbd "C-; C-;") 'nc/python-tmenu)
 
 ;;
 ;; Requirements:
