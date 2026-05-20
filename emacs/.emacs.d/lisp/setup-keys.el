@@ -74,127 +74,135 @@
   (which-key-mode)
   (which-key-enable-god-mode-support))
 
-(defvar-keymap nc-code-map
-  :doc "My custom coding (LSP) map"
-  ;; Code
-  "s" #'consult-lsp-symbols
-  "r" #'lsp-rename
-  "o" #'lsp-organize-imports
-  "X" #'lsp-treemacs-errors-list
-  ":" #'lsp-treemacs-call-hierarchy
-  "S" #'lsp-treemacs-symbols
-  "?" #'lsp-treemacs-references)
+(use-package general
+  :ensure t
+  :config
 
-(keymap-set global-map "C-c l" nc-code-map)
+  ;; Remap quoted-insert and free C-q as leader
+  (global-set-key (kbd "C-S-q") #'quoted-insert)
+  (global-unset-key (kbd "C-q"))
 
-(defvar-keymap nc-file-map
-  :doc "My custom file keymap"
-  ;; File Commands
-  "." #'ffap
-  "M-." #'ffap-menu
-  "c" #'crux-copy-file-preserve-attributes
-  "d" #'crux-delete-file-and-buffer
-  "r" #'rename-visited-file
-  "y" #'nc/yank-path-menu
-  "m" #'nc/file-menu)
+  ;; Global leader — active in all modes
+  (general-create-definer nc/global-leader
+    :prefix "C-q")
 
-(keymap-set global-map "C-c f" nc-file-map)
+  ;; Mode-specific leaders — same prefix, scoped to their keymaps
+  (general-create-definer nc/org-leader
+    :keymaps 'org-mode-map
+    :prefix "C-q")
 
-(defvar-keymap nc-goto-map
-  :doc "My custom goto keymap"
-  "e" #'nc/goto-emacs-config
-  "a" #'nc/goto-authinfo-file
-  "p" #'nc/goto-my-credentials
-  "s" #'nc/goto-ssh-config-file
-  "A" #'nc/goto-archives-dir
-  "B" #'nc/open-bookmark
-  "P" #'nc/goto-projects-dir
-  "N" #'nc/goto-notes-dir
-  "T" #'nc/goto-templates-dir
-)
+  (general-create-definer nc/python-leader
+    :keymaps '(python-mode-map python-ts-mode-map)
+    :prefix "C-q")
 
-(keymap-set global-map "C-c g" nc-goto-map)
+  (general-create-definer nc/markdown-leader
+    :keymaps '(markdown-mode-map)
+    :prefix "C-q")
 
-(defvar-keymap nc-insert-map
-  :doc "My custom insert map"
-  ;; Insert
-  "d" #'nc/insert-datestamp-inactive
-  "D" #'nc/insert-datestamp
-  "e" #'emoji-search
-  "p" #'nc/generate-password
-  "t" #'tempel-insert
-  "u" #'nc/uuid
-  "y" #'consult-yasnippet
-  "Y" #'yankpad-insert)
+(nc/global-leader
 
-(keymap-set global-map "C-c i" nc-insert-map)
+  ;; --- Misc / top-level ---
+  "/" '(nc/consult-line-symbol-at-point :which-key "search symbol at point")
+  "." '(ffap                            :which-key "find file at point")
+  "B" '(nc/bookmark-open                :which-key "open bookmark")
 
-(defvar-keymap nc-notes-map
-  :doc "My custom notes map"
-  ;; Notes
-  "a" #'consult-org-agenda
-  "c" #'org-clock-goto
-  "d" #'denote-dired
-  "l" #'org-store-link
-  "s" #'nc/search-notes
-  "t" #'org-todo-list
-  "v" #'org-search-view)
+  ;; --- c · LSP / coding ---
+  "c"  '(:ignore t                   :which-key "code")
+  "cs" '(consult-lsp-symbols         :which-key "symbols")
+  "cr" '(lsp-rename                  :which-key "rename symbol")
+  "co" '(lsp-organize-imports        :which-key "organize imports")
+  "cX" '(lsp-treemacs-errors-list    :which-key "errors list")
+  "cH" '(lsp-treemacs-call-hierarchy :which-key "call hierarchy")
+  "cS" '(lsp-treemacs-symbols        :which-key "symbols tree")
+  "c?" '(lsp-treemacs-references     :which-key "references")
 
-(keymap-set global-map "C-c n" nc-notes-map)
+  ;; --- f · Files ---
+  "f"  '(:ignore t                           :which-key "file")
+  "f." '(ffap                                :which-key "find file at point")
+  "fm" '(ffap-menu                           :which-key "ffap menu")
+  "fc" '(crux-copy-file-preserve-attributes  :which-key "copy file")
+  "fd" '(crux-delete-file-and-buffer         :which-key "delete file + buffer")
+  "fr" '(rename-visited-file                 :which-key "rename file")
+  "fy" '(nc/yank-path-menu                   :which-key "yank path")
 
-(defvar-keymap nc-project-map
-  :doc "My custom kill map"
-  "," #'projectile-edit-dir-locals
-  "c" #'consult-projectile
-  "f" #'nc/consult-fd-my-projects
-  "p" #'projectile-command-map
-  "s" #'nc/consult-rg-my-projects)
+  ;; --- g · Go to ---
+  "g"  '(:ignore t               :which-key "goto")
+  "ga" '(nc/goto-authinfo-file   :which-key "authinfo")
+  "ge" '(nc/goto-emacs-config    :which-key "emacs config")
+  "gp" '(nc/goto-my-credentials  :which-key "credentials")
+  "gs" '(nc/goto-ssh-config-file :which-key "ssh config")
+  "gA" '(nc/goto-archives-dir    :which-key "archives dir")
+  "gB" '(nc/bookmark-open        :which-key "bookmarks")
+  "gP" '(nc/goto-projects-dir    :which-key "projects dir")
+  "gN" '(nc/goto-notes-dir       :which-key "notes dir")
+  "gT" '(nc/goto-templates-dir   :which-key "templates dir")
 
-(keymap-set global-map "C-c p" nc-project-map)
+  ;; --- i · Insert ---
+  "i"  '(:ignore t                    :which-key "insert")
+  "id" '(nc/insert-datestamp-inactive :which-key "date (inactive)")
+  "iD" '(nc/insert-datestamp          :which-key "date (active)")
+  "ie" '(emoji-search                 :which-key "emoji")
+  "ip" '(nc/generate-password         :which-key "password")
+  "it" '(tempel-insert                :which-key "tempel snippet")
+  "iu" '(nc/uuid                      :which-key "UUID")
+  "iy" '(consult-yasnippet            :which-key "yasnippet")
+  "iY" '(yankpad-insert               :which-key "yankpad")
 
-(defvar-keymap nc-tmenu-map
-  :doc "My custom Transient Menu Map"
-  "f" #'nc/file-tmenu
-  "g" #'nc/goto-tmenu
-  "s" #'nc/search-tmenu
-  "t" #'nc/toggle-tmenu
-  "w" #'nc/window-tmenu)
+  ;; --- o · Org / notes ---
+  "o"  '(:ignore t            :which-key "org")
+  "oa" '(consult-org-agenda   :which-key "agenda")
+  "oc" '(org-clock-goto       :which-key "clock goto")
+  "od" '(denote-dired         :which-key "denote dired")
+  "ol" '(org-agenda-open-link :which-key "open link")
+  "os" '(org-store-link       :which-key "store link")
+  "ot" '(org-todo-list        :which-key "todo list")
+  "ov" '(org-search-view      :which-key "search view")
 
-(keymap-set global-map "C-c t" nc-tmenu-map)
+  ;; --- p · Project ---
+  "p"  '(:ignore t                  :which-key "project")
+  "p," '(projectile-edit-dir-locals :which-key "edit dir-locals")
+  "pc" '(consult-projectile         :which-key "consult projectile")
+  "pf" '(nc/consult-fd-my-projects  :which-key "find file")
+  "pp" '(projectile-command-map     :which-key "projectile map")
+  "ps" '(nc/consult-rg-my-projects  :which-key "ripgrep search")
 
-(defvar-keymap nc-version-map
-  :doc "My custom Version Control Map"
-  "f" #'nc/vc-browse-remote-current-line
-  "R" #'nc/vc-browse-remote)
+  ;; --- w · Windows / frames ---
+  "w"   '(:ignore t              :which-key "window")
+  "wD"  '(delete-other-frames    :which-key "delete other frames")
+  "wf"  '(make-frame             :which-key "new frame")
+  "wk"  '(kill-buffer-and-window :which-key "kill buffer + window")
+  "wo"  '(other-frame            :which-key "other frame")
+  "wdd" '(windmove-delete-down   :which-key "delete window ↓")
+  "wdu" '(windmove-delete-up     :which-key "delete window ↑")
+  "wdl" '(windmove-delete-left   :which-key "delete window ←")
+  "wdr" '(windmove-delete-right  :which-key "delete window →")
 
-(keymap-set global-map "C-c v" nc-version-map)
+  ;; --- x · Misc utilities ---
+  "x"  '(:ignore t                          :which-key "misc")
+  "xc" '(calc                               :which-key "calculator")
+  "xd" '(nc/jwt-decode                      :which-key "decode JWT")
+  "xj" '(crux-top-join-line                 :which-key "join line")
+  "xo" '(nc/open-current-directory-external :which-key "open dir externally")
+  "xs" '(org-store-link                     :which-key "store link")
 
-(defvar-keymap nc-window-map
-  :doc "My custom window map"
-  "D" #'delete-other-frames
-  "b" #'display-buffer
-  "f" #'make-frame
-  "k" #'kill-buffer-and-window
-  "o" #'other-frame
-  "m" #'nc/window-menu
-  "M-n" #'windmove-display-new-frame
-  "C-d" #'windmove-delete-down
-  "C-u" #'windmove-delete-up
-  "C-l" #'windmove-delete-left
-  "C-r" #'windmove-delete-right)
+  ;; --- M- · Transient menus ---
+  "M-f" '(nc/file-tmenu   :which-key "file menu")
+  "M-g" '(nc/goto-tmenu   :which-key "goto menu")
+  "M-s" '(nc/search-tmenu :which-key "search menu")
+  "M-t" '(nc/toggle-tmenu :which-key "toggle menu")
+  "M-w" '(nc/window-tmenu :which-key "window menu"))
 
-(keymap-set global-map "C-c w" nc-window-map)
+;; org-mode
+(nc/org-leader
+  "C-q" '(nc/org-tmenu :which-key "org menu"))
 
-(defvar-keymap nc-extended-command-map
-  :doc "My custom extended command map"
-  ;; Open Commands
-  "c" #'calc
-  "d" #'nc/jwt-decode
-  "j" #'crux-top-join-line
-  "o" #'crux-open-with
-  "s" #'org-store-link)
+;; python-mode / python-ts-mode
+(nc/python-leader
+  "C-q" '(nc/python-tmenu :which-key "python menu"))
 
-(keymap-set global-map "C-c x" nc-extended-command-map)
+;; markdown-mode
+(nc/markdown-leader
+  "C-q" '(nc/markdown-tmenu :which-key "markdown menu")))
 
 (use-package transient
     :commands (transient-define-prefix))
@@ -289,8 +297,6 @@
    ["Projects"
     ("p" "Search in Projects" nc/consult-rg-my-projects)
     ("." "symbol" nc/consult-line-symbol-at-point)]])
-
-(global-set-key (kbd "C-c M-s") 'nc/search-tmenu)
 
 (transient-define-prefix nc/toggle-tmenu ()
   "Toggle common Emacs settings."
@@ -482,8 +488,6 @@
         (display-line-numbers-mode 'toggle)
       (linum-mode 'toggle)))
 
-(global-set-key (kbd "C-c M-t") 'nc/toggle-tmenu)
-
 (transient-define-prefix nc/window-tmenu ()
   "Simple frame, window and buffer management."
   ["Frame, Window & Buffer Manager"
@@ -513,19 +517,6 @@
     ("r" "Restore config" jump-to-register)
     ("x" "Swap windows" window-swap-states)
     ("q" "Quit" transient-quit-one)]])
-
-(global-set-key (kbd "C-c M-w") 'nc/window-tmenu)
-
-(transient-define-prefix nc/main-tmenu ()
-  "Main dispatcher menu to select a transient menu to open."
-  ["Navigation & Commands"
-   ("f" "File"    nc/file-tmenu)
-   ("g" "Goto"    nc/goto-tmenu)
-   ("s" "Search"  nc/search-transient)
-   ("t" "Toggle"  nc/toggle-tmenu)
-   ("w" "Window"  nc/window-tmenu)])
- 
-(global-set-key (kbd "C-c M-m") #'nc/main-tmenu)
 
 (provide 'setup-keys)
 ;;; setup-keys.el ends here

@@ -100,57 +100,40 @@
 (require 'org-element)
 (require 'seq)
 
-(defun nc-browser-bookmarks (org-file)
-  "Return all links from ORG-FILE."
+(defcustom nc/bookmarks-file "~/emacs-bookmarks.org"
+  "Path to the Org file used as a bookmark store."
+  :type 'file
+  :group 'nc)
+
+(defun nc/bookmarks--parse (org-file)
+  "Parse ORG-FILE and return a sorted list of formatted bookmark strings.
+Each entry is a two-line string: a padded title on line 1, the raw URL on line 2.
+Entries are sorted in reverse alphabetical order by title."
   (with-temp-buffer
-    (let (links)
-      (insert-file-contents org-file)
-      (org-mode)
+    (insert-file-contents org-file)
+    (org-mode)
+    (let (entries)
       (org-element-map (org-element-parse-buffer) 'link
         (lambda (link)
-          (let* ((raw-link (org-element-property :raw-link link))
-                 (content (org-element-contents link))
-                 (title (substring-no-properties (or (seq-first content) raw-link))))
-            (push (concat (s-pad-right 40 "." title)
+          (let* ((url   (org-element-property :raw-link link))
+                 (label (substring-no-properties
+                         (or (seq-first (org-element-contents link)) url))))
+            (push (concat (s-pad-right 40 "." label)
                           "\n"
-                          (propertize raw-link 'face 'whitespace-space)
+                          (propertize url 'face 'whitespace-space)
                           "\n")
-                  links)))
+                  entries)))
         nil nil 'link)
-      (seq-sort 'string-greaterp links))))
+      (seq-sort #'string-greaterp entries))))
 
-(defun nc/open-bookmark ()
+(defun nc/bookmark-open ()
+  "Select a bookmark from `nc/bookmarks-file' and open it in the browser.
+Uses `completing-read' for selection (works with Vertico, Ivy, etc.)."
   (interactive)
-  (browse-url (seq-elt (split-string (completing-read "Open: " (nc-browser-bookmarks "~/emacs-bookmarks.org")) "\n") 1)))
-
-(defun nc/vc-browse-remote (&optional current-line)
-  "Open the repository's remote URL in the browser.
-If CURRENT-LINE is non-nil, point to the current branch, file, and line.
-Otherwise, open the repository's main page."
-  (interactive "P")
-  (let* ((remote-url (string-trim (vc-git--run-command-string nil "config" "--get" "remote.origin.url")))
-		 (branch (string-trim (vc-git--run-command-string nil "rev-parse" "--abbrev-ref" "HEAD")))
-		 (file (string-trim (file-relative-name (buffer-file-name) (vc-root-dir))))
-		 (line (line-number-at-pos)))
-	(message "Opening remote on browser: %s" remote-url)
-	(if (and remote-url (string-match "\\(?:git@\\|https://\\)\\([^:/]+\\)[:/]\\(.+?\\)\\(?:\\.git\\)?$" remote-url))
-		(let ((host (match-string 1 remote-url))
-			  (path (match-string 2 remote-url)))
-		  ;; Convert SSH URLs to HTTPS (e.g., git@github.com:user/repo.git -> https://github.com/user/repo)
-		  (when (string-prefix-p "git@" host)
-			(setq host (replace-regexp-in-string "^git@" "" host)))
-		  ;; Construct the appropriate URL based on CURRENT-LINE
-		  (browse-url
-		   (if current-line
-			   (format "https://%s/%s/blob/%s/%s#L%d" host path branch file line)
-			 (format "https://%s/%s" host path))))
-	  (message "Could not determine repository URL"))))
-
-
-(defun nc/vc-browse-remote-current-line ()
-  (interactive)
-  (let ((current-prefix-arg '(4))) ;; C-u
-    (call-interactively #'nc/vc-browse-remote)))
+  (let* ((entries   (nc/bookmarks--parse nc/bookmarks-file))
+         (selection (completing-read "Bookmark: " entries nil t))
+         (url       (nth 1 (split-string selection "\n"))))
+    (browse-url url)))
 
 (defun nc/jwt-decode (start end)
   "Decode a JWT token from the selected region and display it in a JSON buffer.
@@ -200,6 +183,49 @@ If called from Lisp, START and END specify the region."
       (if (> pad 0)
           (concat b64 (make-string (- 4 pad) ?=))
         b64))))
+
+(defun nc/open-current-directory-external ()
+  "Open `default-directory' in the system's native file browser.
+Supports macOS (open), Windows (explorer), and Linux (xdg-open)."
+  (interactive)
+  (cond
+   ((eq system-type 'darwin)
+    (shell-command
+     (concat "open " (shell-quote-argument default-directory))))
+   ((eq system-type 'windows-nt)
+    (w32-shell-execute "open" default-directory))
+   ((eq system-type 'gnu/linux)
+    (let ((process-connection-type nil))
+      (start-process "" nil "xdg-open" default-directory)))))
+
+(defun nc/vc-browse-remote (&optional current-line)
+  "Open the repository's remote URL in the browser.
+If CURRENT-LINE is non-nil, point to the current branch, file, and line.
+Otherwise, open the repository's main page."
+  (interactive "P")
+  (let* ((remote-url (string-trim (vc-git--run-command-string nil "config" "--get" "remote.origin.url")))
+		 (branch (string-trim (vc-git--run-command-string nil "rev-parse" "--abbrev-ref" "HEAD")))
+		 (file (string-trim (file-relative-name (buffer-file-name) (vc-root-dir))))
+		 (line (line-number-at-pos)))
+	(message "Opening remote on browser: %s" remote-url)
+	(if (and remote-url (string-match "\\(?:git@\\|https://\\)\\([^:/]+\\)[:/]\\(.+?\\)\\(?:\\.git\\)?$" remote-url))
+		(let ((host (match-string 1 remote-url))
+			  (path (match-string 2 remote-url)))
+		  ;; Convert SSH URLs to HTTPS (e.g., git@github.com:user/repo.git -> https://github.com/user/repo)
+		  (when (string-prefix-p "git@" host)
+			(setq host (replace-regexp-in-string "^git@" "" host)))
+		  ;; Construct the appropriate URL based on CURRENT-LINE
+		  (browse-url
+		   (if current-line
+			   (format "https://%s/%s/blob/%s/%s#L%d" host path branch file line)
+			 (format "https://%s/%s" host path))))
+	  (message "Could not determine repository URL"))))
+
+
+(defun nc/vc-browse-remote-current-line ()
+  (interactive)
+  (let ((current-prefix-arg '(4))) ;; C-u
+    (call-interactively #'nc/vc-browse-remote)))
 
 (provide 'setup-functions)
 ;;; setup-functions.el ends here
