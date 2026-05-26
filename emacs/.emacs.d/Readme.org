@@ -766,98 +766,109 @@ global leader key. Mode-specific sub-leaders are defined for org, python, and ma
 *** Global Bindings (C-q …)
 
 #+begin_src emacs-lisp
-  (nc/global-leader
+(nc/global-leader
 
-    ;; --- Misc / top-level ---
-    "/" '(nc/consult-line-symbol-at-point :which-key "search symbol at point")
-    "." '(ffap                            :which-key "find file at point")
-    "B" '(nc/bookmark-open                :which-key "open bookmark")
+  ;; --- Misc / top-level ---
+  "/" '(nc/consult-line-symbol-at-point :which-key "search symbol at point")
+  "." '(ffap                            :which-key "find file at point")
+  "B" '(nc/bookmark-open                :which-key "open bookmark")
+  ";" '(nc/goto-emacs-config            :which-key "emacs config")
 
-    ;; --- c · LSP / coding ---
-    "c"  '(:ignore t                   :which-key "code")
-    "cs" '(consult-lsp-symbols         :which-key "symbols")
-    "cr" '(lsp-rename                  :which-key "rename symbol")
-    "co" '(lsp-organize-imports        :which-key "organize imports")
-    "cX" '(lsp-treemacs-errors-list    :which-key "errors list")
-    "cH" '(lsp-treemacs-call-hierarchy :which-key "call hierarchy")
-    "cS" '(lsp-treemacs-symbols        :which-key "symbols tree")
-    "c?" '(lsp-treemacs-references     :which-key "references")
+  ;; --- c · LSP / coding ---
+  "c"  '(:ignore t                   :which-key "code")
+  "cs" '(consult-lsp-symbols         :which-key "symbols")
+  "cr" '(lsp-rename                  :which-key "rename symbol")
+  "co" '(lsp-organize-imports        :which-key "organize imports")
+  "cX" '(lsp-treemacs-errors-list    :which-key "errors list")
+  "cH" '(lsp-treemacs-call-hierarchy :which-key "call hierarchy")
+  "cS" '(lsp-treemacs-symbols        :which-key "symbols tree")
+  "c?" '(lsp-treemacs-references     :which-key "references")
 
-    ;; --- f · Files ---
-    "f"  '(:ignore t                           :which-key "file")
-    "f." '(ffap                                :which-key "find file at point")
-    "fm" '(ffap-menu                           :which-key "ffap menu")
-    "fc" '(crux-copy-file-preserve-attributes  :which-key "copy file")
-    "fd" '(crux-delete-file-and-buffer         :which-key "delete file + buffer")
-    "fr" '(rename-visited-file                 :which-key "rename file")
-    "fy" '(nc/yank-path-menu                   :which-key "yank path")
+  ;; --- f · Files ---
+  "f"  '(:ignore t                           :which-key "file")
+  "f." '(ffap                                :which-key "find file at point")
+  "fm" '(ffap-menu                           :which-key "ffap menu")
+  "fc" '(crux-copy-file-preserve-attributes  :which-key "copy file")
+  "fd" '(crux-delete-file-and-buffer         :which-key "delete file + buffer")
+  "fr" '(rename-visited-file                 :which-key "rename file")
+  "fy" '(nc/yank-path-menu                   :which-key "yank path")
 
-    ;; --- g · Go to ---
-    "g"  '(:ignore t               :which-key "goto")
-    "ga" '(nc/goto-authinfo-file   :which-key "authinfo")
-    "ge" '(nc/goto-emacs-config    :which-key "emacs config")
-    "gp" '(nc/goto-my-credentials  :which-key "credentials")
-    "gs" '(nc/goto-ssh-config-file :which-key "ssh config")
-    "gA" '(nc/goto-archives-dir    :which-key "archives dir")
-    "gB" '(nc/bookmark-open        :which-key "bookmarks")
-    "gP" '(nc/goto-projects-dir    :which-key "projects dir")
-    "gN" '(nc/goto-notes-dir       :which-key "notes dir")
-    "gT" '(nc/goto-templates-dir   :which-key "templates dir")
+  ;; --- g · Go to ---
+  "g"  '(:ignore t               :which-key "goto")
+  "ga" '(nc/goto-authinfo-file   :which-key "authinfo")
+  "g;" '(nc/goto-emacs-config    :which-key "emacs config")
+  "gp" '(nc/goto-my-credentials  :which-key "credentials")
+  "gs" '(nc/goto-ssh-config-file :which-key "ssh config")
+  "gA" '(nc/goto-archives-dir    :which-key "archives dir")
+  "gB" '(nc/bookmark-open        :which-key "bookmarks")
+  "gP" '(nc/goto-projects-dir    :which-key "projects dir")
+  "gN" '(nc/goto-notes-dir       :which-key "notes dir")
+  "gT" '(nc/goto-templates-dir   :which-key "templates dir")
 
-    ;; --- i · Insert ---
-    "i"  '(:ignore t                    :which-key "insert")
-    "id" '(nc/insert-datestamp-inactive :which-key "date (inactive)")
-    "iD" '(nc/insert-datestamp          :which-key "date (active)")
-    "ie" '(emoji-search                 :which-key "emoji")
-    "ip" '(nc/generate-password         :which-key "password")
-    "it" '(tempel-insert                :which-key "tempel snippet")
-    "iu" '(nc/uuid                      :which-key "UUID")
-    "iy" '(consult-yasnippet            :which-key "yasnippet")
-    "iY" '(yankpad-insert               :which-key "yankpad")
+  ;; --- i · Insert ---
+  "i"  '(:ignore t                    :which-key "insert")
+  "id" '(nc/insert-datestamp-inactive :which-key "date (inactive)")
+  "iD" '(nc/insert-datestamp          :which-key "date (active)")
+  "ie" '(emoji-search                 :which-key "emoji")
+  "ip" '(nc/generate-password         :which-key "password")
+  "it" '(tempel-insert                :which-key "tempel snippet")
+  "iu" '(nc/uuid                      :which-key "UUID")
+  "iy" '(consult-yasnippet            :which-key "yasnippet")
+  "iY" '(yankpad-insert               :which-key "yankpad")
 
-    ;; --- o · Org / notes ---
-    "o"  '(:ignore t            :which-key "org")
-    "oa" '(consult-org-agenda   :which-key "agenda")
-    "oc" '(org-clock-goto       :which-key "clock goto")
-    "od" '(denote-dired         :which-key "denote dired")
-    "ol" '(org-agenda-open-link :which-key "open link")
-    "os" '(org-store-link       :which-key "store link")
-    "ot" '(org-todo-list        :which-key "todo list")
-    "ov" '(org-search-view      :which-key "search view")
+  ;; --- m · Mark ---
+  "m"  '(:ignore t                          :which-key "mark")
+  "mn" '(mc/mark-next-like-this             :which-key "next match")
+  "mp" '(mc/mark-previous-like-this         :which-key "prev match")
+  "ma" '(mc/mark-all-like-this              :which-key "mark all")
+  "ma" '(mc/mark-all-dwim                   :which-key "mark dwim")
+  "ml" '(mc/edit-lines                      :which-key "cursor per line")
+  "mb" '(mc/edit-beginnings-of-lines        :which-key "cursor bol")
+  "me" '(mc/edit-ends-of-lines              :which-key "cursor eol")
+  
+  ;; --- o · Org / notes ---
+  "o"  '(:ignore t            :which-key "org")
+  "oa" '(consult-org-agenda   :which-key "agenda")
+  "oc" '(org-clock-goto       :which-key "clock goto")
+  "od" '(denote-dired         :which-key "denote dired")
+  "ol" '(org-agenda-open-link :which-key "open link")
+  "os" '(org-store-link       :which-key "store link")
+  "ot" '(org-todo-list        :which-key "todo list")
+  "ov" '(org-search-view      :which-key "search view")
 
-    ;; --- p · Project ---
-    "p"  '(:ignore t                  :which-key "project")
-    "p," '(projectile-edit-dir-locals :which-key "edit dir-locals")
-    "pc" '(consult-projectile         :which-key "consult projectile")
-    "pf" '(nc/consult-fd-my-projects  :which-key "find file")
-    "pp" '(projectile-command-map     :which-key "projectile map")
-    "ps" '(nc/consult-rg-my-projects  :which-key "ripgrep search")
+  ;; --- p · Project ---
+  "p"  '(:ignore t                  :which-key "project")
+  "p," '(projectile-edit-dir-locals :which-key "edit dir-locals")
+  "pc" '(consult-projectile         :which-key "consult projectile")
+  "pf" '(nc/consult-fd-my-projects  :which-key "find file")
+  "pp" '(projectile-command-map     :which-key "projectile map")
+  "ps" '(nc/consult-rg-my-projects  :which-key "ripgrep search")
 
-    ;; --- w · Windows / frames ---
-    "w"   '(:ignore t              :which-key "window")
-    "wD"  '(delete-other-frames    :which-key "delete other frames")
-    "wf"  '(make-frame             :which-key "new frame")
-    "wk"  '(kill-buffer-and-window :which-key "kill buffer + window")
-    "wo"  '(other-frame            :which-key "other frame")
-    "wdd" '(windmove-delete-down   :which-key "delete window ↓")
-    "wdu" '(windmove-delete-up     :which-key "delete window ↑")
-    "wdl" '(windmove-delete-left   :which-key "delete window ←")
-    "wdr" '(windmove-delete-right  :which-key "delete window →")
+  ;; --- w · Windows / frames ---
+  "w"   '(:ignore t              :which-key "window")
+  "wD"  '(delete-other-frames    :which-key "delete other frames")
+  "wf"  '(make-frame             :which-key "new frame")
+  "wk"  '(kill-buffer-and-window :which-key "kill buffer + window")
+  "wo"  '(other-frame            :which-key "other frame")
+  "wdd" '(windmove-delete-down   :which-key "delete window ↓")
+  "wdu" '(windmove-delete-up     :which-key "delete window ↑")
+  "wdl" '(windmove-delete-left   :which-key "delete window ←")
+  "wdr" '(windmove-delete-right  :which-key "delete window →")
 
-    ;; --- x · Misc utilities ---
-    "x"  '(:ignore t                          :which-key "misc")
-    "xc" '(calc                               :which-key "calculator")
-    "xd" '(nc/jwt-decode                      :which-key "decode JWT")
-    "xj" '(crux-top-join-line                 :which-key "join line")
-    "xo" '(nc/open-current-directory-external :which-key "open dir externally")
-    "xs" '(org-store-link                     :which-key "store link")
+  ;; --- x · Misc utilities ---
+  "x"  '(:ignore t                          :which-key "misc")
+  "xc" '(calc                               :which-key "calculator")
+  "xd" '(nc/jwt-decode                      :which-key "decode JWT")
+  "xj" '(crux-top-join-line                 :which-key "join line")
+  "xo" '(nc/open-current-directory-external :which-key "open dir externally")
+  "xs" '(org-store-link                     :which-key "store link")
 
-    ;; --- M- · Transient menus ---
-    "M-f" '(nc/file-tmenu   :which-key "file menu")
-    "M-g" '(nc/goto-tmenu   :which-key "goto menu")
-    "M-s" '(nc/search-tmenu :which-key "search menu")
-    "M-t" '(nc/toggle-tmenu :which-key "toggle menu")
-    "M-w" '(nc/window-tmenu :which-key "window menu"))
+  ;; --- M- · Transient menus ---
+  "M-f" '(nc/file-tmenu   :which-key "file menu")
+  "M-g" '(nc/goto-tmenu   :which-key "goto menu")
+  "M-s" '(nc/search-tmenu :which-key "search menu")
+  "M-t" '(nc/toggle-tmenu :which-key "toggle menu")
+  "M-w" '(nc/window-tmenu :which-key "window menu"))
 #+end_src
 
 *** Mode-specific Bindings (C-q C-q)

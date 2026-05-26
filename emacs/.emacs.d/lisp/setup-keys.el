@@ -105,6 +105,7 @@
   "/" '(nc/consult-line-symbol-at-point :which-key "search symbol at point")
   "." '(ffap                            :which-key "find file at point")
   "B" '(nc/bookmark-open                :which-key "open bookmark")
+  ";" '(nc/goto-emacs-config            :which-key "emacs config")
 
   ;; --- c · LSP / coding ---
   "c"  '(:ignore t                   :which-key "code")
@@ -128,7 +129,7 @@
   ;; --- g · Go to ---
   "g"  '(:ignore t               :which-key "goto")
   "ga" '(nc/goto-authinfo-file   :which-key "authinfo")
-  "ge" '(nc/goto-emacs-config    :which-key "emacs config")
+  "g;" '(nc/goto-emacs-config    :which-key "emacs config")
   "gp" '(nc/goto-my-credentials  :which-key "credentials")
   "gs" '(nc/goto-ssh-config-file :which-key "ssh config")
   "gA" '(nc/goto-archives-dir    :which-key "archives dir")
@@ -148,6 +149,16 @@
   "iy" '(consult-yasnippet            :which-key "yasnippet")
   "iY" '(yankpad-insert               :which-key "yankpad")
 
+  ;; --- m · Mark ---
+  "m"  '(:ignore t                          :which-key "mark")
+  "mn" '(mc/mark-next-like-this             :which-key "next match")
+  "mp" '(mc/mark-previous-like-this         :which-key "prev match")
+  "ma" '(mc/mark-all-like-this              :which-key "mark all")
+  "ma" '(mc/mark-all-dwim                   :which-key "mark dwim")
+  "ml" '(mc/edit-lines                      :which-key "cursor per line")
+  "mb" '(mc/edit-beginnings-of-lines        :which-key "cursor bol")
+  "me" '(mc/edit-ends-of-lines              :which-key "cursor eol")
+  
   ;; --- o · Org / notes ---
   "o"  '(:ignore t            :which-key "org")
   "oa" '(consult-org-agenda   :which-key "agenda")
