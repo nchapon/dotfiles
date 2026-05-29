@@ -107,6 +107,8 @@
   "B" '(nc/bookmark-open                :which-key "open bookmark")
   ";" '(nc/goto-emacs-config            :which-key "emacs config")
 
+  "<up>"    '(kirigami-close-fold           :which-key "close fold")
+  "<down>"  '(kirigami-open-fold            :which-key "open fold")
   ;; --- c · LSP / coding ---
   "c"  '(:ignore t                   :which-key "code")
   "cs" '(consult-lsp-symbols         :which-key "symbols")
@@ -196,6 +198,16 @@
   "xo" '(nc/open-current-directory-external :which-key "open dir externally")
   "xs" '(org-store-link                     :which-key "store link")
 
+  ;; --- z · fold ---
+  "z"  '(:ignore t                            :which-key "fold actions") 
+  "z <up>"    '(kirigami-close-fold           :which-key "close fold")
+  "z <down>"  '(kirigami-open-fold            :which-key "open fold")
+  "z r"       '(kirigami-open-fold-rec        :which-key "open recursive")
+  "z o"       '(kirigami-open-folds           :which-key "open all")
+  "z c"       '(kirigami-close-folds          :which-key "close all")
+  "z t"       '(kirigami-toggle-fold          :which-key "toggle fold")
+
+  
   ;; --- M- · Transient menus ---
   "M-f" '(nc/file-tmenu   :which-key "file menu")
   "M-g" '(nc/goto-tmenu   :which-key "goto menu")

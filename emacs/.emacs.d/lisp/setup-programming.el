@@ -203,6 +203,33 @@
 ;; (use-package treesit-fold
 ;;   :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold"))
 
+
+(use-package treesit-fold
+  :commands (treesit-fold-close
+             treesit-fold-close-all
+             treesit-fold-open
+             treesit-fold-toggle
+             treesit-fold-open-all
+             treesit-fold-mode
+             global-treesit-fold-mode
+             treesit-fold-open-recursively
+             treesit-fold-line-comment-mode)
+
+  :custom
+  (treesit-fold-line-count-show t)
+  (treesit-fold-line-count-format " ?")
+
+  :config
+  (set-face-attribute 'treesit-fold-replacement-face nil
+                      :foreground "#808080"
+                      :box nil
+                      :weight 'bold))
+
+
+;; Data and Configuration
+(add-hook 'json-ts-mode-hook #'treesit-fold-mode)
+;; (add-hook 'toml-ts-mode-hook #'treesit-fold-mode)
+
 (use-package smartparens
   :defer t
   :diminish ""
