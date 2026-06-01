@@ -846,6 +846,11 @@ global leader key. Mode-specific sub-leaders are defined for org, python, and ma
   "pp" '(projectile-command-map     :which-key "projectile map")
   "ps" '(nc/consult-rg-my-projects  :which-key "ripgrep search")
 
+  ;; --- v · Version Control ---
+  "v"  '(:ignore t                           :which-key "vc actions")
+  "vf" '(nc/vc-browse-remote-current-line    :which-key "vc browse file")
+  "vr" '(nc/vc-browse-remote                 :which-key "vc browse repo")
+  
   ;; --- w · Windows / frames ---
   "w"   '(:ignore t              :which-key "window")
   "wD"  '(delete-other-frames    :which-key "delete other frames")
