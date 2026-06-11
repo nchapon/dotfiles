@@ -633,613 +633,6 @@ User interface library for Emacs editing commands.
 
 (keymap-global-set "C-o" #'casual-editkit-main-tmenu)
 #+end_src
-* Key Bindings
-:properties:
-:header-args+: :tangle "./lisp/setup-keys.el"
-:ID:       3fdc1f8d-a113-4282-aad3-a0afe66d120e
-:end:
-Key bindings configuration module automatically tangled in =./lisp/setup-keys.el=
-#+begin_src emacs-lisp :noweb yes
-  ;;; setup-keys.el --- Key Bindings module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
-
-  <<nc-header>>
-#+end_src
-
-
-
-** Global Key Bindings
-:PROPERTIES:
-:ID:       82fbc0b5-2c93-4062-8901-80ee49883d4e
-:END:
-Some Emacs Global Bindings are redefined here.
-#+begin_src emacs-lisp
-;; Unbind unneeded keys
-(global-set-key (kbd "C-z") nil)
-(global-set-key (kbd "C-l") nil)
-(global-set-key (kbd "M-z") nil)
-(global-set-key (kbd "C-x C-z") nil)
-(global-set-key (kbd "M-o") nil)
-(global-set-key (kbd "M-SPC") nil)
-
-
-(global-set-key (kbd "C-+") #'text-scale-increase)
-(global-set-key (kbd "C--") #'text-scale-decrease)
-
-;; Prefer backward-kill-word over Backspace
-(global-set-key (kbd "C-w") #'backward-kill-word)
-(global-set-key (kbd "C-x C-k") #'kill-region)
-
-(global-set-key (kbd "C-x C-r") #'recentf-open-files)
-
-;; Move up/down paragraph
-(global-set-key (kbd "M-n") #'forward-paragraph)
-(global-set-key (kbd "M-p") #'backward-paragraph)
-(global-set-key (kbd "C-x c") #'compile)
-
-;; Remap goto-map 
-(global-set-key (kbd "C-M-g") goto-map)
-
-;; Functions
-(bind-keys
- ("<f5>" . revert-buffer)
- ("C-<f5>" . magit-log-buffer-file)
- ("<f9>" . treemacs)
- ("<f10>" . org-capture)
- ;; Not really used ??
- ("<f11>" . org-clock-goto)
- ("<f12>" . org-agenda)
- ("C-<f12>" . org-agenda))
-
-;; Tools alt-[0-9]
-(bind-keys
- ("M-0" . nc/maximize-or-split-window-vertically))
-#+end_src
-** Key Chords
-
-#+begin_src emacs-lisp
-  (use-package key-chord
-    :init
-    (key-chord-mode 1)
-    (key-chord-define-global "FF" 'projectile-find-file)
-    (key-chord-define-global "GG" 'consult-ripgrep)  
-    (key-chord-define-global "OO" 'consult-outline)
-    (key-chord-define-global "DD" 'delete-region)
-    (key-chord-define-global "??" 'nc/search-notes) 
-    (key-chord-define-global "BB" 'beginning-of-buffer)
-    (key-chord-define-global "JJ" 'crux-top-join-line)
-    (key-chord-define-global "MM" 'nc/maximize-or-split-window-vertically)
-    (key-chord-define-global "$$" 'end-of-buffer))
-#+end_src
-
-** Which Key
-
-[[https://github.com/justbur/emacs-which-key][Which Key]] is a minor mode for Emacs that displays the key bindings following
-your currently entered incomplete command (a prefix) in a popup.
-
-#+begin_src emacs-lisp
-  (use-package which-key
-    :diminish
-    :custom
-    (which-key-separator " ")
-    (which-key-prefix-prefix "+")
-    :config
-    (which-key-mode)
-    (which-key-enable-god-mode-support))
-#+end_src
-
-
-** Unified keybindings with C-q
-
-Defines a unified keybinding system using ~general.el~.
-~C-q~ is freed from ~quoted-insert~ (remapped to ~C-S-q~) and repurposed as the
-global leader key. Mode-specific sub-leaders are defined for org, python, and markdown.
-
-*** Setup & Leader Definitions
-
-#+begin_src emacs-lisp
-(use-package general
-  :ensure t
-  :config
-
-  ;; Remap quoted-insert and free C-q as leader
-  (global-set-key (kbd "C-S-q") #'quoted-insert)
-  (global-unset-key (kbd "C-q"))
-
-  ;; Global leader — active in all modes
-  (general-create-definer nc/global-leader
-    :prefix "C-q")
-
-  ;; Mode-specific leaders — same prefix, scoped to their keymaps
-  (general-create-definer nc/org-leader
-    :keymaps 'org-mode-map
-    :prefix "C-q")
-
-  (general-create-definer nc/python-leader
-    :keymaps '(python-mode-map python-ts-mode-map)
-    :prefix "C-q")
-
-  (general-create-definer nc/markdown-leader
-    :keymaps '(markdown-mode-map)
-    :prefix "C-q")
-#+end_src
-
-*** Global Bindings (C-q …)
-
-#+begin_src emacs-lisp
-(nc/global-leader
-
-  ;; --- Misc / top-level ---
-  "/" '(nc/consult-line-symbol-at-point :which-key "search symbol at point")
-  "." '(ffap                            :which-key "find file at point")
-  "B" '(nc/bookmark-open                :which-key "open bookmark")
-  ";" '(nc/goto-emacs-config            :which-key "emacs config")
-
-  "<up>"    '(kirigami-close-fold           :which-key "close fold")
-  "<down>"  '(kirigami-open-fold            :which-key "open fold")
-  ;; --- c · LSP / coding ---
-  "c"  '(:ignore t                   :which-key "code")
-  "cs" '(consult-lsp-symbols         :which-key "symbols")
-  "cr" '(lsp-rename                  :which-key "rename symbol")
-  "co" '(lsp-organize-imports        :which-key "organize imports")
-  "cX" '(lsp-treemacs-errors-list    :which-key "errors list")
-  "cH" '(lsp-treemacs-call-hierarchy :which-key "call hierarchy")
-  "cS" '(lsp-treemacs-symbols        :which-key "symbols tree")
-  "c?" '(lsp-treemacs-references     :which-key "references")
-
-  ;; --- f · Files ---
-  "f"  '(:ignore t                           :which-key "file")
-  "f." '(ffap                                :which-key "find file at point")
-  "fm" '(ffap-menu                           :which-key "ffap menu")
-  "fc" '(crux-copy-file-preserve-attributes  :which-key "copy file")
-  "fd" '(crux-delete-file-and-buffer         :which-key "delete file + buffer")
-  "fr" '(rename-visited-file                 :which-key "rename file")
-  "fy" '(nc/yank-path-menu                   :which-key "yank path")
-
-  ;; --- g · Go to ---
-  "g"  '(:ignore t               :which-key "goto")
-  "ga" '(nc/goto-authinfo-file   :which-key "authinfo")
-  "g;" '(nc/goto-emacs-config    :which-key "emacs config")
-  "gp" '(nc/goto-my-credentials  :which-key "credentials")
-  "gs" '(nc/goto-ssh-config-file :which-key "ssh config")
-  "gA" '(nc/goto-archives-dir    :which-key "archives dir")
-  "gB" '(nc/bookmark-open        :which-key "bookmarks")
-  "gP" '(nc/goto-projects-dir    :which-key "projects dir")
-  "gN" '(nc/goto-notes-dir       :which-key "notes dir")
-  "gT" '(nc/goto-templates-dir   :which-key "templates dir")
-
-  ;; --- i · Insert ---
-  "i"  '(:ignore t                    :which-key "insert")
-  "id" '(nc/insert-datestamp-inactive :which-key "date (inactive)")
-  "iD" '(nc/insert-datestamp          :which-key "date (active)")
-  "ie" '(emoji-search                 :which-key "emoji")
-  "ip" '(nc/generate-password         :which-key "password")
-  "it" '(tempel-insert                :which-key "tempel snippet")
-  "iu" '(nc/uuid                      :which-key "UUID")
-  "iy" '(consult-yasnippet            :which-key "yasnippet")
-  "iY" '(yankpad-insert               :which-key "yankpad")
-
-  ;; --- m · Mark ---
-  "m"  '(:ignore t                          :which-key "mark")
-  "mn" '(mc/mark-next-like-this             :which-key "next match")
-  "mp" '(mc/mark-previous-like-this         :which-key "prev match")
-  "ma" '(mc/mark-all-like-this              :which-key "mark all")
-  "ma" '(mc/mark-all-dwim                   :which-key "mark dwim")
-  "ml" '(mc/edit-lines                      :which-key "cursor per line")
-  "mb" '(mc/edit-beginnings-of-lines        :which-key "cursor bol")
-  "me" '(mc/edit-ends-of-lines              :which-key "cursor eol")
-  
-  ;; --- o · Org / notes ---
-  "o"  '(:ignore t            :which-key "org")
-  "oa" '(consult-org-agenda   :which-key "agenda")
-  "oc" '(org-clock-goto       :which-key "clock goto")
-  "od" '(denote-dired         :which-key "denote dired")
-  "ol" '(org-agenda-open-link :which-key "open link")
-  "os" '(org-store-link       :which-key "store link")
-  "ot" '(org-todo-list        :which-key "todo list")
-  "ov" '(org-search-view      :which-key "search view")
-
-  ;; --- p · Project ---
-  "p"  '(:ignore t                  :which-key "project")
-  "p," '(projectile-edit-dir-locals :which-key "edit dir-locals")
-  "pc" '(consult-projectile         :which-key "consult projectile")
-  "pf" '(nc/consult-fd-my-projects  :which-key "find file")
-  "pp" '(projectile-command-map     :which-key "projectile map")
-  "ps" '(nc/consult-rg-my-projects  :which-key "ripgrep search")
-
-  ;; --- v · Version Control ---
-  "v"  '(:ignore t                           :which-key "vc actions")
-  "vf" '(nc/vc-browse-remote-current-line    :which-key "vc browse file")
-  "vr" '(nc/vc-browse-remote                 :which-key "vc browse repo")
-  
-  ;; --- w · Windows / frames ---
-  "w"   '(:ignore t              :which-key "window")
-  "wD"  '(delete-other-frames    :which-key "delete other frames")
-  "wf"  '(make-frame             :which-key "new frame")
-  "wk"  '(kill-buffer-and-window :which-key "kill buffer + window")
-  "wo"  '(other-frame            :which-key "other frame")
-  "wdd" '(windmove-delete-down   :which-key "delete window ↓")
-  "wdu" '(windmove-delete-up     :which-key "delete window ↑")
-  "wdl" '(windmove-delete-left   :which-key "delete window ←")
-  "wdr" '(windmove-delete-right  :which-key "delete window →")
-
-  ;; --- x · Misc utilities ---
-  "x"  '(:ignore t                          :which-key "misc")
-  "xc" '(calc                               :which-key "calculator")
-  "xd" '(nc/jwt-decode                      :which-key "decode JWT")
-  "xj" '(crux-top-join-line                 :which-key "join line")
-  "xo" '(nc/open-current-directory-external :which-key "open dir externally")
-  "xs" '(org-store-link                     :which-key "store link")
-
-  ;; --- z · fold ---
-  "z"  '(:ignore t                            :which-key "fold actions") 
-  "z <up>"    '(kirigami-close-fold           :which-key "close fold")
-  "z <down>"  '(kirigami-open-fold            :which-key "open fold")
-  "z r"       '(kirigami-open-fold-rec        :which-key "open recursive")
-  "z o"       '(kirigami-open-folds           :which-key "open all")
-  "z c"       '(kirigami-close-folds          :which-key "close all")
-  "z t"       '(kirigami-toggle-fold          :which-key "toggle fold")
-
-  
-  ;; --- M- · Transient menus ---
-  "M-f" '(nc/file-tmenu   :which-key "file menu")
-  "M-g" '(nc/goto-tmenu   :which-key "goto menu")
-  "M-s" '(nc/search-tmenu :which-key "search menu")
-  "M-t" '(nc/toggle-tmenu :which-key "toggle menu")
-  "M-w" '(nc/window-tmenu :which-key "window menu"))
-#+end_src
-
-*** Mode-specific Bindings (C-q C-q)
-
-Each major mode exposes its own transient menu under ~C-q C-q~.
-
-#+begin_src emacs-lisp
-  ;; org-mode
-  (nc/org-leader
-    "C-q" '(nc/org-tmenu :which-key "org menu"))
-
-  ;; python-mode / python-ts-mode
-  (nc/python-leader
-    "C-q" '(nc/python-tmenu :which-key "python menu"))
-
-  ;; markdown-mode
-  (nc/markdown-leader
-    "C-q" '(nc/markdown-tmenu :which-key "markdown menu")))
-#+end_src
-
-
-** Transient Menus
-
-Be sure transient is loaded.
-
-#+begin_src emacs-lisp
-(use-package transient
-    :commands (transient-define-prefix))
-#+end_src
-
-*** File Menu
-#+begin_src emacs-lisp
-(use-package transient
-    :commands (transient-define-prefix))
-;; Stolen from Doom
-(defun nc/yank-buffer-path ()
-  "Copy the file name or directory name of the current buffer to the clipboard."
-  (interactive)
-  (let* ((filename (or buffer-file-name default-directory))
-         (project (ignore-errors (project-root (project-current))))
-         (relpath (if (and project (file-in-directory-p filename project))
-                      (file-relative-name filename project)
-                    nil)))
-    (kill-new
-     (cond
-      ((equal current-prefix-arg '(4)) ; C-u
-       (file-name-nondirectory filename))
-      ((equal current-prefix-arg '(16)) ; C-u C-u
-       (or relpath filename))
-      (t
-       filename)))
-    (message "Copied: %s"
-             (substring-no-properties (car kill-ring)))))
-
-(transient-define-prefix nc/file-yank-path-tmenu ()
-  "Yank Paths"
-  
-  [["Yank Paths"
-   ("F" "Full path"
-    (lambda () (interactive)
-      (let ((current-prefix-arg nil))
-        (call-interactively #'nc/yank-buffer-path))))
-
-   ("f" "Filename only"
-    (lambda () (interactive)
-      (let ((current-prefix-arg '(4)))
-        (call-interactively #'nc/yank-buffer-path))))
-
-   ("p" "Project relative path"
-    (lambda () (interactive)
-      (let ((current-prefix-arg '(16)))
-        (call-interactively #'nc/yank-buffer-path))))
-   ]])
-
-(transient-define-prefix nc/file-tmenu ()
-  "File"
-  
-  [["Actions"
-   ("r" "Rename file & buffer" rename-visited-file)
-   ("d" "Delete file & buffer" crux-delete-file-and-buffer)
-   ("c" "Copy file" crux-copy-file-preserve-attributes)
-   ("y" "Yank buffer path..." nc/file-yank-path-tmenu)]
-  ])
-
-(global-set-key (kbd "C-c M-f") 'nc/file-tmenu)
-#+end_src
-*** Goto Menu
-#+begin_src emacs-lisp
-(defun nc/goto-ssh-config-file ()
-  "Goto my ssh config files"
-  (interactive)
-  (find-file "~/.ssh/config"))
-
-(defun nc/goto-authinfo-file ()
-  "Goto my auth info file"
-  (interactive)
-  (find-file "~/.authinfo.gpg"))
-
-(transient-define-prefix nc/goto-tmenu ()
-  "Goto Transient Menu"
-  
-  [["Config File & Credentials"
-    ("e" "Emacs Config" nc/goto-emacs-config)
-    ("p" "Credentials" nc/goto-my-credentials)
-    ("s" "SSH config"  nc/goto-ssh-config-file)
-    ("a" "Authinfo"  nc/goto-authinfo-file)
-  ]
-  ["Dirs"
-    ("A" "Archives" nc/goto-archives-dir)
-    ("H" "Home" (lambda () (interactive) (dired "~")))
-    ("N" "Notes" nc/goto-notes-dir)
-    ("T" "Templates" nc/goto-templates-dir)
-    ("P" "Projects" nc/goto-projects-dir)
-    ]])
-#+end_src
-*** Search Menu
-#+begin_src emacs-lisp
-(transient-define-prefix nc/search-tmenu ()
-  "Transient Search Menu"
-  ["Search"
-   ["Org Files"
-    ("a" "Agenda Heading" consult-org-agenda)
-    ("n" "Notes" nc/search-notes)]
-   ["Projects"
-    ("p" "Search in Projects" nc/consult-rg-my-projects)
-    ("." "symbol" nc/consult-line-symbol-at-point)]])
-#+end_src
-
-*** Toggle Menu
-#+begin_src elisp
-(transient-define-prefix nc/toggle-tmenu ()
-  "Toggle common Emacs settings."
-  ["Toggle Menu"
-   
-   ["Display"
-    ("l" "Line Numbers" nc/toggle-line-numbers
-     :transient t
-     :description (lambda ()
-                    (format "Line Numbers %s"
-                            (if (bound-and-true-p display-line-numbers-mode)
-                                "[ON]" "[OFF]"))))
-    ;; ("L" "Linum Mode" linum-mode
-    ;;  :transient t
-    ;;  :description (lambda ()
-    ;;                 (format "Linum Mode %s"
-    ;;                         (if (bound-and-true-p linum-mode)
-    ;;                             "[ON]" "[OFF]"))))
-    ("t" "Truncate Lines" toggle-truncate-lines
-     :transient t
-     :description (lambda ()
-                    (format "Truncate Lines %s"
-                            (if truncate-lines "[ON]" "[OFF]"))))
-    ("w" "Whitespace Mode" whitespace-mode
-     :transient t
-     :description (lambda ()
-                    (format "Whitespace Mode %s"
-                            (if (bound-and-true-p whitespace-mode)
-                                "[ON]" "[OFF]"))))
-    ("v" "Visual Line Mode" visual-line-mode
-     :transient t
-     :description (lambda ()
-                    (format "Visual Line Mode %s"
-                            (if (bound-and-true-p visual-line-mode)
-                                "[ON]" "[OFF]"))))
-    ("h" "HL Line Mode" hl-line-mode
-     :transient t
-     :description (lambda ()
-                    (format "HL Line Mode %s"
-                            (if (bound-and-true-p hl-line-mode)
-                                "[ON]" "[OFF]"))))]
-   
-   ["Editing"
-    ("a" "Auto Fill Mode" auto-fill-mode
-     :transient t
-     :description (lambda ()
-                    (format "Auto Fill Mode %s"
-                            (if (bound-and-true-p auto-fill-function)
-                                "[ON]" "[OFF]"))))
-    ("o" "Overwrite Mode" overwrite-mode
-     :transient t
-     :description (lambda ()
-                    (format "Overwrite Mode %s"
-                            (if (bound-and-true-p overwrite-mode)
-                                "[ON]" "[OFF]"))))
-    ("r" "Read Only Mode" read-only-mode
-     :transient t
-     :description (lambda ()
-                    (format "Read Only Mode %s"
-                            (if buffer-read-only "[ON]" "[OFF]"))))
-    ("s" "Smartparens Mode" smartparens-mode
-     :transient t
-     :description (lambda ()
-                    (format "Smartparens Mode %s"
-                            (if (bound-and-true-p smartparens-mode)
-                                "[ON]" "[OFF]"))))
-    ("S" "Smartparens Strict Mode" smartparens-strict-mode
-     :transient t
-     :description (lambda ()
-                    (format "Smartparens Strict Mode %s"
-                            (if (bound-and-true-p smartparens-strict-mode)
-                                "[ON]" "[OFF]"))))
-    
-    ("p" "Show Paren Mode" show-paren-mode
-     :transient t
-     :description (lambda ()
-                    (format "Show Paren Mode %s"
-                            (if (bound-and-true-p show-paren-mode)
-                                "[ON]" "[OFF]"))))
-    
-    ("e" "Electric Pair Mode" electric-pair-mode
-     :transient t
-     :description (lambda ()
-                    (format "Electric Pair Mode %s"
-                            (if (bound-and-true-p electric-pair-mode)
-                                "[ON]" "[OFF]"))))]
-   
-      
-   ["Completion & Help"
-    ;; ("c" "Company Mode" company-mode
-    ;;  :transient t
-    ;;  :description (lambda ()
-    ;;                 (format "Company Mode %s"
-    ;;                         (if (bound-and-true-p company-mode)
-    ;;                             "[ON]" "[OFF]"))))
-    ("E" "Eldoc Mode" eldoc-mode
-     :transient t
-     :description (lambda ()
-                    (format "Eldoc Mode %s"
-                            (if (bound-and-true-p eldoc-mode)
-                                "[ON]" "[OFF]"))))
-    ("f" "Flycheck Mode" flycheck-mode
-     :transient t
-     :description (lambda ()
-                    (format "Flycheck Mode %s"
-                            (if (bound-and-true-p flycheck-mode)
-                                "[ON]" "[OFF]"))))
-    ("F" "Flymake Mode" flymake-mode
-     :transient t
-     :description (lambda ()
-                    (format "Flymake Mode %s"
-                            (if (bound-and-true-p flymake-mode)
-                                "[ON]" "[OFF]"))))]
-   
-   ["Visual & Colors"
-    ("R" "Rainbow Mode" rainbow-mode
-     :transient t
-     :description (lambda ()
-                    (format "Rainbow Mode %s"
-                            (if (bound-and-true-p rainbow-mode)
-                                "[ON]" "[OFF]"))))
-    ;; ("D" "Rainbow Delimiters" rainbow-delimiters-mode
-    ;;  :transient t
-    ;;  :description (lambda ()
-    ;;                 (format "Rainbow Delimiters %s"
-    ;;                         (if (bound-and-true-p rainbow-delimiters-mode)
-    ;;                             "[ON]" "[OFF]"))))
-    ;; ("i" "Indent Guide" highlight-indent-guides-mode 
-    ;;  :transient t
-    ;;  :description (lambda ()
-    ;;                 (format "Indent Guide %s"
-    ;;                         (if (bound-and-true-p highlight-indent-guides-mode)
-    ;;                             "[ON]" "[OFF]"))))
-    ]
-   
-   ["UI & Sidebar"
-    ("m" "Menu Bar" menu-bar-mode
-     :transient t
-     :description (lambda ()
-                    (format "Menu Bar %s"
-                            (if (bound-and-true-p menu-bar-mode)
-                                "[ON]" "[OFF]"))))
-    ("T" "Tool Bar" tool-bar-mode
-     :transient t
-     :description (lambda ()
-                    (format "Tool Bar %s"
-                            (if (bound-and-true-p tool-bar-mode)
-                                "[ON]" "[OFF]"))))
-    ("S" "Scroll Bar" scroll-bar-mode
-     :transient t
-     :description (lambda ()
-                    (format "Scroll Bar %s"
-                            (if (bound-and-true-p scroll-bar-mode)
-                                "[ON]" "[OFF]"))))
-    ("M" "Treemacs" treemacs
-     :transient t
-     :description (lambda ()
-                    (format "Treemacs %s"
-                            (if (and (fboundp 'treemacs-current-visibility)
-                                     (eq (treemacs-current-visibility) 'visible))
-                                "[ON]" "[OFF]"))))]
-   
-   ["Debug & Dev"
-    ("d" "Debug on Error" toggle-debug-on-error
-     :transient t
-     :description (lambda ()
-                    (format "Debug on Error %s"
-                            (if debug-on-error "[ON]" "[OFF]"))))
-    ("Q" "Debug on Quit" toggle-debug-on-quit
-     :transient t
-     :description (lambda ()
-                    (format "Debug on Quit %s"
-                            (if debug-on-quit "[ON]" "[OFF]"))))
-    ;; ("g" "Aggressive Indent" aggressive-indent-mode
-    ;;  :transient t
-    ;;  :description (lambda ()
-    ;;                 (format "Aggressive Indent %s"
-    ;;                         (if (bound-and-true-p aggressive-indent-mode)
-    ;;                             "[ON]" "[OFF]"))))
-    ]
-   
-   ["Actions"
-    ("q" "Quit" transient-quit-one)]])
-
-  (defun nc/toggle-line-numbers ()
-    "Toggle line numbers."
-    (interactive)
-    (if (fboundp 'display-line-numbers-mode)
-        (display-line-numbers-mode 'toggle)
-      (linum-mode 'toggle)))
-#+end_src
-
-*** Window Menu
-
-#+begin_src emacs-lisp
-(transient-define-prefix nc/window-tmenu ()
-  "Simple frame, window and buffer management."
-  ["Frame, Window & Buffer Manager"
-   
-   ["Frames"
-    ("n" "New frame" make-frame-command)
-    ("d" "Delete frame" delete-frame)
-    ("o" "Other frame" other-frame)
-    ("D" "Only this frame" delete-other-frames)
-    ("m" "Maximize" toggle-frame-maximized)
-    ("f" "Fullscreen" toggle-frame-fullscreen)]
-   
-   ["Layouts"
-    ("L i" "IDE layout" nc/layout-ide)
-    ("L l" "Sidebar left" nc/layout-sidebar-left)
-    ("L r" "Sidebar right" nc/layout-sidebar-right)]
-   
-   ["Buffers"
-    ("B" "Buffer other window" switch-to-buffer-other-window)
-    ("F" "Buffer other frame" switch-to-buffer-other-frame)
-    ("b" "Display buffer" display-buffer)
-    ("K" "Kill buffer & window" kill-buffer-and-window)
-    ("i" "Ibuffer" ibuffer)]
-   
-   ["Actions"
-    ("s" "Save config" window-configuration-to-register)
-    ("r" "Restore config" jump-to-register)
-    ("x" "Swap windows" window-swap-states)
-    ("q" "Quit" transient-quit-one)]])
-#+end_src
 * Windows
 :properties:
 :header-args+: :tangle "./lisp/setup-windows.el"
@@ -1841,7 +1234,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
     ;; Enable vertico
     (use-package vertico
       :straight (:files (:defaults "extensions/*"))
-      :init
+      :config
       (vertico-mode)
 
       ;; Different scroll margin
@@ -1855,6 +1248,8 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 
       ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
       ;; (setq vertico-cycle t)
+     (vertico-multiform-mode)
+     (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
       )
 
   ;; Persist history over Emacs restarts. Vertico sorts by history position.
@@ -2304,6 +1699,645 @@ Cf https://github.com/minad/tempel
 #+end_src
 
 
+* Key Bindings
+:properties:
+:header-args+: :tangle "./lisp/setup-keys.el"
+:ID:       3fdc1f8d-a113-4282-aad3-a0afe66d120e
+:end:
+Key bindings configuration module automatically tangled in =./lisp/setup-keys.el=
+#+begin_src emacs-lisp :noweb yes
+  ;;; setup-keys.el --- Key Bindings module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+
+  <<nc-header>>
+#+end_src
+
+
+
+** Global Key Bindings
+:PROPERTIES:
+:ID:       82fbc0b5-2c93-4062-8901-80ee49883d4e
+:END:
+Some Emacs Global Bindings are redefined here.
+#+begin_src emacs-lisp
+;; Unbind unneeded keys
+(global-set-key (kbd "C-z") nil)
+(global-set-key (kbd "C-l") nil)
+(global-set-key (kbd "C-x C-z") nil)
+(global-set-key (kbd "M-o") nil)
+(global-set-key (kbd "M-SPC") nil)
+
+
+(global-set-key (kbd "C-+") #'text-scale-increase)
+(global-set-key (kbd "C--") #'text-scale-decrease)
+
+;; Prefer backward-kill-word over Backspace
+(global-set-key (kbd "C-w") #'backward-kill-word)
+(global-set-key (kbd "C-x C-k") #'kill-region)
+
+(global-set-key (kbd "C-x C-r") #'recentf-open-files)
+
+;; Move up/down paragraph
+(global-set-key (kbd "M-n") #'forward-paragraph)
+(global-set-key (kbd "M-p") #'backward-paragraph)
+(global-set-key (kbd "C-x c") #'compile)
+
+;; Remap goto-map 
+(global-set-key (kbd "C-M-g") goto-map)
+
+;; Zap Up To Char
+(global-set-key (kbd "C-M-z") #'zap-up-to-char)
+
+;; Functions
+(bind-keys
+ ("<f5>" . revert-buffer)
+ ("C-<f5>" . magit-log-buffer-file)
+ ("<f9>" . treemacs)
+ ("<f10>" . org-capture)
+ ;; Not really used ??
+ ("<f11>" . org-clock-goto)
+ ("<f12>" . org-agenda)
+ ("C-<f12>" . org-agenda))
+
+;; Tools alt-[0-9]
+(bind-keys
+ ("M-0" . nc/maximize-or-split-window-vertically))
+#+end_src
+** Key Chords
+
+#+begin_src emacs-lisp
+  (use-package key-chord
+    :init
+    (key-chord-mode 1)
+    (key-chord-define-global "FF" 'projectile-find-file)
+    (key-chord-define-global "GG" 'consult-ripgrep)  
+    (key-chord-define-global "OO" 'consult-outline)
+    (key-chord-define-global "DD" 'delete-region)
+    (key-chord-define-global "??" 'nc/search-notes) 
+    (key-chord-define-global "BB" 'beginning-of-buffer)
+    (key-chord-define-global "JJ" 'crux-top-join-line)
+    (key-chord-define-global "MM" 'nc/maximize-or-split-window-vertically)
+    (key-chord-define-global "$$" 'end-of-buffer))
+#+end_src
+
+** Which Key
+
+From https://www.matem.unam.mx/~omar/apropos-emacs.html#the-case-against-which-key-a-polemic
+
+Press a prefix key (like C-x) followed by C-h to get help on the available bindings.
+Embark then shows those bindings as a searchable, compact Vertico grid where you can filter by typing and pick one to run.
+
+#+begin_src emacs-lisp
+;; (use-package which-key
+;;   :diminish
+;;   :custom
+;;   (which-key-separator " ")
+;;   (which-key-prefix-prefix "+")
+;;   :config
+;;   (which-key-mode)
+;;   (which-key-enable-god-mode-support))
+
+
+;;; which-key configuration
+;;
+;; Make which-key on-demand rather than automatic:
+;; - `which-key-show-early-on-C-h' lets you trigger the popup manually
+;;   by pressing C-h in the middle of a key sequence.
+;; - `which-key-idle-delay' is set to a huge value (1e6 = ~11 days) so the
+;;   popup never appears on its own from idle time.
+;; - Once shown, `which-key-idle-secondary-delay' (0.05s) refreshes it
+;;   almost instantly for the following keys of the same sequence.
+
+
+(use-package which-key
+  :custom
+  (which-key-show-early-on-C-h t)
+  (which-key-idle-delay 1e6) ;; 11 days
+  (which-key-idle-secondary-delay 0.05)
+  :config
+  (which-key-mode))
+
+
+; Embark / Vertico integration:
+;; - `prefix-help-command' routes C-h (after a prefix key) to Embark's
+;;   completing-read interface instead of the static *Help* buffer.
+;; - `vertico-multiform-mode' + the `embark-keybinding' grid category make
+;;   Vertico display those bindings in a compact, filterable grid.
+(setq prefix-help-command #'embark-prefix-help-command)
+
+#+end_src
+
+** Unified keybindings with C-q
+
+Defines a unified keybinding system using ~general.el~.
+~C-q~ is freed from ~quoted-insert~ (remapped to ~C-S-q~) and repurposed as the
+global leader key. Mode-specific sub-leaders are defined for org, python, and markdown.
+
+*** Setup & Leader Definitions
+
+#+begin_src emacs-lisp
+(use-package general
+  :ensure t
+  :config
+
+  ;; Remap quoted-insert and free C-q as leader
+  (global-set-key (kbd "C-S-q") #'quoted-insert)
+  (global-unset-key (kbd "C-q"))
+
+  ;; Global leader — active in all modes
+  (general-create-definer nc/global-leader
+    :prefix "C-q")
+
+  ;; Mode-specific leaders — same prefix, scoped to their keymaps
+  (general-create-definer nc/org-leader
+    :keymaps 'org-mode-map
+    :prefix "C-q")
+
+  (general-create-definer nc/python-leader
+    :keymaps '(python-mode-map python-ts-mode-map)
+    :prefix "C-q")
+
+  (general-create-definer nc/markdown-leader
+    :keymaps '(markdown-mode-map)
+    :prefix "C-q")
+#+end_src
+
+*** Global Bindings (C-q …)
+
+#+begin_src emacs-lisp
+(nc/global-leader
+
+  ;; --- Misc / top-level ---
+  "/" '(nc/consult-line-symbol-at-point :which-key "search symbol at point")
+  "." '(ffap                            :which-key "find file at point")
+  "B" '(nc/bookmark-open                :which-key "open bookmark")
+  ";" '(nc/goto-emacs-config            :which-key "emacs config")
+
+  "<up>"    '(kirigami-close-fold           :which-key "close fold")
+  "<down>"  '(kirigami-open-fold            :which-key "open fold")
+  ;; --- c · LSP / coding ---
+  "c"  '(:ignore t                   :which-key "code")
+  "cs" '(consult-lsp-symbols         :which-key "symbols")
+  "cr" '(lsp-rename                  :which-key "rename symbol")
+  "co" '(lsp-organize-imports        :which-key "organize imports")
+  "cX" '(lsp-treemacs-errors-list    :which-key "errors list")
+  "cH" '(lsp-treemacs-call-hierarchy :which-key "call hierarchy")
+  "cS" '(lsp-treemacs-symbols        :which-key "symbols tree")
+  "c?" '(lsp-treemacs-references     :which-key "references")
+
+  ;; --- f · Files ---
+  "f"  '(:ignore t                           :which-key "file")
+  "f." '(ffap                                :which-key "find file at point")
+  "fm" '(ffap-menu                           :which-key "ffap menu")
+  "fc" '(crux-copy-file-preserve-attributes  :which-key "copy file")
+  "fd" '(crux-delete-file-and-buffer         :which-key "delete file + buffer")
+  "fr" '(rename-visited-file                 :which-key "rename file")
+  "fy" '(nc/yank-path-menu                   :which-key "yank path")
+
+  ;; --- g · Go to ---
+  "g"  '(:ignore t               :which-key "goto")
+  "ga" '(nc/goto-authinfo-file   :which-key "authinfo")
+  "g;" '(nc/goto-emacs-config    :which-key "emacs config")
+  "gp" '(nc/goto-my-credentials  :which-key "credentials")
+  "gs" '(nc/goto-ssh-config-file :which-key "ssh config")
+  "gA" '(nc/goto-archives-dir    :which-key "archives dir")
+  "gB" '(nc/bookmark-open        :which-key "bookmarks")
+  "gP" '(nc/goto-projects-dir    :which-key "projects dir")
+  "gN" '(nc/goto-notes-dir       :which-key "notes dir")
+  "gT" '(nc/goto-templates-dir   :which-key "templates dir")
+
+  ;; --- i · Insert ---
+  "i"  '(:ignore t                    :which-key "insert")
+  "id" '(nc/insert-datestamp-inactive :which-key "date (inactive)")
+  "iD" '(nc/insert-datestamp          :which-key "date (active)")
+  "ie" '(emoji-search                 :which-key "emoji")
+  "ip" '(nc/generate-password         :which-key "password")
+  "it" '(tempel-insert                :which-key "tempel snippet")
+  "iu" '(nc/uuid                      :which-key "UUID")
+  "iy" '(consult-yasnippet            :which-key "yasnippet")
+  "iY" '(yankpad-insert               :which-key "yankpad")
+
+  ;; --- m · Mark ---
+  "m"  '(:ignore t                          :which-key "mark")
+  "mn" '(mc/mark-next-like-this             :which-key "next match")
+  "mp" '(mc/mark-previous-like-this         :which-key "prev match")
+  "ma" '(mc/mark-all-like-this              :which-key "mark all")
+  "ma" '(mc/mark-all-dwim                   :which-key "mark dwim")
+  "ml" '(mc/edit-lines                      :which-key "cursor per line")
+  "mb" '(mc/edit-beginnings-of-lines        :which-key "cursor bol")
+  "me" '(mc/edit-ends-of-lines              :which-key "cursor eol")
+  
+  ;; --- o · Org / notes ---
+  "o"  '(:ignore t            :which-key "org")
+  "oa" '(consult-org-agenda   :which-key "agenda")
+  "oc" '(org-clock-goto       :which-key "clock goto")
+  "od" '(denote-dired         :which-key "denote dired")
+  "ol" '(org-agenda-open-link :which-key "open link")
+  "os" '(org-store-link       :which-key "store link")
+  "ot" '(org-todo-list        :which-key "todo list")
+  "ov" '(org-search-view      :which-key "search view")
+
+  ;; --- p · Project ---
+  "p"  '(:ignore t                  :which-key "project")
+  "p," '(projectile-edit-dir-locals :which-key "edit dir-locals")
+  "pc" '(consult-projectile         :which-key "consult projectile")
+  "pf" '(nc/consult-fd-my-projects  :which-key "find file")
+  "pp" '(projectile-command-map     :which-key "projectile map")
+  "ps" '(nc/consult-rg-my-projects  :which-key "ripgrep search")
+
+  ;; --- v · Version Control ---
+  "v"  '(:ignore t                           :which-key "vc actions")
+  "vf" '(nc/vc-browse-remote-current-line    :which-key "vc browse file")
+  "vr" '(nc/vc-browse-remote                 :which-key "vc browse repo")
+  
+  ;; --- w · Windows / frames ---
+  "w"   '(:ignore t              :which-key "window")
+  "wD"  '(delete-other-frames    :which-key "delete other frames")
+  "wf"  '(make-frame             :which-key "new frame")
+  "wk"  '(kill-buffer-and-window :which-key "kill buffer + window")
+  "wo"  '(other-frame            :which-key "other frame")
+  "wdd" '(windmove-delete-down   :which-key "delete window ↓")
+  "wdu" '(windmove-delete-up     :which-key "delete window ↑")
+  "wdl" '(windmove-delete-left   :which-key "delete window ←")
+  "wdr" '(windmove-delete-right  :which-key "delete window →")
+
+  ;; --- x · Misc utilities ---
+  "x"  '(:ignore t                          :which-key "misc")
+  "xc" '(calc                               :which-key "calculator")
+  "xd" '(nc/jwt-decode                      :which-key "decode JWT")
+  "xj" '(crux-top-join-line                 :which-key "join line")
+  "xo" '(nc/open-current-directory-external :which-key "open dir externally")
+  "xs" '(org-store-link                     :which-key "store link")
+
+  ;; --- z · fold ---
+  "z"  '(:ignore t                            :which-key "fold actions") 
+  "z <up>"    '(kirigami-close-fold           :which-key "close fold")
+  "z <down>"  '(kirigami-open-fold            :which-key "open fold")
+  "z r"       '(kirigami-open-fold-rec        :which-key "open recursive")
+  "z o"       '(kirigami-open-folds           :which-key "open all")
+  "z c"       '(kirigami-close-folds          :which-key "close all")
+  "z t"       '(kirigami-toggle-fold          :which-key "toggle fold")
+
+  
+  ;; --- M- · Transient menus ---
+  "M-f" '(nc/file-tmenu   :which-key "file menu")
+  "M-g" '(nc/goto-tmenu   :which-key "goto menu")
+  "M-s" '(nc/search-tmenu :which-key "search menu")
+  "M-t" '(nc/toggle-tmenu :which-key "toggle menu")
+  "M-w" '(nc/window-tmenu :which-key "window menu"))
+#+end_src
+
+*** Mode-specific Bindings (C-q C-q)
+
+Each major mode exposes its own transient menu under ~C-q C-q~.
+
+#+begin_src emacs-lisp
+  ;; org-mode
+  (nc/org-leader
+    "C-q" '(nc/org-tmenu :which-key "org menu"))
+
+  ;; python-mode / python-ts-mode
+  (nc/python-leader
+    "C-q" '(nc/python-tmenu :which-key "python menu"))
+
+  ;; markdown-mode
+  (nc/markdown-leader
+    "C-q" '(nc/markdown-tmenu :which-key "markdown menu")))
+#+end_src
+
+
+** Transient Menus
+
+Be sure transient is loaded.
+
+#+begin_src emacs-lisp
+(use-package transient
+    :commands (transient-define-prefix))
+#+end_src
+
+*** File Menu
+#+begin_src emacs-lisp
+(use-package transient
+    :commands (transient-define-prefix))
+;; Stolen from Doom
+(defun nc/yank-buffer-path ()
+  "Copy the file name or directory name of the current buffer to the clipboard."
+  (interactive)
+  (let* ((filename (or buffer-file-name default-directory))
+         (project (ignore-errors (project-root (project-current))))
+         (relpath (if (and project (file-in-directory-p filename project))
+                      (file-relative-name filename project)
+                    nil)))
+    (kill-new
+     (cond
+      ((equal current-prefix-arg '(4)) ; C-u
+       (file-name-nondirectory filename))
+      ((equal current-prefix-arg '(16)) ; C-u C-u
+       (or relpath filename))
+      (t
+       filename)))
+    (message "Copied: %s"
+             (substring-no-properties (car kill-ring)))))
+
+(transient-define-prefix nc/file-yank-path-tmenu ()
+  "Yank Paths"
+  
+  [["Yank Paths"
+   ("F" "Full path"
+    (lambda () (interactive)
+      (let ((current-prefix-arg nil))
+        (call-interactively #'nc/yank-buffer-path))))
+
+   ("f" "Filename only"
+    (lambda () (interactive)
+      (let ((current-prefix-arg '(4)))
+        (call-interactively #'nc/yank-buffer-path))))
+
+   ("p" "Project relative path"
+    (lambda () (interactive)
+      (let ((current-prefix-arg '(16)))
+        (call-interactively #'nc/yank-buffer-path))))
+   ]])
+
+(transient-define-prefix nc/file-tmenu ()
+  "File"
+  
+  [["Actions"
+   ("r" "Rename file & buffer" rename-visited-file)
+   ("d" "Delete file & buffer" crux-delete-file-and-buffer)
+   ("c" "Copy file" crux-copy-file-preserve-attributes)
+   ("y" "Yank buffer path..." nc/file-yank-path-tmenu)]
+  ])
+
+(global-set-key (kbd "C-c M-f") 'nc/file-tmenu)
+#+end_src
+*** Goto Menu
+#+begin_src emacs-lisp
+(defun nc/goto-ssh-config-file ()
+  "Goto my ssh config files"
+  (interactive)
+  (find-file "~/.ssh/config"))
+
+(defun nc/goto-authinfo-file ()
+  "Goto my auth info file"
+  (interactive)
+  (find-file "~/.authinfo.gpg"))
+
+(transient-define-prefix nc/goto-tmenu ()
+  "Goto Transient Menu"
+  
+  [["Config File & Credentials"
+    ("e" "Emacs Config" nc/goto-emacs-config)
+    ("p" "Credentials" nc/goto-my-credentials)
+    ("s" "SSH config"  nc/goto-ssh-config-file)
+    ("a" "Authinfo"  nc/goto-authinfo-file)
+  ]
+  ["Dirs"
+    ("A" "Archives" nc/goto-archives-dir)
+    ("H" "Home" (lambda () (interactive) (dired "~")))
+    ("N" "Notes" nc/goto-notes-dir)
+    ("T" "Templates" nc/goto-templates-dir)
+    ("P" "Projects" nc/goto-projects-dir)
+    ]])
+#+end_src
+*** Search Menu
+#+begin_src emacs-lisp
+(transient-define-prefix nc/search-tmenu ()
+  "Transient Search Menu"
+  ["Search"
+   ["Org Files"
+    ("a" "Agenda Heading" consult-org-agenda)
+    ("n" "Notes" nc/search-notes)]
+   ["Projects"
+    ("p" "Search in Projects" nc/consult-rg-my-projects)
+    ("." "symbol" nc/consult-line-symbol-at-point)]])
+#+end_src
+
+*** Toggle Menu
+#+begin_src elisp
+(transient-define-prefix nc/toggle-tmenu ()
+  "Toggle common Emacs settings."
+  ["Toggle Menu"
+   
+   ["Display"
+    ("l" "Line Numbers" nc/toggle-line-numbers
+     :transient t
+     :description (lambda ()
+                    (format "Line Numbers %s"
+                            (if (bound-and-true-p display-line-numbers-mode)
+                                "[ON]" "[OFF]"))))
+    ;; ("L" "Linum Mode" linum-mode
+    ;;  :transient t
+    ;;  :description (lambda ()
+    ;;                 (format "Linum Mode %s"
+    ;;                         (if (bound-and-true-p linum-mode)
+    ;;                             "[ON]" "[OFF]"))))
+    ("t" "Truncate Lines" toggle-truncate-lines
+     :transient t
+     :description (lambda ()
+                    (format "Truncate Lines %s"
+                            (if truncate-lines "[ON]" "[OFF]"))))
+    ("w" "Whitespace Mode" whitespace-mode
+     :transient t
+     :description (lambda ()
+                    (format "Whitespace Mode %s"
+                            (if (bound-and-true-p whitespace-mode)
+                                "[ON]" "[OFF]"))))
+    ("v" "Visual Line Mode" visual-line-mode
+     :transient t
+     :description (lambda ()
+                    (format "Visual Line Mode %s"
+                            (if (bound-and-true-p visual-line-mode)
+                                "[ON]" "[OFF]"))))
+    ("h" "HL Line Mode" hl-line-mode
+     :transient t
+     :description (lambda ()
+                    (format "HL Line Mode %s"
+                            (if (bound-and-true-p hl-line-mode)
+                                "[ON]" "[OFF]"))))]
+   
+   ["Editing"
+    ("a" "Auto Fill Mode" auto-fill-mode
+     :transient t
+     :description (lambda ()
+                    (format "Auto Fill Mode %s"
+                            (if (bound-and-true-p auto-fill-function)
+                                "[ON]" "[OFF]"))))
+    ("o" "Overwrite Mode" overwrite-mode
+     :transient t
+     :description (lambda ()
+                    (format "Overwrite Mode %s"
+                            (if (bound-and-true-p overwrite-mode)
+                                "[ON]" "[OFF]"))))
+    ("r" "Read Only Mode" read-only-mode
+     :transient t
+     :description (lambda ()
+                    (format "Read Only Mode %s"
+                            (if buffer-read-only "[ON]" "[OFF]"))))
+    ("s" "Smartparens Mode" smartparens-mode
+     :transient t
+     :description (lambda ()
+                    (format "Smartparens Mode %s"
+                            (if (bound-and-true-p smartparens-mode)
+                                "[ON]" "[OFF]"))))
+    ("S" "Smartparens Strict Mode" smartparens-strict-mode
+     :transient t
+     :description (lambda ()
+                    (format "Smartparens Strict Mode %s"
+                            (if (bound-and-true-p smartparens-strict-mode)
+                                "[ON]" "[OFF]"))))
+    
+    ("p" "Show Paren Mode" show-paren-mode
+     :transient t
+     :description (lambda ()
+                    (format "Show Paren Mode %s"
+                            (if (bound-and-true-p show-paren-mode)
+                                "[ON]" "[OFF]"))))
+    
+    ("e" "Electric Pair Mode" electric-pair-mode
+     :transient t
+     :description (lambda ()
+                    (format "Electric Pair Mode %s"
+                            (if (bound-and-true-p electric-pair-mode)
+                                "[ON]" "[OFF]"))))]
+   
+      
+   ["Completion & Help"
+    ;; ("c" "Company Mode" company-mode
+    ;;  :transient t
+    ;;  :description (lambda ()
+    ;;                 (format "Company Mode %s"
+    ;;                         (if (bound-and-true-p company-mode)
+    ;;                             "[ON]" "[OFF]"))))
+    ("E" "Eldoc Mode" eldoc-mode
+     :transient t
+     :description (lambda ()
+                    (format "Eldoc Mode %s"
+                            (if (bound-and-true-p eldoc-mode)
+                                "[ON]" "[OFF]"))))
+    ("f" "Flycheck Mode" flycheck-mode
+     :transient t
+     :description (lambda ()
+                    (format "Flycheck Mode %s"
+                            (if (bound-and-true-p flycheck-mode)
+                                "[ON]" "[OFF]"))))
+    ("F" "Flymake Mode" flymake-mode
+     :transient t
+     :description (lambda ()
+                    (format "Flymake Mode %s"
+                            (if (bound-and-true-p flymake-mode)
+                                "[ON]" "[OFF]"))))]
+   
+   ["Visual & Colors"
+    ("R" "Rainbow Mode" rainbow-mode
+     :transient t
+     :description (lambda ()
+                    (format "Rainbow Mode %s"
+                            (if (bound-and-true-p rainbow-mode)
+                                "[ON]" "[OFF]"))))
+    ;; ("D" "Rainbow Delimiters" rainbow-delimiters-mode
+    ;;  :transient t
+    ;;  :description (lambda ()
+    ;;                 (format "Rainbow Delimiters %s"
+    ;;                         (if (bound-and-true-p rainbow-delimiters-mode)
+    ;;                             "[ON]" "[OFF]"))))
+    ;; ("i" "Indent Guide" highlight-indent-guides-mode 
+    ;;  :transient t
+    ;;  :description (lambda ()
+    ;;                 (format "Indent Guide %s"
+    ;;                         (if (bound-and-true-p highlight-indent-guides-mode)
+    ;;                             "[ON]" "[OFF]"))))
+    ]
+   
+   ["UI & Sidebar"
+    ("m" "Menu Bar" menu-bar-mode
+     :transient t
+     :description (lambda ()
+                    (format "Menu Bar %s"
+                            (if (bound-and-true-p menu-bar-mode)
+                                "[ON]" "[OFF]"))))
+    ("T" "Tool Bar" tool-bar-mode
+     :transient t
+     :description (lambda ()
+                    (format "Tool Bar %s"
+                            (if (bound-and-true-p tool-bar-mode)
+                                "[ON]" "[OFF]"))))
+    ("S" "Scroll Bar" scroll-bar-mode
+     :transient t
+     :description (lambda ()
+                    (format "Scroll Bar %s"
+                            (if (bound-and-true-p scroll-bar-mode)
+                                "[ON]" "[OFF]"))))
+    ("M" "Treemacs" treemacs
+     :transient t
+     :description (lambda ()
+                    (format "Treemacs %s"
+                            (if (and (fboundp 'treemacs-current-visibility)
+                                     (eq (treemacs-current-visibility) 'visible))
+                                "[ON]" "[OFF]"))))]
+   
+   ["Debug & Dev"
+    ("d" "Debug on Error" toggle-debug-on-error
+     :transient t
+     :description (lambda ()
+                    (format "Debug on Error %s"
+                            (if debug-on-error "[ON]" "[OFF]"))))
+    ("Q" "Debug on Quit" toggle-debug-on-quit
+     :transient t
+     :description (lambda ()
+                    (format "Debug on Quit %s"
+                            (if debug-on-quit "[ON]" "[OFF]"))))
+    ;; ("g" "Aggressive Indent" aggressive-indent-mode
+    ;;  :transient t
+    ;;  :description (lambda ()
+    ;;                 (format "Aggressive Indent %s"
+    ;;                         (if (bound-and-true-p aggressive-indent-mode)
+    ;;                             "[ON]" "[OFF]"))))
+    ]
+   
+   ["Actions"
+    ("q" "Quit" transient-quit-one)]])
+
+  (defun nc/toggle-line-numbers ()
+    "Toggle line numbers."
+    (interactive)
+    (if (fboundp 'display-line-numbers-mode)
+        (display-line-numbers-mode 'toggle)
+      (linum-mode 'toggle)))
+#+end_src
+
+*** Window Menu
+
+#+begin_src emacs-lisp
+(transient-define-prefix nc/window-tmenu ()
+  "Simple frame, window and buffer management."
+  ["Frame, Window & Buffer Manager"
+   
+   ["Frames"
+    ("n" "New frame" make-frame-command)
+    ("d" "Delete frame" delete-frame)
+    ("o" "Other frame" other-frame)
+    ("D" "Only this frame" delete-other-frames)
+    ("m" "Maximize" toggle-frame-maximized)
+    ("f" "Fullscreen" toggle-frame-fullscreen)]
+   
+   ["Layouts"
+    ("L i" "IDE layout" nc/layout-ide)
+    ("L l" "Sidebar left" nc/layout-sidebar-left)
+    ("L r" "Sidebar right" nc/layout-sidebar-right)]
+   
+   ["Buffers"
+    ("B" "Buffer other window" switch-to-buffer-other-window)
+    ("F" "Buffer other frame" switch-to-buffer-other-frame)
+    ("b" "Display buffer" display-buffer)
+    ("K" "Kill buffer & window" kill-buffer-and-window)
+    ("i" "Ibuffer" ibuffer)]
+   
+   ["Actions"
+    ("s" "Save config" window-configuration-to-register)
+    ("r" "Restore config" jump-to-register)
+    ("x" "Swap windows" window-swap-states)
+    ("q" "Quit" transient-quit-one)]])
+#+end_src
 * Org
 :properties:
 :header-args+: :tangle "./lisp/setup-org.el"

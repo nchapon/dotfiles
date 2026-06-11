@@ -14,7 +14,6 @@
 ;; Unbind unneeded keys
 (global-set-key (kbd "C-z") nil)
 (global-set-key (kbd "C-l") nil)
-(global-set-key (kbd "M-z") nil)
 (global-set-key (kbd "C-x C-z") nil)
 (global-set-key (kbd "M-o") nil)
 (global-set-key (kbd "M-SPC") nil)
@@ -36,6 +35,9 @@
 
 ;; Remap goto-map 
 (global-set-key (kbd "C-M-g") goto-map)
+
+;; Zap Up To Char
+(global-set-key (kbd "C-M-z") #'zap-up-to-char)
 
 ;; Functions
 (bind-keys
@@ -65,14 +67,42 @@
   (key-chord-define-global "MM" 'nc/maximize-or-split-window-vertically)
   (key-chord-define-global "$$" 'end-of-buffer))
 
+;; (use-package which-key
+;;   :diminish
+;;   :custom
+;;   (which-key-separator " ")
+;;   (which-key-prefix-prefix "+")
+;;   :config
+;;   (which-key-mode)
+;;   (which-key-enable-god-mode-support))
+
+
+;;; which-key configuration
+;;
+;; Make which-key on-demand rather than automatic:
+;; - `which-key-show-early-on-C-h' lets you trigger the popup manually
+;;   by pressing C-h in the middle of a key sequence.
+;; - `which-key-idle-delay' is set to a huge value (1e6 = ~11 days) so the
+;;   popup never appears on its own from idle time.
+;; - Once shown, `which-key-idle-secondary-delay' (0.05s) refreshes it
+;;   almost instantly for the following keys of the same sequence.
+
+
 (use-package which-key
-  :diminish
   :custom
-  (which-key-separator " ")
-  (which-key-prefix-prefix "+")
+  (which-key-show-early-on-C-h t)
+  (which-key-idle-delay 1e6) ;; 11 days
+  (which-key-idle-secondary-delay 0.05)
   :config
-  (which-key-mode)
-  (which-key-enable-god-mode-support))
+  (which-key-mode))
+
+
+; Embark / Vertico integration:
+;; - `prefix-help-command' routes C-h (after a prefix key) to Embark's
+;;   completing-read interface instead of the static *Help* buffer.
+;; - `vertico-multiform-mode' + the `embark-keybinding' grid category make
+;;   Vertico display those bindings in a compact, filterable grid.
+(setq prefix-help-command #'embark-prefix-help-command)
 
 (use-package general
   :ensure t
