@@ -90,7 +90,7 @@
 
 (use-package which-key
   :custom
-  (which-key-show-early-on-C-h t)
+  (which-key-show-early-on-C-h nil) ;; fix conflict with embark let C-h go to `prefix-help-command' (Embark)
   (which-key-idle-delay 1e6) ;; 11 days
   (which-key-idle-secondary-delay 0.05)
   :config
