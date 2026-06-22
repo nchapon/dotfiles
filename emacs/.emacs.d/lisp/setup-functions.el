@@ -198,34 +198,59 @@ Supports macOS (open), Windows (explorer), and Linux (xdg-open)."
     (let ((process-connection-type nil))
       (start-process "" nil "xdg-open" default-directory)))))
 
+(defun nc/vc-get-remote-url ()
+  "Parse .git/config and return the remote.origin.url."
+  (let ((git-config (expand-file-name ".git/config" (vc-root-dir))))
+    (when (file-exists-p git-config)
+      (with-temp-buffer
+        (insert-file-contents git-config)
+        (when (re-search-forward "\\[remote \"origin\"\\]" nil t)
+          (when (re-search-forward "url = \\(.+\\)$" nil t)
+            (string-trim (match-string 1))))))))
+
+
+(defun nc/vc-remote-url-to-https (remote-url)
+  "Convert a remote URL (SSH or HTTPS) to an HTTPS base URL."
+  (when (string-match "\\(?:git@\\|https://\\)\\([^:/]+\\)[:/]\\(.+?\\)\\(?:\\.wiki\\)?\\(?:\\.git\\)?$" remote-url)
+    (let ((host (match-string 1 remote-url))
+          (path (match-string 2 remote-url)))
+      (when (string-prefix-p "git@" host)
+        (setq host (replace-regexp-in-string "^git@" "" host)))
+      (format "https://%s/%s" host path))))
+
+
 (defun nc/vc-browse-remote (&optional current-line)
   "Open the repository's remote URL in the browser.
 If CURRENT-LINE is non-nil, point to the current branch, file, and line.
 Otherwise, open the repository's main page."
   (interactive "P")
-  (let* ((remote-url (string-trim (vc-git--run-command-string nil "config" "--get" "remote.origin.url")))
-		 (branch (string-trim (vc-git--run-command-string nil "rev-parse" "--abbrev-ref" "HEAD")))
-		 (file (string-trim (file-relative-name (buffer-file-name) (vc-root-dir))))
-		 (line (line-number-at-pos)))
-	(message "Opening remote on browser: %s" remote-url)
-	(if (and remote-url (string-match "\\(?:git@\\|https://\\)\\([^:/]+\\)[:/]\\(.+?\\)\\(?:\\.git\\)?$" remote-url))
-		(let ((host (match-string 1 remote-url))
-			  (path (match-string 2 remote-url)))
-		  ;; Convert SSH URLs to HTTPS (e.g., git@github.com:user/repo.git -> https://github.com/user/repo)
-		  (when (string-prefix-p "git@" host)
-			(setq host (replace-regexp-in-string "^git@" "" host)))
-		  ;; Construct the appropriate URL based on CURRENT-LINE
-		  (browse-url
-		   (if current-line
-			   (format "https://%s/%s/blob/%s/%s#L%d" host path branch file line)
-			 (format "https://%s/%s" host path))))
-	  (message "Could not determine repository URL"))))
-
+  (let* ((remote-url (nc/vc-get-remote-url))
+         (base-url   (and remote-url (nc/vc-remote-url-to-https remote-url))))
+    (if base-url
+        (let ((branch (string-trim (vc-git--run-command-string nil "rev-parse" "--abbrev-ref" "HEAD")))
+              (file   (string-trim (file-relative-name (buffer-file-name) (vc-root-dir))))
+              (line   (line-number-at-pos)))
+          (browse-url
+           (if current-line
+               (format "%s/blob/%s/%s#L%d" base-url branch file line)
+             base-url)))
+      (message "Could not determine repository URL"))))
 
 (defun nc/vc-browse-remote-current-line ()
   (interactive)
-  (let ((current-prefix-arg '(4))) ;; C-u
+  (let ((current-prefix-arg '(4)))
     (call-interactively #'nc/vc-browse-remote)))
+
+(defun nc/vc-browse-remote-wiki ()
+  "Open the GitLab wiki page corresponding to the current buffer, derived from .git/config."
+  (interactive)
+  (let* ((remote-url (nc/vc-get-remote-url))
+         (base-url   (and remote-url (nc/vc-remote-url-to-https remote-url)))
+         (file       (file-relative-name (buffer-file-name) (vc-root-dir)))
+         (wiki-page  (file-name-sans-extension file)))
+    (if base-url
+        (browse-url (format "%s/-/wikis/%s" base-url wiki-page))
+      (message "Could not determine repository URL"))))
 
 (provide 'setup-functions)
 ;;; setup-functions.el ends here

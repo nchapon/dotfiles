@@ -213,6 +213,7 @@
   "v"  '(:ignore t                           :which-key "vc actions")
   "vf" '(nc/vc-browse-remote-current-line    :which-key "vc browse file")
   "vr" '(nc/vc-browse-remote                 :which-key "vc browse repo")
+  "vw" '(nc/vc-browse-remote-wiki            :which-key "vc browse wiki page")
   
   ;; --- w · Windows / frames ---
   "w"   '(:ignore t              :which-key "window")
