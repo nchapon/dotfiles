@@ -89,20 +89,29 @@
 
 
 (use-package which-key
-  :custom
-  (which-key-show-early-on-C-h nil) ;; fix conflict with embark let C-h go to `prefix-help-command' (Embark)
-  (which-key-idle-delay 1e6) ;; 11 days
-  (which-key-idle-secondary-delay 0.05)
   :config
-  (which-key-mode))
+  (setq which-key-show-early-on-C-h t
+        which-key-idle-delay 1e6 ; 11 days
+        which-key-idle-secondary-delay 0.05)
+  (which-key-mode)
 
+  ;; Embark / Vertico integration for prefix help
+  (setq prefix-help-command #'embark-prefix-help-command)
 
-; Embark / Vertico integration:
-;; - `prefix-help-command' routes C-h (after a prefix key) to Embark's
-;;   completing-read interface instead of the static *Help* buffer.
-;; - `vertico-multiform-mode' + the `embark-keybinding' grid category make
-;;   Vertico display those bindings in a compact, filterable grid.
-(setq prefix-help-command #'embark-prefix-help-command)
+   ;; vertico-multiform is a separate extension and may not be loaded yet
+  ;; at this point, so defer its setup until vertico is available.
+  (with-eval-after-load 'vertico
+    (require 'vertico-multiform)
+    (vertico-multiform-mode)
+    (add-to-list 'vertico-multiform-categories '(embark-keybinding grid)))
+
+  ;; Transient (e.g. Magit) suspends/resumes which-key, and on resume
+  ;; which-key resets `prefix-help-command' to its own dispatcher.
+  ;; Re-assert Embark every time which-key turns back on.
+  (define-advice which-key-mode
+      (:after (&rest _) +use-embark-prefix-help)
+    (when which-key-mode
+      (setq prefix-help-command #'embark-prefix-help-command))))
 
 (use-package general
   :ensure t

@@ -1231,69 +1231,68 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 ** Vertico
 
 #+begin_src emacs-lisp
-    ;; Enable vertico
-    (use-package vertico
-      :straight (:files (:defaults "extensions/*"))
-      :config
-      (vertico-mode)
+  ;; Enable vertico
+  (use-package vertico
+    :straight (:files (:defaults "extensions/*"))
+    :config
+    (vertico-mode)
 
-      ;; Different scroll margin
-      (setq vertico-scroll-margin 0)
+    ;; Different scroll margin
+    (setq vertico-scroll-margin 0)
 
-      ;; Show more candidates
-      (setq vertico-count 10)
+    ;; Show more candidates
+    (setq vertico-count 10)
 
-      ;; Grow and shrink the Vertico minibuffer
-     (setq vertico-resize t)
+    ;; Grow and shrink the Vertico minibuffer
+   (setq vertico-resize t)
 
-      ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
-      ;; (setq vertico-cycle t)
-     (vertico-multiform-mode)
-     (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
-      )
+    ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+    ;; (setq vertico-cycle t)
+   
+    )
 
-  ;; Persist history over Emacs restarts. Vertico sorts by history position.
-  (use-package savehist
-    :init
-    (savehist-mode))
+;; Persist history over Emacs restarts. Vertico sorts by history position.
+(use-package savehist
+  :init
+  (savehist-mode))
 
 
-  ;; Optionally use the `orderless' completion style.
-  (use-package orderless
-    :init
-    ;; Configure a custom style dispatcher (see the Consult wiki)
-    ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
-    ;;       orderless-component-separator #'orderless-escapable-split-on-space)
-    (setq completion-styles '(orderless basic)
-          completion-category-defaults nil
-          completion-category-overrides '((file (styles partial-completion)))))
+;; Optionally use the `orderless' completion style.
+(use-package orderless
+  :init
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
+  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
 
-  ;; A few more useful configurations...
-  (use-package emacs
-    :init
-    ;; Add prompt indicator to `completing-read-multiple'.
-    ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
-    (defun crm-indicator (args)
-      (cons (format "[CRM%s] %s"
-                    (replace-regexp-in-string
-                     "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                     crm-separator)
-                    (car args))
-            (cdr args)))
-    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+;; A few more useful configurations...
+(use-package emacs
+  :init
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
-    ;; Do not allow the cursor in the minibuffer prompt
-    (setq minibuffer-prompt-properties
-          '(read-only t cursor-intangible t face minibuffer-prompt))
-    (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-    ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
-    ;; Vertico commands are hidden in normal buffers.
-    ;; (setq read-extended-command-predicate
-    ;;       #'command-completion-default-include-p)
+  ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+  ;; Vertico commands are hidden in normal buffers.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
 
-    ;; Enable recursive minibuffers
-    (setq enable-recursive-minibuffers t))
+  ;; Enable recursive minibuffers
+  (setq enable-recursive-minibuffers t))
 #+end_src
 ** Marginalia
 
@@ -1809,20 +1808,29 @@ Embark then shows those bindings as a searchable, compact Vertico grid where you
 
 
 (use-package which-key
-  :custom
-  (which-key-show-early-on-C-h nil) ;; fix conflict with embark let C-h go to `prefix-help-command' (Embark)
-  (which-key-idle-delay 1e6) ;; 11 days
-  (which-key-idle-secondary-delay 0.05)
   :config
-  (which-key-mode))
+  (setq which-key-show-early-on-C-h t
+        which-key-idle-delay 1e6 ; 11 days
+        which-key-idle-secondary-delay 0.05)
+  (which-key-mode)
 
+  ;; Embark / Vertico integration for prefix help
+  (setq prefix-help-command #'embark-prefix-help-command)
 
-; Embark / Vertico integration:
-;; - `prefix-help-command' routes C-h (after a prefix key) to Embark's
-;;   completing-read interface instead of the static *Help* buffer.
-;; - `vertico-multiform-mode' + the `embark-keybinding' grid category make
-;;   Vertico display those bindings in a compact, filterable grid.
-(setq prefix-help-command #'embark-prefix-help-command)
+   ;; vertico-multiform is a separate extension and may not be loaded yet
+  ;; at this point, so defer its setup until vertico is available.
+  (with-eval-after-load 'vertico
+    (require 'vertico-multiform)
+    (vertico-multiform-mode)
+    (add-to-list 'vertico-multiform-categories '(embark-keybinding grid)))
+
+  ;; Transient (e.g. Magit) suspends/resumes which-key, and on resume
+  ;; which-key resets `prefix-help-command' to its own dispatcher.
+  ;; Re-assert Embark every time which-key turns back on.
+  (define-advice which-key-mode
+      (:after (&rest _) +use-embark-prefix-help)
+    (when which-key-mode
+      (setq prefix-help-command #'embark-prefix-help-command))))
 #+end_src
 
 ** Unified keybindings with C-q

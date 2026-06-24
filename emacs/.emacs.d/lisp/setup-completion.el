@@ -28,8 +28,7 @@
 
     ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
     ;; (setq vertico-cycle t)
-   (vertico-multiform-mode)
-   (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
+   
     )
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
