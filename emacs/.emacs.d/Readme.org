@@ -3960,6 +3960,9 @@ Testing this mode https://github.com/renzmann/treesit-auto
   (setq treesit-auto-langs '(python yaml json rust))
   (global-treesit-auto-mode))
 
+
+;; Colorisation maximale (appels de fonctions, etc.)
+(setq treesit-font-lock-level 4)
 #+end_src
 *** Combobulate
 :PROPERTIES:

@@ -189,6 +189,10 @@
   (setq treesit-auto-langs '(python yaml json rust))
   (global-treesit-auto-mode))
 
+
+;; Colorisation maximale (appels de fonctions, etc.)
+(setq treesit-font-lock-level 4)
+
 (use-package combobulate
     :defer t
     :bind
