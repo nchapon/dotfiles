@@ -193,13 +193,28 @@
 ;; Colorisation maximale (appels de fonctions, etc.)
 (setq treesit-font-lock-level 4)
 
+
+;; Fix Rust
+(with-eval-after-load 'treesit-auto
+  (setq treesit-auto-recipe-list
+        (cons (make-treesit-auto-recipe
+               :lang 'rust
+               :ts-mode 'rust-ts-mode
+               :remap 'rust-mode
+               :url "https://github.com/tree-sitter/tree-sitter-rust"
+               :revision "v0.23.3"
+               :ext "\\.rs\\'")
+              (cl-remove-if (lambda (r) (eq (treesit-auto-recipe-lang r) 'rust))
+                            treesit-auto-recipe-list))))
+
 (use-package combobulate
     :defer t
     :bind
     ("C-c o o" . combobulate)
     :hook ((python-ts-mode . combobulate-mode)
            (yaml-ts-mode . combobulate-mode)
-           (json-ts-mode . combobulate-mode))
+           (json-ts-mode . combobulate-mode)
+           (rust-ts-mode . combobulate-mode))
     ;; Amend this to the directory where you keep Combobulate's source
     ;; code.
     :load-path ("~/Projects/_playground/combobulate"))
