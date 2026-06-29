@@ -165,7 +165,7 @@
   "fc" '(crux-copy-file-preserve-attributes  :which-key "copy file")
   "fd" '(crux-delete-file-and-buffer         :which-key "delete file + buffer")
   "fr" '(rename-visited-file                 :which-key "rename file")
-  "fy" '(nc/yank-path-menu                   :which-key "yank path")
+  "fy" '(nc/file-yank-path-tmenu             :which-key "yank path")
 
   ;; --- g · Go to ---
   "g"  '(:ignore t               :which-key "goto")

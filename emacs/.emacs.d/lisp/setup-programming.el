@@ -661,6 +661,7 @@
   (rust-ts-mode . eglot-ensure)
   ;; Enable Corfu completion in Rust buffers
   (rust-ts-mode . corfu-mode)
+  (rust-ts-mode . (lambda () (setq-local compile-command "cargo build")))
   :config
   (setq rust-ts-mode-indent-offset 4))
 
@@ -688,7 +689,8 @@
     '(:rust-analyzer
       ( :checkOnSave       (:command "clippy")  ; use clippy instead of check
         :cargo             (:allFeatures t)      ; enable all cargo features
-        :procMacro         (:enable t)
+        :procMacro         (:enable t
+                                    :attributes (:enable t))
         :inlayHints        ( :parameterHints    (:enable t)
                              :typeHints         (:enable t)
                              :chainingHints     (:enable t))
@@ -706,12 +708,12 @@
 (use-package cargo
   :hook (rust-ts-mode . cargo-minor-mode))
 
-
-;; Auto-format on save via rust-analyzer
-(add-hook 'before-save-hook
+;; Buffer-local format on save only runs when eglot is active
+(add-hook 'rust-ts-mode-hook
           (lambda ()
-            (when (eq major-mode 'rust-ts-mode)
-              (eglot-format-buffer))))
+            (add-hook 'before-save-hook #'eglot-format-buffer nil t)))
+;;                                                               ^^^
+;;                                                               t = buffer-local
 
 (use-package terraform-mode
   :defer t
