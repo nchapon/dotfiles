@@ -327,9 +327,6 @@
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'"       . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :bind
-  (:map markdown-mode-map
-        ("C-; C-;" . nc/markdown-tmenu))
   :config
   (setq markdown-live-preview-delete-export 'delete-on-destroy)
   (setq markdown-fontify-code-blocks-natively t)
@@ -407,8 +404,7 @@
   :mode "\\.puml\\'"
   :bind
   (:map plantuml-mode-map
-        ("C-c C-p" . nc/plantuml-generate-png)
-        ("C-; C-;" . nc/plantuml-tmenu))
+        ("C-c C-p" . nc/plantuml-generate-png))
   :config
   (setq plantuml-output-type "png")
   (defun nc/plantuml-generate-png ()
@@ -637,8 +633,6 @@
     ("v" "Show venv"     (lambda ()
                            (interactive)
                            (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
-
-(define-key python-ts-mode-map (kbd "C-; C-;") 'nc/python-tmenu)
 
 ;;
 ;; Requirements:

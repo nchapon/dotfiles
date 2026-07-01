@@ -1158,7 +1158,5 @@ capture was not aborted."
    ["Return"
     ("q" "Back to main menu" nc/org-tmenu)]])
 
-(define-key org-mode-map (kbd "C-; C-;") 'nc/org-tmenu)
-
 (provide 'setup-org)
 ;;; setup-org.el ends here
