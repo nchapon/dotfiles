@@ -1486,7 +1486,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 (use-package embark
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
-   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("M-." . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
   :init
@@ -3742,6 +3742,8 @@ I try to do a lot of things with =org-roam= :
     ("s" "Store link" org-store-link)]
    ["Return"
     ("q" "Back to main menu" nc/org-tmenu)]])
+
+(define-key org-mode-map (kbd "C-; C-;") 'nc/org-tmenu)
 #+end_src
 * Programming
 :properties:
@@ -4154,6 +4156,9 @@ GitHub Flavored Markdown by default for README.md files.
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'"       . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
+  :bind
+  (:map markdown-mode-map
+        ("C-; C-;" . nc/markdown-tmenu))
   :config
   (setq markdown-live-preview-delete-export 'delete-on-destroy)
   (setq markdown-fontify-code-blocks-natively t)
@@ -4248,7 +4253,8 @@ Needs Java and plantuml.jar installed in =~/opt=
   :mode "\\.puml\\'"
   :bind
   (:map plantuml-mode-map
-        ("C-c C-p" . nc/plantuml-generate-png))
+        ("C-c C-p" . nc/plantuml-generate-png)
+        ("C-; C-;" . nc/plantuml-tmenu))
   :config
   (setq plantuml-output-type "png")
   (defun nc/plantuml-generate-png ()
@@ -4525,6 +4531,8 @@ Automatic generation of function docstrings according to the [[https://google.gi
     ("v" "Show venv"     (lambda ()
                            (interactive)
                            (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
+
+(define-key python-ts-mode-map (kbd "C-; C-;") 'nc/python-tmenu)
 #+end_src
 ** Rust
 Rust4Fun
