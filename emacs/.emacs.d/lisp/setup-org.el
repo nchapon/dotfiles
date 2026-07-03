@@ -39,9 +39,10 @@
   (org-crypt-use-before-save-magic)
 
   (add-to-list 'org-tags-exclude-from-inheritance "crypt")
+
   ;; GPG key to use for encryption
   ;; Either the Key ID or set to nil to use symmetric encryption.
-  (setq org-crypt-key "0DF2D6C6E8443FE7")
+  (setq org-crypt-key nil)
 
   ;; subscripts and superscripts are recognized only when enclosed in braces
   (setq org-use-sub-superscripts '{})
