@@ -5064,14 +5064,10 @@ Insert time slot mainly used when I schedule meeting or appointment.
 
 
  #+begin_src emacs-lisp
-   (defun nc/insert-datestamp-inactive ()
-     "Insert the current date in yyyy-mm-dd format."
-     (interactive "*")
-     (if (eq major-mode 'org-mode)
-         (progn
-       (org-insert-time-stamp nil nil t)
-       (insert " "))
-       (insert (format-time-string "%Y-%m-%d" (current-time)))))
+ (defun nc/insert-datestamp-inactive ()
+   "Insert the current date in yyyy-mm-dd format."
+   (interactive "*")
+   (insert (format-time-string "%Y-%m-%d" (current-time))))
  #+end_src
 
 ** Searching in my notes

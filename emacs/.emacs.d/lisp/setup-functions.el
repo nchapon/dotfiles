@@ -65,11 +65,7 @@
 (defun nc/insert-datestamp-inactive ()
   "Insert the current date in yyyy-mm-dd format."
   (interactive "*")
-  (if (eq major-mode 'org-mode)
-      (progn
-    (org-insert-time-stamp nil nil t)
-    (insert " "))
-    (insert (format-time-string "%Y-%m-%d" (current-time)))))
+  (insert (format-time-string "%Y-%m-%d" (current-time))))
 
 (defun nc/search-notes ()
   "Search in all my org notes"
