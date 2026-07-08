@@ -1110,28 +1110,38 @@ capture was not aborted."
   ;; (add-hook 'dired-mode-hook #'denote-dired-mode)
   )
 
-(use-package consult-notes
-  :straight (:type git :host github :repo "mclear-tools/consult-notes")
-  :commands (consult-notes
-             consult-notes-search-in-all-notes
-             ;; if using org-roam 
-             ;;consult-notes-org-roam-find-node
-             ;;consult-notes-org-roam-find-node-relation
-             )
-  :config
-  ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
+;; (use-package consult-notes
+;;   :straight (:type git :host github :repo "mclear-tools/consult-notes")
+;;   :commands (consult-notes
+;;              consult-notes-search-in-all-notes
+;;              ;; if using org-roam 
+;;              ;;consult-notes-org-roam-find-node
+;;              ;;consult-notes-org-roam-find-node-relation
+;;              )
+;;   :config
+;;   ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
   
-  ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
-  (setq consult-notes-org-headings-files '("~/notes/"))
-  (consult-notes-org-headings-mode)
-  (when (locate-library "denote")
-    (consult-notes-denote-mode)
-    (setq consult-notes-denote-display-id nil))
-  ;; search only for text files in denote dir
-  (setq consult-notes-denote-files-function (lambda () (denote-directory-files nil t t)))
-  :bind
-    (("C-c n F" . consult-notes)
-     ("C-c n s" . consult-notes-search-in-all-notes)))
+;;   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
+;;   (setq consult-notes-org-headings-files '("~/notes/"))
+;;   (consult-notes-org-headings-mode)
+;;   (when (locate-library "denote")
+;;     (consult-notes-denote-mode)
+;;     (setq consult-notes-denote-display-id nil))
+;;   ;; search only for text files in denote dir
+;;   (setq consult-notes-denote-files-function (lambda () (denote-directory-files nil t t)))
+;;   :bind
+;;     (("C-c n F" . consult-notes)
+;;      ("C-c n s" . consult-notes-search-in-all-notes)))
+
+
+
+(use-package consult-notes
+  :commands (consult-notes consult-notes-search-in-all-notes)
+  :bind (("M-s n" . consult-notes)                       ; search notes by title
+         ("M-s N" . consult-notes-search-in-all-notes))  ; full-text across notes
+  :config
+  ;; Reads denote-directory automatically (no second path to maintain)
+  (consult-notes-denote-mode))
 
 (transient-define-prefix nc/org-tmenu ()
   "Transient menu for managing org-mode links."

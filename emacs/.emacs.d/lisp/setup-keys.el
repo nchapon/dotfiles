@@ -215,7 +215,7 @@
   "p," '(projectile-edit-dir-locals :which-key "edit dir-locals")
   "pc" '(consult-projectile         :which-key "consult projectile")
   "pf" '(nc/consult-fd-my-projects  :which-key "find file")
-  "pp" '(projectile-command-map     :which-key "projectile map")
+  "pp" '(projectile-dispatch         :which-key "projectile dispatch")
   "ps" '(nc/consult-rg-my-projects  :which-key "ripgrep search")
 
   ;; --- v · Version Control ---

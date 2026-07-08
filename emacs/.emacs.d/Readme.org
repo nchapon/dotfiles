@@ -909,7 +909,7 @@ filter string into the minibuffer.
     (setq projectile-enable-caching t)
     ;; Custom mode line
     (setq projectile-mode-line '(:eval (format " Ⓟ[%s]" (projectile-project-name))))
-  :bind-keymap ("C-<f6>" . projectile-command-map))
+  :bind-keymap ("C-<f6>" . projectile-dispatch))
 #+end_src
 
 ** Expand region
@@ -1948,7 +1948,7 @@ global leader key. Mode-specific sub-leaders are defined for org, python, and ma
   "p," '(projectile-edit-dir-locals :which-key "edit dir-locals")
   "pc" '(consult-projectile         :which-key "consult projectile")
   "pf" '(nc/consult-fd-my-projects  :which-key "find file")
-  "pp" '(projectile-command-map     :which-key "projectile map")
+  "pp" '(projectile-dispatch         :which-key "projectile dispatch")
   "ps" '(nc/consult-rg-my-projects  :which-key "ripgrep search")
 
   ;; --- v · Version Control ---
@@ -3693,28 +3693,38 @@ I try to do a lot of things with =org-roam= :
 ** Consult Notes
 
 #+begin_src emacs-lisp
-  (use-package consult-notes
-    :straight (:type git :host github :repo "mclear-tools/consult-notes")
-    :commands (consult-notes
-               consult-notes-search-in-all-notes
-               ;; if using org-roam 
-               ;;consult-notes-org-roam-find-node
-               ;;consult-notes-org-roam-find-node-relation
-               )
-    :config
-    ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
-    
-    ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
-    (setq consult-notes-org-headings-files '("~/notes/"))
-    (consult-notes-org-headings-mode)
-    (when (locate-library "denote")
-      (consult-notes-denote-mode)
-      (setq consult-notes-denote-display-id nil))
-    ;; search only for text files in denote dir
-    (setq consult-notes-denote-files-function (lambda () (denote-directory-files nil t t)))
-    :bind
-      (("C-c n F" . consult-notes)
-       ("C-c n s" . consult-notes-search-in-all-notes)))
+;; (use-package consult-notes
+;;   :straight (:type git :host github :repo "mclear-tools/consult-notes")
+;;   :commands (consult-notes
+;;              consult-notes-search-in-all-notes
+;;              ;; if using org-roam 
+;;              ;;consult-notes-org-roam-find-node
+;;              ;;consult-notes-org-roam-find-node-relation
+;;              )
+;;   :config
+;;   ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
+  
+;;   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
+;;   (setq consult-notes-org-headings-files '("~/notes/"))
+;;   (consult-notes-org-headings-mode)
+;;   (when (locate-library "denote")
+;;     (consult-notes-denote-mode)
+;;     (setq consult-notes-denote-display-id nil))
+;;   ;; search only for text files in denote dir
+;;   (setq consult-notes-denote-files-function (lambda () (denote-directory-files nil t t)))
+;;   :bind
+;;     (("C-c n F" . consult-notes)
+;;      ("C-c n s" . consult-notes-search-in-all-notes)))
+
+
+
+(use-package consult-notes
+  :commands (consult-notes consult-notes-search-in-all-notes)
+  :bind (("M-s n" . consult-notes)                       ; search notes by title
+         ("M-s N" . consult-notes-search-in-all-notes))  ; full-text across notes
+  :config
+  ;; Reads denote-directory automatically (no second path to maintain)
+  (consult-notes-denote-mode))
 #+end_src
 ** Transient Org Menu
 #+begin_src emacs-lisp

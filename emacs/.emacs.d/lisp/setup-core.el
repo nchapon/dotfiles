@@ -120,7 +120,7 @@
     (setq projectile-enable-caching t)
     ;; Custom mode line
     (setq projectile-mode-line '(:eval (format " Ⓟ[%s]" (projectile-project-name))))
-  :bind-keymap ("C-<f6>" . projectile-command-map))
+  :bind-keymap ("C-<f6>" . projectile-dispatch))
 
 (use-package expand-region
   :bind
