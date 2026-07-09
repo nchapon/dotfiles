@@ -114,13 +114,14 @@
 (use-package projectile
   :custom
   (projectile-sort-order 'recently-active)
-  :config
-  (projectile-global-mode)
   :init
-    (setq projectile-enable-caching t)
-    ;; Custom mode line
-    (setq projectile-mode-line '(:eval (format " Ⓟ[%s]" (projectile-project-name))))
-  :bind-keymap ("C-<f6>" . projectile-dispatch))
+  (setq projectile-enable-caching t)
+  (setq projectile-mode-line
+        '(:eval (format "ⓟ[%s]" (projectile-project-name))))
+  :config
+  (projectile-mode 1)
+  :bind
+  ("C-<f6>" . projectile-dispatch))
 
 (use-package expand-region
   :bind
