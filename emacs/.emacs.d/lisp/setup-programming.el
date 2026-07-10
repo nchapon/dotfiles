@@ -428,6 +428,33 @@
             (pop-to-buffer output-buffer))
         (find-file-other-window output)))))
 
+;; Local fix for support new features of plant UML
+;; I think it should be integated here : https://github.com/skuro/plantuml-mode/issues/100
+(defun nc/plantuml-current-block-bounds ()
+  "Return (START . END) of the @start.../@end... block point is in.
+Works for @startuml, @startmindmap, @startgantt, @startsalt, @startwbs,
+@startjson, @startyaml, etc... any PlantUML diagram type."
+  (save-excursion
+    (let (start end kind)
+      (end-of-line)
+      (unless (re-search-backward "^@start\\([a-zA-Z0-9_]+\\)" nil t)
+        (error "No @start... block found above point"))
+      (setq kind (match-string 1))
+      (setq start (line-beginning-position))
+      (unless (re-search-forward (format "^@end%s\\b" (regexp-quote kind)) nil t)
+        (error "No matching @end%s found" kind))
+      (setq end (line-end-position))
+      (cons start end))))
+
+(defun nc/plantuml-extended-preview-current-block ()
+  "Preview the PlantUML block (any @start.../@end... kind) at point."
+  (interactive)
+  (let ((bounds (nc/plantuml-current-block-bounds)))
+    (goto-char (car bounds))
+    (push-mark (cdr bounds) t t)
+    (setq deactivate-mark nil)
+    (call-interactively #'plantuml-preview)))
+
 
 (defun nc/plantuml-preview-current-block (prefix)
   "PlantUML preview current block (hack windows to byPass the pb preview)"
@@ -438,7 +465,7 @@
       (when (file-exists-p preview-file)
         (delete-file preview-file))
 
-      (plantuml-preview-current-block 1)
+      (nc/plantuml-extended-preview-current-block)
       (when (buffer-live-p (get-buffer image-buffer-name))
         (set-buffer image-buffer-name)
         (set-buffer-modified-p nil)
@@ -450,9 +477,12 @@
         (save-buffer)
         (image-mode))))
   (when is-mac
-    (plantuml-preview-current-block 1))
+    (nc/plantuml-extended-preview-current-block))
+    ;; (nc/plantuml-preview-current-block 1))
   (when is-linux
-    (plantuml-preview-current-block 1)))
+    (nc/plantuml-extended-preview-current-block)
+    ;; (nc/plantuml-preview-current-block 1)
+    ))
 
 (transient-define-prefix nc/plantuml-tmenu ()
   "Python tools"
