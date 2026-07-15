@@ -1926,13 +1926,14 @@ global leader key. Mode-specific sub-leaders are defined for org, python, and ma
 
   ;; --- m · Mark ---
   "m"  '(:ignore t                          :which-key "mark")
-  "mn" '(mc/mark-next-like-this             :which-key "next match")
-  "mp" '(mc/mark-previous-like-this         :which-key "prev match")
-  "ma" '(mc/mark-all-like-this              :which-key "mark all")
   "ma" '(mc/mark-all-dwim                   :which-key "mark dwim")
-  "ml" '(mc/edit-lines                      :which-key "cursor per line")
   "mb" '(mc/edit-beginnings-of-lines        :which-key "cursor bol")
   "me" '(mc/edit-ends-of-lines              :which-key "cursor eol")
+  "ml" '(mc/edit-lines                      :which-key "cursor per line")
+  "mm" '(mark-word                          :which-key "word")
+  "mn" '(mc/mark-next-like-this             :which-key "next match")
+  "mp" '(mc/mark-previous-like-this         :which-key "prev match")
+  "ms" '(mark-sexp                          :which-key "sexp")
   
   ;; --- o · Org / notes ---
   "o"  '(:ignore t            :which-key "org")
