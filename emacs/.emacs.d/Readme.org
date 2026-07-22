@@ -1591,30 +1591,28 @@ Bound to =C-c p=
 #+begin_src emacs-lisp
 (use-package cape
   :defer 10
-  :bind (("C-c c p" . completion-at-point)
-         ("C-c c d" . cape-dabbrev)
-         ("C-c c h" . cape-history)
-         ("C-c c f" . cape-file)
-         ("C-c c k" . cape-keyword)
-         ("C-c c a" . cape-abbrev)
-         ("C-c c e" . cape-emoji)
-         ("C-c c l" . cape-line)
-         ("C-c c w" . cape-dict)
-         ("C-c c &" . cape-sgml)
-         ("C-c c r" . cape-rfc1345))
+  :bind (("C-c p p" . completion-at-point)
+         ("C-c p d" . cape-dabbrev)
+         ("C-c p h" . cape-history)
+         ("C-c p f" . cape-file)
+         ("C-c p k" . cape-keyword)
+         ("C-c p a" . cape-abbrev)
+         ("C-c p e" . cape-emoji)
+         ("C-c p l" . cape-line)
+         ("C-c p w" . cape-dict)
+         ("C-c p &" . cape-sgml)
+         ("C-c p r" . cape-rfc1345))
   :init
-  ;; Add `completion-at-point-functions', used by `completion-at-point'.
-  (defalias 'dabbrev-after-2 (cape-capf-prefix-length #'cape-dabbrev 2))
-  (add-to-list 'completion-at-point-functions 'dabbrev-after-2 t)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-history)
-  (add-to-list 'completion-at-point-functions #'cape-abbrev)
-  (add-to-list 'completion-at-point-functions #'yasnippet-capf)
-  (cl-pushnew #'cape-file completion-at-point-functions)
+  (add-hook 'completion-at-point-functions #'cape-file 50)
+  (when (fboundp 'yasnippet-capf)
+    (add-hook 'completion-at-point-functions #'yasnippet-capf 20))
+  (add-hook 'completion-at-point-functions #'cape-abbrev 60)
   :config
-  ;; Silence then pcomplete capf, no errors or messages!
+  ;; This needs cape to be loaded, so it must live in :config, not :init.
+  (add-hook 'completion-at-point-functions (cape-capf-prefix-length #'cape-dabbrev 2) 90)
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent))
 #+end_src
+
 *** kind-icon
 
 #+begin_src emacs-lisp
@@ -1666,7 +1664,8 @@ Cf https://github.com/minad/tempel
       (add-to-list 'nc-tempel-templates nc-tempel-local-templates)))
 
   (setq tempel-path nc-tempel-templates)
-  
+ ;; Needs tempel loaded, so it must live in :config, not :init.
+  (global-tempel-abbrev-mode)
   :init
   ;; Setup completion at point
   (defun tempel-setup-capf ()
@@ -1688,14 +1687,12 @@ Cf https://github.com/minad/tempel
   ;; Optionally make the Tempel templates available to Abbrev,
   ;; either locally or globally. `expand-abbrev' is bound to C-x '.
   (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-  (global-tempel-abbrev-mode)
+  
 )
 
 ;; Optional: Add tempel-collection.
 ;; The package is young and doesn't have comprehensive coverage.
 ;;(use-package tempel-collection)
-
-
 #+end_src
 
 
@@ -2362,13 +2359,13 @@ Org mode configuration automatically tangled in =./lisp/setup-org.el=
 #+end_src
 
 
-** Org Base Configuration
+** Org Base Configurations
 
 #+begin_src emacs-lisp
 (use-package org
   :straight (:type built-in)
-  :bind (("C-c o c" . org-capture)
-         ("C-c o a" . org-agenda)
+  :bind (("C-c c" . org-capture)
+         ("C-c a" . org-agenda)
          ("C-c C-b" . org-iswitchb)
          :map org-mode-map
          ("C-M-h" .  org-mark-subtree))

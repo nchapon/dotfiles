@@ -13,8 +13,8 @@
 
 (use-package org
   :straight (:type built-in)
-  :bind (("C-c o c" . org-capture)
-         ("C-c o a" . org-agenda)
+  :bind (("C-c c" . org-capture)
+         ("C-c a" . org-agenda)
          ("C-c C-b" . org-iswitchb)
          :map org-mode-map
          ("C-M-h" .  org-mark-subtree))
