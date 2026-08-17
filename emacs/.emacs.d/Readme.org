@@ -1548,43 +1548,86 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 *** Corfu
 
 #+begin_src emacs-lisp
+;; Old Config
+;; (use-package corfu
+;;   :straight (corfu :files (:defaults "extensions/*")
+;;                    :includes
+;;                    (corfu-history    ;; corfu-history-mode remembers selected candidates and sorts the candidates by their history position.
+;;                     corfu-info       ;; Actions to access the candidate location and documentation.
+;;                     corfu-popupinfo  ;; Display candidate documentation or source in a popup next to the candidate menu.
+;;                     ))
+
+;;   ;; Optional customizations
+;;   :custom
+;;   (corfu-cycle t)                 ; Allows cycling through candidates
+;;   (corfu-auto t)                  ; Enable auto completion
+;;   (corfu-auto-prefix 2)
+;;   (corfu-auto-delay 0.25)
+;;   (corfu-popupinfo-delay '(0.5 . 0.2))
+;;   (corfu-preview-current 'insert) ; Do not preview current candidate
+;;   (corfu-preselect-first nil)
+;;   (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
+
+;;   ;; Optionally use TAB for cycling, default is `corfu-complete'.
+;;   :bind (:map corfu-map
+;;               ("M-SPC"      . corfu-insert-separator)
+;;               ("C-n"        . corfu-next)
+;;               ("C-p"    . corfu-previous)
+;;               ("<return>" . corfu-insert))
+
+;;   :init
+;;   (global-corfu-mode)
+;;   (corfu-history-mode)
+;;   (corfu-popupinfo-mode) ; Popup completion info
+;;   :config
+;;   (add-hook 'eshell-mode-hook
+;;             (lambda () (setq-local corfu-quit-at-boundary t
+;;                                    corfu-quit-no-match t
+;;                                    corfu-auto nil)
+;;               (corfu-mode))))
+
+;; No popup appears automatically, and nothing is inserted as a preview while browsing candidates. Completion only triggers when you press TAB,
+;; which either indents the line or opens the candidate list (falling back to completion only when indentation wouldn't change anything).
+;; Once the popup is open, a documentation tooltip appears after a short pause, and your chosen candidates are remembered and reordered by frequency across Emacs restarts 
 (use-package corfu
-  :straight (corfu :files (:defaults "extensions/*")
-                   :includes
-                   (corfu-history    ;; corfu-history-mode remembers selected candidates and sorts the candidates by their history position.
-                    corfu-info       ;; Actions to access the candidate location and documentation.
-                    corfu-popupinfo  ;; Display candidate documentation or source in a popup next to the candidate menu.
-                    ))
-
-  ;; Optional customizations
-  :custom
-  (corfu-cycle t)                 ; Allows cycling through candidates
-  (corfu-auto t)                  ; Enable auto completion
-  (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.25)
-  (corfu-popupinfo-delay '(0.5 . 0.2))
-  (corfu-preview-current 'insert) ; Do not preview current candidate
-  (corfu-preselect-first nil)
-  (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
-
-  ;; Optionally use TAB for cycling, default is `corfu-complete'.
+  ;; :ensure t
+  :init
+  (setq tab-always-indent 'complete)
   :bind (:map corfu-map
               ("M-SPC"      . corfu-insert-separator)
               ("C-n"        . corfu-next)
-              ("C-p"    . corfu-previous)
-              ("<return>" . corfu-insert))
-
-  :init
-  (global-corfu-mode)
-  (corfu-history-mode)
-  (corfu-popupinfo-mode) ; Popup completion info
+              ("C-p"        . corfu-previous)
+              ("<return>"   . corfu-insert))
   :config
-  (add-hook 'eshell-mode-hook
-            (lambda () (setq-local corfu-quit-at-boundary t
-                                   corfu-quit-no-match t
-                                   corfu-auto nil)
-              (corfu-mode))))
+  (setq corfu-preview-current nil)
+  (setq corfu-min-width 20)
+
+  (setq corfu-popupinfo-delay '(1.25 . 0.5))
+  (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
+
+  (global-corfu-mode 1)
+
+  ;; I also have (setq tab-always-indent 'complete) for TAB to complete
+  ;; when it does not need to perform an indentation change.
+  (define-key corfu-map (kbd "<tab>") #'corfu-complete)
+
+  
+  ;; Sort by input history (no need to modify `corfu-sort-function').
+  (with-eval-after-load 'savehist
+    (corfu-history-mode 1)
+    (add-to-list 'savehist-additional-variables 'corfu-history)))
+
+
+
+
+
+
+
+
+
+
 #+end_src
+
 
 *** Cape
 Bound to =C-c p=
