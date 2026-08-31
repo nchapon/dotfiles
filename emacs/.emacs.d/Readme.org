@@ -4119,6 +4119,12 @@ My custom rebinding =C-c C-p= to =cider-pprint-eval-last-sexp-to-comment=
 (use-package dockerfile-mode
   :mode "Dockerfile.*\\'")
 #+end_src
+** Dotenv
+#+begin_src emacs-lisp
+(use-package dotenv-mode
+  :mode (("\\.env\\'" . dotenv-mode)
+         ("\\.env\\.[a-zA-Z0-9_-]+\\'" . dotenv-mode)))
+#+end_src
 ** Just
 Mode for justfiles used by [[https://github.com/casey/just][Just]] 
 #+begin_src emacs-lisp

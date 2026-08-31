@@ -317,6 +317,10 @@
 (use-package dockerfile-mode
   :mode "Dockerfile.*\\'")
 
+(use-package dotenv-mode
+  :mode (("\\.env\\'" . dotenv-mode)
+         ("\\.env\\.[a-zA-Z0-9_-]+\\'" . dotenv-mode)))
+
 (use-package just-mode
   :defer t)
 
