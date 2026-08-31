@@ -342,33 +342,14 @@
   (search-forward (concat "Links " (format-time-string "%Y-W%W"))))
 
 (add-to-list 'org-capture-templates
-               `("l" "Linkk" entry (function org-journal-find-bookmark)
+               `("l" "Link" entry (function org-journal-find-bookmark)
                       "* %?\n  %i\n  From: %a" :empty-lines 1))
 
 (add-to-list 'org-capture-templates
-      '("f" "Fishing Log Entry" entry
-        (file+headline nc/fishing-file "Sessions")
-        "* %^t - %^{Location| Vilaine| Etangs Bruz| Doubs}
-:PROPERTIES:
-:Date: %^t %\\1
-:Horaire: %^{Horaire}
-:Location: %\\2
-:Type: %^{Type|🚶 Du bord|🛟 Float tube|⛵ Bateau}
-:Météo: %^{Weather|☀️ Sunny|⛅ Partly Cloudy|☁️ Cloudy|🌧️ Rainy|⛈️ Stormy|🌫️ Foggy}
-:Temp: %^{Temperature (°C)}
-:Vent: %^{Wind conditions}
-:Prise: %^{Prises}
-:Rating: %^{Rating| 🔴| ⭐| ⭐⭐| ⭐⭐⭐}
-:END:
-
-Notes
-- Techniques leurres: 
-- What worked: 
-- What didn't work: 
-- Next time: 
-
-"
-        :empty-lines 1))
+             '("f" "Fishing Log Entry" entry
+               (file+headline nc/fishing-file "Sessions")
+               (file "~/notes/templates/fishlog.txt")
+               :empty-lines 1))
 
 (add-to-list 'org-capture-templates
                  '("n" "Note"  entry
