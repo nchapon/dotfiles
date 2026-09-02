@@ -181,31 +181,100 @@
   (add-hook 'dap-stopped-hook
             (lambda (arg) (call-interactively #'dap-hydra))))
 
+(use-package eglot
+  :ensure nil   ; built-in
+  :commands eglot eglot-ensure
+  :hook ((rust-ts-mode       . eglot-ensure)
+         (rust-mode          . eglot-ensure)
+         (typescript-ts-mode . eglot-ensure)
+         (tsx-ts-mode        . eglot-ensure))
+  :custom
+  ;; Shut down the server when no more buffers of that project are open
+  (eglot-autoshutdown t)
+  ;; How long to wait for the server to respond (seconds)
+  (eglot-connect-timeout 30)
+  ;; Send changes to the server immediately (better completion)
+  (eglot-send-changes-idle-time 0.1)
+  ;; Show all LSP events set to nil for quieter operation
+  (eglot-events-buffer-size 0)
+  :config
+  ;; Register rust-analyzer for rust-ts-mode / rust-mode
+  ;; rust-analyzer must be on your PATH
+  (add-to-list 'eglot-server-programs
+               '((rust-ts-mode rust-mode) . ("rust-analyzer")))
+  ;; Register typescript-language-server for typescript-ts-mode / tsx-ts-mode
+  ;; typescript-language-server must be on your PATH (npm i -g typescript-language-server typescript)
+  (add-to-list 'eglot-server-programs
+               '((typescript-ts-mode tsx-ts-mode) . ("typescript-language-server" "--stdio")))
+
+  ;; Useful rust-analyzer settings passed via initializationOptions
+  (setq-default eglot-workspace-configuration
+    '(:rust-analyzer
+      ( :checkOnSave       (:command "clippy")  ; use clippy instead of check
+        :cargo             (:allFeatures t)      ; enable all cargo features
+        :procMacro         (:enable t
+                                    :attributes (:enable t))
+        :inlayHints        ( :parameterHints    (:enable t)
+                             :typeHints         (:enable t)
+                             :chainingHints     (:enable t))
+        :completion        (:autoimport (:enable t))
+        :diagnostics       (:enable t))
+      :typescript
+      ( :inlayHints ( :includeInlayParameterNameHints          "all"
+                      :includeInlayFunctionParameterTypeHints  t
+                      :includeInlayVariableTypeHints           t
+                      :includeInlayFunctionLikeReturnTypeHints t))))
+  :bind (:map eglot-mode-map
+         ("C-c r"   . eglot-rename)
+         ("C-c C-f" . eglot-format-buffer)
+         ("C-c C-a" . eglot-code-actions)
+         ("M-?"     . xref-find-references)
+         ("M-."     . xref-find-definitions)
+         ("C-c d"   . eldoc)))
+
 (use-package treesit-auto
   :ensure t
   :custom
   (treesit-auto-install 'prompt)
   :config
-  (setq treesit-auto-langs '(python yaml json rust))
+  ;; Replace recipes for languages needing ABI 14 pins (Emacs 29/30)
+  ;; tree-sitter CLI 0.24+ compiles ABI 15, incompatible with Emacs 30
+  (with-eval-after-load 'treesit-auto
+    (let ((pinned (list
+                   (make-treesit-auto-recipe
+                    :lang 'rust
+                    :ts-mode 'rust-ts-mode
+                    :remap 'rust-mode
+                    :url "https://github.com/tree-sitter/tree-sitter-rust"
+                    :revision "v0.23.3"
+                    :ext "\\.rs\\'")
+                   (make-treesit-auto-recipe
+                    :lang 'typescript
+                    :ts-mode 'typescript-ts-mode
+                    :remap 'typescript-mode
+                    :url "https://github.com/tree-sitter/tree-sitter-typescript"
+                    :revision "v0.23.2"
+                    :source-dir "typescript/src"
+                    :ext "\\.ts\\'")
+                   (make-treesit-auto-recipe
+                    :lang 'tsx
+                    :ts-mode 'tsx-ts-mode
+                    :remap nil
+                    :url "https://github.com/tree-sitter/tree-sitter-typescript"
+                    :revision "v0.23.2"
+                    :source-dir "tsx/src"
+                    :ext "\\.tsx\\'"))))
+      (setq treesit-auto-recipe-list
+            (append pinned
+                    (cl-remove-if
+                     (lambda (r)
+                       (memq (treesit-auto-recipe-lang r) '(rust typescript tsx)))
+                     treesit-auto-recipe-list)))))
+
+  (setq treesit-auto-langs '(python yaml json rust typescript tsx))
   (global-treesit-auto-mode))
 
-
-;; Colorisation maximale (appels de fonctions, etc.)
 (setq treesit-font-lock-level 4)
-
-
-;; Fix Rust
-(with-eval-after-load 'treesit-auto
-  (setq treesit-auto-recipe-list
-        (cons (make-treesit-auto-recipe
-               :lang 'rust
-               :ts-mode 'rust-ts-mode
-               :remap 'rust-mode
-               :url "https://github.com/tree-sitter/tree-sitter-rust"
-               :revision "v0.23.3"
-               :ext "\\.rs\\'")
-              (cl-remove-if (lambda (r) (eq (treesit-auto-recipe-lang r) 'rust))
-                            treesit-auto-recipe-list))))
 
 (use-package combobulate
     :defer t
@@ -693,46 +762,6 @@ Works for @startuml, @startmindmap, @startgantt, @startsalt, @startwbs,
   :config
   (setq rust-ts-mode-indent-offset 4))
 
-
-(use-package eglot
-  :ensure nil   ; built-in
-  :commands eglot eglot-ensure
-  :custom
-  ;; Shut down the server when no more Rust buffers are open
-  (eglot-autoshutdown t)
-  ;; How long to wait for the server to respond (seconds)
-  (eglot-connect-timeout 30)
-  ;; Send changes to the server immediately (better completion)
-  (eglot-send-changes-idle-time 0.1)
-  ;; Show all LSP events set to nil for quieter operation
-  (eglot-events-buffer-size 0)
-  :config
-  ;; Register rust-analyzer for rust-ts-mode
-  ;; rust-analyzer must be on your PATH
-  (add-to-list 'eglot-server-programs
-               '((rust-ts-mode rust-mode) . ("rust-analyzer")))
-
-  ;; Useful rust-analyzer settings passed via initializationOptions
-  (setq-default eglot-workspace-configuration
-    '(:rust-analyzer
-      ( :checkOnSave       (:command "clippy")  ; use clippy instead of check
-        :cargo             (:allFeatures t)      ; enable all cargo features
-        :procMacro         (:enable t
-                                    :attributes (:enable t))
-        :inlayHints        ( :parameterHints    (:enable t)
-                             :typeHints         (:enable t)
-                             :chainingHints     (:enable t))
-        :completion        (:autoimport (:enable t))
-        :diagnostics       (:enable t))))
-  :bind (:map eglot-mode-map
-         ("C-c r"   . eglot-rename)
-         ("C-c C-f" . eglot-format-buffer)
-         ("C-c C-a" . eglot-code-actions)
-         ("M-?"     . xref-find-references)
-         ("M-."     . xref-find-definitions)
-         ("C-c d"   . eldoc)))
-
-
 (use-package cargo
   :hook (rust-ts-mode . cargo-minor-mode))
 
@@ -783,6 +812,11 @@ Works for @startuml, @startmindmap, @startgantt, @startsalt, @startwbs,
 
   ;; Don't override global M-j keybinding (join lines)
   (define-key js2-mode-map (kbd "M-j") nil))
+
+(use-package typescript-ts-mode
+  :ensure nil  ; built-in
+  :mode (("\\.ts\\'"  . typescript-ts-mode)
+         ("\\.tsx\\'" . tsx-ts-mode)))
 
 (use-package yaml-ts-mode
   :mode ("\\.yaml\\'" "\\.yml\\'")

@@ -1525,26 +1525,29 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 *** Hippie Expand
 
 #+begin_src emacs-lisp
-  (use-package hippie-exp
-    :bind ([remap dabbrev-expand] . hippie-expand)
-    :commands (hippie-expand)
-    :custom
-    (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'"))
-    :config
-    (setq hippie-expand-try-functions-list
-          '(try-expand-dabbrev
-            try-expand-dabbrev-all-buffers
-            try-expand-dabbrev-from-kill
-            try-complete-lisp-symbol-partially
-            try-complete-lisp-symbol
-            try-complete-file-name-partially
-            try-complete-file-name
-            try-expand-all-abbrevs
-            try-expand-list
-            try-expand-line)))
+(use-package dabbrev
+  :custom
+  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
+
+(use-package hippie-exp
+  :bind ([remap dabbrev-expand] . hippie-expand)
+  :custom
+  (hippie-expand-verbose t)
+  (hippie-expand-dabbrev-as-symbol t)
+  (hippie-expand-try-functions-list
+   '(try-expand-dabbrev-visible
+     try-expand-dabbrev
+     try-expand-dabbrev-all-buffers
+     try-expand-dabbrev-from-kill
+     try-complete-file-name-partially
+     try-complete-file-name
+     try-complete-lisp-symbol-partially
+     try-complete-lisp-symbol
+     try-expand-all-abbrevs
+     try-expand-list
+     try-expand-line
+     try-expand-line-all-buffers)))
 #+end_src
-
-
 *** Corfu
 
 #+begin_src emacs-lisp
@@ -1870,11 +1873,15 @@ global leader key. Mode-specific sub-leaders are defined for org, python, and ma
   ;; --- Misc / top-level ---
   "/" '(nc/consult-line-symbol-at-point :which-key "search symbol at point")
   "." '(ffap                            :which-key "find file at point")
-  "B" '(nc/bookmark-open                :which-key "open bookmark")
+  "b" '(nc/bookmark-open                :which-key "open bookmark")
   ";" '(nc/goto-emacs-config            :which-key "emacs config")
 
-  "<up>"    '(kirigami-close-fold           :which-key "close fold")
-  "<down>"  '(kirigami-open-fold            :which-key "open fold")
+  ;; --- Misc Top Level with CTRL
+  "C-b" '(nc/bookmark-open                :which-key "open bookmark")
+
+  "C-<up>"    '(kirigami-close-fold           :which-key "close fold")
+  "C-<down>"  '(kirigami-open-fold            :which-key "open fold")
+
   ;; --- c · LSP / coding ---
   "c"  '(:ignore t                   :which-key "code")
   "cs" '(consult-lsp-symbols         :which-key "symbols")
@@ -3941,6 +3948,61 @@ Hydra
   (add-hook 'dap-stopped-hook
             (lambda (arg) (call-interactively #'dap-hydra))))
 #+end_src
+** Eglot
+#+begin_src emacs-lisp
+(use-package eglot
+  :ensure nil   ; built-in
+  :commands eglot eglot-ensure
+  :hook ((rust-ts-mode       . eglot-ensure)
+         (rust-mode          . eglot-ensure)
+         (typescript-ts-mode . eglot-ensure)
+         (tsx-ts-mode        . eglot-ensure))
+  :custom
+  ;; Shut down the server when no more buffers of that project are open
+  (eglot-autoshutdown t)
+  ;; How long to wait for the server to respond (seconds)
+  (eglot-connect-timeout 30)
+  ;; Send changes to the server immediately (better completion)
+  (eglot-send-changes-idle-time 0.1)
+  ;; Show all LSP events set to nil for quieter operation
+  (eglot-events-buffer-size 0)
+  :config
+  ;; Register rust-analyzer for rust-ts-mode / rust-mode
+  ;; rust-analyzer must be on your PATH
+  (add-to-list 'eglot-server-programs
+               '((rust-ts-mode rust-mode) . ("rust-analyzer")))
+  ;; Register typescript-language-server for typescript-ts-mode / tsx-ts-mode
+  ;; typescript-language-server must be on your PATH (npm i -g typescript-language-server typescript)
+  (add-to-list 'eglot-server-programs
+               '((typescript-ts-mode tsx-ts-mode) . ("typescript-language-server" "--stdio")))
+
+  ;; Useful rust-analyzer settings passed via initializationOptions
+  (setq-default eglot-workspace-configuration
+    '(:rust-analyzer
+      ( :checkOnSave       (:command "clippy")  ; use clippy instead of check
+        :cargo             (:allFeatures t)      ; enable all cargo features
+        :procMacro         (:enable t
+                                    :attributes (:enable t))
+        :inlayHints        ( :parameterHints    (:enable t)
+                             :typeHints         (:enable t)
+                             :chainingHints     (:enable t))
+        :completion        (:autoimport (:enable t))
+        :diagnostics       (:enable t))
+      :typescript
+      ( :inlayHints ( :includeInlayParameterNameHints          "all"
+                      :includeInlayFunctionParameterTypeHints  t
+                      :includeInlayVariableTypeHints           t
+                      :includeInlayFunctionLikeReturnTypeHints t))))
+  :bind (:map eglot-mode-map
+         ("C-c r"   . eglot-rename)
+         ("C-c C-f" . eglot-format-buffer)
+         ("C-c C-a" . eglot-code-actions)
+         ("M-?"     . xref-find-references)
+         ("M-."     . xref-find-definitions)
+         ("C-c d"   . eldoc)))
+
+
+#+end_src
 ** Treesitter
 
 Testing this mode https://github.com/renzmann/treesit-auto
@@ -3951,29 +4013,44 @@ Testing this mode https://github.com/renzmann/treesit-auto
   :custom
   (treesit-auto-install 'prompt)
   :config
-  (setq treesit-auto-langs '(python yaml json rust))
+  ;; Replace recipes for languages needing ABI 14 pins (Emacs 29/30)
+  ;; tree-sitter CLI 0.24+ compiles ABI 15, incompatible with Emacs 30
+  (with-eval-after-load 'treesit-auto
+    (let ((pinned (list
+                   (make-treesit-auto-recipe
+                    :lang 'rust
+                    :ts-mode 'rust-ts-mode
+                    :remap 'rust-mode
+                    :url "https://github.com/tree-sitter/tree-sitter-rust"
+                    :revision "v0.23.3"
+                    :ext "\\.rs\\'")
+                   (make-treesit-auto-recipe
+                    :lang 'typescript
+                    :ts-mode 'typescript-ts-mode
+                    :remap 'typescript-mode
+                    :url "https://github.com/tree-sitter/tree-sitter-typescript"
+                    :revision "v0.23.2"
+                    :source-dir "typescript/src"
+                    :ext "\\.ts\\'")
+                   (make-treesit-auto-recipe
+                    :lang 'tsx
+                    :ts-mode 'tsx-ts-mode
+                    :remap nil
+                    :url "https://github.com/tree-sitter/tree-sitter-typescript"
+                    :revision "v0.23.2"
+                    :source-dir "tsx/src"
+                    :ext "\\.tsx\\'"))))
+      (setq treesit-auto-recipe-list
+            (append pinned
+                    (cl-remove-if
+                     (lambda (r)
+                       (memq (treesit-auto-recipe-lang r) '(rust typescript tsx)))
+                     treesit-auto-recipe-list)))))
+
+  (setq treesit-auto-langs '(python yaml json rust typescript tsx))
   (global-treesit-auto-mode))
 
-
-;; Colorisation maximale (appels de fonctions, etc.)
 (setq treesit-font-lock-level 4)
-
-
-;; Fix Rust
-(with-eval-after-load 'treesit-auto
-  (setq treesit-auto-recipe-list
-        (cons (make-treesit-auto-recipe
-               :lang 'rust
-               :ts-mode 'rust-ts-mode
-               :remap 'rust-mode
-               :url "https://github.com/tree-sitter/tree-sitter-rust"
-               :revision "v0.23.3"
-               :ext "\\.rs\\'")
-              (cl-remove-if (lambda (r) (eq (treesit-auto-recipe-lang r) 'rust))
-                            treesit-auto-recipe-list))))
-
-
-
 #+end_src
 *** Combobulate
 :PROPERTIES:
@@ -4578,46 +4655,6 @@ Rust4Fun
   :config
   (setq rust-ts-mode-indent-offset 4))
 
-
-(use-package eglot
-  :ensure nil   ; built-in
-  :commands eglot eglot-ensure
-  :custom
-  ;; Shut down the server when no more Rust buffers are open
-  (eglot-autoshutdown t)
-  ;; How long to wait for the server to respond (seconds)
-  (eglot-connect-timeout 30)
-  ;; Send changes to the server immediately (better completion)
-  (eglot-send-changes-idle-time 0.1)
-  ;; Show all LSP events set to nil for quieter operation
-  (eglot-events-buffer-size 0)
-  :config
-  ;; Register rust-analyzer for rust-ts-mode
-  ;; rust-analyzer must be on your PATH
-  (add-to-list 'eglot-server-programs
-               '((rust-ts-mode rust-mode) . ("rust-analyzer")))
-
-  ;; Useful rust-analyzer settings passed via initializationOptions
-  (setq-default eglot-workspace-configuration
-    '(:rust-analyzer
-      ( :checkOnSave       (:command "clippy")  ; use clippy instead of check
-        :cargo             (:allFeatures t)      ; enable all cargo features
-        :procMacro         (:enable t
-                                    :attributes (:enable t))
-        :inlayHints        ( :parameterHints    (:enable t)
-                             :typeHints         (:enable t)
-                             :chainingHints     (:enable t))
-        :completion        (:autoimport (:enable t))
-        :diagnostics       (:enable t))))
-  :bind (:map eglot-mode-map
-         ("C-c r"   . eglot-rename)
-         ("C-c C-f" . eglot-format-buffer)
-         ("C-c C-a" . eglot-code-actions)
-         ("M-?"     . xref-find-references)
-         ("M-."     . xref-find-definitions)
-         ("C-c d"   . eldoc)))
-
-
 (use-package cargo
   :hook (rust-ts-mode . cargo-minor-mode))
 
@@ -4703,7 +4740,13 @@ Verb is a package for Emacs which allows you to organize and send HTTP requests
   (define-key js2-mode-map (kbd "M-j") nil))
 
 #+end_src
-
+*** Typescript
+#+begin_src emacs-lisp
+(use-package typescript-ts-mode
+  :ensure nil  ; built-in
+  :mode (("\\.ts\\'"  . typescript-ts-mode)
+         ("\\.tsx\\'" . tsx-ts-mode)))
+#+end_src
 
 ** YAML
 

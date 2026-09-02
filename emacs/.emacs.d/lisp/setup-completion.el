@@ -284,23 +284,28 @@
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
+(use-package dabbrev
+  :custom
+  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
+
 (use-package hippie-exp
   :bind ([remap dabbrev-expand] . hippie-expand)
-  :commands (hippie-expand)
   :custom
-  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'"))
-  :config
-  (setq hippie-expand-try-functions-list
-        '(try-expand-dabbrev
-          try-expand-dabbrev-all-buffers
-          try-expand-dabbrev-from-kill
-          try-complete-lisp-symbol-partially
-          try-complete-lisp-symbol
-          try-complete-file-name-partially
-          try-complete-file-name
-          try-expand-all-abbrevs
-          try-expand-list
-          try-expand-line)))
+  (hippie-expand-verbose t)
+  (hippie-expand-dabbrev-as-symbol t)
+  (hippie-expand-try-functions-list
+   '(try-expand-dabbrev-visible
+     try-expand-dabbrev
+     try-expand-dabbrev-all-buffers
+     try-expand-dabbrev-from-kill
+     try-complete-file-name-partially
+     try-complete-file-name
+     try-complete-lisp-symbol-partially
+     try-complete-lisp-symbol
+     try-expand-all-abbrevs
+     try-expand-list
+     try-expand-line
+     try-expand-line-all-buffers)))
 
 ;; No popup appears automatically, and nothing is inserted as a preview while browsing candidates. Completion only triggers when you press TAB,
 ;; which either indents the line or opens the candidate list (falling back to completion only when indentation wouldn't change anything).

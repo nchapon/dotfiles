@@ -143,11 +143,15 @@
   ;; --- Misc / top-level ---
   "/" '(nc/consult-line-symbol-at-point :which-key "search symbol at point")
   "." '(ffap                            :which-key "find file at point")
-  "B" '(nc/bookmark-open                :which-key "open bookmark")
+  "b" '(nc/bookmark-open                :which-key "open bookmark")
   ";" '(nc/goto-emacs-config            :which-key "emacs config")
 
-  "<up>"    '(kirigami-close-fold           :which-key "close fold")
-  "<down>"  '(kirigami-open-fold            :which-key "open fold")
+  ;; --- Misc Top Level with CTRL
+  "C-b" '(nc/bookmark-open                :which-key "open bookmark")
+
+  "C-<up>"    '(kirigami-close-fold           :which-key "close fold")
+  "C-<down>"  '(kirigami-open-fold            :which-key "open fold")
+
   ;; --- c · LSP / coding ---
   "c"  '(:ignore t                   :which-key "code")
   "cs" '(consult-lsp-symbols         :which-key "symbols")
