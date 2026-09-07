@@ -148,6 +148,7 @@
 
   ;; --- Misc Top Level with CTRL
   "C-b" '(nc/bookmark-open                :which-key "open bookmark")
+  "C-p" '(projectile-dispatch             :which-key "projectile-dispatch")
 
   "C-<up>"    '(kirigami-close-fold           :which-key "close fold")
   "C-<down>"  '(kirigami-open-fold            :which-key "open fold")
