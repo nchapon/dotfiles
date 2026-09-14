@@ -460,6 +460,9 @@
   (:map markdown-mode-map
         ([remap markdown-preview] . gh-md-render-buffer)))
 
+;; Enable  editing of code blocks in indirect buffers
+(use-package edit-indirect)
+
 (transient-define-prefix nc/markdown-tmenu ()
   "Markdown Transient Menu"
   [

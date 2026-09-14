@@ -141,10 +141,11 @@
 (nc/global-leader
 
   ;; --- Misc / top-level ---
-  "/" '(nc/consult-line-symbol-at-point :which-key "search symbol at point")
-  "." '(ffap                            :which-key "find file at point")
-  "b" '(nc/bookmark-open                :which-key "open bookmark")
-  ";" '(nc/goto-emacs-config            :which-key "emacs config")
+  "/" '(nc/consult-line-symbol-at-point      :which-key "search symbol at point")
+  "." '(ffap                                 :which-key "find file at point")
+  "b" '(nc/bookmark-open                     :which-key "open bookmark")
+  ";" '(nc/goto-emacs-config                 :which-key "emacs config")
+  "P" '(consult-projectile-switch-project    :which-key "switch project")
 
   ;; --- Misc Top Level with CTRL
   "C-b" '(nc/bookmark-open                :which-key "open bookmark")
