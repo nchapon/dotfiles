@@ -1,4 +1,4 @@
-;;; setup-ui.el --- UI configuration module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+;;; setup-ui.el --- UI configuration module -*- lexical-binding: t; buffer-read-only: t -*-
 
 ;; Author: Nicolas CHAPON
 ;; Keywords: Emacs configuration
@@ -43,7 +43,7 @@
   ;;(doom-themes-treemacs-config)
 
   ;; Corrects (and improves) org-mode's native fontification.
-  (with-eval-after-load 'org-mode
+  (with-eval-after-load 'org
       (doom-themes-org-config))
   )
 
@@ -67,7 +67,6 @@
   (add-hook 'after-init-hook #'nc/setup-font))
 
 (setf use-default-font-for-symbols nil)
-(set-fontset-font t 'unicode "Noto Emoji" nil 'append)
 
 (use-package emojify
     :hook (after-init . global-emojify-mode)
@@ -75,6 +74,7 @@
 
     (set-fontset-font "fontset-default" 'symbol "Noto Color Emoji" nil 'append)
     (set-fontset-font "fontset-default" 'symbol "Symbola" nil 'append)
+    (set-fontset-font t 'unicode "Noto Emoji" nil 'append)
     (set-fontset-font t 'unicode (font-spec :family "all-the-icons") nil 'append)
     (set-fontset-font t 'unicode (font-spec :family "file-icons") nil 'append)
     (set-fontset-font t 'unicode (font-spec :family "Material Icons") nil 'append)

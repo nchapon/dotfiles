@@ -1,4 +1,4 @@
-;;; setup-keys.el --- Key Bindings module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+;;; setup-keys.el --- Key Bindings module -*- lexical-binding: t; buffer-read-only: t -*-
 
 ;; Author: Nicolas CHAPON
 ;; Keywords: Emacs configuration
@@ -114,7 +114,6 @@
       (setq prefix-help-command #'embark-prefix-help-command))))
 
 (use-package general
-  :ensure t
   :config
 
   ;; Remap quoted-insert and free C-q as leader
@@ -283,8 +282,6 @@
 (use-package transient
     :commands (transient-define-prefix))
 
-(use-package transient
-    :commands (transient-define-prefix))
 ;; Stolen from Doom
 (defun nc/yank-buffer-path ()
   "Copy the file name or directory name of the current buffer to the clipboard."

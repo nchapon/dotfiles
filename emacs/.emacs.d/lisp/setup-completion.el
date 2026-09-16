@@ -1,4 +1,4 @@
-;;; setup-completion.el --- Completion configuration file -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+;;; setup-completion.el --- Completion configuration file -*- lexical-binding: t; buffer-read-only: t -*-
 
 ;; Author: Nicolas CHAPON
 ;; Keywords: Emacs configuration
@@ -75,7 +75,6 @@
   (setq enable-recursive-minibuffers t))
 
 (use-package marginalia
-  :ensure t
   :bind (:map minibuffer-local-map
               ("C-M-a" . marginalia-cycle))
   :init
@@ -223,7 +222,6 @@
 
 
 (use-package consult-dir
-  :ensure t
   :bind (("C-x C-d" . consult-dir)
        :map vertico-map
        ("C-x C-d" . consult-dir)

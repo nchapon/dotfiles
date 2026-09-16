@@ -1,4 +1,4 @@
-;;; setup-org.el --- Org mode configuration file -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+;;; setup-org.el --- Org mode configuration file -*- lexical-binding: t; buffer-read-only: t -*-
 
 ;; Author: Nicolas CHAPON
 ;; Keywords: Emacs configuration

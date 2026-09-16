@@ -1,4 +1,4 @@
-;;; setup-programming.el --- Programming configuration module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+;;; setup-programming.el --- Programming configuration module -*- lexical-binding: t; buffer-read-only: t -*-
 
 ;; Author: Nicolas CHAPON
 ;; Keywords: Emacs configuration
@@ -107,6 +107,8 @@
 (defun lsp-save-hooks () "Install save hooks for lsp."
        (add-hook 'before-save-hook #'lsp-format-buffer t t)
        (add-hook 'before-save-hook #'lsp-organize-imports t t))
+
+(use-package hydra :defer t)
 
 (defhydra hydra-lsp (:exit t :hint nil)
     "
@@ -233,7 +235,6 @@
          ("C-c d"   . eldoc)))
 
 (use-package treesit-auto
-  :ensure t
   :custom
   (treesit-auto-install 'prompt)
   :config
@@ -638,7 +639,6 @@ Works for @startuml, @startmindmap, @startgantt, @startsalt, @startwbs,
           "")))))
 
 (use-package virtualenvwrapper
-  :ensure t
   :defer t
   :init
   (venv-initialize-eshell))

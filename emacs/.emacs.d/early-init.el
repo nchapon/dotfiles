@@ -1,4 +1,4 @@
-;;; early-init.el --- Early initialization -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+;;; early-init.el --- Early initialization -*- lexical-binding: t; buffer-read-only: t -*-
 
 ;; Author: Nicolas CHAPON
 ;; Keywords: Emacs configuration
@@ -21,7 +21,9 @@
 
 (defun nc/restore-defaults-after-init ()
   "Restore default values after initialization."
-  (setq-default file-name-handler-alist nc--file-name-handler-alist))
+  (setq-default gc-cons-threshold nc--gc-cons-threshold
+                gc-cons-percentage nc--gc-cons-percentage
+                file-name-handler-alist nc--file-name-handler-alist))
 
 (add-hook 'after-init-hook #'nc/restore-defaults-after-init)
 

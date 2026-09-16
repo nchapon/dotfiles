@@ -1,4 +1,4 @@
-;;; setup-functions.el --- Custom functions module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+;;; setup-functions.el --- Custom functions module -*- lexical-binding: t; buffer-read-only: t -*-
 
 ;; Author: Nicolas CHAPON
 ;; Keywords: Emacs configuration

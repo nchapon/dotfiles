@@ -1,4 +1,4 @@
-;;; setup-shell.el --- Shell configuration module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+;;; setup-shell.el --- Shell configuration module -*- lexical-binding: t; buffer-read-only: t -*-
 
 ;; Author: Nicolas CHAPON
 ;; Keywords: Emacs configuration

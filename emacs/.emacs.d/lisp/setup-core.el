@@ -1,4 +1,4 @@
-;;; setup-core.el --- Core packages configuration file -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+;;; setup-core.el --- Core packages configuration file -*- lexical-binding: t; buffer-read-only: t -*-
 
 ;; Author: Nicolas CHAPON
 ;; Keywords: Emacs configuration
@@ -171,10 +171,8 @@
   :bind ("C-x g" . magit-status))
 
 (use-package treemacs
-  :ensure t
   :bind (:map global-map
               ("M-à" . treemacs-select-window)
-              ("M-0" . treemacs-select-window)
               ("C-x t t" . treemacs)
               ("C-x t 1" . treemacs-delete-other-windows))
   :custom
@@ -193,7 +191,7 @@
 
 (use-package treemacs-icons-dired
   :hook (dired-mode . treemacs-icons-dired-enable-once)
-  :ensure t)
+  )
 
 
 ;; From https://github.com/doomemacs/doomemacs/blob/master/modules/ui/treemacs/autoload.el
@@ -234,14 +232,12 @@ Use `treemacs' command for old functionality."
 (global-set-key (kbd "C-S-<up>") 'kirigami-close-fold)
 
 (use-package rainbow-mode
-  :ensure t
   :defer t
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode)
   (diminish 'rainbow-mode))
 
 (use-package yasnippet
-  :ensure t
   :diminish yas-minor-mode
   :config
   (use-package yasnippet-snippets)

@@ -1,2 +1,3 @@
 .DS_Store
 /emacs/.emacs.d/projectile-frecency.eld
+/emacs/.emacs.d/lisp/*.elc

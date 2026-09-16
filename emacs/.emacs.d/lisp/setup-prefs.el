@@ -1,4 +1,4 @@
-;;; setup-prefs.el --- Global Preferences module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+;;; setup-prefs.el --- Global Preferences module -*- lexical-binding: t; buffer-read-only: t -*-
 
 ;; Author: Nicolas CHAPON
 ;; Keywords: Emacs configuration
@@ -27,11 +27,9 @@
   :straight nil
   :custom
   (initial-major-mode 'lisp-interaction-mode)
-  (redisplay-dont-pause t)
   (column-number-mode t)
   (echo-keystrokes 0.02)
   (fill-column 80)
-  (transient-mark-mode t)
   (shift-select-mode nil)
   (require-final-newline t)
   (truncate-partial-width-windows nil)
@@ -77,17 +75,7 @@
 (setq set-mark-command-repeat-pop t)
 
 (prefer-coding-system 'utf-8-unix)
-(set-clipboard-coding-system 'utf-8-unix)
-(set-default-coding-systems 'utf-8-unix)
-(set-keyboard-coding-system 'utf-8-unix)
-(set-language-environment 'utf-8)
-(set-selection-coding-system 'utf-8-unix)
-(set-terminal-coding-system 'utf-8-unix)
 (setq locale-coding-system 'utf-8-unix)
-(setq coding-system-for-write 'utf-8-unix)
-(setq default-buffer-file-coding-system 'utf-8-unix)
-(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
-(setq file-name-coding-system  'utf-8)
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 (setq calendar-week-start-day 1
@@ -171,7 +159,7 @@
 (repeat-mode)
 
 (set-register ?S '(buffer . "*scratch*"))
-(set-register ?E  `(file . ,(expand-file-name "README.org" user-emacs-directory)))
+(set-register ?E  `(file . ,(expand-file-name "Readme.org" user-emacs-directory)))
 (set-register ?m '(buffer . "*Messages*"))
 (set-register ?c '(buffer . "*Compile*"))
 

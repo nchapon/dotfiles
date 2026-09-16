@@ -37,7 +37,7 @@ Emacs 27 introduced new initialization file called =early-init.el=, which is exe
 It is meant to configure package initialization and early graphical interface tweaks, before actually drawing a window.
 
 #+begin_src emacs-lisp :tangle early-init.el :noweb yes
-  ;;; early-init.el --- Early initialization -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+  ;;; early-init.el --- Early initialization -*- lexical-binding: t; buffer-read-only: t -*-
 
   <<nc-header>>
 #+end_src
@@ -57,7 +57,9 @@ This can be migrated by setting high GC threshold and restoring it back in =afte
 
 (defun nc/restore-defaults-after-init ()
   "Restore default values after initialization."
-  (setq-default file-name-handler-alist nc--file-name-handler-alist))
+  (setq-default gc-cons-threshold nc--gc-cons-threshold
+                gc-cons-percentage nc--gc-cons-percentage
+                file-name-handler-alist nc--file-name-handler-alist))
 
 (add-hook 'after-init-hook #'nc/restore-defaults-after-init)
 
@@ -124,7 +126,7 @@ This concludes the =early-init.el= file.
 Main GNU Emacs init file =init.el=.
 
 #+begin_src emacs-lisp :noweb yes
-  ;;; init.el --- Emacs main configuration file -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+  ;;; init.el --- Emacs main configuration file -*- lexical-binding: t; buffer-read-only: t -*-
 
   <<nc-header>>
 #+end_src
@@ -215,7 +217,7 @@ Add setup modules and conclude the =init.el= file.
 
 Global preferences module automatically tangled in =./lisp/setup-prefs.el=
 #+begin_src emacs-lisp :noweb yes
-  ;;; setup-prefs.el --- Global Preferences module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+  ;;; setup-prefs.el --- Global Preferences module -*- lexical-binding: t; buffer-read-only: t -*-
 
   <<nc-header>>
 #+end_src
@@ -251,11 +253,9 @@ Small configs for better emacs experience...
   :straight nil
   :custom
   (initial-major-mode 'lisp-interaction-mode)
-  (redisplay-dont-pause t)
   (column-number-mode t)
   (echo-keystrokes 0.02)
   (fill-column 80)
-  (transient-mark-mode t)
   (shift-select-mode nil)
   (require-final-newline t)
   (truncate-partial-width-windows nil)
@@ -348,17 +348,7 @@ With this setting, after the first =C-u C-SPC= you can keep pressing just =C-SPC
  Set all coding systems to utf-8
  #+begin_src emacs-lisp
  (prefer-coding-system 'utf-8-unix)
- (set-clipboard-coding-system 'utf-8-unix)
- (set-default-coding-systems 'utf-8-unix)
- (set-keyboard-coding-system 'utf-8-unix)
- (set-language-environment 'utf-8)
- (set-selection-coding-system 'utf-8-unix)
- (set-terminal-coding-system 'utf-8-unix)
  (setq locale-coding-system 'utf-8-unix)
- (setq coding-system-for-write 'utf-8-unix)
- (setq default-buffer-file-coding-system 'utf-8-unix)
- (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
- (setq file-name-coding-system  'utf-8)
  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
  #+end_src
 ** French Calendar & Holydays
@@ -481,7 +471,7 @@ Toggle Repeat Mode
 Keeping files and buffers in registers. To visit the file whose name is in register r, type =C-x r j r=
 #+begin_src emacs-lisp
 (set-register ?S '(buffer . "*scratch*"))
-(set-register ?E  `(file . ,(expand-file-name "README.org" user-emacs-directory)))
+(set-register ?E  `(file . ,(expand-file-name "Readme.org" user-emacs-directory)))
 (set-register ?m '(buffer . "*Messages*"))
 (set-register ?c '(buffer . "*Compile*"))
 #+end_src
@@ -511,7 +501,7 @@ Keeping files and buffers in registers. To visit the file whose name is in regis
 UI configuration module automatically tangled in =./lisp/setup-ui.el=
 
 #+begin_src emacs-lisp :noweb yes
-  ;;; setup-ui.el --- UI configuration module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+  ;;; setup-ui.el --- UI configuration module -*- lexical-binding: t; buffer-read-only: t -*-
 
   <<nc-header>>
 #+end_src
@@ -564,7 +554,7 @@ Using moe theme dark all the day
     ;;(doom-themes-treemacs-config)
 
     ;; Corrects (and improves) org-mode's native fontification.
-    (with-eval-after-load 'org-mode
+    (with-eval-after-load 'org
         (doom-themes-org-config))
     )
 #+end_src
@@ -599,7 +589,6 @@ Using moe theme dark all the day
 
 #+begin_src emacs-lisp
 (setf use-default-font-for-symbols nil)
-(set-fontset-font t 'unicode "Noto Emoji" nil 'append)
 
 (use-package emojify
     :hook (after-init . global-emojify-mode)
@@ -607,6 +596,7 @@ Using moe theme dark all the day
 
     (set-fontset-font "fontset-default" 'symbol "Noto Color Emoji" nil 'append)
     (set-fontset-font "fontset-default" 'symbol "Symbola" nil 'append)
+    (set-fontset-font t 'unicode "Noto Emoji" nil 'append)
     (set-fontset-font t 'unicode (font-spec :family "all-the-icons") nil 'append)
     (set-fontset-font t 'unicode (font-spec :family "file-icons") nil 'append)
     (set-fontset-font t 'unicode (font-spec :family "Material Icons") nil 'append)
@@ -641,7 +631,7 @@ User interface library for Emacs editing commands.
 Windows configuration module automatically tangled in =./lisp/setup-windows.el=
 
 #+begin_src emacs-lisp :noweb yes
-  ;;; setup-windows.el --- Windows configuration file -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+  ;;; setup-windows.el --- Windows configuration file -*- lexical-binding: t; buffer-read-only: t -*-
 
   <<nc-header>>
 #+end_src
@@ -764,7 +754,7 @@ If windows are splitted delete other windows.
 Core packages configuration module automatically tangled in =./lisp/setup-core.el=
 
 #+begin_src emacs-lisp :noweb yes
-  ;;; setup-core.el --- Core packages configuration file -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+  ;;; setup-core.el --- Core packages configuration file -*- lexical-binding: t; buffer-read-only: t -*-
 
   <<nc-header>>
 #+end_src
@@ -1021,10 +1011,8 @@ Cf https://github.com/Alexander-Miller/treemacs#navigation-without-projects-and-
 
 #+begin_src emacs-lisp
 (use-package treemacs
-  :ensure t
   :bind (:map global-map
               ("M-à" . treemacs-select-window)
-              ("M-0" . treemacs-select-window)
               ("C-x t t" . treemacs)
               ("C-x t 1" . treemacs-delete-other-windows))
   :custom
@@ -1043,7 +1031,7 @@ Cf https://github.com/Alexander-Miller/treemacs#navigation-without-projects-and-
 
 (use-package treemacs-icons-dired
   :hook (dired-mode . treemacs-icons-dired-enable-once)
-  :ensure t)
+  )
 
 
 ;; From https://github.com/doomemacs/doomemacs/blob/master/modules/ui/treemacs/autoload.el
@@ -1101,7 +1089,6 @@ The kirigami Emacs package provides a unified method to fold and unfold text in 
 
 #+begin_src emacs-lisp
 (use-package rainbow-mode
-  :ensure t
   :defer t
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode)
@@ -1113,7 +1100,6 @@ Snippets for programming.
 
  #+begin_src emacs-lisp
  (use-package yasnippet
-   :ensure t
    :diminish yas-minor-mode
    :config
    (use-package yasnippet-snippets)
@@ -1224,7 +1210,7 @@ or no selection is made: nil is returned."
 
 Completion configuration automatically tangled in =./lisp/setup-completion.el=
 #+begin_src emacs-lisp :noweb yes
-  ;;; setup-completion.el --- Completion configuration file -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+  ;;; setup-completion.el --- Completion configuration file -*- lexical-binding: t; buffer-read-only: t -*-
 
   <<nc-header>>
 #+end_src
@@ -1299,7 +1285,6 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 
 #+begin_src emacs-lisp
   (use-package marginalia
-    :ensure t
     :bind (:map minibuffer-local-map
                 ("C-M-a" . marginalia-cycle))
     :init
@@ -1453,7 +1438,6 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 
 
 (use-package consult-dir
-  :ensure t
   :bind (("C-x C-d" . consult-dir)
        :map vertico-map
        ("C-x C-d" . consult-dir)
@@ -1702,7 +1686,7 @@ Cf https://github.com/minad/tempel
 :end:
 Key bindings configuration module automatically tangled in =./lisp/setup-keys.el=
 #+begin_src emacs-lisp :noweb yes
-  ;;; setup-keys.el --- Key Bindings module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+  ;;; setup-keys.el --- Key Bindings module -*- lexical-binding: t; buffer-read-only: t -*-
 
   <<nc-header>>
 #+end_src
@@ -1840,7 +1824,6 @@ global leader key. Mode-specific sub-leaders are defined for org, python, and ma
 
 #+begin_src emacs-lisp
 (use-package general
-  :ensure t
   :config
 
   ;; Remap quoted-insert and free C-q as leader
@@ -2029,8 +2012,6 @@ Be sure transient is loaded.
 
 *** File Menu
 #+begin_src emacs-lisp
-(use-package transient
-    :commands (transient-define-prefix))
 ;; Stolen from Doom
 (defun nc/yank-buffer-path ()
   "Copy the file name or directory name of the current buffer to the clipboard."
@@ -2358,7 +2339,7 @@ Be sure transient is loaded.
 
 Org mode configuration automatically tangled in =./lisp/setup-org.el=
 #+begin_src emacs-lisp :noweb yes
-  ;;; setup-org.el --- Org mode configuration file -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+  ;;; setup-org.el --- Org mode configuration file -*- lexical-binding: t; buffer-read-only: t -*-
 
   <<nc-header>>
 #+end_src
@@ -3747,7 +3728,7 @@ I try to do a lot of things with =org-roam= :
 
 Programming configuration module automatically tangled in =./lisp/setup-programming.el=
 #+begin_src emacs-lisp :noweb yes
-  ;;; setup-programming.el --- Programming configuration module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+  ;;; setup-programming.el --- Programming configuration module -*- lexical-binding: t; buffer-read-only: t -*-
 
   <<nc-header>>
 #+end_src
@@ -3869,6 +3850,8 @@ and import organizing when saving a file with code.
 Hydra
 
 #+begin_src emacs-lisp
+(use-package hydra :defer t)
+
 (defhydra hydra-lsp (:exit t :hint nil)
     "
    Buffer^^               Server^^                   Symbol
@@ -4011,7 +3994,6 @@ Testing this mode https://github.com/renzmann/treesit-auto
 
 #+begin_src emacs-lisp
 (use-package treesit-auto
-  :ensure t
   :custom
   (treesit-auto-install 'prompt)
   :config
@@ -4502,7 +4484,6 @@ Works for @startuml, @startmindmap, @startgantt, @startsalt, @startwbs,
 
 #+begin_src emacs-lisp
 (use-package virtualenvwrapper
-  :ensure t
   :defer t
   :init
   (venv-initialize-eshell))
@@ -4789,7 +4770,7 @@ Verb is a package for Emacs which allows you to organize and send HTTP requests
 
 Shell configuration module automatically tangled in =./lisp/setup-shell.el=
 #+begin_src emacs-lisp :noweb yes
-  ;;; setup-shell.el --- Shell configuration module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+  ;;; setup-shell.el --- Shell configuration module -*- lexical-binding: t; buffer-read-only: t -*-
 
   <<nc-header>>
 #+end_src
@@ -5046,7 +5027,7 @@ FIX : Path to plantuml ??
 
 Helper functions module automatically tangled in =./lisp/setup-functions.el=
 #+begin_src emacs-lisp :noweb yes
-  ;;; setup-functions.el --- Custom functions module -*- lexical-binding: t; buffer-read-only: t; no-byte-compile: t -*-
+  ;;; setup-functions.el --- Custom functions module -*- lexical-binding: t; buffer-read-only: t -*-
 
   <<nc-header>>
 #+end_src
@@ -5419,7 +5400,8 @@ Otherwise, open the repository's main page."
   ;;; setup-functions.el ends here
 #+end_src
 
-
 # Local Variables:
-# eval: (add-hook 'after-save-hook #'org-babel-tangle nil t)
+# eval: (add-hook 'after-save-hook (lambda ()
+#                                     (org-babel-tangle)
+#                                     (byte-recompile-directory (expand-file-name "lisp" user-emacs-directory) 0)) nil t)
 # End:
