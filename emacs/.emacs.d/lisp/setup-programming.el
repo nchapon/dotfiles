@@ -11,6 +11,9 @@
 
 ;;; Code:
 
+(eval-and-compile
+  (require 'transient))
+
 (use-package compile
   :defer t
   :hook ((compilation-filter . ansi-color-compilation-filter)
@@ -108,7 +111,8 @@
        (add-hook 'before-save-hook #'lsp-format-buffer t t)
        (add-hook 'before-save-hook #'lsp-organize-imports t t))
 
-(use-package hydra :defer t)
+(eval-and-compile
+  (require 'hydra))
 
 (defhydra hydra-lsp (:exit t :hint nil)
     "
@@ -339,7 +343,11 @@
               (";" . sp-comment))
 
   :config
-  (require 'smartparens-config)
+
+  (eval-and-compile
+    (require 'smartparens-config))
+
+  
   (sp-use-smartparens-bindings)
   ;; Unbind sp-convolute-xexp (conflict with xref-find-references / lsp-ui-peek-find-references)
   (unbind-key "M-?" smartparens-mode-map)

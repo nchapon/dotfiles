@@ -1124,6 +1124,9 @@ capture was not aborted."
   ;; Reads denote-directory automatically (no second path to maintain)
   (consult-notes-denote-mode))
 
+(eval-and-compile
+  (require 'transient))
+
 (transient-define-prefix nc/org-tmenu ()
   "Transient menu for managing org-mode links."
   [["Org Commands"

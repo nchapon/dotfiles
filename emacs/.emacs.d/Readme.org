@@ -2006,8 +2006,8 @@ Each major mode exposes its own transient menu under ~C-q C-q~.
 Be sure transient is loaded.
 
 #+begin_src emacs-lisp
-(use-package transient
-    :commands (transient-define-prefix))
+  (eval-and-compile
+    (require 'transient))
 #+end_src
 
 *** File Menu
@@ -2346,6 +2346,9 @@ Org mode configuration automatically tangled in =./lisp/setup-org.el=
 
 
 ** Org Base Configurations
+
+
+
 
 #+begin_src emacs-lisp
 (use-package org
@@ -3695,31 +3698,35 @@ I try to do a lot of things with =org-roam= :
 #+end_src
 ** Transient Org Menu
 #+begin_src emacs-lisp
-(transient-define-prefix nc/org-tmenu ()
-  "Transient menu for managing org-mode links."
-  [["Org Commands"
-    ("l" "Link..." nc/org-link-tmenu)
-    ]
-   ["GTD"
-    ("s"  "Start Daily Review" nc/org-insert-daily-review)
-    ("d"  "Insert Daily Heading" nc/insert-daily-heading)
-    ]
-   ["Actions"
-    ("p"  "Plantuml Preview Current Block" nc/plantuml-preview-current-block)
-    ("r"  "Refile subtree to file" nc/org-refile-subtree-to-file)
-    ("A"  "Create attachment directory" nc/create-buffer-attachment-directory)
-    ("q" "Quit" transient-quit-all)
-    ]
-   ])
 
-(transient-define-prefix nc/org-link-tmenu ()
-  "Submenu for additional link operations."
-  ["Link Management"
-   ["Insert"
-    ("i" "Insert link" org-insert-link)
-    ("s" "Store link" org-store-link)]
-   ["Return"
-    ("q" "Back to main menu" nc/org-tmenu)]])
+  (eval-and-compile
+    (require 'transient))
+
+  (transient-define-prefix nc/org-tmenu ()
+    "Transient menu for managing org-mode links."
+    [["Org Commands"
+      ("l" "Link..." nc/org-link-tmenu)
+      ]
+     ["GTD"
+      ("s"  "Start Daily Review" nc/org-insert-daily-review)
+      ("d"  "Insert Daily Heading" nc/insert-daily-heading)
+      ]
+     ["Actions"
+      ("p"  "Plantuml Preview Current Block" nc/plantuml-preview-current-block)
+      ("r"  "Refile subtree to file" nc/org-refile-subtree-to-file)
+      ("A"  "Create attachment directory" nc/create-buffer-attachment-directory)
+      ("q" "Quit" transient-quit-all)
+      ]
+     ])
+
+  (transient-define-prefix nc/org-link-tmenu ()
+    "Submenu for additional link operations."
+    ["Link Management"
+     ["Insert"
+      ("i" "Insert link" org-insert-link)
+      ("s" "Store link" org-store-link)]
+     ["Return"
+      ("q" "Back to main menu" nc/org-tmenu)]])
 #+end_src
 * Programming
 :properties:
@@ -3732,6 +3739,13 @@ Programming configuration module automatically tangled in =./lisp/setup-programm
 
   <<nc-header>>
 #+end_src
+
+Be sure transient is loaded
+#+begin_src emacs-lisp
+(eval-and-compile
+  (require 'transient))
+#+end_src
+
 ** Compile
 Better defaults
 
@@ -3850,7 +3864,8 @@ and import organizing when saving a file with code.
 Hydra
 
 #+begin_src emacs-lisp
-(use-package hydra :defer t)
+(eval-and-compile
+  (require 'hydra))
 
 (defhydra hydra-lsp (:exit t :hint nil)
     "
@@ -4114,7 +4129,11 @@ Smart parens for all programming modes with paredit bindings.
               (";" . sp-comment))
 
   :config
-  (require 'smartparens-config)
+
+  (eval-and-compile
+    (require 'smartparens-config))
+
+  
   (sp-use-smartparens-bindings)
   ;; Unbind sp-convolute-xexp (conflict with xref-find-references / lsp-ui-peek-find-references)
   (unbind-key "M-?" smartparens-mode-map)

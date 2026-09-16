@@ -279,8 +279,8 @@
 (nc/markdown-leader
   "C-q" '(nc/markdown-tmenu :which-key "markdown menu")))
 
-(use-package transient
-    :commands (transient-define-prefix))
+(eval-and-compile
+  (require 'transient))
 
 ;; Stolen from Doom
 (defun nc/yank-buffer-path ()
