@@ -108,7 +108,7 @@ Prefer loading newer files to the byte-compiled ones that have older time-stamp 
 Saves us a little IO time to skip the mtime checks on every =*.elc= file.
 
 #+begin_src emacs-lisp :tangle early-init.el
-  (setq load-prefer-newer noninteractive)
+  (setq load-prefer-newer t)
 #+end_src
 
 ** Provide early-init
@@ -5420,7 +5420,5 @@ Otherwise, open the repository's main page."
 #+end_src
 
 # Local Variables:
-# eval: (add-hook 'after-save-hook (lambda ()
-#                                     (org-babel-tangle)
-#                                     (byte-recompile-directory (expand-file-name "lisp" user-emacs-directory) 0)) nil t)
+# eval: (add-hook 'after-save-hook #'org-babel-tangle nil t)                              
 # End:
