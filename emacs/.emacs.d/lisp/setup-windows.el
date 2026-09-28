@@ -21,6 +21,12 @@
    '(aw-leading-char-face
      ((t (:inherit ace-jump-face-foreground :height 3.0))))))
 
+;; Fix Magit opening new window instaed reuse
+(setopt display-buffer-base-action
+        '((display-buffer-reuse-window
+           display-buffer-in-previous-window
+           display-buffer-use-some-window)))
+
 (use-package golden-ratio
   :diminish t
   :init

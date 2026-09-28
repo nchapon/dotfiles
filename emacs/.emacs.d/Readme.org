@@ -641,15 +641,21 @@ Windows configuration module automatically tangled in =./lisp/setup-windows.el=
 [[https://github.com/abo-abo/ace-window][ace-window]] Quickly switch and move windows
 
 #+begin_src emacs-lisp
-  (use-package ace-window
-    :bind (([remap other-window] . ace-window)
-           ("M-o" . ace-window))
-    :config
-    (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
-    ;; increase size face
-    (custom-set-faces
-     '(aw-leading-char-face
-       ((t (:inherit ace-jump-face-foreground :height 3.0))))))
+(use-package ace-window
+  :bind (([remap other-window] . ace-window)
+         ("M-o" . ace-window))
+  :config
+  (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
+  ;; increase size face
+  (custom-set-faces
+   '(aw-leading-char-face
+     ((t (:inherit ace-jump-face-foreground :height 3.0))))))
+
+;; Fix Magit opening new window instaed reuse
+(setopt display-buffer-base-action
+        '((display-buffer-reuse-window
+           display-buffer-in-previous-window
+           display-buffer-use-some-window)))
  #+end_src
 
 ** Golden Ratio
