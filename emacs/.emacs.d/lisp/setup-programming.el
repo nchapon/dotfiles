@@ -836,25 +836,25 @@ Works for @startuml, @startmindmap, @startgantt, @startsalt, @startwbs,
   (add-hook 'yaml-mode-hook #'outline-indent-minor-mode)
   (add-hook 'yaml-ts-mode-hook #'outline-indent-minor-mode))
 
-(use-package yaml-pro
-  :hook (yaml-ts-mode . yaml-pro-ts-mode)
-  :config
-  (defun yaml-pro-edit-initialize-buffer-filter-args-advice (args)
-    (if-let ((mode (language-detection-detect-mode (buffer-string))))
-        (cl-destructuring-bind (parent-buffer buffer initial-text type initialize path) args
-          (let ((init-func (lambda ()
-                             (funcall mode)
-                             (when initialize
-                               (call-interactively initialize)))))
-            (list parent-buffer buffer initial-text type init-func path)))
-      args))
-  (advice-add 'yaml-pro-edit-initialize-buffer :filter-args #'yaml-pro-edit-initialize-buffer-filter-args-advice)
+;; (use-package yaml-pro
+;;   :hook (yaml-ts-mode . yaml-pro-ts-mode)
+;;   :config
+;;   (defun yaml-pro-edit-initialize-buffer-filter-args-advice (args)
+;;     (if-let ((mode (language-detection-detect-mode (buffer-string))))
+;;         (cl-destructuring-bind (parent-buffer buffer initial-text type initialize path) args
+;;           (let ((init-func (lambda ()
+;;                              (funcall mode)
+;;                              (when initialize
+;;                                (call-interactively initialize)))))
+;;             (list parent-buffer buffer initial-text type init-func path)))
+;;       args))
+;;   (advice-add 'yaml-pro-edit-initialize-buffer :filter-args #'yaml-pro-edit-initialize-buffer-filter-args-advice)
 
-  :bind
-    (:map yaml-pro-ts-mode-map
-          ("C-c j" . yaml-pro-ts-move-subtree-down)
-          ("C-c k" . yaml-pro-ts-move-subtree-up)
-          ("C-c f" . yaml-pro-format)))
+;;   :bind
+;;     (:map yaml-pro-ts-mode-map
+;;           ("C-c j" . yaml-pro-ts-move-subtree-down)
+;;           ("C-c k" . yaml-pro-ts-move-subtree-up)
+;;           ("C-c f" . yaml-pro-format)))
 
 (provide 'setup-programming)
 ;;; setup-programming.el ends here
