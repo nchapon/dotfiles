@@ -266,7 +266,14 @@ Small configs for better emacs experience...
   (create-lockfiles nil)
   (ring-bell-function 'ignore)
   (sentence-end-double-space nil)
-  (tab-always-indent 'complete))
+  (tab-always-indent 'complete)
+
+  ;; navigation
+  ;; Move point to the buffer boundary before signaling a scrolling error.
+  (scroll-error-top-bottom t)
+
+  ;; Keep 3 lines of context visible above and below point.
+  (scroll-margin 3))
 
  #+end_src
 *** Transparently open compressed files
@@ -463,9 +470,28 @@ Uniquify file path to ensure buffer name uniqueness
 
  #+end_src
 ** Repeat Mode
-Toggle Repeat Mode
+Toggle Repeat Mode and navigation customization
+
+🧪 From  https://www.reddit.com/r/emacs/comments/1wj30nh/repeat_mode_finally_made_emacs_navigation_click/
 #+begin_src emacs-lisp
-  (repeat-mode)
+(setq repeat-keep-prefix t)
+(use-package repeat
+  :init
+  (repeat-mode 1)
+  :config
+  (defvar-keymap my-line-repeat-map
+    :repeat t
+    "n" #'next-line
+    "p" #'previous-line)
+  (defvar-keymap my-word-repeat-map
+    :repeat t
+    "f" #'forward-word
+    "b" #'backward-word)
+  (defvar-keymap my-char-repeat-map
+    :repeat t
+    "f" #'forward-char
+    "b" #'backward-char))
+
 #+end_src
 ** Registers
 Keeping files and buffers in registers. To visit the file whose name is in register r, type =C-x r j r=

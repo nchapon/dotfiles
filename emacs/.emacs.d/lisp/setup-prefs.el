@@ -40,7 +40,14 @@
   (create-lockfiles nil)
   (ring-bell-function 'ignore)
   (sentence-end-double-space nil)
-  (tab-always-indent 'complete))
+  (tab-always-indent 'complete)
+
+  ;; navigation
+  ;; Move point to the buffer boundary before signaling a scrolling error.
+  (scroll-error-top-bottom t)
+
+  ;; Keep 3 lines of context visible above and below point.
+  (scroll-margin 3))
 
 (auto-compression-mode t)
 
@@ -156,7 +163,23 @@
 ;; Set history-length longer
 (setq-default history-length 500)
 
-(repeat-mode)
+(setq repeat-keep-prefix t)
+(use-package repeat
+  :init
+  (repeat-mode 1)
+  :config
+  (defvar-keymap my-line-repeat-map
+    :repeat t
+    "n" #'next-line
+    "p" #'previous-line)
+  (defvar-keymap my-word-repeat-map
+    :repeat t
+    "f" #'forward-word
+    "b" #'backward-word)
+  (defvar-keymap my-char-repeat-map
+    :repeat t
+    "f" #'forward-char
+    "b" #'backward-char))
 
 (set-register ?S '(buffer . "*scratch*"))
 (set-register ?E  `(file . ,(expand-file-name "Readme.org" user-emacs-directory)))
