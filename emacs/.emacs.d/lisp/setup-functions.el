@@ -143,14 +143,14 @@ If called from Lisp, START and END specify the region."
          (signature (caddr parts)))
     (unless (= (length parts) 3)
       (error "Invalid JWT format: expected 3 parts separated by dots"))
-    (let ((header (json-read-from-string 
-                   (decode-coding-string 
-                    (base64-decode-string 
+    (let ((header (json-read-from-string
+                   (decode-coding-string
+                    (base64-decode-string
                      (jwt--base64url-to-base64 header-b64))
                     'utf-8)))
-          (payload (json-read-from-string 
-                    (decode-coding-string 
-                     (base64-decode-string 
+          (payload (json-read-from-string
+                    (decode-coding-string
+                     (base64-decode-string
                       (jwt--base64url-to-base64 payload-b64))
                      'utf-8))))
       (with-current-buffer (get-buffer-create "*JWT Decoded*")

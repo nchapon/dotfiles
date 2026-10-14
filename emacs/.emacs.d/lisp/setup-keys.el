@@ -33,7 +33,7 @@
 (global-set-key (kbd "M-p") #'backward-paragraph)
 (global-set-key (kbd "C-x c") #'compile)
 
-;; Remap goto-map 
+;; Remap goto-map
 (global-set-key (kbd "C-M-g") goto-map)
 
 ;; Zap Up To Char
@@ -58,10 +58,10 @@
   :init
   (key-chord-mode 1)
   (key-chord-define-global "FF" 'projectile-find-file)
-  (key-chord-define-global "GG" 'consult-ripgrep)  
+  (key-chord-define-global "GG" 'consult-ripgrep)
   (key-chord-define-global "OO" 'consult-outline)
   (key-chord-define-global "DD" 'delete-region)
-  (key-chord-define-global "??" 'nc/search-notes) 
+  (key-chord-define-global "??" 'nc/search-notes)
   (key-chord-define-global "BB" 'beginning-of-buffer)
   (key-chord-define-global "JJ" 'crux-top-join-line)
   (key-chord-define-global "MM" 'nc/maximize-or-split-window-vertically)
@@ -205,7 +205,7 @@
   "mn" '(mc/mark-next-like-this             :which-key "next match")
   "mp" '(mc/mark-previous-like-this         :which-key "prev match")
   "ms" '(mark-sexp                          :which-key "sexp")
-  
+
   ;; --- o · Org / notes ---
   "o"  '(:ignore t            :which-key "org")
   "oa" '(consult-org-agenda   :which-key "agenda")
@@ -230,7 +230,7 @@
   "vf" '(nc/vc-browse-remote-current-line    :which-key "vc browse file")
   "vr" '(nc/vc-browse-remote                 :which-key "vc browse repo")
   "vw" '(nc/vc-browse-remote-wiki            :which-key "vc browse wiki page")
-  
+
   ;; --- w · Windows / frames ---
   "w"   '(:ignore t              :which-key "window")
   "wD"  '(delete-other-frames    :which-key "delete other frames")
@@ -251,7 +251,7 @@
   "xs" '(org-store-link                     :which-key "store link")
 
   ;; --- z · fold ---
-  "z"  '(:ignore t                            :which-key "fold actions") 
+  "z"  '(:ignore t                            :which-key "fold actions")
   "z <up>"    '(kirigami-close-fold           :which-key "close fold")
   "z <down>"  '(kirigami-open-fold            :which-key "open fold")
   "z r"       '(kirigami-open-fold-rec        :which-key "open recursive")
@@ -259,7 +259,7 @@
   "z c"       '(kirigami-close-folds          :which-key "close all")
   "z t"       '(kirigami-toggle-fold          :which-key "toggle fold")
 
-  
+
   ;; --- M- · Transient menus ---
   "M-f" '(nc/file-tmenu   :which-key "file menu")
   "M-g" '(nc/goto-tmenu   :which-key "goto menu")
@@ -304,7 +304,7 @@
 
 (transient-define-prefix nc/file-yank-path-tmenu ()
   "Yank Paths"
-  
+
   [["Yank Paths"
    ("F" "Full path"
     (lambda () (interactive)
@@ -324,7 +324,7 @@
 
 (transient-define-prefix nc/file-tmenu ()
   "File"
-  
+
   [["Actions"
    ("r" "Rename file & buffer" rename-visited-file)
    ("d" "Delete file & buffer" crux-delete-file-and-buffer)
@@ -346,7 +346,7 @@
 
 (transient-define-prefix nc/goto-tmenu ()
   "Goto Transient Menu"
-  
+
   [["Config File & Credentials"
     ("e" "Emacs Config" nc/goto-emacs-config)
     ("p" "Credentials" nc/goto-my-credentials)
@@ -374,7 +374,7 @@
 (transient-define-prefix nc/toggle-tmenu ()
   "Toggle common Emacs settings."
   ["Toggle Menu"
-   
+
    ["Display"
     ("l" "Line Numbers" nc/toggle-line-numbers
      :transient t
@@ -411,7 +411,7 @@
                     (format "HL Line Mode %s"
                             (if (bound-and-true-p hl-line-mode)
                                 "[ON]" "[OFF]"))))]
-   
+
    ["Editing"
     ("a" "Auto Fill Mode" auto-fill-mode
      :transient t
@@ -442,22 +442,22 @@
                     (format "Smartparens Strict Mode %s"
                             (if (bound-and-true-p smartparens-strict-mode)
                                 "[ON]" "[OFF]"))))
-    
+
     ("p" "Show Paren Mode" show-paren-mode
      :transient t
      :description (lambda ()
                     (format "Show Paren Mode %s"
                             (if (bound-and-true-p show-paren-mode)
                                 "[ON]" "[OFF]"))))
-    
+
     ("e" "Electric Pair Mode" electric-pair-mode
      :transient t
      :description (lambda ()
                     (format "Electric Pair Mode %s"
                             (if (bound-and-true-p electric-pair-mode)
                                 "[ON]" "[OFF]"))))]
-   
-      
+
+
    ["Completion & Help"
     ;; ("c" "Company Mode" company-mode
     ;;  :transient t
@@ -483,7 +483,7 @@
                     (format "Flymake Mode %s"
                             (if (bound-and-true-p flymake-mode)
                                 "[ON]" "[OFF]"))))]
-   
+
    ["Visual & Colors"
     ("R" "Rainbow Mode" rainbow-mode
      :transient t
@@ -497,14 +497,14 @@
     ;;                 (format "Rainbow Delimiters %s"
     ;;                         (if (bound-and-true-p rainbow-delimiters-mode)
     ;;                             "[ON]" "[OFF]"))))
-    ;; ("i" "Indent Guide" highlight-indent-guides-mode 
+    ;; ("i" "Indent Guide" highlight-indent-guides-mode
     ;;  :transient t
     ;;  :description (lambda ()
     ;;                 (format "Indent Guide %s"
     ;;                         (if (bound-and-true-p highlight-indent-guides-mode)
     ;;                             "[ON]" "[OFF]"))))
     ]
-   
+
    ["UI & Sidebar"
     ("m" "Menu Bar" menu-bar-mode
      :transient t
@@ -531,7 +531,7 @@
                             (if (and (fboundp 'treemacs-current-visibility)
                                      (eq (treemacs-current-visibility) 'visible))
                                 "[ON]" "[OFF]"))))]
-   
+
    ["Debug & Dev"
     ("d" "Debug on Error" toggle-debug-on-error
      :transient t
@@ -550,7 +550,7 @@
     ;;                         (if (bound-and-true-p aggressive-indent-mode)
     ;;                             "[ON]" "[OFF]"))))
     ]
-   
+
    ["Actions"
     ("q" "Quit" transient-quit-one)]])
 
@@ -564,7 +564,7 @@
 (transient-define-prefix nc/window-tmenu ()
   "Simple frame, window and buffer management."
   ["Frame, Window & Buffer Manager"
-   
+
    ["Frames"
     ("n" "New frame" make-frame-command)
     ("d" "Delete frame" delete-frame)
@@ -572,19 +572,19 @@
     ("D" "Only this frame" delete-other-frames)
     ("m" "Maximize" toggle-frame-maximized)
     ("f" "Fullscreen" toggle-frame-fullscreen)]
-   
+
    ["Layouts"
     ("L i" "IDE layout" nc/layout-ide)
     ("L l" "Sidebar left" nc/layout-sidebar-left)
     ("L r" "Sidebar right" nc/layout-sidebar-right)]
-   
+
    ["Buffers"
     ("B" "Buffer other window" switch-to-buffer-other-window)
     ("F" "Buffer other frame" switch-to-buffer-other-frame)
     ("b" "Display buffer" display-buffer)
     ("K" "Kill buffer & window" kill-buffer-and-window)
     ("i" "Ibuffer" ibuffer)]
-   
+
    ["Actions"
     ("s" "Save config" window-configuration-to-register)
     ("r" "Restore config" jump-to-register)

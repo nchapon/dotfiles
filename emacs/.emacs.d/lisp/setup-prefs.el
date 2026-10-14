@@ -194,7 +194,7 @@
         remote-file-name-inhibit-cache nil
         ;; Enable file-name-handler cache
         tramp-cache-read-persistent-data t
-        
+
         remote-file-name-inhibit-locks t
         tramp-use-scp-direct-remote-copying t
         remote-file-name-inhibit-auto-save-visited t)

@@ -407,7 +407,7 @@ Some custom preferences dedicated to MacOS
      (setq ns-function-modifier 'hyper)   ; make Fn key do Hyper
 
      (setq trash-directory "~/.Trash")    ; Trash Directory
-  
+
      ;; Write Symbols [{}]
      (setq-default mac-right-option-modifier nil)
 
@@ -511,7 +511,7 @@ Keeping files and buffers in registers. To visit the file whose name is in regis
         remote-file-name-inhibit-cache nil
         ;; Enable file-name-handler cache
         tramp-cache-read-persistent-data t
-        
+
         remote-file-name-inhibit-locks t
         tramp-use-scp-direct-remote-copying t
         remote-file-name-inhibit-auto-save-visited t)
@@ -736,7 +736,7 @@ Bound to =<my-prefix-map> w h=.
 #+end_src
 
 
-** Maximize or Split Window Vertically 
+** Maximize or Split Window Vertically
 Split window right with =<my-prefix-map> w v= and move there.
 If windows are splitted delete other windows.
 #+begin_src emacs-lisp
@@ -804,10 +804,10 @@ Core packages configuration module automatically tangled in =./lisp/setup-core.e
   (("M-g w" . avy-goto-word-1)
    ("M-g :"   . avy-goto-char-timer)
    ("M-g l"   . avy-goto-line)
-   )     ; start / opt 
+   )     ; start / opt
   :custom-face
   (avy-lead-face ((t (:background "#51afef" :foreground "#870000" :weight bold)))))
-  
+
 #+end_src
 
 ** Crux
@@ -837,7 +837,7 @@ Core packages configuration module automatically tangled in =./lisp/setup-core.e
     (("C-x C-j" . dired-jump)
      (:map dired-mode-map
                 ("E" . wdired-change-to-wdired-mode)))
-    
+
     :custom
     ;; Always delete and copy recursively
     (dired-recursive-deletes 'always)
@@ -963,7 +963,7 @@ Expand region increases the selected region by semantic units. Just keep pressin
       ("C-$" .  mc/edit-ends-of-lines)
       ("C-S-b" .  mc/edit-beginnings-of-lines)
       ;; Conflict my own map
-      ;("C-<" .  mc/mark-previous-word-like-this) 
+      ;("C-<" .  mc/mark-previous-word-like-this)
       ;("C->" .  mc/mark-next-word-like-this)
       ("C-S-n" .  mc/mark-next-like-this)
       ("C-S-p" .  mc/mark-previous-like-this)
@@ -1038,7 +1038,7 @@ https://github.com/Alexander-Miller/treemacs
 #+end_quote
 
 I have a very simple use of treemacs
-Cf https://github.com/Alexander-Miller/treemacs#navigation-without-projects-and-workspaces 
+Cf https://github.com/Alexander-Miller/treemacs#navigation-without-projects-and-workspaces
 
 
 #+begin_src emacs-lisp
@@ -1112,8 +1112,8 @@ The kirigami Emacs package provides a unified method to fold and unfold text in 
 (global-set-key (kbd "C-c z a") 'kirigami-toggle-fold) ; Toggle fold at point
 
 ;; Experimental
-(global-set-key (kbd "C-S-<down>") 'kirigami-open-fold)     
-(global-set-key (kbd "C-S-<up>") 'kirigami-close-fold)     
+(global-set-key (kbd "C-S-<down>") 'kirigami-open-fold)
+(global-set-key (kbd "C-S-<up>") 'kirigami-close-fold)
 
 #+end_src
 
@@ -1289,7 +1289,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 
     ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
     ;; (setq vertico-cycle t)
-   
+
     )
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
@@ -1398,7 +1398,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
          ("M-s m" . consult-multi-occur)
          ("M-s k" . consult-keep-lines)
          ("M-s u" . consult-focus-lines)
-         
+
          ;; Isearch integration
          ("M-s e" . consult-isearch)
          :map isearch-mode-map
@@ -1447,7 +1447,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
     (interactive)
     (consult-line
      (or (thing-at-point 'symbol))))
-  
+
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.
   ;; (setq consult-preview-key 'any)
@@ -1591,7 +1591,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 #+begin_src emacs-lisp
 ;; No popup appears automatically, and nothing is inserted as a preview while browsing candidates. Completion only triggers when you press TAB,
 ;; which either indents the line or opens the candidate list (falling back to completion only when indentation wouldn't change anything).
-;; Once the popup is open, a documentation tooltip appears after a short pause, and your chosen candidates are remembered and reordered by frequency across Emacs restarts 
+;; Once the popup is open, a documentation tooltip appears after a short pause, and your chosen candidates are remembered and reordered by frequency across Emacs restarts
 (use-package corfu
   ;; :ensure t
   :init
@@ -1603,7 +1603,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
               ("C-p"        . corfu-previous)
               ("<return>"   . corfu-insert))
 
-  
+
   :config
   (setq corfu-preview-current nil)
   (setq corfu-min-width 20)
@@ -1615,7 +1615,7 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
   ;; when it does not need to perform an indentation change.
   (define-key corfu-map (kbd "<tab>") #'corfu-complete)
 
-  
+
   ;; Sort by input history (no need to modify `corfu-sort-function').
   (with-eval-after-load 'savehist
     (corfu-history-mode 1)
@@ -1669,7 +1669,7 @@ Bound to =C-c p=
     :config
     (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter) ; Enable `kind-icon'
 
-  
+
     )
 
 #+end_src
@@ -1724,7 +1724,7 @@ Cf https://github.com/minad/tempel
   ;; Optionally make the Tempel templates available to Abbrev,
   ;; either locally or globally. `expand-abbrev' is bound to C-x '.
   (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-  
+
 )
 
 ;; Optional: Add tempel-collection.
@@ -1775,7 +1775,7 @@ Some Emacs Global Bindings are redefined here.
 (global-set-key (kbd "M-p") #'backward-paragraph)
 (global-set-key (kbd "C-x c") #'compile)
 
-;; Remap goto-map 
+;; Remap goto-map
 (global-set-key (kbd "C-M-g") goto-map)
 
 ;; Zap Up To Char
@@ -1803,10 +1803,10 @@ Some Emacs Global Bindings are redefined here.
     :init
     (key-chord-mode 1)
     (key-chord-define-global "FF" 'projectile-find-file)
-    (key-chord-define-global "GG" 'consult-ripgrep)  
+    (key-chord-define-global "GG" 'consult-ripgrep)
     (key-chord-define-global "OO" 'consult-outline)
     (key-chord-define-global "DD" 'delete-region)
-    (key-chord-define-global "??" 'nc/search-notes) 
+    (key-chord-define-global "??" 'nc/search-notes)
     (key-chord-define-global "BB" 'beginning-of-buffer)
     (key-chord-define-global "JJ" 'crux-top-join-line)
     (key-chord-define-global "MM" 'nc/maximize-or-split-window-vertically)
@@ -1973,7 +1973,7 @@ global leader key. Mode-specific sub-leaders are defined for org, python, and ma
   "mn" '(mc/mark-next-like-this             :which-key "next match")
   "mp" '(mc/mark-previous-like-this         :which-key "prev match")
   "ms" '(mark-sexp                          :which-key "sexp")
-  
+
   ;; --- o · Org / notes ---
   "o"  '(:ignore t            :which-key "org")
   "oa" '(consult-org-agenda   :which-key "agenda")
@@ -1998,7 +1998,7 @@ global leader key. Mode-specific sub-leaders are defined for org, python, and ma
   "vf" '(nc/vc-browse-remote-current-line    :which-key "vc browse file")
   "vr" '(nc/vc-browse-remote                 :which-key "vc browse repo")
   "vw" '(nc/vc-browse-remote-wiki            :which-key "vc browse wiki page")
-  
+
   ;; --- w · Windows / frames ---
   "w"   '(:ignore t              :which-key "window")
   "wD"  '(delete-other-frames    :which-key "delete other frames")
@@ -2019,7 +2019,7 @@ global leader key. Mode-specific sub-leaders are defined for org, python, and ma
   "xs" '(org-store-link                     :which-key "store link")
 
   ;; --- z · fold ---
-  "z"  '(:ignore t                            :which-key "fold actions") 
+  "z"  '(:ignore t                            :which-key "fold actions")
   "z <up>"    '(kirigami-close-fold           :which-key "close fold")
   "z <down>"  '(kirigami-open-fold            :which-key "open fold")
   "z r"       '(kirigami-open-fold-rec        :which-key "open recursive")
@@ -2027,7 +2027,7 @@ global leader key. Mode-specific sub-leaders are defined for org, python, and ma
   "z c"       '(kirigami-close-folds          :which-key "close all")
   "z t"       '(kirigami-toggle-fold          :which-key "toggle fold")
 
-  
+
   ;; --- M- · Transient menus ---
   "M-f" '(nc/file-tmenu   :which-key "file menu")
   "M-g" '(nc/goto-tmenu   :which-key "goto menu")
@@ -2088,7 +2088,7 @@ Be sure transient is loaded.
 
 (transient-define-prefix nc/file-yank-path-tmenu ()
   "Yank Paths"
-  
+
   [["Yank Paths"
    ("F" "Full path"
     (lambda () (interactive)
@@ -2108,7 +2108,7 @@ Be sure transient is loaded.
 
 (transient-define-prefix nc/file-tmenu ()
   "File"
-  
+
   [["Actions"
    ("r" "Rename file & buffer" rename-visited-file)
    ("d" "Delete file & buffer" crux-delete-file-and-buffer)
@@ -2132,7 +2132,7 @@ Be sure transient is loaded.
 
 (transient-define-prefix nc/goto-tmenu ()
   "Goto Transient Menu"
-  
+
   [["Config File & Credentials"
     ("e" "Emacs Config" nc/goto-emacs-config)
     ("p" "Credentials" nc/goto-my-credentials)
@@ -2165,7 +2165,7 @@ Be sure transient is loaded.
 (transient-define-prefix nc/toggle-tmenu ()
   "Toggle common Emacs settings."
   ["Toggle Menu"
-   
+
    ["Display"
     ("l" "Line Numbers" nc/toggle-line-numbers
      :transient t
@@ -2202,7 +2202,7 @@ Be sure transient is loaded.
                     (format "HL Line Mode %s"
                             (if (bound-and-true-p hl-line-mode)
                                 "[ON]" "[OFF]"))))]
-   
+
    ["Editing"
     ("a" "Auto Fill Mode" auto-fill-mode
      :transient t
@@ -2233,22 +2233,22 @@ Be sure transient is loaded.
                     (format "Smartparens Strict Mode %s"
                             (if (bound-and-true-p smartparens-strict-mode)
                                 "[ON]" "[OFF]"))))
-    
+
     ("p" "Show Paren Mode" show-paren-mode
      :transient t
      :description (lambda ()
                     (format "Show Paren Mode %s"
                             (if (bound-and-true-p show-paren-mode)
                                 "[ON]" "[OFF]"))))
-    
+
     ("e" "Electric Pair Mode" electric-pair-mode
      :transient t
      :description (lambda ()
                     (format "Electric Pair Mode %s"
                             (if (bound-and-true-p electric-pair-mode)
                                 "[ON]" "[OFF]"))))]
-   
-      
+
+
    ["Completion & Help"
     ;; ("c" "Company Mode" company-mode
     ;;  :transient t
@@ -2274,7 +2274,7 @@ Be sure transient is loaded.
                     (format "Flymake Mode %s"
                             (if (bound-and-true-p flymake-mode)
                                 "[ON]" "[OFF]"))))]
-   
+
    ["Visual & Colors"
     ("R" "Rainbow Mode" rainbow-mode
      :transient t
@@ -2288,14 +2288,14 @@ Be sure transient is loaded.
     ;;                 (format "Rainbow Delimiters %s"
     ;;                         (if (bound-and-true-p rainbow-delimiters-mode)
     ;;                             "[ON]" "[OFF]"))))
-    ;; ("i" "Indent Guide" highlight-indent-guides-mode 
+    ;; ("i" "Indent Guide" highlight-indent-guides-mode
     ;;  :transient t
     ;;  :description (lambda ()
     ;;                 (format "Indent Guide %s"
     ;;                         (if (bound-and-true-p highlight-indent-guides-mode)
     ;;                             "[ON]" "[OFF]"))))
     ]
-   
+
    ["UI & Sidebar"
     ("m" "Menu Bar" menu-bar-mode
      :transient t
@@ -2322,7 +2322,7 @@ Be sure transient is loaded.
                             (if (and (fboundp 'treemacs-current-visibility)
                                      (eq (treemacs-current-visibility) 'visible))
                                 "[ON]" "[OFF]"))))]
-   
+
    ["Debug & Dev"
     ("d" "Debug on Error" toggle-debug-on-error
      :transient t
@@ -2341,7 +2341,7 @@ Be sure transient is loaded.
     ;;                         (if (bound-and-true-p aggressive-indent-mode)
     ;;                             "[ON]" "[OFF]"))))
     ]
-   
+
    ["Actions"
     ("q" "Quit" transient-quit-one)]])
 
@@ -2359,7 +2359,7 @@ Be sure transient is loaded.
 (transient-define-prefix nc/window-tmenu ()
   "Simple frame, window and buffer management."
   ["Frame, Window & Buffer Manager"
-   
+
    ["Frames"
     ("n" "New frame" make-frame-command)
     ("d" "Delete frame" delete-frame)
@@ -2367,19 +2367,19 @@ Be sure transient is loaded.
     ("D" "Only this frame" delete-other-frames)
     ("m" "Maximize" toggle-frame-maximized)
     ("f" "Fullscreen" toggle-frame-fullscreen)]
-   
+
    ["Layouts"
     ("L i" "IDE layout" nc/layout-ide)
     ("L l" "Sidebar left" nc/layout-sidebar-left)
     ("L r" "Sidebar right" nc/layout-sidebar-right)]
-   
+
    ["Buffers"
     ("B" "Buffer other window" switch-to-buffer-other-window)
     ("F" "Buffer other frame" switch-to-buffer-other-frame)
     ("b" "Display buffer" display-buffer)
     ("K" "Kill buffer & window" kill-buffer-and-window)
     ("i" "Ibuffer" ibuffer)]
-   
+
    ["Actions"
     ("s" "Save config" window-configuration-to-register)
     ("r" "Restore config" jump-to-register)
@@ -2440,7 +2440,7 @@ Org mode configuration automatically tangled in =./lisp/setup-org.el=
 
   ;; subscripts and superscripts are recognized only when enclosed in braces
   (setq org-use-sub-superscripts '{})
-  
+
   :custom
   (org-special-ctrl-a t)
   (org-special-ctrl-e t)
@@ -2593,7 +2593,7 @@ Change priorities colors
      (defun nc/goto-projects-dir ()
        (interactive)
        (dired (nc/projects-dir)))
-   
+
      (defun nc/projects-dir ()
        "Return projects dir"
        (interactive "P")
@@ -2665,7 +2665,7 @@ Change priorities colors
      (interactive)
      (let ( (header-title (format-time-string "%Y-W%W" ))
             (current-day (nc--get-current-day)))
-       (push-mark (point) t t) ;; mark point 
+       (push-mark (point) t t) ;; mark point
        ;; Don't change location of point.
        (goto-char (point-min)) ;; From the beginning...
        (if (search-forward header-title)
@@ -2765,7 +2765,7 @@ will appear as projects.
           :empty-lines 1)
          ("s" "Someday" entry (file+headline nc/inbox-file "Inbox")
           "* SOMEDAY %? :idea:\n%u" :clock-in t :clock-resume t)
-         
+
          ("F" "Film" entry (file+headline nc/watching-file "Films")
           "* NEXT %^{Titre}
         %i
@@ -2841,7 +2841,7 @@ will appear as projects.
 (add-to-list 'org-capture-templates
              '("b" "Book"  entry
                (file+headline nc/reading-file "Inbox")
-               "* NEXT %^{Title} 
+               "* NEXT %^{Title}
 :PROPERTIES:
 :AUTHOR: %^{Author}
 :GENRE: %^{Genre|BD|SF|ESSAY|TECH|SCIENTIFIC|POLAR}
@@ -2943,7 +2943,7 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
    "Display org title if necessary"
    (save-excursion
      (save-restriction
-      (widen) 
+      (widen)
       (let* ((heading-tags (org-get-tags)))
         (if (seq-contains-p heading-tags "project")
             (s-concat "\n"  " 🏗️ ")
@@ -2976,7 +2976,7 @@ Setting =org-agenda-file-regexp= to include all numeric files (journal files)
                            (org-agenda-overriding-header "\n🚀 Inbox")))
                      (tags-todo "TODO=\"HOLD\""
                                 ((org-agenda-overriding-header "\n⌛ Hold / Waiting Tasks")
-                                 (org-agenda-prefix-format " %i %-20:c")                            
+                                 (org-agenda-prefix-format " %i %-20:c")
                                  (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
                      (tags "personal+TODO=\"STARTED\"|personal+TODO=\"NEXT\""
                                 ((org-agenda-overriding-header "\n:house: My current tasks")
@@ -3276,7 +3276,7 @@ Customize speed-commands :
 - P :: Show previous entry keeping previous entries closed
 - m :: org-mark-subtree
 - ! :: Jump to the end of the current node
-  
+
  #+begin_src emacs-lisp
    (defun nc/org-show-next-heading-tidily ()
      "Show next entry, keeping other entries closed."
@@ -3570,7 +3570,7 @@ I try to do a lot of things with =org-roam= :
     "Update refile targets"
     (add-to-list 'org-refile-targets `(,filename :regexp . "\\(?:\\(?:Meeting\\|Task\\)s\\)")))
 
-  ;; Refresh org-refile-targets 
+  ;; Refresh org-refile-targets
   (dolist (project-file (nc/org-roam-list-notes-by-tag "project"))
     (nc/update-refile-targets project-file))
 
@@ -3583,7 +3583,7 @@ I try to do a lot of things with =org-roam= :
     ;; Add project file to the agenda list if the capture was confirmed
     (unless org-note-abort
       (with-current-buffer (org-capture-get :buffer)
-        (progn  
+        (progn
          (add-to-list 'org-agenda-files (buffer-file-name))
          (nc/update-refile-targets (buffer-file-name))))))
 
@@ -3676,15 +3676,15 @@ I try to do a lot of things with =org-roam= :
   ("C-c n l" . 'denote-link-find-backlink)
 
   (:map dired-mode-map
-        ("C-c C-d C-i" . 'denote-link-dired-marked-notes)                        
-        ("C-c C-d C-r" . 'denote-dired-rename-files)                           
-        ("C-c C-d C-k" . 'denote-dired-rename-marked-files-with-keywords)      
+        ("C-c C-d C-i" . 'denote-link-dired-marked-notes)
+        ("C-c C-d C-r" . 'denote-dired-rename-files)
+        ("C-c C-d C-k" . 'denote-dired-rename-marked-files-with-keywords)
         ("C-c C-d C-R" . 'denote-dired-rename-marked-files-using-front-matter))
-  
+
   :init
   (setq denote-directory (expand-file-name "main" (getenv "PIM_HOME")))
   :config
-  
+
   (setq denote-prompts '(subdirectory title keyword))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
@@ -3709,10 +3709,10 @@ I try to do a lot of things with =org-roam= :
       (diredfl-mode +1)))
 
   (add-hook 'dired-mode-hook #'nc--denote-dired-mode-hook)
-  
+
   ;; (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
   ;; (add-hook 'dired-mode-hook #'denote-dired-mode)
-  ) 
+  )
 #+end_src
 ** Consult Notes
 
@@ -3721,13 +3721,13 @@ I try to do a lot of things with =org-roam= :
 ;;   :straight (:type git :host github :repo "mclear-tools/consult-notes")
 ;;   :commands (consult-notes
 ;;              consult-notes-search-in-all-notes
-;;              ;; if using org-roam 
+;;              ;; if using org-roam
 ;;              ;;consult-notes-org-roam-find-node
 ;;              ;;consult-notes-org-roam-find-node-relation
 ;;              )
 ;;   :config
 ;;   ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
-  
+
 ;;   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
 ;;   (setq consult-notes-org-headings-files '("~/notes/"))
 ;;   (consult-notes-org-headings-mode)
@@ -3834,9 +3834,9 @@ Better defaults
   (setq ; recommended
    gc-cons-threshold (* 100 1024 1024)
    read-process-output-max (* 1024 1024))
-  
+
   (setq ; optional
-   ;; lsp-clojure-custom-server-command '("/Users/nchapon/_PIM/tmp/2del/clojure-lsp") 
+   ;; lsp-clojure-custom-server-command '("/Users/nchapon/_PIM/tmp/2del/clojure-lsp")
 
                                         ; Features
    lsp-lens-enable t
@@ -3884,7 +3884,7 @@ Better defaults
               ("C-c ?" . lsp-treemacs-references)
               ("C-c :" . lsp-treemacs-call-hierarchy))
   :config
-  
+
   (setq lsp-treemacs-sync-mode 1))
 
 
@@ -3977,7 +3977,7 @@ Hydra
 
 ;;   ;; Enable DAP controls in the modeline
 ;;   (dap-ui-controls-mode 1)
-  
+
 ;;   (require 'dap-hydra)
 
 ;;   ;; Bind `C-c l d` to `dap-hydra` for easy access
@@ -4102,8 +4102,8 @@ Testing this mode https://github.com/renzmann/treesit-auto
 
   (setq treesit-auto-langs '(python yaml json rust typescript tsx))
   (global-treesit-auto-mode))
-
-(setq treesit-font-lock-level 4)
+;; Treesit font lock 1 small details -> 4 more details, 3 is the default
+(setq treesit-font-lock-level 3)
 #+end_src
 *** Combobulate
 :PROPERTIES:
@@ -4187,7 +4187,7 @@ Smart parens for all programming modes with paredit bindings.
   (eval-and-compile
     (require 'smartparens-config))
 
-  
+
   (sp-use-smartparens-bindings)
   ;; Unbind sp-convolute-xexp (conflict with xref-find-references / lsp-ui-peek-find-references)
   (unbind-key "M-?" smartparens-mode-map)
@@ -4260,7 +4260,7 @@ My custom rebinding =C-c C-p= to =cider-pprint-eval-last-sexp-to-comment=
          ("\\.env\\.[a-zA-Z0-9_-]+\\'" . dotenv-mode)))
 #+end_src
 ** Just
-Mode for justfiles used by [[https://github.com/casey/just][Just]] 
+Mode for justfiles used by [[https://github.com/casey/just][Just]]
 #+begin_src emacs-lisp
   (use-package just-mode
     :defer t)
@@ -4338,7 +4338,7 @@ GitHub Flavored Markdown by default for README.md files.
 ;; Render Markdwon with GitHub API
 (use-package gh-md
   :after markdown-mode
-  :bind 
+  :bind
   (:map markdown-mode-map
         ([remap markdown-preview] . gh-md-render-buffer)))
 
@@ -4359,7 +4359,7 @@ GitHub Flavored Markdown by default for README.md files.
 ** Plant UML
 Needs Java and plantuml.jar installed in =~/opt=
 
-#+begin_src shell :tangle no  
+#+begin_src shell :tangle no
   mkdir -P ~/opt
   cd ~/opt
   curl -O -J -L https://github.com/plantuml/plantuml/releases/download/v1.2024.6/plantuml-1.2024.6.jar
@@ -4444,7 +4444,7 @@ Works for @startuml, @startmindmap, @startgantt, @startsalt, @startwbs,
         (set-buffer image-buffer-name)
         (set-buffer-modified-p nil)
         (kill-this-buffer))
-      
+
       (with-current-buffer (get-buffer "*PLANTUML Preview*")
         (write-file preview-file)
         (set-buffer image-buffer-name)
@@ -4664,7 +4664,7 @@ Automatic generation of function docstrings according to the [[https://google.gi
 
 #+end_src
 
-*** Transient Python Menu 
+*** Transient Python Menu
 
 #+begin_src elisp
 (transient-define-prefix nc/python-tmenu ()
@@ -4849,11 +4849,11 @@ Shell configuration module automatically tangled in =./lisp/setup-shell.el=
 #+end_src
 
 
-** vterm 
+** vterm
 
 Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
 
-[[https://github.com/jixiuf/vterm-toggle][vterm-toggle]] toggles between the Vterm buffer and the current editing buffer 
+[[https://github.com/jixiuf/vterm-toggle][vterm-toggle]] toggles between the Vterm buffer and the current editing buffer
 
 #+begin_src emacs-lisp
   (use-package vterm
@@ -4892,7 +4892,7 @@ Last emacs terminal emulator :  https://github.com/akermu/emacs-libvterm
 
 ** Eshell
 
-Adapted from https://config.daviwil.com/emacs#eshell 
+Adapted from https://config.daviwil.com/emacs#eshell
 
 #+begin_src emacs-lisp
 (defun nc/map-line-to-status-char (line)
@@ -5014,7 +5014,7 @@ Adapted from https://config.daviwil.com/emacs#eshell
   (defun eshell/g ()
     "Git status"
     (eshell-command-result "git status"))
-  
+
   :bind
   (:map eshell-mode-map
         ("C-d" . nc/eshell-quit-or-delete-char)
@@ -5025,7 +5025,7 @@ Adapted from https://config.daviwil.com/emacs#eshell
 
   ;; Enable xterm 256 color support
   (setq eshell-term-name "xterm-256color")
-  
+
   ;; ANSI color support
   (require 'ansi-color)
   (add-hook 'eshell-preoutput-filter-functions 'ansi-color-apply)
@@ -5090,7 +5090,7 @@ FIX : Path to plantuml ??
        )
       )
      (bind-key "C-c C-! t" #'nc/dwim-run-pytest 'python-mode-map)
-     
+
     )
 #+end_src
 * Helper Functions
@@ -5111,7 +5111,7 @@ Helper functions module automatically tangled in =./lisp/setup-functions.el=
  (defun nc/goto-emacs-config ()
      "Edit Readme.org"
      (interactive)
-     (find-file (concat user-emacs-directory "/Readme.org")))     
+     (find-file (concat user-emacs-directory "/Readme.org")))
  #+end_src
 
 ** My personal credentials
@@ -5288,14 +5288,14 @@ If called from Lisp, START and END specify the region."
          (signature (caddr parts)))
     (unless (= (length parts) 3)
       (error "Invalid JWT format: expected 3 parts separated by dots"))
-    (let ((header (json-read-from-string 
-                   (decode-coding-string 
-                    (base64-decode-string 
+    (let ((header (json-read-from-string
+                   (decode-coding-string
+                    (base64-decode-string
                      (jwt--base64url-to-base64 header-b64))
                     'utf-8)))
-          (payload (json-read-from-string 
-                    (decode-coding-string 
-                     (base64-decode-string 
+          (payload (json-read-from-string
+                    (decode-coding-string
+                     (base64-decode-string
                       (jwt--base64url-to-base64 payload-b64))
                      'utf-8))))
       (with-current-buffer (get-buffer-create "*JWT Decoded*")
@@ -5345,7 +5345,7 @@ Supports macOS (open), Windows (explorer), and Linux (xdg-open)."
 #+end_src
 
 
-** nc/vc-browse-remote 
+** nc/vc-browse-remote
 
 From : https://www.rahuljuliato.com/posts/vc-git-functions
 This function opens the repository's remote URL in the browser.
@@ -5474,5 +5474,5 @@ Otherwise, open the repository's main page."
 #+end_src
 
 # Local Variables:
-# eval: (add-hook 'after-save-hook #'org-babel-tangle nil t)                              
+# eval: (add-hook 'after-save-hook #'org-babel-tangle nil t)
 # End:

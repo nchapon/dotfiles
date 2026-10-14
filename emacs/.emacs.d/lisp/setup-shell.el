@@ -163,7 +163,7 @@
   (defun eshell/g ()
     "Git status"
     (eshell-command-result "git status"))
-  
+
   :bind
   (:map eshell-mode-map
         ("C-d" . nc/eshell-quit-or-delete-char)
@@ -174,7 +174,7 @@
 
   ;; Enable xterm 256 color support
   (setq eshell-term-name "xterm-256color")
-  
+
   ;; ANSI color support
   (require 'ansi-color)
   (add-hook 'eshell-preoutput-filter-functions 'ansi-color-apply)
@@ -226,7 +226,7 @@
      )
     )
    (bind-key "C-c C-! t" #'nc/dwim-run-pytest 'python-mode-map)
-   
+
   )
 
 (provide 'setup-shell)

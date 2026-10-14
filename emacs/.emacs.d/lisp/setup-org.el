@@ -46,7 +46,7 @@
 
   ;; subscripts and superscripts are recognized only when enclosed in braces
   (setq org-use-sub-superscripts '{})
-  
+
   :custom
   (org-special-ctrl-a t)
   (org-special-ctrl-e t)
@@ -232,7 +232,7 @@
   (interactive)
   (let ( (header-title (format-time-string "%Y-W%W" ))
          (current-day (nc--get-current-day)))
-    (push-mark (point) t t) ;; mark point 
+    (push-mark (point) t t) ;; mark point
     ;; Don't change location of point.
     (goto-char (point-min)) ;; From the beginning...
     (if (search-forward header-title)
@@ -303,7 +303,7 @@
          :empty-lines 1)
         ("s" "Someday" entry (file+headline nc/inbox-file "Inbox")
          "* SOMEDAY %? :idea:\n%u" :clock-in t :clock-resume t)
-        
+
         ("F" "Film" entry (file+headline nc/watching-file "Films")
          "* NEXT %^{Titre}
        %i
@@ -359,7 +359,7 @@
 (add-to-list 'org-capture-templates
              '("b" "Book"  entry
                (file+headline nc/reading-file "Inbox")
-               "* NEXT %^{Title} 
+               "* NEXT %^{Title}
 :PROPERTIES:
 :AUTHOR: %^{Author}
 :GENRE: %^{Genre|BD|SF|ESSAY|TECH|SCIENTIFIC|POLAR}
@@ -427,7 +427,7 @@
   "Display org title if necessary"
   (save-excursion
     (save-restriction
-     (widen) 
+     (widen)
      (let* ((heading-tags (org-get-tags)))
        (if (seq-contains-p heading-tags "project")
            (s-concat "\n"  " 🏗️ ")
@@ -457,7 +457,7 @@
                       (org-agenda-overriding-header "\n🚀 Inbox")))
                 (tags-todo "TODO=\"HOLD\""
                            ((org-agenda-overriding-header "\n⌛ Hold / Waiting Tasks")
-                            (org-agenda-prefix-format " %i %-20:c")                            
+                            (org-agenda-prefix-format " %i %-20:c")
                             (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
                 (tags "personal+TODO=\"STARTED\"|personal+TODO=\"NEXT\""
                            ((org-agenda-overriding-header "\n:house: My current tasks")
@@ -951,7 +951,7 @@ the result as a time value."
   "Update refile targets"
   (add-to-list 'org-refile-targets `(,filename :regexp . "\\(?:\\(?:Meeting\\|Task\\)s\\)")))
 
-;; Refresh org-refile-targets 
+;; Refresh org-refile-targets
 (dolist (project-file (nc/org-roam-list-notes-by-tag "project"))
   (nc/update-refile-targets project-file))
 
@@ -964,7 +964,7 @@ capture was not aborted."
   ;; Add project file to the agenda list if the capture was confirmed
   (unless org-note-abort
     (with-current-buffer (org-capture-get :buffer)
-      (progn  
+      (progn
        (add-to-list 'org-agenda-files (buffer-file-name))
        (nc/update-refile-targets (buffer-file-name))))))
 
@@ -1053,15 +1053,15 @@ capture was not aborted."
   ("C-c n l" . 'denote-link-find-backlink)
 
   (:map dired-mode-map
-        ("C-c C-d C-i" . 'denote-link-dired-marked-notes)                        
-        ("C-c C-d C-r" . 'denote-dired-rename-files)                           
-        ("C-c C-d C-k" . 'denote-dired-rename-marked-files-with-keywords)      
+        ("C-c C-d C-i" . 'denote-link-dired-marked-notes)
+        ("C-c C-d C-r" . 'denote-dired-rename-files)
+        ("C-c C-d C-k" . 'denote-dired-rename-marked-files-with-keywords)
         ("C-c C-d C-R" . 'denote-dired-rename-marked-files-using-front-matter))
-  
+
   :init
   (setq denote-directory (expand-file-name "main" (getenv "PIM_HOME")))
   :config
-  
+
   (setq denote-prompts '(subdirectory title keyword))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
@@ -1086,7 +1086,7 @@ capture was not aborted."
       (diredfl-mode +1)))
 
   (add-hook 'dired-mode-hook #'nc--denote-dired-mode-hook)
-  
+
   ;; (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
   ;; (add-hook 'dired-mode-hook #'denote-dired-mode)
   )
@@ -1095,13 +1095,13 @@ capture was not aborted."
 ;;   :straight (:type git :host github :repo "mclear-tools/consult-notes")
 ;;   :commands (consult-notes
 ;;              consult-notes-search-in-all-notes
-;;              ;; if using org-roam 
+;;              ;; if using org-roam
 ;;              ;;consult-notes-org-roam-find-node
 ;;              ;;consult-notes-org-roam-find-node-relation
 ;;              )
 ;;   :config
 ;;   ;;(setq consult-notes-file-dir-sources '(("Name"  ?key  "path/to/dir"))) ;; Set notes dir(s), see below
-  
+
 ;;   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
 ;;   (setq consult-notes-org-headings-files '("~/notes/"))
 ;;   (consult-notes-org-headings-mode)

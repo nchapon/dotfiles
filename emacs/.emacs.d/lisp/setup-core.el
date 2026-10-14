@@ -21,7 +21,7 @@
   (("M-g w" . avy-goto-word-1)
    ("M-g :"   . avy-goto-char-timer)
    ("M-g l"   . avy-goto-line)
-   )     ; start / opt 
+   )     ; start / opt
   :custom-face
   (avy-lead-face ((t (:background "#51afef" :foreground "#870000" :weight bold)))))
 
@@ -45,7 +45,7 @@
   (("C-x C-j" . dired-jump)
    (:map dired-mode-map
               ("E" . wdired-change-to-wdired-mode)))
-  
+
   :custom
   ;; Always delete and copy recursively
   (dired-recursive-deletes 'always)
@@ -134,7 +134,7 @@
    ("C-$" .  mc/edit-ends-of-lines)
    ("C-S-b" .  mc/edit-beginnings-of-lines)
    ;; Conflict my own map
-   ;("C-<" .  mc/mark-previous-word-like-this) 
+   ;("C-<" .  mc/mark-previous-word-like-this)
    ;("C->" .  mc/mark-next-word-like-this)
    ("C-S-n" .  mc/mark-next-like-this)
    ("C-S-p" .  mc/mark-previous-like-this)
@@ -228,7 +228,7 @@ Use `treemacs' command for old functionality."
 (global-set-key (kbd "C-c z a") 'kirigami-toggle-fold) ; Toggle fold at point
 
 ;; Experimental
-(global-set-key (kbd "C-S-<down>") 'kirigami-open-fold)     
+(global-set-key (kbd "C-S-<down>") 'kirigami-open-fold)
 (global-set-key (kbd "C-S-<up>") 'kirigami-close-fold)
 
 (use-package rainbow-mode

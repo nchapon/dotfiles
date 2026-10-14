@@ -38,9 +38,9 @@
   (setq ; recommended
    gc-cons-threshold (* 100 1024 1024)
    read-process-output-max (* 1024 1024))
-  
+
   (setq ; optional
-   ;; lsp-clojure-custom-server-command '("/Users/nchapon/_PIM/tmp/2del/clojure-lsp") 
+   ;; lsp-clojure-custom-server-command '("/Users/nchapon/_PIM/tmp/2del/clojure-lsp")
 
                                         ; Features
    lsp-lens-enable t
@@ -88,7 +88,7 @@
               ("C-c ?" . lsp-treemacs-references)
               ("C-c :" . lsp-treemacs-call-hierarchy))
   :config
-  
+
   (setq lsp-treemacs-sync-mode 1))
 
 
@@ -162,7 +162,7 @@
 
 ;;   ;; Enable DAP controls in the modeline
 ;;   (dap-ui-controls-mode 1)
-  
+
 ;;   (require 'dap-hydra)
 
 ;;   ;; Bind `C-c l d` to `dap-hydra` for easy access
@@ -278,8 +278,8 @@
 
   (setq treesit-auto-langs '(python yaml json rust typescript tsx))
   (global-treesit-auto-mode))
-
-(setq treesit-font-lock-level 4)
+;; Treesit font lock 1 small details -> 4 more details, 3 is the default
+(setq treesit-font-lock-level 3)
 
 (use-package combobulate
     :defer t
@@ -347,7 +347,7 @@
   (eval-and-compile
     (require 'smartparens-config))
 
-  
+
   (sp-use-smartparens-bindings)
   ;; Unbind sp-convolute-xexp (conflict with xref-find-references / lsp-ui-peek-find-references)
   (unbind-key "M-?" smartparens-mode-map)
@@ -465,7 +465,7 @@
 ;; Render Markdwon with GitHub API
 (use-package gh-md
   :after markdown-mode
-  :bind 
+  :bind
   (:map markdown-mode-map
         ([remap markdown-preview] . gh-md-render-buffer)))
 
@@ -555,7 +555,7 @@ Works for @startuml, @startmindmap, @startgantt, @startsalt, @startwbs,
         (set-buffer image-buffer-name)
         (set-buffer-modified-p nil)
         (kill-this-buffer))
-      
+
       (with-current-buffer (get-buffer "*PLANTUML Preview*")
         (write-file preview-file)
         (set-buffer image-buffer-name)

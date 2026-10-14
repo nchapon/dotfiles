@@ -28,7 +28,7 @@
 
     ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
     ;; (setq vertico-cycle t)
-   
+
     )
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
@@ -128,7 +128,7 @@
          ("M-s m" . consult-multi-occur)
          ("M-s k" . consult-keep-lines)
          ("M-s u" . consult-focus-lines)
-         
+
          ;; Isearch integration
          ("M-s e" . consult-isearch)
          :map isearch-mode-map
@@ -177,7 +177,7 @@
     (interactive)
     (consult-line
      (or (thing-at-point 'symbol))))
-  
+
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.
   ;; (setq consult-preview-key 'any)
@@ -307,7 +307,7 @@
 
 ;; No popup appears automatically, and nothing is inserted as a preview while browsing candidates. Completion only triggers when you press TAB,
 ;; which either indents the line or opens the candidate list (falling back to completion only when indentation wouldn't change anything).
-;; Once the popup is open, a documentation tooltip appears after a short pause, and your chosen candidates are remembered and reordered by frequency across Emacs restarts 
+;; Once the popup is open, a documentation tooltip appears after a short pause, and your chosen candidates are remembered and reordered by frequency across Emacs restarts
 (use-package corfu
   ;; :ensure t
   :init
@@ -319,7 +319,7 @@
               ("C-p"        . corfu-previous)
               ("<return>"   . corfu-insert))
 
-  
+
   :config
   (setq corfu-preview-current nil)
   (setq corfu-min-width 20)
@@ -331,7 +331,7 @@
   ;; when it does not need to perform an indentation change.
   (define-key corfu-map (kbd "<tab>") #'corfu-complete)
 
-  
+
   ;; Sort by input history (no need to modify `corfu-sort-function').
   (with-eval-after-load 'savehist
     (corfu-history-mode 1)
@@ -425,7 +425,7 @@
   ;; Optionally make the Tempel templates available to Abbrev,
   ;; either locally or globally. `expand-abbrev' is bound to C-x '.
   (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-  
+
 )
 
 ;; Optional: Add tempel-collection.
