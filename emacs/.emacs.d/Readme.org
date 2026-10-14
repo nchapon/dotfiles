@@ -349,6 +349,13 @@ With this setting, after the first =C-u C-SPC= you can keep pressing just =C-SPC
 #+begin_src emacs-lisp
 (setq set-mark-command-repeat-pop t)
 #+end_src
+*** MS Windows IO
+MS Windows IO Optimizations
+#+begin_src emacs-lisp
+(when is-windows
+  (setq w32-get-true-file-attributes nil      ; Decrease file IO workload
+        w32-pipe-buffer-size (* 128 1024)))   ; Read more at a time
+#+end_src
 
 ** UTF-8 Encoding
 

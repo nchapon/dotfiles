@@ -81,6 +81,10 @@
 
 (setq set-mark-command-repeat-pop t)
 
+(when is-windows
+  (setq w32-get-true-file-attributes nil      ; Decrease file IO workload
+        w32-pipe-buffer-size (* 128 1024)))   ; Read more at a time
+
 (prefer-coding-system 'utf-8-unix)
 (setq locale-coding-system 'utf-8-unix)
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
