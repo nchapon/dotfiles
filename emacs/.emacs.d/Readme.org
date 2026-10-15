@@ -193,21 +193,22 @@ Help keeping =~/.emacs.d= clean.
 Add setup modules and conclude the =init.el= file.
 
 #+begin_src emacs-lisp
-  (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
-  (require 'setup-prefs)
-  (require 'setup-ui)
-  (require 'setup-keys)
-  (require 'setup-windows)
-  (require 'setup-core)
-  (require 'setup-completion)
-  (require 'setup-org)
-  (require 'setup-programming)
-  (require 'setup-shell)
-  (require 'setup-functions)
+(require 'setup-prefs)
+(require 'setup-ui)
+(require 'setup-keys)
+(require 'setup-windows)
+(require 'setup-core)
+(require 'setup-completion)
+(require 'setup-org)
+(require 'setup-programming)
+(require 'setup-shell)
+(require 'setup-functions)
+(require 'setup-tools)
 
-  (provide 'init)
-  ;;; init.el ends here
+(provide 'init)
+;;; init.el ends here
 #+end_src
 
 * Global Preferences
@@ -5413,6 +5414,43 @@ Otherwise, open the repository's main page."
         (browse-url (format "%s/-/wikis/%s" base-url wiki-page))
       (message "Could not determine repository URL"))))
 #+end_src
+* Tools
+:properties:
+:header-args+: :tangle "./lisp/setup-tools.el"
+:end:
+
+Tools module automatically tangled in =./lisp/setup-tools.el=
+#+begin_src emacs-lisp :noweb yes
+  ;;; setup-functions.el --- Custom functions module -*- lexical-binding: t; buffer-read-only: t -*-
+
+  <<nc-header>>
+#+end_src
+** OSM
+
+#+begin_src emacs-lisp
+(use-package osm
+  :bind ("C-c m" . osm-prefix-map) ;; Alternatives: `osm-home' or `osm'
+
+  :custom
+  ;; Take a look at the customization group `osm' for more options.
+  (osm-default-server 'default) ;; Configure the tile server
+  (osm-default-zoom 15)         ;; Default zoom level
+  (osm-copyright t)             ;; Display the copyright information
+  (osm-home (list 48.02 -1.75 10))       ;; Home, configure `calendar-latitude/longitude' instead
+
+  :config
+
+  ;; Add custom servers, see also https://github.com/minad/osm/wiki
+  ;; (osm-add-server 'myserver
+  ;;   :name "My tile server"
+  ;;   :group "Custom"
+  ;;   :description "Tiles based on aerial images"
+  ;;   :url "https://myserver/tiles/%z/%x/%y.png?apikey=%k")
+)
+
+#+end_src
+
+
 * Provided modules
 
 ** =setup-prefs= module
@@ -5478,6 +5516,11 @@ Otherwise, open the repository's main page."
 #+begin_src emacs-lisp :tangle ./lisp/setup-functions.el
   (provide 'setup-functions)
   ;;; setup-functions.el ends here
+#+end_src
+** =setup-tools= module
+#+begin_src emacs-lisp :tangle ./lisp/setup-tools.el
+  (provide 'setup-tools)
+  ;;; setup-tools.el ends here
 #+end_src
 
 # Local Variables:

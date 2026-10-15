@@ -50,6 +50,7 @@
 (require 'setup-programming)
 (require 'setup-shell)
 (require 'setup-functions)
+(require 'setup-tools)
 
 (provide 'init)
 ;;; init.el ends here
