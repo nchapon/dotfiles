@@ -811,7 +811,6 @@ Core packages configuration module automatically tangled in =./lisp/setup-core.e
   :bind
   (("M-g w" . avy-goto-word-1)
    ("M-g :"   . avy-goto-char-timer)
-   ("M-g l"   . avy-goto-line)
    )     ; start / opt
   :custom-face
   (avy-lead-face ((t (:background "#51afef" :foreground "#870000" :weight bold)))))
@@ -1401,7 +1400,6 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
          ("M-s G" . consult-git-grep)
          ("M-s r" . consult-ripgrep)
          ("M-s l" . consult-line)
-         ("C-s" . consult-line)
          ("M-s L" . consult-line-multi)
          ("M-s m" . consult-multi-occur)
          ("M-s k" . consult-keep-lines)

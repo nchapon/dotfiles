@@ -20,7 +20,6 @@
   :bind
   (("M-g w" . avy-goto-word-1)
    ("M-g :"   . avy-goto-char-timer)
-   ("M-g l"   . avy-goto-line)
    )     ; start / opt
   :custom-face
   (avy-lead-face ((t (:background "#51afef" :foreground "#870000" :weight bold)))))
