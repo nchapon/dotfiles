@@ -205,5 +205,16 @@
 
 (setq auth-sources '("~/.authinfo.gpg"))
 
+(use-package winner
+  :straight nil                     ; built-in, nothing to install
+  :init
+  (winner-mode 1)
+  :custom
+  (winner-ring-size 200)          ; history depth per frame (default 200)
+  (winner-boring-bufs '("*Completions*" "*Help*" "*Apropos*"
+                        "*Buffer List*" "*Messages*"))
+  :bind (("C-c w u" . winner-undo)   ; optional extra bindings
+         ("C-c w r" . winner-redo)))
+
 (provide 'setup-prefs)
 ;;; setup-prefs.el ends here

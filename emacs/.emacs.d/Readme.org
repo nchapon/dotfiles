@@ -526,6 +526,19 @@ Keeping files and buffers in registers. To visit the file whose name is in regis
 
 (setq auth-sources '("~/.authinfo.gpg"))
 #+end_src
+** Winner Mode
+#+begin_src emacs-lisp
+(use-package winner
+  :straight nil                     ; built-in, nothing to install
+  :init
+  (winner-mode 1)
+  :custom
+  (winner-ring-size 200)          ; history depth per frame (default 200)
+  (winner-boring-bufs '("*Completions*" "*Help*" "*Apropos*"
+                        "*Buffer List*" "*Messages*"))
+  :bind (("C-c w u" . winner-undo)   ; optional extra bindings
+         ("C-c w r" . winner-redo)))
+#+end_src
 
 * UI
 :properties:
