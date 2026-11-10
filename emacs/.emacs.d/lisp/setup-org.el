@@ -1065,7 +1065,6 @@ capture was not aborted."
   (setq denote-prompts '(subdirectory title keyword))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
-  (setq denote-excluded-directories-regexp "attachments")
 
   ;; Makes the denote links different from usual link.
   (set-face-attribute 'denote-faces-link

@@ -1567,6 +1567,41 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
 
   (define-key embark-file-map (kbd "S") 'nc/sudo-find-file))
 
+#+end_src
+*** Embark Custom Actions
+:PROPERTIES:
+:ID:       91db9a73-c604-43b7-95a9-df216a72a98c
+:END:
+
+From https://blog.fidelramos.net/software/embark-custom-actions
+
+#+begin_src emacs-lisp
+;;; To prevent compiler warnings, org-stored-links comes from ol.el
+(defvar org-stored-links)
+
+(defun nc/embark-org-store-file-link (file)
+  "Store an Org link to FILE in `org-stored-links'."
+  (interactive "fStore Org link to file: ")
+  (push (list (concat "file:" (expand-file-name file))
+              (file-name-nondirectory file))
+        org-stored-links)
+  (message "Stored Org link to %s" file))
+
+(defun nc/embark-org-store-url-link (url)
+  "Store an Org link to URL in `org-stored-links'."
+  (interactive "sStore Org link to URL: ")
+  (push (list url nil) org-stored-links)
+  (message "Stored Org link to %s" url))
+
+
+(keymap-set embark-file-map "l" #'nc/embark-org-store-file-link)
+(keymap-set embark-url-map "l" #'nc/embark-org-store-url-link)
+
+#+end_src
+
+
+*** Embark Consult
+#+begin_src emacs-lisp
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
   :after (embark consult)
@@ -1575,9 +1610,10 @@ Completion configuration automatically tangled in =./lisp/setup-completion.el=
   ;; auto-updating embark collect buffer
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
-
-
 #+end_src
+
+
+
 ** Completion at point
 *** Hippie Expand
 
@@ -1934,6 +1970,7 @@ global leader key. Mode-specific sub-leaders are defined for org, python, and ma
   "P" '(consult-projectile-switch-project    :which-key "switch project")
 
   ;; --- Misc Top Level with CTRL
+  "C-a" '(embark-act                      :which-key "embark actions" )
   "C-b" '(nc/bookmark-open                :which-key "open bookmark")
   "C-p" '(projectile-dispatch             :which-key "projectile-dispatch")
 
@@ -3708,7 +3745,6 @@ I try to do a lot of things with =org-roam= :
   (setq denote-prompts '(subdirectory title keyword))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
-  (setq denote-excluded-directories-regexp "attachments")
 
   ;; Makes the denote links different from usual link.
   (set-face-attribute 'denote-faces-link

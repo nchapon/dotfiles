@@ -147,6 +147,7 @@
   "P" '(consult-projectile-switch-project    :which-key "switch project")
 
   ;; --- Misc Top Level with CTRL
+  "C-a" '(embark-act                      :which-key "embark actions" )
   "C-b" '(nc/bookmark-open                :which-key "open bookmark")
   "C-p" '(projectile-dispatch             :which-key "projectile-dispatch")
 

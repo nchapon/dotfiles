@@ -272,6 +272,27 @@
 
   (define-key embark-file-map (kbd "S") 'nc/sudo-find-file))
 
+;;; To prevent compiler warnings, org-stored-links comes from ol.el
+(defvar org-stored-links)
+
+(defun nc/embark-org-store-file-link (file)
+  "Store an Org link to FILE in `org-stored-links'."
+  (interactive "fStore Org link to file: ")
+  (push (list (concat "file:" (expand-file-name file))
+              (file-name-nondirectory file))
+        org-stored-links)
+  (message "Stored Org link to %s" file))
+
+(defun nc/embark-org-store-url-link (url)
+  "Store an Org link to URL in `org-stored-links'."
+  (interactive "sStore Org link to URL: ")
+  (push (list url nil) org-stored-links)
+  (message "Stored Org link to %s" url))
+
+
+(keymap-set embark-file-map "l" #'nc/embark-org-store-file-link)
+(keymap-set embark-url-map "l" #'nc/embark-org-store-url-link)
+
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
   :after (embark consult)
