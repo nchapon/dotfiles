@@ -44,7 +44,7 @@
 
   ;; Corrects (and improves) org-mode's native fontification.
   (with-eval-after-load 'org
-      (doom-themes-org-config))
+    (doom-themes-org-config))
   )
 
 (use-package doom-modeline
@@ -58,7 +58,7 @@
   (when is-mac
     (if (> (display-pixel-width) 2500)
         (set-frame-font "Jetbrains Mono 16" nil t)
-        (set-frame-font "Jetbrains Mono 14" nil t)))
+      (set-frame-font "Jetbrains Mono 14" nil t)))
   (when is-windows
     (set-frame-font "Jetbrains Mono 10" nil t))
   )
@@ -69,22 +69,22 @@
 (setf use-default-font-for-symbols nil)
 
 (use-package emojify
-    :hook (after-init . global-emojify-mode)
-    :config
+  :hook (after-init . global-emojify-mode)
+  :config
 
-    (set-fontset-font "fontset-default" 'symbol "Noto Color Emoji" nil 'append)
-    (set-fontset-font "fontset-default" 'symbol "Symbola" nil 'append)
-    (set-fontset-font t 'unicode "Noto Emoji" nil 'append)
-    (set-fontset-font t 'unicode (font-spec :family "all-the-icons") nil 'append)
-    (set-fontset-font t 'unicode (font-spec :family "file-icons") nil 'append)
-    (set-fontset-font t 'unicode (font-spec :family "Material Icons") nil 'append)
-    (set-fontset-font t 'unicode (font-spec :family "github-octicons") nil 'append)
-    (set-fontset-font t 'unicode (font-spec :family "FontAwesome") nil 'append)
-    (set-fontset-font t 'unicode (font-spec :family "Weather Icons") nil 'append)
+  (set-fontset-font "fontset-default" 'symbol "Noto Color Emoji" nil 'append)
+  (set-fontset-font "fontset-default" 'symbol "Symbola" nil 'append)
+  (set-fontset-font t 'unicode "Noto Emoji" nil 'append)
+  (set-fontset-font t 'unicode (font-spec :family "all-the-icons") nil 'append)
+  (set-fontset-font t 'unicode (font-spec :family "file-icons") nil 'append)
+  (set-fontset-font t 'unicode (font-spec :family "Material Icons") nil 'append)
+  (set-fontset-font t 'unicode (font-spec :family "github-octicons") nil 'append)
+  (set-fontset-font t 'unicode (font-spec :family "FontAwesome") nil 'append)
+  (set-fontset-font t 'unicode (font-spec :family "Weather Icons") nil 'append)
 
-    ;; (add-hook 'markdown-mode-hook 'ac-emoji-setup)
+  ;; (add-hook 'markdown-mode-hook 'ac-emoji-setup)
 
-    (require 'font-lock))
+  (require 'font-lock))
 
 (use-package casual
   :after org

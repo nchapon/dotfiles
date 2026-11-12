@@ -12,7 +12,7 @@
 ;;; Code:
 
 (setq user-full-name "Nicolas Chapon"
-        user-mail-address "nchapon@gmail.com")
+      user-mail-address "nchapon@gmail.com")
 
 (defconst is-mac (equal system-type 'darwin))
 (defconst is-linux (equal system-type 'gnu/linux))
@@ -139,7 +139,7 @@
   (uniquify-separator "/")
   (uniquify-after-kill-buffer-p t)
   (uniquify-ignore-buffers-re "^\\*")
-)
+  )
 
 (use-package recentf
   :straight nil
@@ -191,17 +191,17 @@
 (set-register ?c '(buffer . "*Compile*"))
 
 (setq tramp-default-method "ssh"          ; Use SSH by default
-        tramp-verbose 1                      ; Reduce verbosity
-        tramp-use-ssh-controlmaster-options nil  ; Don't use control master
-        tramp-connection-timeout 10         ; Shorter timeout
-        ;; Cache remote files
-        remote-file-name-inhibit-cache nil
-        ;; Enable file-name-handler cache
-        tramp-cache-read-persistent-data t
+      tramp-verbose 1                      ; Reduce verbosity
+      tramp-use-ssh-controlmaster-options nil  ; Don't use control master
+      tramp-connection-timeout 10         ; Shorter timeout
+      ;; Cache remote files
+      remote-file-name-inhibit-cache nil
+      ;; Enable file-name-handler cache
+      tramp-cache-read-persistent-data t
 
-        remote-file-name-inhibit-locks t
-        tramp-use-scp-direct-remote-copying t
-        remote-file-name-inhibit-auto-save-visited t)
+      remote-file-name-inhibit-locks t
+      tramp-use-scp-direct-remote-copying t
+      remote-file-name-inhibit-auto-save-visited t)
 
 (setq auth-sources '("~/.authinfo.gpg"))
 

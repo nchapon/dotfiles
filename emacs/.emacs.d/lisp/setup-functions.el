@@ -12,9 +12,9 @@
 ;;; Code:
 
 (defun nc/goto-emacs-config ()
-    "Edit Readme.org"
-    (interactive)
-    (find-file (concat user-emacs-directory "/Readme.org")))
+  "Edit Readme.org"
+  (interactive)
+  (find-file (concat user-emacs-directory "/Readme.org")))
 
 (defun nc/goto-my-credentials ()
   "Goto my credentials"
@@ -34,15 +34,15 @@
   (dotimes (i 32) (insert (nc--random-alnum))))
 
 (defun nc--random-char ()
-    (let* ((alnum "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-/%+*?&#[]()={}_<>!$,;:^µ0123456789")
-           (i (% (abs (random)) (length alnum))))
-      (substring alnum i (1+ i))))
+  (let* ((alnum "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-/%+*?&#[]()={}_<>!$,;:^µ0123456789")
+         (i (% (abs (random)) (length alnum))))
+    (substring alnum i (1+ i))))
 
 
 (defun nc/generate-password ()
-    "Generates a strong password"
-    (interactive)
-    (dotimes (i 12) (insert (nc--random-char))))
+  "Generates a strong password"
+  (interactive)
+  (dotimes (i 12) (insert (nc--random-char))))
 
 (defvar current-hour-format "%H:00")
 
@@ -60,7 +60,7 @@
       (progn
         (org-insert-time-stamp nil nil nil)
         (insert " "))
-      (insert (format-time-string "%Y-%m-%d" (current-time)))))
+    (insert (format-time-string "%Y-%m-%d" (current-time)))))
 
 (defun nc/insert-datestamp-inactive ()
   "Insert the current date in yyyy-mm-dd format."

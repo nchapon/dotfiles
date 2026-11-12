@@ -30,11 +30,11 @@
   :unless is-windows
   :config
   (add-to-list 'display-buffer-alist
-     '("\*vterm\*"
-       (display-buffer-in-side-window)
-       (window-height . 0.3)
-       (side . bottom)
-       (slot . 0)))
+               '("\*vterm\*"
+                 (display-buffer-in-side-window)
+                 (window-height . 0.3)
+                 (side . bottom)
+                 (slot . 0)))
 
   :bind
   ("C-c s" . vterm-toggle)
@@ -56,7 +56,7 @@
          (git-output (shell-command-to-string "git rev-parse --show-toplevel"))
          (has-path (not (string-match "^fatal" git-output))))
     (if (not has-path)
-      (abbreviate-file-name current-path)
+        (abbreviate-file-name current-path)
       (string-remove-prefix (file-name-directory git-output) current-path))))
 
 ;; This prompt function mostly replicates my custom zsh prompt setup
@@ -159,7 +159,7 @@
     "ls -lah shortcut"
     (apply #'eshell/ls "-lah" args))
 
-;; Git status shortcut
+  ;; Git status shortcut
   (defun eshell/g ()
     "Git status"
     (eshell-command-result "git status"))
@@ -172,12 +172,12 @@
   )
 
 
-  ;; Enable xterm 256 color support
-  (setq eshell-term-name "xterm-256color")
+;; Enable xterm 256 color support
+(setq eshell-term-name "xterm-256color")
 
-  ;; ANSI color support
-  (require 'ansi-color)
-  (add-hook 'eshell-preoutput-filter-functions 'ansi-color-apply)
+;; ANSI color support
+(require 'ansi-color)
+(add-hook 'eshell-preoutput-filter-functions 'ansi-color-apply)
 
 (use-package eshell-toggle
   :custom
@@ -208,12 +208,12 @@
          (save-excursion
            (goto-char 0)
            (when (re-search-forward "output='\\(.*\\)'" nil t)
-               (find-file-other-window (match-string-no-properties 1))
-               (kill-buffer buffer)
+             (find-file-other-window (match-string-no-properties 1))
+             (kill-buffer buffer)
              )))))
     )
-   (bind-key "C-c C-! e" #'nc/dwim-shell-command-plantuml-to-png)
-   (defun nc/dwim-run-pytest ()
+  (bind-key "C-c C-! e" #'nc/dwim-shell-command-plantuml-to-png)
+  (defun nc/dwim-run-pytest ()
     "Run pytest on marked file"
     (interactive)
     (dwim-shell-command-on-marked-files
@@ -225,7 +225,7 @@
      :silent-success t
      )
     )
-   (bind-key "C-c C-! t" #'nc/dwim-run-pytest 'python-mode-map)
+  (bind-key "C-c C-! t" #'nc/dwim-run-pytest 'python-mode-map)
 
   )
 

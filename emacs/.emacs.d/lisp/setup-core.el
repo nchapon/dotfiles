@@ -43,7 +43,7 @@
   :bind
   (("C-x C-j" . dired-jump)
    (:map dired-mode-map
-              ("E" . wdired-change-to-wdired-mode)))
+         ("E" . wdired-change-to-wdired-mode)))
 
   :custom
   ;; Always delete and copy recursively
@@ -108,7 +108,7 @@
               ("/" . dired-narrow)))
 
 (use-package diredfl
- :init (diredfl-global-mode 1))
+  :init (diredfl-global-mode 1))
 
 (use-package projectile
   :custom
@@ -133,8 +133,8 @@
    ("C-$" .  mc/edit-ends-of-lines)
    ("C-S-b" .  mc/edit-beginnings-of-lines)
    ;; Conflict my own map
-   ;("C-<" .  mc/mark-previous-word-like-this)
-   ;("C->" .  mc/mark-next-word-like-this)
+                                        ;("C-<" .  mc/mark-previous-word-like-this)
+                                        ;("C->" .  mc/mark-next-word-like-this)
    ("C-S-n" .  mc/mark-next-like-this)
    ("C-S-p" .  mc/mark-previous-like-this)
    ("C-*" .  mc/mark-all-dwim)))
@@ -152,7 +152,7 @@
   :straight nil
   :defer t
   :custom
-   ;; Ediff should be opened in selected frame and split window horizontally
+  ;; Ediff should be opened in selected frame and split window horizontally
   (ediff-window-setup-function 'ediff-setup-windows-plain)
   (ediff-split-window-function 'split-window-horizontally)
   (ediff-diff-options "-w")
@@ -267,7 +267,7 @@ Use `treemacs' command for old functionality."
 (use-package consult-yasnippet
   :bind
   (:map global-map
-   ("C-c y" . consult-yasnippet)))
+        ("C-c y" . consult-yasnippet)))
 
 (use-package yasnippet-capf
   :after cape
@@ -278,36 +278,36 @@ Use `treemacs' command for old functionality."
   (emacs-lisp-mode . my/yasnippet-capf-h))
 
 (defun +yas/org-src-header-p ()
-    "Determine whether `point' is within a src-block header or header-args."
-    (pcase (org-element-type (org-element-context))
-      ('src-block (< (point) ; before code part of the src-block
-                     (save-excursion (goto-char (org-element-property :begin (org-element-context)))
-                                     (forward-line 1)
-                                     (point))))
-      ('inline-src-block (< (point) ; before code part of the inline-src-block
-                            (save-excursion (goto-char (org-element-property :begin (org-element-context)))
-                                            (search-forward "]{")
-                                            (point))))
-      ('keyword (string-match-p "^header-args" (org-element-property :value (org-element-context))))))
+  "Determine whether `point' is within a src-block header or header-args."
+  (pcase (org-element-type (org-element-context))
+    ('src-block (< (point) ; before code part of the src-block
+                   (save-excursion (goto-char (org-element-property :begin (org-element-context)))
+                                   (forward-line 1)
+                                   (point))))
+    ('inline-src-block (< (point) ; before code part of the inline-src-block
+                          (save-excursion (goto-char (org-element-property :begin (org-element-context)))
+                                          (search-forward "]{")
+                                          (point))))
+    ('keyword (string-match-p "^header-args" (org-element-property :value (org-element-context))))))
 
 
-  (defun +yas/org-prompt-header-arg (arg question values)
+(defun +yas/org-prompt-header-arg (arg question values)
   "Prompt the user to set ARG header property to one of VALUES with QUESTION.
 The default value is identified and indicated. If either default is selected,
 or no selection is made: nil is returned."
   (let* ((src-block-p (not (looking-back "^#\\+property:[ \t]+header-args:.*" (line-beginning-position))))
          (default
-           (or
-            (cdr (assoc arg
-                        (if src-block-p
-                            (nth 2 (org-babel-get-src-block-info t))
-                          (org-babel-merge-params
-                           org-babel-default-header-args
-                           (let ((lang-headers
-                                  (intern (concat "org-babel-default-header-args:"
-                                                  (+yas/org-src-lang)))))
-                             (when (boundp lang-headers) (eval lang-headers t)))))))
-            ""))
+          (or
+           (cdr (assoc arg
+                       (if src-block-p
+                           (nth 2 (org-babel-get-src-block-info t))
+                         (org-babel-merge-params
+                          org-babel-default-header-args
+                          (let ((lang-headers
+                                 (intern (concat "org-babel-default-header-args:"
+                                                 (+yas/org-src-lang)))))
+                            (when (boundp lang-headers) (eval lang-headers t)))))))
+           ""))
          default-value)
     (setq values (mapcar
                   (lambda (value)
@@ -340,9 +340,9 @@ or no selection is made: nil is returned."
   (setq wgrep-change-readonly-file t)
   :straight t
   :bind (:map grep-mode-map
-          ("e" . wgrep-change-to-wgrep-mode)
-          :map ripgrep-search-mode-map
-          ("e" . wgrep-change-to-wgrep-mode)))
+              ("e" . wgrep-change-to-wgrep-mode)
+              :map ripgrep-search-mode-map
+              ("e" . wgrep-change-to-wgrep-mode)))
 
 (provide 'setup-core)
 ;;; setup-core.el ends here

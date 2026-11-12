@@ -55,7 +55,7 @@
   (org-babel-after-execute . org-redisplay-inline-images)
   )
 
- (use-package org-contrib)
+(use-package org-contrib)
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode)
@@ -96,7 +96,7 @@
                           '(org-verbatim ((t (:foreground "#69ffeb"))))
                           '(org-table ((t (:foreground "#fae196"))))
                           `(org-checkbox ((t (:foreground "#ff4c4f"
-                                         :box (:line-width 1 :style released-button)))))
+                                                          :box (:line-width 1 :style released-button)))))
                           `(org-date ((t (:foreground "#69ffeb"))))
                           `(org-tag ((t (:foreground "#e6b68d"))))
 
@@ -105,17 +105,17 @@
                           '(org-link                  ((t (:foreground "#697dff" :underline t))))))
 
 (use-package org-fancy-priorities
-      :diminish
-      :defines org-fancy-priorities-list
-      :hook (org-mode . org-fancy-priorities-mode)
-      :config (setq org-fancy-priorities-list '("⚡" "▲" "▲" "▼")))
+  :diminish
+  :defines org-fancy-priorities-list
+  :hook (org-mode . org-fancy-priorities-mode)
+  :config (setq org-fancy-priorities-list '("⚡" "▲" "▲" "▼")))
 
 (setq org-lowest-priority ?D
-        org-default-priority ?D
-        org-priority-faces '((?A . (:foreground "red" :weight bold))
-                             (?B . (:foreground "orange"))
-                             (?C . (:foreground "yellow"))
-                             (?D . (:foreground "green"))))
+      org-default-priority ?D
+      org-priority-faces '((?A . (:foreground "red" :weight bold))
+                           (?B . (:foreground "orange"))
+                           (?C . (:foreground "yellow"))
+                           (?D . (:foreground "green"))))
 
 (setq org-startup-indented t
       org-pretty-entities t
@@ -176,18 +176,18 @@
     (cond
      (is-windows "~/Projects/")
      (t "~/Projects")))
-)
+  )
 
 (defun nc/goto-journal-file ()
-      "Create and load a journal file based on today's date."
-      (interactive)
+  "Create and load a journal file based on today's date."
+  (interactive)
 
-      (find-file (nc--get-journal-file-today)))
+  (find-file (nc--get-journal-file-today)))
 
 (defun nc--get-journal-file-today ()
-      "Return today's journal file."
-      (let ((daily-name (format-time-string "%Y-W%W")))
-        (expand-file-name (concat nc/org-journal-dir "/" daily-name ".org"))))
+  "Return today's journal file."
+  (let ((daily-name (format-time-string "%Y-W%W")))
+    (expand-file-name (concat nc/org-journal-dir "/" daily-name ".org"))))
 
 (setq org-default-notes-file (nc--get-journal-file-today))
 
@@ -246,9 +246,9 @@
       (error "Insert failed"))))
 
 (setq org-todo-keywords
- '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-   (sequence "STARTED(s)" "HOLD(h/!)" "|" "CANCELLED(c@/!)")
-   (sequence "MEETING(m)" "RDV(r)"  "|" "DONE(d)")))
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+        (sequence "STARTED(s)" "HOLD(h/!)" "|" "CANCELLED(c@/!)")
+        (sequence "MEETING(m)" "RDV(r)"  "|" "DONE(d)")))
 
 (setq org-log-done nil)
 
@@ -323,13 +323,13 @@
         ))
 
 (add-to-list 'org-capture-templates
-                 `("m" "Meeting" entry  (file+headline nc/calendar-file "Réunions")
-        ,(concat "* MEETING 📆 %? :meeting:\n"
-                 "<%<%Y-%m-%d %a %H:00-%H:30>>")))
+             `("m" "Meeting" entry  (file+headline nc/calendar-file "Réunions")
+               ,(concat "* MEETING 📆 %? :meeting:\n"
+                        "<%<%Y-%m-%d %a %H:00-%H:30>>")))
 
 (add-to-list 'org-capture-templates
-                 `("a" "RendezVous" entry (file+headline nc/calendar-file "RendezVous")
-                 "* RDV %? :rdv:\n%U\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n"))
+             `("a" "RendezVous" entry (file+headline nc/calendar-file "RendezVous")
+               "* RDV %? :rdv:\n%U\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n"))
 
 (defun org-journal-find-bookmark ()
   ;; Open today's journal, but specify a non-nil prefix argument in order to
@@ -342,8 +342,8 @@
   (search-forward (concat "Links " (format-time-string "%Y-W%W"))))
 
 (add-to-list 'org-capture-templates
-               `("l" "Link" entry (function org-journal-find-bookmark)
-                      "* %?\n  %i\n  From: %a" :empty-lines 1))
+             `("l" "Link" entry (function org-journal-find-bookmark)
+               "* %?\n  %i\n  From: %a" :empty-lines 1))
 
 (add-to-list 'org-capture-templates
              '("f" "Fishing Log Entry" entry
@@ -352,9 +352,9 @@
                :empty-lines 1))
 
 (add-to-list 'org-capture-templates
-                 '("n" "Note"  entry
-                   (file+headline nc/inbox-file "Notes")
-                   "* %(org-insert-time-stamp nil nil t) %?\n  %i \n  See: %a" :empty-lines 1))
+             '("n" "Note"  entry
+               (file+headline nc/inbox-file "Notes")
+               "* %(org-insert-time-stamp nil nil t) %?\n  %i \n  See: %a" :empty-lines 1))
 
 (add-to-list 'org-capture-templates
              '("b" "Book"  entry
@@ -377,23 +377,23 @@
                :clock-in t :clock-resume t))
 
 (defun my/capture-interruption-task ()
-    "Interrupted Task"
-    (interactive)
-    (org-capture 4 "i"))
+  "Interrupted Task"
+  (interactive)
+  (org-capture 4 "i"))
 
 (defun org-journal-find-location ()
- ;; Open today's journal, but specify a non-nil prefix argument in order to
- ;; inhibit inserting the heading; org-capture will insert the heading.
- (nc/goto-journal-file)
- ;; Position point on the journal's top-level heading so that org-capture
- ;; will add the new entry as a child entry.
+  ;; Open today's journal, but specify a non-nil prefix argument in order to
+  ;; inhibit inserting the heading; org-capture will insert the heading.
+  (nc/goto-journal-file)
+  ;; Position point on the journal's top-level heading so that org-capture
+  ;; will add the new entry as a child entry.
 
- (goto-char (point-min)))
+  (goto-char (point-min)))
 
 (add-to-list 'org-capture-templates
-               `("d" "Review: Daily Review" entry (function org-journal-find-location)
-                 (file "~/notes/templates/dailyreview.org")
-                 :clock-in t :clock-resume t))
+             `("d" "Review: Daily Review" entry (function org-journal-find-location)
+               (file "~/notes/templates/dailyreview.org")
+               :clock-in t :clock-resume t))
 
 (defun nc/org-insert-daily-review ()
   "Insert daily review in org file"
@@ -404,21 +404,21 @@
     (org-clock-in)))
 
 (add-to-list 'org-capture-templates
-                 `("w" "WeeklyReview" entry (file+olp+datetree nc/weekly-review-file)
-           "* Summary of the week :REVIEW:\n%[~/notes/templates/review.org]" :time-prompt t))
+             `("w" "WeeklyReview" entry (file+olp+datetree nc/weekly-review-file)
+               "* Summary of the week :REVIEW:\n%[~/notes/templates/review.org]" :time-prompt t))
 
 ;; My Org agenda-files
 (defvar nc/org-agenda-files (list "~/notes/gtd.org" "~/notes/projects.org" "~/notes/office.org" "~/notes/personal/calendar.org" "~/notes/journal/"))
 
 (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'\\|[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$"
-        org-agenda-files nc/org-agenda-files
-        org-agenda-span 'day
-        org-agenda-start-on-weekday nil
-        org-agenda-skip-deadline-if-done t
-        org-agenda-skip-scheduled-if-done t
-        org-agenda-start-with-log-mode t
-        org-agenda-block-separator nil
-        org-deadline-warning-days 5)
+      org-agenda-files nc/org-agenda-files
+      org-agenda-span 'day
+      org-agenda-start-on-weekday nil
+      org-agenda-skip-deadline-if-done t
+      org-agenda-skip-scheduled-if-done t
+      org-agenda-start-with-log-mode t
+      org-agenda-block-separator nil
+      org-deadline-warning-days 5)
 
 (setq diary-file "~/notes/diary"
       org-agenda-include-diary t)
@@ -427,11 +427,11 @@
   "Display org title if necessary"
   (save-excursion
     (save-restriction
-     (widen)
-     (let* ((heading-tags (org-get-tags)))
-       (if (seq-contains-p heading-tags "project")
-           (s-concat "\n"  " 🏗️ ")
-         "")))))
+      (widen)
+      (let* ((heading-tags (org-get-tags)))
+        (if (seq-contains-p heading-tags "project")
+            (s-concat "\n"  " 🏗️ ")
+          "")))))
 
 (require 'org-agenda)
 
@@ -440,67 +440,67 @@
          ((agenda "" ((org-agenda-sorting-strategy '(timestamp-up time-up priority-down category-keep))
                       (org-agenda-prefix-format " %i %-20:c%?-12t% s")))
 
-                (tags "@office+TODO=\"STARTED\""
-                           ((org-agenda-overriding-header "\n:office: Started Tasks @office")
-                            (org-agenda-prefix-format " %i %-20:c [%e] ")
-                            ;;(org-agenda-prefix-format "%-27:(nc--org-agenda-format-parent 25)")
-                            (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
-                (tags "@office+TODO=\"NEXT\""
-                           ((org-agenda-overriding-header "\n:office: Next Tasks @office")
-                            (org-agenda-prefix-format " %i %-20:c [%e] ")
-                            (org-agenda-skip
-                             '(org-agenda-skip-if 'deadline))
-                            ;;(org-agenda-files '("~/_PIM/notes/gtd.org"))
-                            (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
-                (tags-todo "inbox"
+          (tags "@office+TODO=\"STARTED\""
+                ((org-agenda-overriding-header "\n:office: Started Tasks @office")
+                 (org-agenda-prefix-format " %i %-20:c [%e] ")
+                 ;;(org-agenda-prefix-format "%-27:(nc--org-agenda-format-parent 25)")
+                 (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
+          (tags "@office+TODO=\"NEXT\""
+                ((org-agenda-overriding-header "\n:office: Next Tasks @office")
+                 (org-agenda-prefix-format " %i %-20:c [%e] ")
+                 (org-agenda-skip
+                  '(org-agenda-skip-if 'deadline))
+                 ;;(org-agenda-files '("~/_PIM/notes/gtd.org"))
+                 (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
+          (tags-todo "inbox"
                      ((org-agenda-prefix-format "  %?-12t% s")
                       (org-agenda-overriding-header "\n🚀 Inbox")))
-                (tags-todo "TODO=\"HOLD\""
-                           ((org-agenda-overriding-header "\n⌛ Hold / Waiting Tasks")
-                            (org-agenda-prefix-format " %i %-20:c")
-                            (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
-                (tags "personal+TODO=\"STARTED\"|personal+TODO=\"NEXT\""
-                           ((org-agenda-overriding-header "\n:house: My current tasks")
-                            (org-agenda-prefix-format " %i %-20:c [%e] ")
-                            (org-agenda-skip
-                             '(org-agenda-skip-if 'deadline))
-                            ;;(org-agenda-files '("~/_PIM/notes/gtd.org"))
-                            (org-agenda-sorting-strategy '(priority-down todo-state-down category-keep))))
-                )
-               nil)
+          (tags-todo "TODO=\"HOLD\""
+                     ((org-agenda-overriding-header "\n⌛ Hold / Waiting Tasks")
+                      (org-agenda-prefix-format " %i %-20:c")
+                      (org-agenda-sorting-strategy '(priority-down todo-state-up category-keep))))
+          (tags "personal+TODO=\"STARTED\"|personal+TODO=\"NEXT\""
+                ((org-agenda-overriding-header "\n:house: My current tasks")
+                 (org-agenda-prefix-format " %i %-20:c [%e] ")
+                 (org-agenda-skip
+                  '(org-agenda-skip-if 'deadline))
+                 ;;(org-agenda-files '("~/_PIM/notes/gtd.org"))
+                 (org-agenda-sorting-strategy '(priority-down todo-state-down category-keep))))
+          )
+         nil)
         ("g" . "GTD contexts")
-           ("go" "Office" tags-todo "@office")
-           ("gp" "Personal" tags-todo "personal")
-           ("ge" "Emacs" tags-todo "emacs")
-           ("gl" "Learning" tags-todo "learning")
-           ("gr" "Reading" tags-todo "@reading")
-            ;; exports block to this file with C-c a e
-          ;; ..other commands here
-           ("p" . "Projects")
-           ("po" "Office Projects"
-            ((tags "project+@office|@office+LEVEL=2+TODO=\"TODO\""
-                   (;; (org-agenda-files (nc/org-projects-file))
-                    ;; (org-agenda-prefix-format " %-20c %l%e%l %27:(nc--org-agenda-display-title)")
+        ("go" "Office" tags-todo "@office")
+        ("gp" "Personal" tags-todo "personal")
+        ("ge" "Emacs" tags-todo "emacs")
+        ("gl" "Learning" tags-todo "learning")
+        ("gr" "Reading" tags-todo "@reading")
+        ;; exports block to this file with C-c a e
+        ;; ..other commands here
+        ("p" . "Projects")
+        ("po" "Office Projects"
+         ((tags "project+@office|@office+LEVEL=2+TODO=\"TODO\""
+                (;; (org-agenda-files (nc/org-projects-file))
+                 ;; (org-agenda-prefix-format " %-20c %l%e%l %27:(nc--org-agenda-display-title)")
 
-                    (org-agenda-prefix-format "%l%l %:(nc--org-agenda-display-title)")
-                    (org-agenda-sorting-strategy '(priority-down))
-                    (org-agenda-overriding-header "Office Projects")))))
-           ("pp" "My Personal Projects"
-            ((tags "project+personal|personal+LEVEL=2+TODO=\"TODO\""
-                   (;; (org-agenda-files (list nc/org-projects-file))
-                    ;;(org-agenda-prefix-format " %-20c %l%e%l")
-                    (org-agenda-prefix-format "%l%l %:(nc--org-agenda-display-title)")
-                    (org-agenda-sorting-strategy '(priority-down))
-                    (org-agenda-overriding-header "Personal Projects")
-                    ))))
-           ))
+                 (org-agenda-prefix-format "%l%l %:(nc--org-agenda-display-title)")
+                 (org-agenda-sorting-strategy '(priority-down))
+                 (org-agenda-overriding-header "Office Projects")))))
+        ("pp" "My Personal Projects"
+         ((tags "project+personal|personal+LEVEL=2+TODO=\"TODO\""
+                (;; (org-agenda-files (list nc/org-projects-file))
+                 ;;(org-agenda-prefix-format " %-20c %l%e%l")
+                 (org-agenda-prefix-format "%l%l %:(nc--org-agenda-display-title)")
+                 (org-agenda-sorting-strategy '(priority-down))
+                 (org-agenda-overriding-header "Personal Projects")
+                 ))))
+        ))
 
 (defun nc/org-agenda-recent-open-loops ()
-    (interactive)
-    (let ((org-agenda-start-with-log-mode t)
-            (org-agenda-use-time-grid nil))
-      ;; (fetch-calendar)
-      (org-agenda-list nil (org-read-date nil nil "-2d") 4)))
+  (interactive)
+  (let ((org-agenda-start-with-log-mode t)
+        (org-agenda-use-time-grid nil))
+    ;; (fetch-calendar)
+    (org-agenda-list nil (org-read-date nil nil "-2d") 4)))
 
 (use-package org
   :bind (("C-c C-x C-i" . nc/org-clock-in)
@@ -585,14 +585,14 @@ of the start and end of the subtree."
   "Given the properties, PROPS, from a call to
 `org-entry-properties', return a list of tags."
   (unless props
-     (setq props (org-entry-properties)))
+    (setq props (org-entry-properties)))
   (let ((tag-label (if nc--org-get-subtree-tags-inherited "ALLTAGS" "TAGS")))
     (-some->> props
-         (assoc tag-label)
-         cdr
-         substring-no-properties
-         (s-split ":")
-         (--filter (not (cl-equalp "" it))))))
+              (assoc tag-label)
+              cdr
+              substring-no-properties
+              (s-split ":")
+              (--filter (not (cl-equalp "" it))))))
 
 (defvar nc--org-get-subtree-tags-inherited t
   "Returns a subtree's tags, and all tags inherited (from tags
@@ -619,21 +619,21 @@ of the start and end of the subtree."
 (defun nc--org-get-subtree-content (attributes)
   "Return the contents of the current subtree as a string."
   (let ((header-components '(clock diary-sexp drawer headline inlinetask
-                             node-property planning property-drawer section)))
+                                   node-property planning property-drawer section)))
 
-      (goto-char (plist-get attributes :contents-begin))
+    (goto-char (plist-get attributes :contents-begin))
 
-      ;; Walk down past the properties, etc.
-      (while
-          (let* ((cntx (org-element-context))
-                 (elem (cl-first cntx))
-                 (props (cl-second cntx)))
-            (when (member elem header-components)
-              (goto-char (plist-get props :end)))))
+    ;; Walk down past the properties, etc.
+    (while
+        (let* ((cntx (org-element-context))
+               (elem (cl-first cntx))
+               (props (cl-second cntx)))
+          (when (member elem header-components)
+            (goto-char (plist-get props :end)))))
 
-      ;; At this point, we are at the beginning of what we consider
-      ;; the contents of the subtree, so we can return part of the buffer:
-      (buffer-substring-no-properties (point) (org-end-of-subtree))))
+    ;; At this point, we are at the beginning of what we consider
+    ;; the contents of the subtree, so we can return part of the buffer:
+    (buffer-substring-no-properties (point) (org-end-of-subtree))))
 
 (defun nc/org-refile-subtree-to-file (dir)
   "Archive the org-mode subtree and create an entry in the
@@ -740,7 +740,7 @@ if nil,the top of the file."
 
 ;; Improve speed command behavior
 (setq org-use-speed-commands
-       (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
+      (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
 
 (push '("N" nc/org-show-next-heading-tidily) org-speed-commands)
 (push '("P" nc/org-show-previous-heading-tidily) org-speed-commands)
@@ -845,7 +845,7 @@ the result as a time value."
           `,@exprs))))
 
 (defun nc/create-buffer-attachment-directory ()
-    "Create assets directory for org mode file"
+  "Create assets directory for org mode file"
   (interactive)
   (let ((assets-buffer-dir (file-name-sans-extension (buffer-name) )))
     (f-mkdir "assets" assets-buffer-dir)
@@ -928,78 +928,78 @@ the result as a time value."
         (concat "${type:15} ${title:*} " (propertize "${tags:20}" 'face 'org-tag)))
 
   ;; Managing Projects from org-roam
-(defun nc/org-roam-filter-by-tag (tag-name)
-  (lambda (node)
-    (member tag-name (org-roam-node-tags node))))
+  (defun nc/org-roam-filter-by-tag (tag-name)
+    (lambda (node)
+      (member tag-name (org-roam-node-tags node))))
 
-(defun nc/org-roam-list-notes-by-tag (tag-name)
-  (mapcar #'org-roam-node-file
-          (seq-filter
-           (nc/org-roam-filter-by-tag tag-name)
-           (org-roam-node-list))))
+  (defun nc/org-roam-list-notes-by-tag (tag-name)
+    (mapcar #'org-roam-node-file
+            (seq-filter
+             (nc/org-roam-filter-by-tag tag-name)
+             (org-roam-node-list))))
 
-(defun nc/org-roam-refresh-agenda-list ()
-  (interactive)
-  (setq org-agenda-files
-        (append nc/org-agenda-files
-                (nc/org-roam-list-notes-by-tag "project"))))
+  (defun nc/org-roam-refresh-agenda-list ()
+    (interactive)
+    (setq org-agenda-files
+          (append nc/org-agenda-files
+                  (nc/org-roam-list-notes-by-tag "project"))))
 
-;; Build the agenda list the first time for the session
-(nc/org-roam-refresh-agenda-list)
+  ;; Build the agenda list the first time for the session
+  (nc/org-roam-refresh-agenda-list)
 
-(defun nc/update-refile-targets (filename)
-  "Update refile targets"
-  (add-to-list 'org-refile-targets `(,filename :regexp . "\\(?:\\(?:Meeting\\|Task\\)s\\)")))
+  (defun nc/update-refile-targets (filename)
+    "Update refile targets"
+    (add-to-list 'org-refile-targets `(,filename :regexp . "\\(?:\\(?:Meeting\\|Task\\)s\\)")))
 
-;; Refresh org-refile-targets
-(dolist (project-file (nc/org-roam-list-notes-by-tag "project"))
-  (nc/update-refile-targets project-file))
+  ;; Refresh org-refile-targets
+  (dolist (project-file (nc/org-roam-list-notes-by-tag "project"))
+    (nc/update-refile-targets project-file))
 
-(defun nc/org-roam-project-finalize-hook ()
-  "Adds the captured project file to `org-agenda-files' if the
+  (defun nc/org-roam-project-finalize-hook ()
+    "Adds the captured project file to `org-agenda-files' if the
 capture was not aborted."
-  ;; Remove the hook since it was added temporarily
-  (remove-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
+    ;; Remove the hook since it was added temporarily
+    (remove-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
 
-  ;; Add project file to the agenda list if the capture was confirmed
-  (unless org-note-abort
-    (with-current-buffer (org-capture-get :buffer)
-      (progn
-       (add-to-list 'org-agenda-files (buffer-file-name))
-       (nc/update-refile-targets (buffer-file-name))))))
+    ;; Add project file to the agenda list if the capture was confirmed
+    (unless org-note-abort
+      (with-current-buffer (org-capture-get :buffer)
+        (progn
+          (add-to-list 'org-agenda-files (buffer-file-name))
+          (nc/update-refile-targets (buffer-file-name))))))
 
-(defun nc/org-roam-find-project ()
-  (interactive)
-  ;; Add the project file to the agenda after capture is finished
-  (add-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
+  (defun nc/org-roam-find-project ()
+    (interactive)
+    ;; Add the project file to the agenda after capture is finished
+    (add-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
 
-  ;; Select a project file to open, creating it if necessary
-  (org-roam-node-find
-   nil
-   nil
-   (nc/org-roam-filter-by-tag "project")
-   nil
-   :templates
-   '(("p" "project" plain (file "~/notes/templates/newproject.org")
-      :if-new (file+head "projects/%<%Y-%m-%d>-${slug}.org"
-                         "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:%^{context|@office|personal}:")
-      :unnarrowed t))))
+    ;; Select a project file to open, creating it if necessary
+    (org-roam-node-find
+     nil
+     nil
+     (nc/org-roam-filter-by-tag "project")
+     nil
+     :templates
+     '(("p" "project" plain (file "~/notes/templates/newproject.org")
+        :if-new (file+head "projects/%<%Y-%m-%d>-${slug}.org"
+                           "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:%^{context|@office|personal}:")
+        :unnarrowed t))))
 
-(defun nc/org-roam-capture-task ()
-  (interactive)
-  ;; Add the project file to the agenda after capture is finished
-  (add-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
+  (defun nc/org-roam-capture-task ()
+    (interactive)
+    ;; Add the project file to the agenda after capture is finished
+    (add-hook 'org-capture-after-finalize-hook #'nc/org-roam-project-finalize-hook)
 
-  ;; Capture the new task, creating the project file if necessary
-  (org-roam-capture- :node (org-roam-node-read
-                            nil
-                            (nc/org-roam-filter-by-tag "project"))
-                     :templates '(("p" "project" plain "** TODO %?"
-                                   :if-new (file+head+olp "projects/%<%Y-%m-%d>-${slug}.org"
-                                                          "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:"
-                                                          ("Tasks"))))))
+    ;; Capture the new task, creating the project file if necessary
+    (org-roam-capture- :node (org-roam-node-read
+                              nil
+                              (nc/org-roam-filter-by-tag "project"))
+                       :templates '(("p" "project" plain "** TODO %?"
+                                     :if-new (file+head+olp "projects/%<%Y-%m-%d>-${slug}.org"
+                                                            "#+title: ${title}\n#+category: %^{CATEGORY}\n#+filetags: :project:"
+                                                            ("Tasks"))))))
   ;; this sets up various file handling hooks so your DB remains up to date
-(org-roam-setup))
+  (org-roam-setup))
 
 
 ;; Close project
@@ -1013,10 +1013,10 @@ capture was not aborted."
 (defun nc/get-project-tags ()
   "Returns project tags"
   (car (alist-get "FILETAGS"
-                 (org-collect-keywords '("filetags"))
-                 nil
-                 nil
-                 'string-equal)))
+                  (org-collect-keywords '("filetags"))
+                  nil
+                  nil
+                  'string-equal)))
 
 (defun nc/is-org-roam-project? ()
   "Checks if buffer is an org-roam project buffer"
@@ -1029,9 +1029,9 @@ capture was not aborted."
 (defun nc/complete-project-tags ()
   "Set project to completed tag"
   (let* ((project-tags (nc/get-project-tags))
-               (project-completed-tags (s-replace "project" "completed" project-tags))
-              (year (format-time-string "%Y")))
-          (org-roam-set-keyword "filetags" (format"%s%s:" project-completed-tags year))))
+         (project-completed-tags (s-replace "project" "completed" project-tags))
+         (year (format-time-string "%Y")))
+    (org-roam-set-keyword "filetags" (format"%s%s:" project-completed-tags year))))
 
 (defun nc/close-org-roam-project ()
   "Update tags and date for project buffer"
@@ -1127,30 +1127,30 @@ capture was not aborted."
   (require 'transient))
 
 (transient-define-prefix nc/org-tmenu ()
-  "Transient menu for managing org-mode links."
-  [["Org Commands"
-    ("l" "Link..." nc/org-link-tmenu)
-    ]
-   ["GTD"
-    ("s"  "Start Daily Review" nc/org-insert-daily-review)
-    ("d"  "Insert Daily Heading" nc/insert-daily-heading)
-    ]
-   ["Actions"
-    ("p"  "Plantuml Preview Current Block" nc/plantuml-preview-current-block)
-    ("r"  "Refile subtree to file" nc/org-refile-subtree-to-file)
-    ("A"  "Create attachment directory" nc/create-buffer-attachment-directory)
-    ("q" "Quit" transient-quit-all)
-    ]
-   ])
+                         "Transient menu for managing org-mode links."
+                         [["Org Commands"
+                           ("l" "Link..." nc/org-link-tmenu)
+                           ]
+                          ["GTD"
+                           ("s"  "Start Daily Review" nc/org-insert-daily-review)
+                           ("d"  "Insert Daily Heading" nc/insert-daily-heading)
+                           ]
+                          ["Actions"
+                           ("p"  "Plantuml Preview Current Block" nc/plantuml-preview-current-block)
+                           ("r"  "Refile subtree to file" nc/org-refile-subtree-to-file)
+                           ("A"  "Create attachment directory" nc/create-buffer-attachment-directory)
+                           ("q" "Quit" transient-quit-all)
+                           ]
+                          ])
 
 (transient-define-prefix nc/org-link-tmenu ()
-  "Submenu for additional link operations."
-  ["Link Management"
-   ["Insert"
-    ("i" "Insert link" org-insert-link)
-    ("s" "Store link" org-store-link)]
-   ["Return"
-    ("q" "Back to main menu" nc/org-tmenu)]])
+                         "Submenu for additional link operations."
+                         ["Link Management"
+                          ["Insert"
+                           ("i" "Insert link" org-insert-link)
+                           ("s" "Store link" org-store-link)]
+                          ["Return"
+                           ("q" "Back to main menu" nc/org-tmenu)]])
 
 (provide 'setup-org)
 ;;; setup-org.el ends here

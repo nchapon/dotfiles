@@ -12,24 +12,24 @@
 ;;; Code:
 
 ;; Enable vertico
-  (use-package vertico
-    :straight (:files (:defaults "extensions/*"))
-    :config
-    (vertico-mode)
+(use-package vertico
+  :straight (:files (:defaults "extensions/*"))
+  :config
+  (vertico-mode)
 
-    ;; Different scroll margin
-    (setq vertico-scroll-margin 0)
+  ;; Different scroll margin
+  (setq vertico-scroll-margin 0)
 
-    ;; Show more candidates
-    (setq vertico-count 10)
+  ;; Show more candidates
+  (setq vertico-count 10)
 
-    ;; Grow and shrink the Vertico minibuffer
-   (setq vertico-resize t)
+  ;; Grow and shrink the Vertico minibuffer
+  (setq vertico-resize t)
 
-    ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
-    ;; (setq vertico-cycle t)
+  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+  ;; (setq vertico-cycle t)
 
-    )
+  )
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
@@ -184,7 +184,7 @@
   ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
-(consult-customize
+  (consult-customize
    consult-theme :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
@@ -217,14 +217,14 @@
   ;; (setq consult-project-root-function #'vc-root-dir)
   ;;;; 4. locate-dominating-file
   ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
-)
+  )
 
 
 (use-package consult-dir
   :bind (("C-x C-d" . consult-dir)
-       :map vertico-map
-       ("C-x C-d" . consult-dir)
-       ("C-x C-j" . consult-dir-jump-file))
+         :map vertico-map
+         ("C-x C-d" . consult-dir)
+         ("C-x C-j" . consult-dir-jump-file))
   :config
   (setq consult-dir-project-list-function #'consult-dir-projectile-dirs))
 
@@ -233,13 +233,13 @@
 (with-eval-after-load 'consult-imenu
   (dolist (python '(python-mode python-ts-mode))
     (add-to-list 'consult-imenu-config
-               `(,python
-                 :toplevel "Method"
-                 :types ((?f "Field" font-lock-variable-name-face)
-                         (?c "Class" font-lock-property-use-face)
-                         (?m "Method" font-lock-function-name-face)
-                         (?M "Module" font-lock-builtin-face)
-                         (?v "Variable" font-lock-variable-name-face))))))
+                 `(,python
+                   :toplevel "Method"
+                   :types ((?f "Field" font-lock-variable-name-face)
+                           (?c "Class" font-lock-property-use-face)
+                           (?m "Method" font-lock-function-name-face)
+                           (?M "Module" font-lock-builtin-face)
+                           (?v "Variable" font-lock-variable-name-face))))))
 
 (use-package consult-projectile
   :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
@@ -265,33 +265,32 @@
                  nil
                  (window-parameters (mode-line-format . none))))
 
-  ;; Custom some actions
-  (define-key embark-defun-map "j" 'crux-top-join-line)
-  (define-key embark-symbol-map "j" 'crux-top-join-line)
-  (define-key embark-expression-map "j" 'crux-top-join-line)
 
-  (define-key embark-file-map (kbd "S") 'nc/sudo-find-file))
-
+  ;; From https://blog.fidelramos.net/software/embark-custom-actions
 ;;; To prevent compiler warnings, org-stored-links comes from ol.el
-(defvar org-stored-links)
+  (defvar org-stored-links)
 
-(defun nc/embark-org-store-file-link (file)
-  "Store an Org link to FILE in `org-stored-links'."
-  (interactive "fStore Org link to file: ")
-  (push (list (concat "file:" (expand-file-name file))
-              (file-name-nondirectory file))
-        org-stored-links)
-  (message "Stored Org link to %s" file))
+  (defun nc/embark-org-store-file-link (file)
+    "Store an Org link to FILE in `org-stored-links'."
+    (interactive "fStore Org link to file: ")
+    (push (list (concat "file:" (expand-file-name file))
+                (file-name-nondirectory file))
+          org-stored-links)
+    (message "Stored Org link to %s" file))
 
-(defun nc/embark-org-store-url-link (url)
-  "Store an Org link to URL in `org-stored-links'."
-  (interactive "sStore Org link to URL: ")
-  (push (list url nil) org-stored-links)
-  (message "Stored Org link to %s" url))
+  (defun nc/embark-org-store-url-link (url)
+    "Store an Org link to URL in `org-stored-links'."
+    (interactive "sStore Org link to URL: ")
+    (push (list url nil) org-stored-links)
+    (message "Stored Org link to %s" url))
 
 
-(keymap-set embark-file-map "l" #'nc/embark-org-store-file-link)
-(keymap-set embark-url-map "l" #'nc/embark-org-store-url-link)
+  (keymap-set embark-file-map "l" #'nc/embark-org-store-file-link)
+  (keymap-set embark-url-map "l" #'nc/embark-org-store-url-link)
+  (keymap-set embark-defun-map "j" 'crux-top-join-line)
+  (keymap-set embark-symbol-map "j" 'crux-top-join-line)
+  (keymap-set embark-expression-map "j" 'crux-top-join-line)
+  (keymap-set embark-file-map (kbd "S") 'nc/sudo-find-file))
 
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
@@ -422,7 +421,7 @@
       (add-to-list 'nc-tempel-templates nc-tempel-local-templates)))
 
   (setq tempel-path nc-tempel-templates)
- ;; Needs tempel loaded, so it must live in :config, not :init.
+  ;; Needs tempel loaded, so it must live in :config, not :init.
   (global-tempel-abbrev-mode)
   :init
   ;; Setup completion at point
@@ -446,7 +445,7 @@
   ;; either locally or globally. `expand-abbrev' is bound to C-x '.
   (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
 
-)
+  )
 
 ;; Optional: Add tempel-collection.
 ;; The package is young and doesn't have comprehensive coverage.

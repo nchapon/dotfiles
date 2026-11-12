@@ -115,28 +115,28 @@
   (require 'hydra))
 
 (defhydra hydra-lsp (:exit t :hint nil)
-    "
+          "
    Buffer^^               Server^^                   Symbol
   -------------------------------------------------------------------------------------
    [_f_] format           [_M-r_] restart            [_d_] definition   [_i_] implementation  [_o_] documentation
    [_m_] imenu            [_S_]   shutdown           [_D_] declaration  [_t_] type            [_r_] rename
    [_x_] execute action   [_M-s_] describe session   [_R_] references   [_s_] signature"
-    ("d" lsp-ui-peek-find-definitions)
-    ("D" lsp-find-declaration)
-    ("R" lsp-ui-peek-find-references)
-    ("i" lsp-ui-peek-find-implementation)
-    ("t" lsp-find-type-definition)
-    ("s" lsp-signature-help)
-    ("o" lsp-describe-thing-at-point)
-    ("r" lsp-rename)
+          ("d" lsp-ui-peek-find-definitions)
+          ("D" lsp-find-declaration)
+          ("R" lsp-ui-peek-find-references)
+          ("i" lsp-ui-peek-find-implementation)
+          ("t" lsp-find-type-definition)
+          ("s" lsp-signature-help)
+          ("o" lsp-describe-thing-at-point)
+          ("r" lsp-rename)
 
-    ("f" lsp-format-buffer)
-    ("m" lsp-ui-imenu)
-    ("x" lsp-execute-code-action)
+          ("f" lsp-format-buffer)
+          ("m" lsp-ui-imenu)
+          ("x" lsp-execute-code-action)
 
-    ("M-s" lsp-describe-session)
-    ("M-r" lsp-restart-workspace)
-    ("S" lsp-shutdown-workspace))
+          ("M-s" lsp-describe-session)
+          ("M-r" lsp-restart-workspace)
+          ("S" lsp-shutdown-workspace))
 (global-set-key (kbd "C-l") 'hydra-lsp/body)
 
 (use-package flycheck
@@ -215,28 +215,28 @@
 
   ;; Useful rust-analyzer settings passed via initializationOptions
   (setq-default eglot-workspace-configuration
-    '(:rust-analyzer
-      ( :checkOnSave       (:command "clippy")  ; use clippy instead of check
-        :cargo             (:allFeatures t)      ; enable all cargo features
-        :procMacro         (:enable t
-                                    :attributes (:enable t))
-        :inlayHints        ( :parameterHints    (:enable t)
-                             :typeHints         (:enable t)
-                             :chainingHints     (:enable t))
-        :completion        (:autoimport (:enable t))
-        :diagnostics       (:enable t))
-      :typescript
-      ( :inlayHints ( :includeInlayParameterNameHints          "all"
-                      :includeInlayFunctionParameterTypeHints  t
-                      :includeInlayVariableTypeHints           t
-                      :includeInlayFunctionLikeReturnTypeHints t))))
+                '(:rust-analyzer
+                  ( :checkOnSave       (:command "clippy")  ; use clippy instead of check
+                    :cargo             (:allFeatures t)      ; enable all cargo features
+                    :procMacro         (:enable t
+                                                :attributes (:enable t))
+                    :inlayHints        ( :parameterHints    (:enable t)
+                                         :typeHints         (:enable t)
+                                         :chainingHints     (:enable t))
+                    :completion        (:autoimport (:enable t))
+                    :diagnostics       (:enable t))
+                  :typescript
+                  ( :inlayHints ( :includeInlayParameterNameHints          "all"
+                                  :includeInlayFunctionParameterTypeHints  t
+                                  :includeInlayVariableTypeHints           t
+                                  :includeInlayFunctionLikeReturnTypeHints t))))
   :bind (:map eglot-mode-map
-         ("C-c r"   . eglot-rename)
-         ("C-c C-f" . eglot-format-buffer)
-         ("C-c C-a" . eglot-code-actions)
-         ("M-?"     . xref-find-references)
-         ("M-."     . xref-find-definitions)
-         ("C-c d"   . eldoc)))
+              ("C-c r"   . eglot-rename)
+              ("C-c C-f" . eglot-format-buffer)
+              ("C-c C-a" . eglot-code-actions)
+              ("M-?"     . xref-find-references)
+              ("M-."     . xref-find-definitions)
+              ("C-c d"   . eldoc)))
 
 (use-package treesit-auto
   :custom
@@ -282,16 +282,16 @@
 (setq treesit-font-lock-level 3)
 
 (use-package combobulate
-    :defer t
-    :bind
-    ("C-c o o" . combobulate)
-    :hook ((python-ts-mode . combobulate-mode)
-           (yaml-ts-mode . combobulate-mode)
-           (json-ts-mode . combobulate-mode)
-           (rust-ts-mode . combobulate-mode))
-    ;; Amend this to the directory where you keep Combobulate's source
-    ;; code.
-    :load-path ("~/Projects/_playground/combobulate"))
+  :defer t
+  :bind
+  ("C-c o o" . combobulate)
+  :hook ((python-ts-mode . combobulate-mode)
+         (yaml-ts-mode . combobulate-mode)
+         (json-ts-mode . combobulate-mode)
+         (rust-ts-mode . combobulate-mode))
+  ;; Amend this to the directory where you keep Combobulate's source
+  ;; code.
+  :load-path ("~/Projects/_playground/combobulate"))
 
 ;; (use-package treesit-fold
 ;;   :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold"))
@@ -365,8 +365,8 @@
 
   (sp-with-modes '(c-mode c++-mode js-mode js2-mode java-mode
                           typescript-mode perl-mode)
-    (sp-local-pair "{" nil :post-handlers
-                   '((nc--create-newline-and-enter-sexp "RET")))))
+                 (sp-local-pair "{" nil :post-handlers
+                                '((nc--create-newline-and-enter-sexp "RET")))))
 
 (use-package paren
   :straight nil
@@ -420,7 +420,7 @@
           (concat "pandoc --toc --section-divs"
                   " --css   file://" stylesheet
                   " --standalone -f markdown -t html5"
-                     )))
+                  )))
   )
 
 (use-package markdown-toc
@@ -473,10 +473,10 @@
 (use-package edit-indirect)
 
 (transient-define-prefix nc/markdown-tmenu ()
-  "Markdown Transient Menu"
-  [
-   ["Actions"
-    ("p" "PlantUML preview" nc/plantuml-preview-current-block)]])
+                         "Markdown Transient Menu"
+                         [
+                          ["Actions"
+                           ("p" "PlantUML preview" nc/plantuml-preview-current-block)]])
 
 (use-package plantuml-mode
   :init
@@ -563,17 +563,17 @@ Works for @startuml, @startmindmap, @startgantt, @startsalt, @startwbs,
         (image-mode))))
   (when is-mac
     (nc/plantuml-extended-preview-current-block))
-    ;; (nc/plantuml-preview-current-block 1))
+  ;; (nc/plantuml-preview-current-block 1))
   (when is-linux
     (nc/plantuml-extended-preview-current-block)
     ;; (nc/plantuml-preview-current-block 1)
     ))
 
 (transient-define-prefix nc/plantuml-tmenu ()
-  "Python tools"
-  [
-   ["Actions"
-    ("p" "Preview" nc/plantuml-preview-current-block)]])
+                         "Python tools"
+                         [
+                          ["Actions"
+                           ("p" "Preview" nc/plantuml-preview-current-block)]])
 
 (when is-windows
   (setq python-shell-interpreter "python"))
@@ -632,19 +632,19 @@ Works for @startuml, @startmindmap, @startgantt, @startsalt, @startwbs,
   (conda-env-initialize-interactive-shells)
   (conda-env-initialize-eshell)
   (add-to-list
-     'global-mode-string
-     '(:eval
-       (list
-        (if conda-env-current-name
-            (propertize (concat "(py: " conda-env-current-name ") ")
-                        'face 'font-lock-builtin-face
-                        'help-echo "Conda environment"
-                        'mouse-face '(:box 1)
-                        'local-map (make-mode-line-mouse-map
-                                    'mouse-1
-                                    (lambda () (interactive)
-                                      (conda-env-activate))))
-          "")))))
+   'global-mode-string
+   '(:eval
+     (list
+      (if conda-env-current-name
+          (propertize (concat "(py: " conda-env-current-name ") ")
+                      'face 'font-lock-builtin-face
+                      'help-echo "Conda environment"
+                      'mouse-face '(:box 1)
+                      'local-map (make-mode-line-mouse-map
+                                  'mouse-1
+                                  (lambda () (interactive)
+                                    (conda-env-activate))))
+        "")))))
 
 (use-package virtualenvwrapper
   :defer t
@@ -670,14 +670,14 @@ Works for @startuml, @startmindmap, @startgantt, @startsalt, @startwbs,
   (setq python-pytest-executable "python -m pytest")
   :bind
   (:map python-ts-mode-map
-          ("C-c C-t x" . python-pytest)
-          ("C-c C-t t" . python-pytest-function-dwim)
-          ("C-c C-t T" . python-pytest-function)
-          ("C-c C-t f" . python-pytest-file-dwim)
-          ("C-c C-t F" . python-pytest-file)
-          ("C-c C-t C-t" . python-pytest-dispatch)
-          ("C-c C-t C-r" . python-pytest-repeat)
-          ("C-c C-t C-x" . python-pytest-last-failed)))
+        ("C-c C-t x" . python-pytest)
+        ("C-c C-t t" . python-pytest-function-dwim)
+        ("C-c C-t T" . python-pytest-function)
+        ("C-c C-t f" . python-pytest-file-dwim)
+        ("C-c C-t F" . python-pytest-file)
+        ("C-c C-t C-t" . python-pytest-dispatch)
+        ("C-c C-t C-r" . python-pytest-repeat)
+        ("C-c C-t C-x" . python-pytest-last-failed)))
 
 (use-package python-insert-docstring
   :bind
@@ -731,22 +731,22 @@ Works for @startuml, @startmindmap, @startgantt, @startsalt, @startwbs,
 (add-hook 'python-ts-mode-hook #'my/python-completion-category)
 
 (transient-define-prefix nc/python-tmenu ()
-  "Python tools"
-  [
-   ["Insert"
-    ("d" "DocString" python-insert-docstring-with-google-style-at-point)]
-   ["Format"
-    ("f" "Ruff Format"  nc/format-buffer-with-ruff)]
-   ["Run Tests"
-    ("t" "Run tests in current def/class"  python-pytest-function-dwim)
-    ("T" "Run tests in current file"  python-pytest-file-dwim)
-    ("C-t" "Pytest Submenu..." python-pytest-dispatch)
-    ]
-   ["Env"
-    ("a" "PyVenv Activate" pyvenv-activate)
-    ("v" "Show venv"     (lambda ()
-                           (interactive)
-                           (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
+                         "Python tools"
+                         [
+                          ["Insert"
+                           ("d" "DocString" python-insert-docstring-with-google-style-at-point)]
+                          ["Format"
+                           ("f" "Ruff Format"  nc/format-buffer-with-ruff)]
+                          ["Run Tests"
+                           ("t" "Run tests in current def/class"  python-pytest-function-dwim)
+                           ("T" "Run tests in current file"  python-pytest-file-dwim)
+                           ("C-t" "Pytest Submenu..." python-pytest-dispatch)
+                           ]
+                          ["Env"
+                           ("a" "PyVenv Activate" pyvenv-activate)
+                           ("v" "Show venv"     (lambda ()
+                                                  (interactive)
+                                                  (message "Venv: %s" (getenv "VIRTUAL_ENV"))))]])
 
 ;;
 ;; Requirements:
