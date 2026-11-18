@@ -2451,51 +2451,56 @@ Org mode configuration automatically tangled in =./lisp/setup-org.el=
 
 
 #+begin_src emacs-lisp
-  (use-package org
-    :straight (:type built-in)
-    :bind (("C-c c" . org-capture)
-           ("C-c a" . org-agenda)
-           ("C-c C-b" . org-iswitchb)
-           :map org-mode-map
-           ("C-M-h" .  org-mark-subtree))
+(use-package org
+  :straight (:type built-in)
+  :bind (("C-c c" . org-capture)
+         ("C-c a" . org-agenda)
+         ("C-c C-b" . org-iswitchb)
+         :map org-mode-map
+         ("C-M-h" .  org-mark-subtree))
 
-    :config
-    ;; New template exapnsion
-    (require 'org-tempo)
+  :config
+  ;; New template exapnsion
+  (require 'org-tempo)
 
-    (setq org-ellipsis " ⬇"
-          org-cycle-separator-lines 0                 ;; Hide empty lines between subtrees
-          org-catch-invisible-edits 'show-and-error   ;; Avoid inadvertent text edit in invisible area
-          )
+  (setq org-ellipsis " ⬇"
+        org-cycle-separator-lines 0                 ;; Hide empty lines between subtrees
+        org-catch-invisible-edits 'show-and-error   ;; Avoid inadvertent text edit in invisible area
+        )
 
-    (set-face-attribute 'org-ellipsis nil :underline nil)
+  (set-face-attribute 'org-ellipsis nil :underline nil)
 
-    ;; Autamatically add =ID= (unique identifier) in heading drawers to keep links unique
-    (require 'org-id)
-    (setq org-id-method 'uuidgen)
-    (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+  ;; Autamatically add =ID= (unique identifier) in heading drawers to keep links unique
+  (require 'org-id)
+  (setq org-id-method 'uuidgen)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
-    (require 'org-crypt)
-    (org-crypt-use-before-save-magic)
+  (require 'org-crypt)
+  (org-crypt-use-before-save-magic)
 
-    (add-to-list 'org-tags-exclude-from-inheritance "crypt")
+  (add-to-list 'org-tags-exclude-from-inheritance "crypt")
 
-    ;; GPG key to use for encryption
-    ;; Either the Key ID or set to nil to use symmetric encryption.
-    (setq org-crypt-key nil)
+  ;; GPG key to use for encryption
+  ;; Either the Key ID or set to nil to use symmetric encryption.
+  (setq org-crypt-key nil)
 
-    ;; subscripts and superscripts are recognized only when enclosed in braces
-    (setq org-use-sub-superscripts '{})
+  ;; subscripts and superscripts are recognized only when enclosed in braces
+  (setq org-use-sub-superscripts '{})
 
-    :custom
-    (org-special-ctrl-a t)
-    (org-special-ctrl-e t)
-    :hook
-    ;; Redisplau inline images
-    (org-babel-after-execute . org-redisplay-inline-images)
-    )
+  ;; Open draw.io and Office files with the system's default app
+  (add-to-list 'org-file-apps
+               '("\\.\\(?:drawio\\|docx?\\|docm\\|xlsx?\\|xlsm\\|pptx?\\|pptm\\)\\'"
+                 . system))
 
-  (use-package org-contrib)
+  :custom
+  (org-special-ctrl-a t)
+  (org-special-ctrl-e t)
+  :hook
+  ;; Redisplau inline images
+  (org-babel-after-execute . org-redisplay-inline-images)
+  )
+
+(use-package org-contrib)
 #+end_src
 
 ** Org UI
@@ -2800,7 +2805,7 @@ will appear as projects.
           ("o" "@office")
           ("op" "Project" entry
            (file nc/org-office-file)
-           "* %^{ProjectName} :project:\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:ARCHIVES: ./archives/%s_archive::* %\\1\n:END:\n %?")
+           "* %^{ProjectName} :project:\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:ARCHIVES:./archives/%s_archive:: * %\\1\n:END:\n %?")
           ("ot" "Todo" entry
            (file+headline nc/inbox-file "Inbox")
            "* TODO %?" :refile-targets ((nil :maxlevel . 1))

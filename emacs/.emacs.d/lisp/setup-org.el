@@ -47,6 +47,11 @@
   ;; subscripts and superscripts are recognized only when enclosed in braces
   (setq org-use-sub-superscripts '{})
 
+  ;; Open draw.io and Office files with the system's default app
+  (add-to-list 'org-file-apps
+               '("\\.\\(?:drawio\\|docx?\\|docm\\|xlsx?\\|xlsm\\|pptx?\\|pptm\\)\\'"
+                 . system))
+
   :custom
   (org-special-ctrl-a t)
   (org-special-ctrl-e t)
@@ -292,7 +297,7 @@
         ("o" "@office")
         ("op" "Project" entry
          (file nc/org-office-file)
-         "* %^{ProjectName} :project:\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:ARCHIVES: ./archives/%s_archive::* %\\1\n:END:\n %?")
+         "* %^{ProjectName} :project:\nDEADLINE: %^t\n:PROPERTIES:\n:STARTDATE: %U\n:CATEGORY: %^{category}\n:ARCHIVES:./archives/%s_archive:: * %\\1\n:END:\n %?")
         ("ot" "Todo" entry
          (file+headline nc/inbox-file "Inbox")
          "* TODO %?" :refile-targets ((nil :maxlevel . 1))
